@@ -108,7 +108,7 @@ function sheet(){var o=document.querySelector(".pwa-sheet");if(o){o.remove();ret
 function go(){if(ev){ev.prompt();ev.userChoice.then(function(c){if(c.outcome==="accepted")hide();ev=null})}else sheet()}
 function hide(){if(pill)pill.remove();if(hero)hero.remove();pill=hero=null}
 function show(){if(dis()||!document.body)return;
- if(!pill){pill=document.createElement("div");pill.className="pwa";
+ if(!pill&&!document.querySelector("a.go")){pill=document.createElement("div");pill.className="pwa";
   pill.innerHTML='<button type="button" class="pwa-go"><img alt="" src="icons/icon-192.png"><span>'+T("ثبّت التطبيق")+'</span></button><button type="button" class="pwa-x" aria-label="'+T("إغلاق")+'">×</button>';
   document.body.appendChild(pill);pill.querySelector(".pwa-go").onclick=go;
   pill.querySelector(".pwa-x").onclick=function(){try{localStorage.setItem(KEY,"1")}catch(e){}hide()}}
@@ -170,7 +170,7 @@ html.js.leaving{animation:pgOut .35s ease forwards}
 <h2 class="in">معهد شبكة آباد للتدريب</h2>
 <div class="line in"></div>
 <p class="in">نرافقكم خطوة بخطوة في رحلة الاستعداد للشهادات المهنية العالمية، عبر اختبارات تفاعلية تحاكي الامتحانات الرسمية وتمنحكم الثقة لتحقيق النجاح.</p>
-<a class="go" href="platform.html?r=202610122322">الدخول إلى المنصة <span>←</span></a>
+<a class="go" href="platform.html?r=202610122325">الدخول إلى المنصة <span>←</span></a>
 </main>
 <footer>© <span id="y"></span> معهد شبكة آباد للتدريب — الرياض</footer>
 <script>y.textContent=new Date().getFullYear()</script>
