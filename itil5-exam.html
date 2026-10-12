@@ -416,7 +416,7 @@ body{font-family:"Cairo","Segoe UI",Tahoma,"Noto Sans Arabic",Arial,system-ui,sa
   <div class="logos"><span class="logo-chip"><img data-logo="abad" alt="ABAD"></span><span class="logo-chip itil"><img data-logo="itil" alt="ITIL"></span></div>
   <span class="org">معهد شبكة آباد للتدريب<span class="en">ABAD Network for Training</span></span>
   <span class="tag">محاكي اختبار تدريبي · Training Exam Simulator</span>
-  <a class="tag abad-back" href="vendor.html?r=202610122119#peoplecert" style="text-decoration:none;margin-inline-start:8px;white-space:nowrap">→ رجوع للمنصة</a>
+  <a class="tag abad-back" href="vendor.html?r=202610122303#peoplecert" style="text-decoration:none;margin-inline-start:8px;white-space:nowrap">→ رجوع للمنصة</a>
 </div></header>
 
 <div class="exambar" id="exambar"><div class="in">
@@ -786,5 +786,7 @@ window.addEventListener('beforeunload',function(e){if(S&&!S.done){save();}});
 if(DEBUG){window.__sim={state:function(){return S;},correctDisplay:function(i){var it=S.items[i];return it.p.indexOf(QS[it.q].a);},db:DB,setEnd:function(ms){S.end=Date.now()+ms;}};}
 })();
 </script>
-</body>
+<script>(function(){var L=null;try{var q=new URLSearchParams(location.search).get("lang");L=q||(location.hash.match(/lang=(en|ar)/)||[])[1]||localStorage.getItem("abad-lang")}catch(e){}
+if(L!=="en")return;function f(){var a=document.querySelector(".abad-back");if(!a)return;a.textContent="← Back to platform";a.style.direction="ltr";var h=a.getAttribute("href");if(h&&!/lang=/.test(h)){var p=h.split("#");a.setAttribute("href",p[0]+(p[0].indexOf("?")<0?"?":"&")+"lang=en"+(p[1]?"#"+p[1]:""))}}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",f);else f()})()</script></body>
 </html>
