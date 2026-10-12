@@ -416,7 +416,7 @@ body{font-family:"Cairo","Segoe UI",Tahoma,"Noto Sans Arabic",Arial,system-ui,sa
   <div class="logos"><span class="logo-chip"><img data-logo="abad" alt="ABAD"></span><span class="logo-chip itil"><img data-logo="itil" alt="ITIL"></span></div>
   <span class="org">معهد شبكة آباد للتدريب<span class="en">ABAD Network for Training</span></span>
   <span class="tag">محاكي اختبار تدريبي · Training Exam Simulator</span>
-  <a class="tag abad-back" href="vendor.html?r=202610130017#peoplecert" style="text-decoration:none;margin-inline-start:8px;white-space:nowrap">→ رجوع للمنصة</a>
+  <a class="tag abad-back" href="vendor.html?r=202610130031#peoplecert" style="text-decoration:none;margin-inline-start:8px;white-space:nowrap">→ رجوع للمنصة</a>
 </div></header>
 
 <div class="exambar" id="exambar"><div class="in">
@@ -729,7 +729,7 @@ function finish(){
   S.done=true;S.used=Math.min(Date.now(),S.end)-S.start;S.finishedAt=Date.now();
   store(LS,null);
   var sc=score(),h=load(HS)||{};if(!h[S.exam]||sc>h[S.exam].s)h[S.exam]={s:sc,t:Date.now()};store(HS,h);
-  renderResult();show('s-result');
+  renderResult();show('s-result');try{window.ABAD_AN&&ABAD_AN.itil&&ABAD_AN.itil(S,QS,PASS,NQ,MODES)}catch(e){}
 }
 /* ---------- result ---------- */
 function renderResult(){
@@ -788,5 +788,106 @@ if(DEBUG){window.__sim={state:function(){return S;},correctDisplay:function(i){v
 </script>
 <script>(function(){var L=null;try{var q=new URLSearchParams(location.search).get("lang");L=q||(location.hash.match(/lang=(en|ar)/)||[])[1]||localStorage.getItem("abad-lang")}catch(e){}
 if(L!=="en")return;function f(){var a=document.querySelector(".abad-back");if(!a)return;a.textContent="← Back to platform";a.style.direction="ltr";var h=a.getAttribute("href");if(h&&!/lang=/.test(h)){var p=h.split("#");a.setAttribute("href",p[0]+(p[0].indexOf("?")<0?"?":"&")+"lang=en"+(p[1]?"#"+p[1]:""))}}
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",f);else f()})()</script></body>
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",f);else f()})()</script><!--ABAD-AN--><style>#abad-an{font-family:Cairo,system-ui,sans-serif;color:#10293b;margin:18px 0;display:grid;gap:14px;text-align:start}
+#abad-an .ac{background:#fff;border:1px solid #dbe5ee;border-radius:16px;padding:16px 18px;box-shadow:0 2px 10px #10293b0d}
+#abad-an h3{margin:0 0 10px;font-size:1.12rem;color:#10293b;display:flex;align-items:center;gap:8px}
+#abad-an h3:before{content:"";width:6px;height:20px;border-radius:3px;background:#F5BD2D}
+#abad-an .hd{background:linear-gradient(135deg,#10293b,#1b4562);color:#fff;border:0}
+#abad-an .hd h3{color:#fff;font-size:1.3rem}
+#abad-an .kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+#abad-an .kp div{background:#ffffff14;border-radius:12px;padding:10px 12px}
+#abad-an .kp b{display:block;font-size:1.35rem;color:#F5BD2D;direction:ltr;unicode-bidi:isolate}
+#abad-an .kp span{font-size:.82rem;opacity:.9}
+#abad-an .vd{display:inline-block;padding:4px 14px;border-radius:999px;font-weight:800;margin-top:10px}
+#abad-an .vd.p{background:#1c8a57;color:#fff}#abad-an .vd.f{background:#c0392b;color:#fff}
+#abad-an .dr{display:grid;grid-template-columns:minmax(120px,1.4fr) 3fr 64px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px dashed #e3eaf1}
+#abad-an .dr:last-child{border:0}
+#abad-an .dn{font-weight:700;font-size:.92rem;line-height:1.4}#abad-an .dn small{display:block;font-weight:400;color:#5b7083;font-size:.75rem}
+#abad-an .bt{position:relative;height:14px;background:#eaf1f7;border-radius:8px;overflow:hidden}
+#abad-an .bt i{position:absolute;inset-inline-start:0;top:0;bottom:0;border-radius:8px;background:#3f86b3}
+#abad-an .bt i.w{background:#d9534f}#abad-an .bt i.s{background:#1c8a57}
+#abad-an .bt u{position:absolute;top:-2px;bottom:-2px;width:2px;background:#F5BD2D}
+#abad-an .pc{font-weight:800;direction:ltr;text-align:end}
+#abad-an .lg{font-size:.75rem;color:#5b7083;margin-top:6px}
+#abad-an .sw{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#abad-an ul{margin:0;padding-inline-start:20px;line-height:1.8}
+#abad-an .rec{background:#fff8e5;border-inline-start:4px solid #F5BD2D;border-radius:10px;padding:10px 12px;margin:8px 0}
+#abad-an .rec b{color:#10293b}
+#abad-an .wr{border:1px solid #f1d4d2;background:#fffafa;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:.9rem}
+#abad-an .wr .q{font-weight:700;direction:ltr;text-align:left;unicode-bidi:plaintext}
+#abad-an .wr .y{color:#c0392b}#abad-an .wr .c{color:#1c8a57}
+#abad-an .wr .a{direction:ltr;text-align:left;unicode-bidi:plaintext;margin-top:4px}
+#abad-an .tg{display:inline-block;background:#eaf1f7;color:#3f86b3;border-radius:999px;padding:1px 10px;font-size:.75rem;font-weight:700;margin-inline-end:6px}
+#abad-an svg{width:100%;height:auto;display:block}
+#abad-an .bx{display:flex;gap:10px;flex-wrap:wrap}
+#abad-an .bb{font-family:inherit;font-weight:800;border:0;border-radius:12px;padding:10px 18px;cursor:pointer;background:#F5BD2D;color:#10293b;font-size:.95rem}
+#abad-an .bb.g{background:#eaf1f7;color:#10293b}
+#abad-an .mu{color:#5b7083;font-size:.82rem}
+@media(max-width:640px){#abad-an .sw{grid-template-columns:1fr}#abad-an .dr{grid-template-columns:1fr 54px}#abad-an .dr .bt{grid-column:1/-1;grid-row:2}}
+@media print{body.an-print *{visibility:hidden!important}body.an-print #abad-an,body.an-print #abad-an *{visibility:visible!important}body.an-print #abad-an{position:absolute;inset-inline:0;top:0;margin:0}#abad-an .bx{display:none!important}#abad-an .ac{box-shadow:none;break-inside:avoid}#abad-an .hd{-webkit-print-color-adjust:exact;print-color-adjust:exact}#abad-an *{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+#abad-an summary{cursor:pointer;font-weight:700;color:#3f86b3;margin-bottom:6px}
+#abad-an svg{max-height:260px}
+</style><script>(function(){
+var LANG='ar';try{var q=new URLSearchParams(location.search).get('lang');LANG=q||(location.hash.match(/lang=(en|ar)/)||[])[1]||localStorage.getItem('abad-lang')||'ar'}catch(e){}if(LANG!=='en')LANG='ar';
+var EN=LANG==='en';function t(a,e){return EN?e:a}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function fm(ms){var s=Math.max(0,Math.round(ms/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':':'')+(h&&m<10?'0':'')+m+':'+(x<10?'0':'')+x}
+function lh(k){try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return[]}}
+function sh(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function chart(h,pass){var W=innerWidth<640?360:640,H=innerWidth<640?220:200,P=34,n=h.length;if(!n)return'';var x=function(i){return n<2?W/2:P+i*(W-P*2)/(n-1)},y=function(v){return H-P-(v/100)*(H-P*1.6)};
+ var g='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+t('مخطط التقدم','Progress chart')+'">';
+ [0,25,50,75,100].forEach(function(v){g+='<line x1="'+P+'" x2="'+(W-P/2)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="#e3eaf1"/><text x="'+(P-6)+'" y="'+(y(v)+4)+'" font-size="11" text-anchor="end" fill="#5b7083">'+v+'%</text>'});
+ g+='<line x1="'+P+'" x2="'+(W-P/2)+'" y1="'+y(pass)+'" y2="'+y(pass)+'" stroke="#F5BD2D" stroke-width="2" stroke-dasharray="6 4"/><text x="'+(P+4)+'" y="'+(y(pass)-5)+'" font-size="11" text-anchor="start" fill="#b8860b" direction="ltr">'+t('درجة النجاح','Pass')+' '+pass+'%</text>';
+ g+='<polyline fill="none" stroke="#3f86b3" stroke-width="3" points="'+h.map(function(a,i){return x(i)+','+y(a.p)}).join(' ')+'"/>';
+ h.forEach(function(a,i){g+='<circle cx="'+x(i)+'" cy="'+y(a.p)+'" r="5" fill="'+(a.p>=pass?'#1c8a57':'#c0392b')+'" stroke="#fff" stroke-width="2"/><text x="'+x(i)+'" y="'+(y(a.p)-10)+'" font-size="11" text-anchor="middle" fill="#10293b" font-weight="700">'+a.p+'</text><text x="'+x(i)+'" y="'+(H-12)+'" font-size="10" text-anchor="middle" fill="#5b7083">#'+(i+1)+'</text>'});
+ return g+'</svg>'}
+/* data: {key,title,doms:[{ar,en,tip_ar,tip_en}],rows:[{n,dom,st:'ok'|'bad'|'skip',q,y,c}],correct,total,used,limit,pass,passNote,attemptId,label} */
+function render(host,before,d){
+ var old=document.getElementById('abad-an');if(old)old.remove();
+ var pct=Math.round(d.correct/d.total*1000)/10,ok=pct>=d.pass;
+ var ds=d.doms.map(function(x,i){return{i:i,x:x,n:0,c:0}});d.rows.forEach(function(r){var a=ds[r.dom];a.n++;if(r.st==='ok')a.c++});
+ var used=ds.filter(function(a){return a.n});used.forEach(function(a){a.p=Math.round(a.c/a.n*100)});
+ var strong=used.filter(function(a){return a.p>=Math.max(d.pass,75)}).sort(function(a,b){return b.p-a.p}),weak=used.filter(function(a){return a.p<d.pass}).sort(function(a,b){return a.p-b.p});
+ // history
+ var hk='abad-an-hist-'+d.key,h=lh(hk);if(!h.some(function(a){return a.id===d.attemptId})){h.push({id:d.attemptId,p:Math.round(pct),c:d.correct,n:d.total,ex:d.label,t:Date.now(),u:d.used});if(h.length>30)h=h.slice(-30);sh(hk,h)}
+ var nm=function(a){return EN?a.x.en:a.x.ar+'<small>'+a.x.en+'</small>'};
+ var o='<div class="ac hd"><h3>'+t('تحليل الأداء بعد الاختبار','Post-exam performance analysis')+'</h3><div class="mu" style="color:#cfe0ec">'+esc(d.title)+' · '+esc(d.label)+'</div>'+
+ '<div class="kp" style="margin-top:12px"><div><b>'+d.correct+' / '+d.total+'</b><span>'+t('الدرجة','Score')+'</span></div><div><b>'+pct+'%</b><span>'+t('النسبة','Percentage')+'</span></div><div><b>'+d.pass+'%</b><span>'+t('درجة النجاح','Pass mark')+'</span></div><div><b>'+fm(d.used)+'</b><span>'+t('الوقت المستغرق من ','Time used of ')+fm(d.limit)+'</span></div><div><b>'+fm(d.used/d.total)+'</b><span>'+t('متوسط الوقت لكل سؤال','Avg time / question')+'</span></div><div><b>'+fm(d.limit/d.total)+'</b><span>'+t('الوقت المتاح لكل سؤال','Allowed / question')+'</span></div></div>'+
+ '<span class="vd '+(ok?'p':'f')+'">'+(ok?t('ناجح ✔','PASS ✔'):t('غير ناجح ✖','FAIL ✖'))+' — '+(ok?t('تجاوزت درجة النجاح بفارق ','Above pass mark by '):t('ينقصك ','Short by '))+Math.abs(d.correct-Math.ceil(d.pass/100*d.total))+t(' سؤال',' question(s)')+'</span>'+(d.passNote?'<div class="mu" style="color:#cfe0ec;margin-top:8px">'+d.passNote+'</div>':'')+'</div>';
+ o+='<div class="ac"><h3>'+t('الأداء حسب المجال','Performance by domain')+'</h3>'+used.map(function(a){return'<div class="dr"><div class="dn">'+nm(a)+'</div><div class="bt"><i class="'+(a.p<d.pass?'w':a.p>=75?'s':'')+'" style="width:'+a.p+'%"></i><u style="inset-inline-start:'+d.pass+'%"></u></div><div class="pc">'+a.p+'% <span class="mu">'+a.c+'/'+a.n+'</span></div></div>'}).join('')+'<div class="lg">'+t('الخط الذهبي = درجة النجاح · ','Gold line = pass mark · ')+esc(d.mapNote)+'</div></div>';
+ o+='<div class="sw"><div class="ac"><h3>'+t('نقاط القوة','Strengths')+'</h3>'+(strong.length?'<ul>'+strong.map(function(a){return'<li><b>'+(EN?a.x.en:a.x.ar)+'</b> — '+a.p+'%</li>'}).join('')+'</ul>':'<p class="mu">'+t('لا توجد مجالات بنسبة 75% فأكثر بعد — واصل التدرّب.','No domain at 75%+ yet — keep practising.')+'</p>')+'</div>'+
+ '<div class="ac"><h3>'+t('نقاط تحتاج تحسين','Weaknesses')+'</h3>'+(weak.length?'<ul>'+weak.map(function(a){return'<li><b>'+(EN?a.x.en:a.x.ar)+'</b> — '+a.p+'%</li>'}).join('')+'</ul>':'<p class="mu">'+t('جميع المجالات فوق درجة النجاح 👏','All domains are above the pass mark 👏')+'</p>')+'</div></div>';
+ o+='<div class="ac"><h3>'+t('توصيات المذاكرة','Study recommendations')+'</h3>'+(weak.length?weak:used.slice().sort(function(a,b){return a.p-b.p}).slice(0,1)).map(function(a){return'<div class="rec"><b>'+(EN?a.x.en:a.x.ar)+' ('+a.p+'%)</b><br>'+(EN?a.x.tip_en:a.x.tip_ar)+'</div>'}).join('')+
+ '<div class="rec" style="background:#eef5fb;border-color:#3f86b3">'+(d.used/d.total>d.limit/d.total*0.9?t('⏱ وقتك لكل سؤال قريب من الحد المسموح — تدرّب على إدارة الوقت وتعليم الأسئلة الصعبة للرجوع إليها.','⏱ Your pace is close to the limit — practise time management and flag hard questions for later.'):d.used<d.limit*0.4&&!ok?t('⏱ أنهيت بسرعة كبيرة — خذ وقتاً أطول لقراءة السؤال والخيارات بعناية.','⏱ You finished very fast — slow down and read each question and option carefully.'):t('⏱ إدارة وقتك جيدة — حافظ على هذا الإيقاع.','⏱ Good time management — keep this pace.'))+'</div></div>';
+ var wr=d.rows.filter(function(r){return r.st!=='ok'});
+ o+='<div class="ac"><h3>'+t('مراجعة الإجابات الخاطئة','Wrong answers review')+' ('+wr.length+')</h3>'+(wr.length?'<details class="wd"'+(wr.length<=6?' open':'')+'><summary>'+t('عرض/إخفاء القائمة','Show / hide list')+'</summary>'+wr.map(function(r){var a=d.doms[r.dom];return'<div class="wr"><span class="tg">'+t('سؤال ','Q')+r.n+'</span><span class="tg">'+(EN?a.en:a.ar)+'</span><div class="q">'+esc(r.q)+'</div><div class="a"><span class="y">✖ '+t('إجابتك: ','Your answer: ')+(r.st==='skip'?t('لم تُجب','not answered'):esc(r.y))+'</span><br><span class="c">✔ '+t('الصحيحة: ','Correct: ')+esc(r.c)+'</span></div></div>'}).join('')+'</details>':'<p class="mu">'+t('لا توجد إجابات خاطئة 🎉','No wrong answers 🎉')+'</p>')+'</div>';
+ o+='<div class="ac"><h3>'+t('سجل المحاولات والتقدّم','Attempt history & progress')+'</h3>'+chart(h,d.pass)+'<div class="mu">'+h.slice(-5).reverse().map(function(a){return new Date(a.t).toLocaleString(EN?'en-GB':'ar-SA-u-nu-latn',{dateStyle:'medium',timeStyle:'short'})+' · '+esc(a.ex)+' · '+a.c+'/'+a.n+' ('+a.p+'%)'}).join('<br>')+'</div></div>';
+ o+='<div class="bx"><button type="button" class="bb" id="an-print">🖨 '+t('طباعة / حفظ PDF','Print / Save as PDF')+'</button><button type="button" class="bb g" id="an-clear">'+t('مسح سجل المحاولات','Clear history')+'</button></div>';
+ var el=document.createElement('section');el.id='abad-an';el.dir=EN?'ltr':'rtl';el.lang=LANG;el.innerHTML=o;
+ if(before)host.insertBefore(el,before);else host.appendChild(el);
+ el.querySelector('#an-print').onclick=function(){document.body.classList.add('an-print');el.querySelectorAll('details').forEach(function(x){x.open=true});window.print();setTimeout(function(){document.body.classList.remove('an-print')},500)};window.addEventListener('afterprint',function(){document.body.classList.remove('an-print')});
+ el.querySelector('#an-clear').onclick=function(){if(confirm(t('مسح سجل المحاولات لهذا الاختبار؟','Clear attempt history for this exam?'))){sh(hk,[]);render(host,el.nextSibling,d)}};
+}
+window.ABAD_AN={render:render,lang:LANG};
+})();
+
+(function(){var M={"1":0,"2":3,"3":0,"4":0,"5":0,"6":1,"7":1,"8":1,"9":1,"10":2,"11":2,"12":5,"13":3,"14":2,"15":0,"16":3,"17":0,"18":4,"19":3,"20":5,"21":5,"22":3,"23":4,"24":0,"25":3,"26":0,"27":0,"28":3,"29":3,"30":3,"31":3,"32":3,"33":5,"34":0,"35":5,"36":5,"37":5,"38":5,"39":5,"40":4,"41":0,"42":5,"43":0,"44":3,"45":3,"46":0,"47":3,"48":0,"49":5,"50":5,"51":1,"52":1,"53":4,"54":1,"55":3,"56":2,"57":2,"58":2,"59":2,"60":2,"61":3,"62":3,"63":5,"64":5,"65":3,"66":5,"67":0,"68":0,"69":5,"70":3,"71":3,"72":3,"73":5,"74":5,"75":5,"76":3,"77":4,"78":4,"79":3,"80":0,"81":0,"82":0,"83":0,"84":0,"85":6,"86":6,"87":0,"88":3,"89":3,"90":2,"91":1,"92":5,"93":1,"94":3,"95":3,"96":4,"97":0,"98":1,"99":3,"100":0,"101":2,"102":3,"103":5,"104":3,"105":0,"106":2,"107":5,"108":4,"109":3,"110":3,"111":5,"112":5,"113":3,"114":0,"115":1,"116":5,"117":0,"118":3,"119":3,"120":3,"121":1,"122":2,"123":1,"124":3,"125":3,"126":5,"127":5,"128":3,"129":0,"130":3,"131":0,"132":0,"133":0,"134":0,"135":0,"136":6,"137":6,"138":0,"139":3,"140":3,"141":2,"142":5,"143":3,"144":3,"145":4,"146":0,"147":1,"148":5,"149":3,"150":5,"151":0,"152":5,"153":5,"154":1,"155":3,"156":0,"157":2,"158":5,"159":5,"160":5,"161":5,"162":5,"163":3,"164":0,"165":2,"166":5,"167":4,"168":5,"169":3,"170":5,"171":5,"172":5,"173":3,"174":5,"175":3,"176":3,"177":3,"178":2,"179":0,"180":0,"181":0,"182":0,"183":0,"184":0,"185":0,"186":0,"187":0,"188":3,"189":0,"190":0,"191":0,"192":3,"193":0,"194":0,"195":0,"196":0,"197":0,"198":5,"199":0,"200":0,"201":0,"202":0,"203":5,"204":3,"205":3,"206":2,"207":3,"208":3,"209":5,"210":5,"211":3,"212":0,"213":3,"214":3,"215":3,"216":0,"217":3,"218":3,"219":3,"220":3,"221":0,"222":5,"223":3,"224":3,"225":3,"226":3,"227":2,"228":2,"229":2,"230":2,"231":0,"232":2,"233":2,"234":2,"235":2,"236":2,"237":2,"238":3,"239":3,"240":5,"241":0,"242":0,"243":3,"244":3,"245":5,"246":5,"247":3,"248":5,"249":5,"250":4,"251":4,"252":4,"253":4,"254":4,"255":4,"256":4,"257":4,"258":4,"259":4,"260":4,"261":4,"262":3,"263":0,"264":0,"265":5,"266":5,"267":0,"268":5,"269":3,"270":0,"271":3,"272":3,"273":0,"274":1,"275":1,"276":1,"277":1,"278":5,"279":1,"280":6,"281":3,"282":1,"283":0,"284":4,"285":1,"286":6,"287":6,"288":6,"289":6,"290":6,"291":6,"292":6,"293":6,"294":6,"295":6,"296":6,"297":6,"298":3,"299":6,"300":3,"301":6,"302":3,"303":3,"304":2,"305":2,"306":1,"307":6,"308":3};
+var DOMS=[
+{ar:'المفاهيم الأساسية: القيمة والمنتجات والخدمات',en:'Key concepts: value, products & services',tip_ar:'راجع تعريفات القيمة والنتائج والتكاليف والمخاطر، والمنفعة والضمان، وأدوار المستهلك والمزوّد وعلاقات الخدمة (الفصل 3 من الكتاب الرسمي).',tip_en:'Revisit definitions of value, outcomes, costs, risks, utility/warranty, consumer/provider roles and service relationships (chapter 3).'},
+{ar:'الأبعاد الأربعة لإدارة المنتجات والخدمات',en:'Four dimensions of product & service management',tip_ar:'احفظ الأبعاد الأربعة ومثالاً عملياً لكل منها، والعوامل الخارجية (PESTLE) المؤثرة عليها.',tip_en:'Memorise the four dimensions with a practical example each, plus the external PESTLE factors.'},
+{ar:'المبادئ التوجيهية لـ ITIL',en:'ITIL guiding principles',tip_ar:'راجع المبادئ السبعة: الغرض من كل مبدأ وكيف تتفاعل معاً، وتدرّب على أسئلة السيناريو «أي مبدأ يُطبَّق هنا؟».',tip_en:'Review the seven principles, their purpose and interaction; practise "which principle applies?" scenarios.'},
+{ar:'نظام القيمة ودورة حياة المنتج (اكتشف، صمّم، اقتنِ، ابنِ، انقل، شغّل، سلّم، ادعم)',en:'Value system & product lifecycle activities',tip_ar:'لكل نشاط في دورة الحياة: الغرض والمدخلات والمخرجات ومقاييس النجاح. أعد قراءة الفصل 4 وجداوله.',tip_en:'For each lifecycle activity know purpose, inputs/outputs and success metrics; re-read chapter 4 tables.'},
+{ar:'تدفقات القيمة ورسم خرائطها',en:'Value streams & value stream mapping',tip_ar:'افهم الفرق بين تدفقات القيمة الأساسية والتمكينية، وخطوات رسم خريطة تدفق القيمة.',tip_en:'Understand primary vs enabling value streams and the steps of value stream mapping.'},
+{ar:'ممارسات ITIL',en:'ITIL practices',tip_ar:'راجع الغرض من كل ممارسة (الحوادث، المشكلات، التغيير، مكتب الخدمة، مستوى الخدمة، الطلبات...) والمصطلحات الرئيسية لكل منها.',tip_en:'Review the purpose and key terms of each practice (incident, problem, change, service desk, SLM, requests...).'},
+{ar:'التكامل مع الأطر الأخرى والذكاء الاصطناعي والأتمتة',en:'Integration with other frameworks, AI & automation',tip_ar:'راجع كيف يتكامل ITIL مع DevOps وAgile وPRINCE2 وإدارة المشاريع، ودور الذكاء الاصطناعي والأتمتة.',tip_en:'Review how ITIL works with DevOps, Agile, PRINCE2, project management, and the role of AI/automation.'}];
+window.ABAD_AN.itil=function(S,QS,PASS,NQ,MODES){var L='ABCD',c=0;
+ var rows=S.items.map(function(it,i){var Q=QS[it.q],d=S.ans[i],cd=it.p.indexOf(Q.a),st=d<0?'skip':(it.p[d]===Q.a?'ok':'bad');if(st==='ok')c++;
+  return{n:i+1,dom:M[Q.id]||0,st:st,q:Q.s,y:d<0?'':L[d]+'. '+Q.o[it.p[d]],c:L[cd]+'. '+Q.o[Q.a]}});
+ var scr=document.getElementById('s-result'),fl=scr.querySelector('.filters'),bf=null;
+ if(fl){bf=fl;while(bf.parentNode&&bf.parentNode!==scr&&bf.parentNode.children.length<3)bf=bf.parentNode;}
+ var host=bf?bf.parentNode:scr;
+ window.ABAD_AN.render(host,bf,{key:'itil5',title:'ITIL® Foundation (Version 5)',label:'Exam '+(S.exam+1),doms:DOMS,rows:rows,correct:c,total:NQ,used:S.used,limit:MODES[S.mode]*60000,pass:Math.round(PASS/NQ*100),passNote:window.ABAD_AN.lang==='en'?'Official pass mark: 26/40 (65%).':'درجة النجاح الرسمية: 26 من 40 (65%).',attemptId:S.start,
+  mapNote:window.ABAD_AN.lang==='en'?'Domains follow the ITIL Foundation syllabus areas; questions are classified by an embedded topic map (syllabus refs + keywords).':'المجالات وفق محاور منهج ITIL Foundation؛ صُنّفت الأسئلة بخريطة موضوعات مضمّنة (مراجع المنهج + الكلمات المفتاحية).'});
+};})();
+</script><!--/ABAD-AN--></body>
 </html>
