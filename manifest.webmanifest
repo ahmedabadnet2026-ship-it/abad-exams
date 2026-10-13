@@ -1,7 +1,7 @@
 {
- "name": "منصة اختبارات آباد",
- "short_name": "اختبارات آباد",
- "description": "منصة الاختبارات الرسمية من معهد شبكة آباد للتدريب — ABAD Network Training Institute",
+ "name": "منصة آباد الرقمية",
+ "short_name": "آباد الرقمية",
+ "description": "منصة آباد الرقمية من معهد شبكة آباد للتدريب: الاختبارات، مكتبة المعهد، والمحاكاة العملية — ABAD Digital Platform",
  "lang": "ar",
  "dir": "rtl",
  "id": "./index.html",
