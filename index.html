@@ -74,7 +74,7 @@ function node(n){if(n.nodeType===3){var p=n.parentNode;if(!p||/^(SCRIPT|STYLE|NO
  for(var i=0;i<ATTR.length;i++){var a=n.getAttribute(ATTR[i]);if(a&&AR.test(a)){var v2=tr(a);if(v2!==a)n.setAttribute(ATTR[i],v2)}}
  if(n.nodeName==="A")link(n);
  for(var c=n.firstChild;c;c=c.nextSibling)node(c)}
-var PAGES=/^(index|platform|vendor|exam|booking|certificate|hadaf|itil5-exam|pmp-exam)\.html/;
+var PAGES=/^(index|platform|vendor|exam|booking|certificate|hadaf|itil5-exam|pmp-exam|security-plus-exam)\.html/;
 function withLang(h,l){var m=h.match(/^([^?#]*)(\?[^#]*)?(#.*)?$/);if(!m||!PAGES.test(m[1]))return h;var q=(m[2]||"").replace(/^\?/,"").split("&").filter(function(x){return x&&!/^lang=/.test(x)});
  if(l==="en")q.push("lang=en");return m[1]+(q.length?"?"+q.join("&"):"")+(m[3]||"")}
 function link(a){var h=a.getAttribute("href");if(!h)return;var n=withLang(h,L);if(n!==h)a.setAttribute("href",n)}
@@ -205,7 +205,7 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 <h2 class="in">معهد شبكة آباد للتدريب</h2>
 <div class="line in"></div>
 <p class="in">نرافقكم خطوة بخطوة في رحلة الاستعداد للشهادات المهنية العالمية، عبر اختبارات تفاعلية تحاكي الامتحانات الرسمية وتمنحكم الثقة لتحقيق النجاح.</p>
-<a class="go" href="platform.html?r=202610130437">الدخول إلى المنصة <span>←</span></a>
+<a class="go" href="platform.html?r=202610130503">الدخول إلى المنصة <span>←</span></a>
 </main>
 <footer>© <span id="y"></span> معهد شبكة آباد للتدريب — الرياض<a class="abad-admin" href="dashboard.html" rel="nofollow" style="display:block;width:max-content;margin:10px auto 0;font-size:11px;opacity:.55;color:inherit;text-decoration:none;font-family:inherit" title="Admin login">🔒 دخول الإدارة</a></footer>
 <script>y.textContent=new Date().getFullYear()</script>
