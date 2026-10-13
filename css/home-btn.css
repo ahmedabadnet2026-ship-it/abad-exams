@@ -1,0 +1,9 @@
+/* ABAD shared Home bar (links to umbrella landing index.html) */
+#abad-home{position:relative;z-index:50;display:flex;align-items:center;justify-content:flex-start;gap:10px;padding:6px 14px;background:linear-gradient(90deg,#0a1c29,#10293b 60%,#16405e);border-bottom:1px solid #F5BD2D55;font-family:Cairo,system-ui,sans-serif;box-sizing:border-box;width:100%}
+#abad-home a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#10293b;background:#F5BD2D;border-radius:999px;padding:3px 13px 3px 11px;font-weight:800;font-size:13px;line-height:1.6;box-shadow:0 3px 10px #0004;transition:transform .2s,box-shadow .2s}
+#abad-home a:hover,#abad-home a:focus-visible{transform:translateY(-1px);box-shadow:0 6px 14px #F5BD2D44;outline:none}
+#abad-home a:focus-visible{outline:2px solid #fff;outline-offset:2px}
+#abad-home span{color:#ffffffb3;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:420px){#abad-home{padding:5px 10px}#abad-home span{font-size:11px}}
+@media print{#abad-home{display:none!important}}
+@media (prefers-reduced-motion:reduce){#abad-home a{transition:none}}
