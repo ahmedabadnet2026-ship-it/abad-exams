@@ -89,7 +89,7 @@ const ar=s=>AR[s]||s;
 
 /* ===== لوحة التحكم الموحّدة — حسابات الموظفين (اسم مستخدم + كلمة مرور + أدوار) =====
    ADMIN_API_URL = رابط /exec لسكربت الحجوزات (هو خادم الحسابات أيضاً، ويجلب إحصاءات التقييمات نيابةً عنك). */
-const ADMIN_API_URL="";
+const ADMIN_API_URL="https://script.google.com/macros/s/AKfycbySCiyLm8uBYHbH5KxbGxlE2Sm-yjwIn_VD3rIptihMorrQocCH3L07R-KPeYTBf9o3/exec";
 const SESS="abad-admin-session";
 const MOCKMODE=/[?&]mock=1/.test(location.search)&&typeof MOCK_SERVER==="function";
 async function api(action,extra){const body=Object.assign({action},extra||{});if(action!=="login")body.token=AUTH.token();
