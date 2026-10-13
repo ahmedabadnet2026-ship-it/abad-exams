@@ -32,6 +32,7 @@ a.cd:hover{transform:translateY(-4px);border-color:#F5BD2D}
 <div class="grid">
  <a class="cd" href="linux-real-lab.html"><span class="tag" data-t="live"></span><span class="ic">🐧</span><b data-t="lx"></b><p data-t="lxd"></p><span class="go" data-t="start"></span></a>
  <a class="cd" href="rhcsa-lab.html"><span class="tag" data-t="pbq"></span><span class="ic">🎩</span><b data-t="rh"></b><p data-t="rhd"></p><span class="go" data-t="open"></span></a>
+ <a class="cd" href="ccna-static-routing-lab.html"><span class="tag">Packet Tracer</span><span class="ic">🛜</span><b data-t="sr"></b><p data-t="srd"></p><span class="go" data-t="start"></span></a>
  <a class="cd" href="ccna-lab-demo.html"><span class="tag" data-t="pbq"></span><span class="ic">🌐</span><b data-t="cc"></b><p data-t="ccd"></p><span class="go" data-t="open"></span></a>
 </div>
 <script>
@@ -41,7 +42,7 @@ kick:["🧪 تدرّب على أنظمة حقيقية","🧪 Practice on real sy
 live:["مختبر حقيقي","Real VM"],pbq:["محاكاة تفاعلية","Interactive sim"],start:["ابدأ المختبر ←","Start lab →"],open:["افتح ←","Open →"],
 lx:["مختبر لينكس الحقيقي","Real Linux Lab"],lxd:["جهاز لينكس حقيقي (x86) يعمل في متصفحك مع طرفية كاملة و10 مهام بأسلوب Linux+ / RHCSA يتم التحقق منها داخل الجهاز.","A real x86 Linux machine in your browser with a full shell and 10 Linux+ / RHCSA-style tasks verified inside the VM."],
 rh:["مختبر RHCSA التفاعلي","RHCSA interactive lab"],rhd:["مهام عملية مُصحَّحة آليًا بأسلوب اختبار Red Hat.","Auto-graded practical tasks in Red Hat exam style."],
-cc:["مختبر CCNA التجريبي","CCNA lab demo"],ccd:["محاكاة أوامر أجهزة سيسكو وتهيئة الشبكات.","Cisco device command & network configuration simulation."]};
+sr:["CCNA: مختبر التوجيه الثابت","CCNA: Static Routing lab"],srd:["ابنِ الشبكة بالسحب والإفلات، صِل الكابلات الصحيحة، وهيّئ الراوترات بسطر أوامر شبيه بـ Cisco IOS ثم تحقق بالـ ping.","Drag-and-drop topology, correct cabling, Cisco IOS-like CLI on routers and PCs, verified end-to-end with ping."],cc:["مختبر CCNA التجريبي","CCNA lab demo"],ccd:["محاكاة أوامر أجهزة سيسكو وتهيئة الشبكات.","Cisco device command & network configuration simulation."]};
 function paint(){var i=L=="ar"?0:1;document.documentElement.lang=L;document.documentElement.dir=L=="ar"?"rtl":"ltr";document.getElementById("lang").textContent=L=="ar"?"English":"العربية";document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=S[e.dataset.t][i]});document.title=S.sec[i]+" — "+S.inst[i]}
 document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{localStorage.setItem("abad-lang",L)}catch(e){}paint()};paint();
 </script>
