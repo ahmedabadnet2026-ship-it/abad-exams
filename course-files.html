@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#10293b">
+<title>ملفات الدورة — معهد شبكة آباد للتدريب</title>
+<link rel="icon" href="icons/icon-192.png">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font-family:Cairo,sans-serif;color:#fff;background:linear-gradient(135deg,#0a1c29,#10293b 50%,#1d5479);display:flex;flex-direction:column;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#0a1c29cc;border-bottom:2px solid #F5BD2D;flex-wrap:wrap}
+header img{height:40px;background:#fff;border-radius:9px;padding:3px 7px}
+header .t{flex:1;min-width:180px}header b{display:block;font-size:16px;line-height:1.3}header small{opacity:.75;font-size:12px}
+header a.bk{color:#F5BD2D;text-decoration:none;font-weight:700;font-size:14px}
+.tabs{display:flex;gap:6px;padding:10px 16px 0}
+.tabs button{font:inherit;font-weight:700;font-size:14px;border:1px solid #ffffff33;background:#ffffff12;color:#fff;border-radius:10px 10px 0 0;padding:8px 18px;cursor:pointer}
+.tabs button[aria-selected=true]{background:#F5BD2D;color:#10293b;border-color:#F5BD2D}
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 16px;background:#ffffff0d;border-top:1px solid #ffffff22;border-bottom:1px solid #ffffff22}
+.bar button{font:inherit;font-weight:700;font-size:15px;min-width:40px;height:38px;border-radius:9px;border:1px solid #ffffff33;background:#ffffff14;color:#fff;cursor:pointer;padding:0 10px}
+.bar button:disabled{opacity:.4;cursor:default}.bar .sp{flex:1}
+.bar input{width:56px;height:38px;border-radius:9px;border:1px solid #ffffff44;background:#0a1c29;color:#fff;text-align:center;font:inherit;font-weight:700}
+.bar .z{min-width:52px;text-align:center;font-size:13px;opacity:.85}
+.wrap{flex:1;display:flex;min-height:0}
+.thumbs{width:150px;overflow-y:auto;padding:10px;background:#0a1c2999;border-inline-end:1px solid #ffffff1a;flex:none}
+.thumbs button{display:block;width:100%;border:2px solid transparent;background:none;padding:0;margin:0 0 10px;border-radius:6px;cursor:pointer;position:relative}
+.thumbs button[aria-current=true]{border-color:#F5BD2D}
+.thumbs img{width:100%;display:block;border-radius:4px;pointer-events:none}
+.thumbs span{position:absolute;bottom:4px;inset-inline-start:4px;background:#10293bdd;font-size:11px;border-radius:5px;padding:0 6px}
+.view{flex:1;overflow:auto;padding:18px;display:flex;justify-content:center;align-items:flex-start;position:relative}
+.stage{position:relative;margin:auto}
+.book{margin:0 auto;filter:drop-shadow(0 18px 30px #0009)}
+.pg{background:#fff;overflow:hidden}.pg img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+.pg::after{content:"";position:absolute;inset:0;pointer-events:none}
+.land .pg.l::after{background:linear-gradient(to left,#0000003d,#00000014 4%,transparent 9%)}
+.land .pg.r::after{background:linear-gradient(to right,#0000003d,#00000014 4%,transparent 9%)}
+.pg.cov::before{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px #0002;pointer-events:none;z-index:1}
+.hint{position:absolute;bottom:-26px;left:0;right:0;text-align:center;font-size:12px;opacity:.6}
+.soon{margin:auto;text-align:center;padding:40px 20px}.soon b{display:block;font-size:30px;color:#F5BD2D}.soon p{opacity:.8}
+.note{font-size:11.5px;opacity:.6;text-align:center;padding:6px}
+@media (max-width:700px){.wrap{flex-direction:column-reverse}.thumbs{width:auto;display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;padding:8px;border:0;border-top:1px solid #ffffff1a}
+ .thumbs button{width:62px;flex:none;margin:0}.view{padding:10px 8px 34px}header img{height:34px}.bar{gap:5px;padding:6px 8px}.bar button{min-width:36px;height:36px;padding:0 8px}.bar .hm{display:none}}
+@media print{body *{display:none!important}body::before{content:"الطباعة غير متاحة — للعرض فقط · Printing is disabled — view only";display:block!important;font:20px Cairo,sans-serif;color:#000;padding:40px;text-align:center}}
+</style>
+</head>
+<body>
+<header><img src="assets/abad-logo.png" alt="ABAD" draggable="false"><div class="t"><b id="ttl">ملفات الدورة</b><small id="sub">معهد شبكة آباد للتدريب — للعرض فقط</small></div><a class="bk" id="back" href="vendor.html#peoplecert">→ رجوع</a></header>
+<div class="tabs" role="tablist" id="tabs"></div>
+<div class="bar" id="bar">
+ <button id="prev" type="button" aria-label="السابق">›</button>
+ <input id="pg" inputmode="numeric" aria-label="رقم الصفحة"><span id="of"></span>
+ <button id="next" type="button" aria-label="التالي">‹</button>
+ <span class="sp"></span>
+ <button id="zo" type="button" aria-label="تصغير">−</button><span class="z" id="zl">100%</span><button id="zi" type="button" aria-label="تكبير">+</button>
+ <button id="fit" type="button" class="hm"></button>
+</div>
+<div class="wrap"><nav class="thumbs" id="thumbs"></nav><main class="view" id="view"></main></div>
+<div class="note" id="note"></div>
+<script src="assets/vendor/page-flip.browser.js?r=202610131535"></script>
+<script>
+(function(){
+const COURSES={itil5:{ar:"ITIL Foundation (Version 5) — ملفات الدورة",en:"ITIL Foundation (Version 5) — Course files",back:"vendor.html#peoplecert",
+ files:{en:{pages:15,dir:"course-files/itil5/en/",title:"Chapter 1 — Key Concepts of Digital Product and Service Management"},ar:null}}};
+const $=id=>document.getElementById(id),Q=new URLSearchParams(location.search);
+let UI="ar";try{UI=localStorage.getItem("abad-lang")==="en"?"en":"ar"}catch(e){}if(Q.get("ui")==="en")UI="en";
+const t=(a,b)=>UI==="en"?b:a;if(UI==="en"){document.documentElement.lang="en";document.documentElement.dir="ltr"}
+const C=COURSES[Q.get("c")]||COURSES.itil5;let L=Q.get("lang")==="ar"?"ar":(Q.get("lang")==="en"?"en":(C.files.ar?"ar":"en"));
+let P=1,Z=0;/* Z=0 → ملاءمة العرض */
+document.title=t(C.ar,C.en)+" — "+t("معهد شبكة آباد للتدريب","ABAD Network Training Institute");
+$("ttl").textContent=t(C.ar,C.en);$("sub").textContent=t("معهد شبكة آباد للتدريب — للعرض فقط","ABAD Network Training Institute — view only");
+$("back").textContent=t("→ رجوع","← Back");$("back").href=C.back;$("fit").textContent=t("ملاءمة","Fit");
+
+$("note").textContent=t("© معهد شبكة آباد للتدريب — المحتوى للعرض فقط داخل المنصة، ويُمنع نسخه أو تحميله أو إعادة نشره.","© ABAD Network Training Institute — view-only content; copying, downloading or redistribution is not permitted.");
+function arrows(){const r=L==="ar";$("bar").dir=r?"rtl":"ltr";$("thumbs").dir=r?"rtl":"ltr";$("prev").textContent=r?"›":"‹";$("next").textContent=r?"‹":"›"}
+function tabs(){arrows();$("tabs").innerHTML=[["ar","العربي"],["en","English"]].map(([k,l])=>'<button type="button" role="tab" data-l="'+k+'" aria-selected="'+(k===L)+'">'+l+'</button>').join("");
+ $("tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{L=b.dataset.l;P=1;const u=new URL(location.href);u.searchParams.set("lang",L);history.replaceState(null,"",u);load()})}
+const F=()=>C.files[L],src=(n,th)=>F().dir+(th?"t":"p")+String(n).padStart(2,"0")+".webp";
+const PW=909,PH=1287;let PF=null,RTL=false;
+/* الكتاب العربي يُقرأ من اليمين لليسار: نعكس ترتيب الصفحات ونبدأ من آخر فهرس */
+const toIdx=n=>RTL?F().pages-n:n-1,toNum=i=>RTL?F().pages-i:i+1;
+function load(){tabs();const f=F();$("bar").hidden=!f;$("thumbs").hidden=!f;if(PF){try{PF.destroy()}catch(e){}PF=null}
+ if(!f){$("view").innerHTML='<div class="soon"><b>قريبًا</b><p>'+t("النسخة العربية من ملفات الدورة ستتوفر قريبًا بإذن الله.","The Arabic version of the course files is coming soon.")+'</p></div>';return}
+ RTL=f.dir_rtl===true||L==="ar";
+ $("thumbs").innerHTML=Array.from({length:f.pages},(_,i)=>'<button type="button" data-p="'+(i+1)+'" aria-label="'+t("صفحة","Page")+' '+(i+1)+'"><img loading="lazy" draggable="false" alt="" src="'+src(i+1,1)+'"><span>'+(i+1)+'</span></button>').join("");
+ $("thumbs").querySelectorAll("button").forEach(b=>b.onclick=()=>go(+b.dataset.p));$("of").textContent="/ "+f.pages;build(P)}
+function dims(){const v=$("view"),mob=innerWidth<700,aw=v.clientWidth-(mob?16:36),ah=v.clientHeight-(mob?44:56);
+ let w=mob?Math.min(aw,PW):Math.min(aw/2,PW);let h=w*PH/PW;if(!mob&&h>ah&&!Z){h=Math.max(ah,300);w=h*PW/PH}
+ if(Z){w=w*Z;h=w*PH/PW}return{w:Math.round(w),h:Math.round(h),mob}}
+function build(n){const f=F(),d=dims();if(PF){try{PF.destroy()}catch(e){}PF=null}
+ $("view").innerHTML='<div class="stage" id="stage" style="width:'+(d.mob?d.w:d.w*2)+'px"><div class="book" id="book"></div><div class="hint">'+(d.mob?t("اسحب لقلب الصفحة","Swipe to turn the page"):t("اضغط أو اسحب زاوية الصفحة لقلبها · ← →","Click or drag a page corner to turn · ← →"))+'</div></div>';
+ const order=Array.from({length:f.pages},(_,i)=>RTL?f.pages-i:i+1);
+ const els=order.map((num,i)=>{const e=document.createElement("div");e.className="pg";if(i===0||i===f.pages-1){e.dataset.density="hard";e.classList.add("cov")}
+  if(i>0)e.classList.add(i%2?"l":"r");e.innerHTML='<img draggable="false" alt="'+t("صفحة","Page")+' '+num+'" src="'+src(num)+'">';return e});
+ PF=new St.PageFlip($("book"),{width:d.w,height:d.h,size:"fixed",showCover:true,usePortrait:true,drawShadow:true,maxShadowOpacity:.55,flippingTime:850,
+  mobileScrollSupport:true,swipeDistance:25,showPageCorners:true,startPage:toIdx(Math.max(1,Math.min(f.pages,n))),autoSize:false,useMouseEvents:true});
+ PF.loadFromHTML(els);
+ const land=()=>$("stage").classList.toggle("land",PF.getOrientation()==="landscape");land();
+ PF.on("changeOrientation",land);PF.on("flip",e=>sync(toNum(e.data)));sync(toNum(PF.getCurrentPageIndex()))}
+function sync(num){const f=F();P=num;$("pg").value=P;
+ const first=RTL?P>=f.pages:P<=1,last=RTL?P<=1:P>=f.pages;$("prev").disabled=first;$("next").disabled=last;
+ $("zl").textContent=Math.round((Z||1)*100)+"%";
+ $("thumbs").querySelectorAll("button").forEach(b=>{const on=+b.dataset.p===P||(!innerWidth<700&&Math.abs(+b.dataset.p-P)===1&&false);b.setAttribute("aria-current",on);if(on)b.scrollIntoView({block:"nearest",inline:"nearest"})})}
+function go(n){const f=F();if(!f||!PF)return;n=Math.max(1,Math.min(f.pages,n|0||1));PF.flip(toIdx(n))}
+const next=()=>PF&&(RTL?PF.flipPrev():PF.flipNext()),prev=()=>PF&&(RTL?PF.flipNext():PF.flipPrev());
+$("prev").onclick=prev;$("next").onclick=next;$("pg").onchange=()=>go(+$("pg").value);
+$("zi").onclick=()=>{Z=Math.min(2.5,(Z||1)+.25);build(P)};$("zo").onclick=()=>{Z=Math.max(.5,(Z||1)-.25);if(Z===1)Z=0;build(P)};$("fit").onclick=()=>{Z=0;build(P)};
+let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>build(P),250)});
+/* حماية العرض فقط */
+["contextmenu","dragstart","selectstart","copy","cut"].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault()));
+document.addEventListener("keydown",e=>{const k=(e.key||"").toLowerCase();
+ if((e.ctrlKey||e.metaKey)&&["s","p","c","u","a","x"].includes(k)){e.preventDefault();e.stopPropagation();return}
+ if(e.target.id==="pg")return;const fw=L==="ar";if(e.key==="ArrowLeft"){e.preventDefault();fw?next():prev()}if(e.key==="ArrowRight"){e.preventDefault();fw?prev():next()}if(e.key==="PageDown"||e.key===" "){e.preventDefault();next()}if(e.key==="PageUp"){e.preventDefault();prev()}},true);
+addEventListener("beforeprint",()=>{document.body.dataset.p=1});
+load();
+})();
+</script>
+</body>
+</html>
