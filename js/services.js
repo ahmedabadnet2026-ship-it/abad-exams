@@ -1,5 +1,5 @@
 (function(){
-var EN=(window.LANG||document.documentElement.lang)==="en",R="?r=202610131149";
+var EN=(window.LANG||document.documentElement.lang)==="en",R="?r=202610131446";
 var S=document.getElementById("services");if(!S)return;
 var I={
 exam:'<rect class="d b" x="5" y="3" width="14" height="18" rx="2" style="--len:70"/><path class="d" d="M9 8h6M9 12h6M9 16h3" style="--len:20"/><circle class="p" cx="17" cy="17" r="0"/>',
