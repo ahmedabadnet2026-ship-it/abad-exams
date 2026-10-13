@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10293b">
+<title>مختبر لينكس الحقيقي — معهد شبكة آباد للتدريب</title>
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/lab/xterm.css">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Cairo,sans-serif;color:#fff;min-height:100vh;background:radial-gradient(circle at 15% 10%,#3f86b344 0,transparent 45%),radial-gradient(circle at 85% 95%,#F5BD2D1c 0,transparent 40%),linear-gradient(135deg,#0a1c29,#10293b 55%,#16405e)}
+header{display:flex;align-items:center;gap:12px;padding:12px 18px;flex-wrap:wrap;max-width:1280px;margin:0 auto}
+header img{height:42px;background:#fff;border-radius:9px;padding:3px 7px}header .t{flex:1;min-width:170px}header b{display:block;font-size:17px}header small{opacity:.7;font-size:12px}
+.hb{font:inherit;font-weight:700;font-size:13px;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:9px;padding:6px 12px;cursor:pointer;text-decoration:none}
+.hero{text-align:center;padding:4px 18px}.hero small{color:#F5BD2D;font-weight:700}.hero h1{margin:2px 0;font-size:clamp(1.4rem,3.4vw,2.1rem);font-weight:800}.hero p{margin:0 auto;opacity:.8;max-width:720px;font-size:14px}
+.wrap{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);gap:18px;max-width:1280px;margin:16px auto 40px;padding:0 18px}
+.term{background:#05111a;border:1px solid #ffffff22;border-radius:16px;overflow:hidden;box-shadow:0 20px 40px #0007;display:flex;flex-direction:column;min-width:0}
+.bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#0d2738;border-bottom:1px solid #ffffff1a;font-size:13px;flex-wrap:wrap}
+.dot{width:10px;height:10px;border-radius:50%;background:#F5BD2D;box-shadow:0 0 0 0 #F5BD2D;animation:p 1.4s infinite}.dot.ok{background:#3ecf8e;animation:none}
+@keyframes p{70%{box-shadow:0 0 0 8px #F5BD2D00}}
+.bar .st{flex:1}.bar button{font:inherit;font-size:12px;font-weight:700;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:8px;padding:3px 10px;cursor:pointer}
+#screen{direction:ltr;text-align:left;background:#000;padding:6px;overflow-x:auto;flex:1}
+.prog{height:3px;background:#ffffff14}.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#3f86b3,#F5BD2D);transition:width .3s}
+.tasks{background:linear-gradient(160deg,#ffffff14,#ffffff06);border:1px solid #ffffff26;border-radius:16px;padding:14px;align-self:start}
+.tasks h2{margin:0 0 4px;font-size:1.1rem;color:#F5BD2D}.score{font-size:13px;opacity:.85;margin-bottom:8px}
+.tk{border:1px solid #ffffff1f;border-radius:12px;padding:9px 11px;margin:8px 0;background:#0a1c2966}
+.tk.pass{border-color:#3ecf8e;background:#3ecf8e14}.tk.fail{border-color:#ff7a7a}
+.tk .h{display:flex;gap:8px;align-items:flex-start}.tk .n{flex:0 0 24px;height:24px;border-radius:50%;background:#3f86b3;display:grid;place-items:center;font-size:12px;font-weight:800}
+.tk.pass .n{background:#3ecf8e;color:#05111a}.tk p{margin:0;flex:1;font-size:13.5px;line-height:1.7}
+.tk code,.hint code{direction:ltr;unicode-bidi:embed;background:#ffffff1a;border-radius:5px;padding:0 5px;font-size:12.5px}
+.tk .a{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.tk button,.all{font:inherit;font-size:12px;font-weight:700;border-radius:8px;padding:3px 11px;cursor:pointer;border:1px solid #ffffff33;background:#ffffff12;color:#fff}
+.tk button.c,.all{background:#F5BD2D;color:#10293b;border-color:#F5BD2D}button:disabled{opacity:.45;cursor:not-allowed}
+.hint{display:none;font-size:12.5px;margin-top:6px;opacity:.9}.hint.on{display:block}
+.all{width:100%;padding:8px;font-size:14px;margin-top:4px}
+.note{font-size:12px;opacity:.7;margin-top:10px;line-height:1.7}
+@media (max-width:900px){.wrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><button class="hb" id="lang" type="button"></button><a class="hb" href="practical-lab.html" data-t="back"></a></header>
+<section class="hero"><small data-t="kick"></small><h1 data-t="title"></h1><p data-t="lead"></p></section>
+<div class="wrap">
+ <div class="term">
+  <div class="bar"><span class="dot" id="dot"></span><span class="st" id="st"></span><button id="rst" type="button" data-t="reset"></button></div>
+  <div class="prog"><i id="pg"></i></div>
+  <div id="screen"></div>
+ </div>
+ <aside class="tasks">
+  <h2 data-t="tasks"></h2><div class="score" id="score"></div>
+  <div id="list"></div>
+  <button class="all" id="all" type="button" disabled data-t="checkall"></button>
+  <div class="note" data-t="note"></div>
+ </aside>
+</div>
+<script src="assets/lab/xterm.js"></script>
+<script src="assets/lab/libv86.js"></script>
+<script>
+var L=(function(){try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";
+var S={
+inst:["معهد شبكة آباد للتدريب","ABAD Network Training Institute"],
+sec:["منصة المحاكاة العملية","Practical Simulation Platform"],
+back:["→ منصة المحاكاة","← Simulation hub"],
+kick:["🐧 مختبر حقيقي — Linux+ / RHCSA","🐧 Real lab — Linux+ / RHCSA"],
+title:["مختبر لينكس الحقيقي","Real Linux Lab"],
+lead:["نظام لينكس حقيقي يعمل بالكامل داخل متصفحك (بدون خادم). نفّذ المهام في الطرفية ثم اضغط «تحقق» ليتم الفحص داخل الجهاز الافتراضي.","A real Linux system running entirely in your browser (no server). Do the tasks in the terminal, then press “Check” — verification runs inside the VM."],
+reset:["⟲ إعادة تشغيل","⟲ Restart"],tasks:["المهام","Tasks"],checkall:["✔ تحقق من جميع المهام","✔ Check all tasks"],
+check:["تحقق","Check"],hint:["تلميح","Hint"],
+note:["ملاحظة: يعمل الجهاز في ذاكرة المتصفح فقط؛ إعادة التشغيل أو تحديث الصفحة تمسح كل التغييرات. النظام مبني على BusyBox لذلك تُستخدم أوامر مثل adduser و addgroup، و tar بدون الخيار z (استخدم gzip عبر الأنابيب).","Note: the VM lives in browser memory only; restarting or reloading wipes all changes. The system is BusyBox-based, so adduser / addgroup are used, and tar has no -z (pipe through gzip)."],
+boot:["جارٍ تحميل وتشغيل لينكس…","Loading & booting Linux…"],dl:["تحميل النظام","Downloading system"],
+ready:["جاهز — الطرفية تعمل ✔ (الإقلاع: %s ث)","Ready — shell running ✔ (boot: %s s)"],
+score:["أنجزت %a من %b","Completed %a of %b"],busy:["جارٍ الفحص…","Checking…"]
+};
+var T=[
+{ar:"أنشئ المستخدم <code>student</code> مع مجلد المنزل",en:"Create the user <code>student</code> (with home dir)",h:"adduser -D student",c:"id student >/dev/null 2>&1 && [ -d /home/student ]"},
+{ar:"أنشئ المجموعة <code>devops</code> برقم تعريف <code>GID 2000</code>",en:"Create group <code>devops</code> with <code>GID 2000</code>",h:"addgroup -g 2000 devops",c:"grep -q '^devops:x:2000:' /etc/group"},
+{ar:"أنشئ المسار <code>/lab/projects/web</code> (بما فيه المجلدات الأم)",en:"Create the path <code>/lab/projects/web</code> (with parents)",h:"mkdir -p /lab/projects/web",c:"test -d /lab/projects/web"},
+{ar:"أنشئ الملف <code>/lab/projects/web/index.html</code> يحتوي النص <code>Hello ABAD</code>",en:"Create <code>/lab/projects/web/index.html</code> containing <code>Hello ABAD</code>",h:"echo 'Hello ABAD' > /lab/projects/web/index.html",c:"grep -q 'Hello ABAD' /lab/projects/web/index.html"},
+{ar:"اجعل مالك <code>/lab/projects/web</code> هو <code>student</code> ومجموعته <code>devops</code>",en:"Make <code>/lab/projects/web</code> owned by <code>student</code>:<code>devops</code>",h:"chown -R student:devops /lab/projects/web",c:"[ \"$(ls -ld /lab/projects/web | awk '{print $3\":\"$4}')\" = student:devops ]"},
+{ar:"اضبط صلاحيات <code>/lab/projects</code> على <code>750</code>",en:"Set permissions of <code>/lab/projects</code> to <code>750</code>",h:"chmod 750 /lab/projects",c:"[ \"$(ls -ld /lab/projects | cut -c1-10)\" = drwxr-x--- ]"},
+{ar:"أنشئ ملفًا مخفيًا <code>/lab/.secret</code> بصلاحيات <code>600</code>",en:"Create hidden file <code>/lab/.secret</code> with mode <code>600</code>",h:"touch /lab/.secret && chmod 600 /lab/.secret",c:"[ -f /lab/.secret ] && [ \"$(ls -l /lab/.secret | cut -c1-10)\" = -rw------- ]"},
+{ar:"أنشئ رابطًا رمزيًا <code>/lab/www</code> يشير إلى <code>/lab/projects/web</code>",en:"Create symlink <code>/lab/www</code> → <code>/lab/projects/web</code>",h:"ln -s /lab/projects/web /lab/www",c:"[ -L /lab/www ] && [ \"$(readlink /lab/www)\" = /lab/projects/web ]"},
+{ar:"احفظ أسطر <code>/etc/passwd</code> التي تحتوي <code>sh</code> في <code>/lab/shells.txt</code> باستخدام grep",en:"Save lines of <code>/etc/passwd</code> containing <code>sh</code> into <code>/lab/shells.txt</code> using grep",h:"grep sh /etc/passwd > /lab/shells.txt",c:"[ -s /lab/shells.txt ] && grep sh /etc/passwd | cmp -s - /lab/shells.txt"},
+{ar:"أنشئ أرشيفًا مضغوطًا <code>/lab/backup.tar.gz</code> للمجلد <code>/lab/projects</code>",en:"Create compressed archive <code>/lab/backup.tar.gz</code> of <code>/lab/projects</code>",h:"tar -cf - -C /lab projects | gzip > /lab/backup.tar.gz",c:"gzip -dc /lab/backup.tar.gz 2>/dev/null | tar -tf - 2>/dev/null | grep -q 'projects/web/index.html'"}
+];
+window.__buf=function(){return buf};var R={},emu=null,ready=false,buf="",t0=0;
+function s(k){return S[k][L=="ar"?0:1]}
+function paint(){document.documentElement.lang=L;document.documentElement.dir=L=="ar"?"rtl":"ltr";document.getElementById("lang").textContent=L=="ar"?"English":"العربية";
+document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=s(e.dataset.t)});document.title=s("title")+" — "+s("inst");
+var h="";T.forEach(function(t,i){h+='<div class="tk'+(R[i]===1?" pass":R[i]===0?" fail":"")+'"><div class="h"><span class="n">'+(R[i]===1?"✓":i+1)+'</span><p>'+t[L]+'</p></div><div class="a"><button class="c" type="button" data-c="'+i+'"'+(ready?"":" disabled")+'>'+s("check")+'</button><button type="button" data-h="'+i+'">'+s("hint")+'</button></div><div class="hint" id="h'+i+'"><code>'+t.h.replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</code></div></div>'});
+document.getElementById("list").innerHTML=h;var n=0;for(var k in R)if(R[k]===1)n++;
+document.getElementById("score").textContent=s("score").replace("%a",n).replace("%b",T.length);document.getElementById("all").disabled=!ready;status()}
+var stK="boot",stA="";function status(){document.getElementById("st").textContent=s(stK).replace("%s",stA)}
+document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{localStorage.setItem("abad-lang",L)}catch(e){}paint()};
+document.getElementById("list").onclick=function(e){var b=e.target.closest("button");if(!b)return;if(b.dataset.h)document.getElementById("h"+b.dataset.h).classList.toggle("on");if(b.dataset.c)check([+b.dataset.c])};
+document.getElementById("all").onclick=function(){check(T.map(function(_,i){return i}))};
+document.getElementById("rst").onclick=function(){location.reload()};
+function fn(){return "abad_check(){ for i in \"$@\"; do case $i in "+T.map(function(t,i){return i+") ("+t.c+");;"}).join(" ")+" esac && r=PASS || r=FAIL; printf '[ABAD] task %s: %s\\n' $((i+1)) $r; done; }"}
+function check(ids){if(!ready)return;emu.serial0_send("abad_check "+ids.join(" ")+"\n")}
+function onByte(b){var ch=String.fromCharCode(b);buf+=ch;if(buf.length>8000)buf=buf.slice(-4000);
+if(!ready&&/[#%] $/.test(buf)){ready=true;stK="ready";stA=((performance.now()-t0)/1000).toFixed(1);document.getElementById("dot").classList.add("ok");document.getElementById("pg").style.width="100%";paint();
+window.__labReady=stA;emu.serial0_send("export PS1='[root@abad-lab \\w]# '; hostname abad-lab; mkdir -p /lab /home; "+fn()+";  cd /lab; clear\n")}
+var m,re=/\[ABAD\] task (\d+): (PASS|FAIL)/g,hit=false;while(m=re.exec(buf)){R[m[1]-1]=m[2]=="PASS"?1:0;hit=true}if(hit){buf=buf.replace(re,"");paint();try{localStorage.setItem("abad-linux-lab",JSON.stringify(R))}catch(e){}}}
+paint();t0=performance.now();
+emu=new V86({wasm_path:"assets/lab/v86.wasm",memory_size:64*1024*1024,vga_memory_size:2*1024*1024,
+bios:{url:"assets/lab/seabios.bin"},vga_bios:{url:"assets/lab/vgabios.bin"},bzimage:{url:"assets/lab/linux.bin",size:10068480,async:false},
+cmdline:"tsc=reliable mitigations=off random.trust_cpu=on",
+serial_container_xtermjs:document.getElementById("screen"),autostart:true,filesystem:{},disable_keyboard:true,disable_mouse:true});
+window.__emu=emu;
+emu.add_listener("download-progress",function(e){if(e.total){stK="dl";stA="";document.getElementById("st").textContent=s("dl")+" "+Math.round(e.loaded/e.total*100)+"%";document.getElementById("pg").style.width=Math.round(e.loaded/e.total*90)+"%"}});
+emu.add_listener("download-progress",function(){});
+emu.add_listener("emulator-started",function(){if(!ready){stK="boot";status()}});
+emu.add_listener("serial0-output-byte",onByte);
+</script>
+</body>
+</html>
