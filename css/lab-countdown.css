@@ -1,0 +1,16 @@
+/* ABAD shared lab countdown overlay */
+#abad-cd{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:Cairo,system-ui,sans-serif;color:#fff;text-align:center;padding:24px;
+background:radial-gradient(circle at 20% 15%,#3f86b355 0,transparent 45%),radial-gradient(circle at 80% 90%,#F5BD2D26 0,transparent 42%),linear-gradient(135deg,#0a1c29,#10293b 55%,#16405e);transition:opacity .6s ease,visibility .6s}
+#abad-cd.out{opacity:0;visibility:hidden}
+#abad-cd .cd-logo{height:64px;background:#fff;border-radius:14px;padding:6px 12px;box-shadow:0 12px 30px #0006}
+#abad-cd .cd-lab{color:#F5BD2D;font-weight:800;font-size:clamp(1rem,2.6vw,1.3rem)}
+#abad-cd .cd-t{font-size:clamp(1.2rem,3.6vw,1.9rem);font-weight:800;margin:0}
+#abad-cd .cd-ring{position:relative;width:min(46vw,210px);aspect-ratio:1;display:grid;place-items:center}
+#abad-cd .cd-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+#abad-cd .cd-ring circle{fill:none;stroke-width:8}#abad-cd .cd-bg{stroke:#ffffff1f}
+#abad-cd .cd-fg{stroke:url(#abadcdg);stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear}
+#abad-cd .cd-n{font-size:clamp(4rem,16vw,6.5rem);font-weight:800;line-height:1;color:#fff;text-shadow:0 0 30px #F5BD2D88}
+#abad-cd .cd-n.pop{animation:abadcdpop 1s ease both}
+@keyframes abadcdpop{0%{transform:scale(1.7);opacity:0}25%{transform:scale(1);opacity:1}80%{opacity:1}100%{transform:scale(.85);opacity:.15}}
+#abad-cd .cd-s{opacity:.75;font-size:.95rem}
+@media (prefers-reduced-motion:reduce){#abad-cd,#abad-cd .cd-fg{transition:none}#abad-cd .cd-n.pop{animation:none}}
