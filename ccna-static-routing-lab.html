@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#10293b">
-<title>مختبر CCNA: التوجيه الثابت — معهد شبكة آباد للتدريب</title>
+<title>Static Lab — معهد شبكة آباد للتدريب</title>
 <link rel="icon" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
 <style>
@@ -95,7 +95,7 @@ header img{height:42px;background:#fff;border-radius:9px;padding:3px 7px}header 
 var L=(function(){try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";
 var KEY="abad-ccna-static-v1";
 var S={inst:["معهد شبكة آباد للتدريب","ABAD Network Training Institute"],sec:["منصة المحاكاة العملية","Practical Simulation Platform"],back:["→ منصة المحاكاة","← Simulation hub"],
-kick:["🌐 CCNA 200-301 — مختبر عملي","🌐 CCNA 200-301 — hands-on lab"],title:["مختبر التوجيه الثابت (Static Routing)","Static Routing Lab"],
+kick:["🌐 CCNA 200-301 — مختبر عملي","🌐 CCNA 200-301 — hands-on lab"],title:["Static Lab","Static Lab"],
 lead:["ابنِ الشبكة كما في المخطط: أضف الأجهزة، صِلها بالكابلات الصحيحة، ثم اضغط على أي جهاز لفتح سطر الأوامر وتهيئته. اضغط «تحقق» لتقييم عملك.","Build the network from the diagram: add devices, connect them with the right cables, then click any device to open its CLI and configure it. Press “Check” to grade your work."],
 add:["إضافة:","Add:"],router:["راوتر","Router"],switch:["سويتش","Switch"],tools:["الأدوات:","Tools:"],select:["تحريك/فتح","Move/Open"],straight:["كابل مستقيم","Straight-through"],cross:["كابل متقاطع","Crossover"],del:["حذف","Delete"],
 topo:["المخطط","Diagram"],reset:["إعادة","Reset"],tasks:["المهام","Tasks"],check:["✔ تحقق من العمل","✔ Check my work"],hint:["تلميح ▾","Hint ▾"],
@@ -343,7 +343,7 @@ function grade(){st.res=T.map(function(t){var r=t.c();return r===true?1:String(r
 function live(){if(st.res)grade()}
 document.getElementById("check").onclick=grade;
 function paint(){document.documentElement.lang=L;document.documentElement.dir=L=="ar"?"rtl":"ltr";document.getElementById("lang").textContent=L=="ar"?"English":"العربية";
-document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=s(e.dataset.t)});document.title=s("title")+" — "+s("inst");document.getElementById("legend").innerHTML=s("leg");
+document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=s(e.dataset.t)});document.title="Static Lab — "+s("inst");document.getElementById("legend").innerHTML=s("leg");
 var h="",n=0,r=st.res;T.forEach(function(t,i){var v=r?r[i]:null;if(v===1)n++;h+='<div class="tk'+(v===1?" pass":v?" fail":"")+'"><div class="h"><span class="n">'+(v===1?"✓":v?"✗":i+1)+'</span><div>'+t[L]+(v&&v!==1?'<div class="why">✗ '+v.replace(/</g,"&lt;")+'</div>':'')+'<div><button class="hb2" type="button" data-h="'+i+'">'+s("hint")+'</button></div><div class="hint" id="h'+i+'"></div></div></div></div>'});
 document.getElementById("list").innerHTML=h;T.forEach(function(t,i){document.getElementById("h"+i).textContent=t.h});
 document.getElementById("score").textContent=r?(n==T.length?s("all"):s("score").replace("%a",n).replace("%b",T.length)):s("notyet");draw()}
