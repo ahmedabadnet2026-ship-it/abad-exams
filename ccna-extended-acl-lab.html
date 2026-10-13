@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10293b">
+<title>Extended ACL — معهد شبكة آباد للتدريب</title>
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Cairo,sans-serif;color:#fff;min-height:100vh;background:radial-gradient(circle at 15% 10%,#3f86b344 0,transparent 45%),radial-gradient(circle at 85% 95%,#F5BD2D1c 0,transparent 40%),linear-gradient(135deg,#0a1c29,#10293b 55%,#16405e)}
+header{display:flex;align-items:center;gap:12px;padding:12px 18px;flex-wrap:wrap;max-width:1320px;margin:0 auto}
+header img{height:42px;background:#fff;border-radius:9px;padding:3px 7px}header .t{flex:1;min-width:170px}header b{display:block;font-size:17px}header small{opacity:.7;font-size:12px}
+.hb{font:inherit;font-weight:700;font-size:13px;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:9px;padding:6px 12px;cursor:pointer;text-decoration:none}
+.hero{text-align:center;padding:2px 18px}.hero small{color:#F5BD2D;font-weight:700}.hero h1{margin:2px 0;font-size:clamp(1.3rem,3.2vw,2rem);font-weight:800}.hero p{margin:0 auto;opacity:.8;max-width:760px;font-size:14px}
+.wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;max-width:1320px;margin:12px auto 40px;padding:0 18px}
+.tool{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#0d2738;border:1px solid #ffffff22;border-radius:14px 14px 0 0;padding:8px 10px}
+.tool .g{display:flex;gap:4px;flex-wrap:wrap;align-items:center;padding-inline-end:8px;border-inline-end:1px solid #ffffff22}.tool .g:last-child{border:0}
+.tool .lb{font-size:11.5px;opacity:.7;margin-inline-end:2px}
+.tb{font:inherit;font-size:12.5px;font-weight:700;color:#fff;background:#ffffff12;border:1px solid #ffffff33;border-radius:9px;padding:4px 10px;cursor:pointer;display:inline-flex;gap:5px;align-items:center}
+.tb[aria-pressed=true]{background:#F5BD2D;color:#10293b;border-color:#F5BD2D}.tb.gold{background:#F5BD2D;color:#10293b;border-color:#F5BD2D}
+.tb .sw{width:18px;height:3px;border-radius:2px;background:#9fd3ff}.tb .sw.x{background:repeating-linear-gradient(90deg,#ffb36b 0 5px,transparent 5px 8px)}
+.sw-wrap{position:relative;overflow:auto;background:#081620;border:1px solid #ffffff22;border-top:0;border-radius:0 0 14px 14px;height:560px;direction:ltr}
+#stage{position:absolute;left:0;top:0;width:1000px;height:600px;transform-origin:0 0;background-image:linear-gradient(#ffffff0a 1px,transparent 1px),linear-gradient(90deg,#ffffff0a 1px,transparent 1px);background-size:25px 25px;touch-action:none}
+#links{position:absolute;inset:0;width:1000px;height:600px;overflow:visible}
+#links line{stroke-width:3;cursor:pointer}#links line.hit{stroke:transparent;stroke-width:16}
+#links text{font:700 11px Cairo,sans-serif;fill:#cfe6f5;paint-order:stroke;stroke:#081620;stroke-width:4px}
+.dev{position:absolute;width:86px;margin-left:-43px;margin-top:-34px;text-align:center;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none}
+.dev svg{width:62px;height:50px;filter:drop-shadow(0 6px 8px #0008);transition:transform .15s}.dev:hover svg{transform:scale(1.06)}
+.dev b{display:block;font-size:12.5px;line-height:1.2}.dev small{display:block;font-size:10.5px;color:#F5BD2D;direction:ltr}
+.dev.pick svg{filter:drop-shadow(0 0 8px #F5BD2D)}
+.empty{position:absolute;inset:0;display:grid;place-items:center;color:#ffffff55;font-size:15px;pointer-events:none;text-align:center;padding:30px}
+.mode{position:absolute;top:8px;left:8px;font-size:12px;background:#000a;border-radius:8px;padding:3px 9px;pointer-events:none;direction:rtl}
+[dir=ltr] .mode{direction:ltr}
+.menu{position:fixed;z-index:30;background:#0d2738;border:1px solid #F5BD2D;border-radius:10px;padding:6px;min-width:170px;box-shadow:0 10px 30px #000a;direction:ltr}
+.menu div{font-size:12px;opacity:.75;padding:2px 6px}.menu button{display:block;width:100%;text-align:left;font:inherit;font-size:13px;color:#fff;background:none;border:0;border-radius:6px;padding:5px 8px;cursor:pointer}
+.menu button:hover{background:#ffffff1a}.menu button:disabled{opacity:.35;cursor:not-allowed}
+.side{display:flex;flex-direction:column;gap:12px}
+.card{background:linear-gradient(160deg,#ffffff14,#ffffff06);border:1px solid #ffffff26;border-radius:16px;padding:12px 14px}
+.card h2{margin:0 0 4px;font-size:1.05rem;color:#F5BD2D}.score{font-size:13px;opacity:.85}
+.tk{border:1px solid #ffffff1f;border-radius:11px;padding:7px 10px;margin:7px 0;background:#0a1c2966;font-size:13px;line-height:1.65}
+.tk.pass{border-color:#3ecf8e;background:#3ecf8e14}.tk.fail{border-color:#ff7a7a;background:#ff7a7a10}
+.tk .h{display:flex;gap:8px}.tk .n{flex:0 0 22px;height:22px;border-radius:50%;background:#3f86b3;display:grid;place-items:center;font-size:11px;font-weight:800;margin-top:2px}
+.tk.pass .n{background:#3ecf8e;color:#05111a}.tk.fail .n{background:#ff7a7a;color:#05111a}
+.tk .why{font-size:12px;color:#ffb3b3;margin-top:2px}.tk code,.hint code{direction:ltr;unicode-bidi:embed;background:#ffffff1a;border-radius:5px;padding:0 4px;font-size:12px}
+.tk .hb2{font:inherit;font-size:11.5px;font-weight:700;color:#F5BD2D;background:none;border:0;cursor:pointer;padding:0}
+.hint{display:none;direction:ltr;text-align:left;white-space:pre;font:12px/1.5 ui-monospace,Consolas,monospace;background:#05111a;border-radius:8px;padding:6px 8px;margin-top:4px;overflow:auto}.hint.on{display:block}
+.chk{width:100%;font:inherit;font-weight:800;font-size:14.5px;background:#F5BD2D;color:#10293b;border:0;border-radius:11px;padding:9px;cursor:pointer;margin-top:4px}
+.legend{font-size:12px;opacity:.8;line-height:1.8}.legend i{display:inline-block;width:22px;height:3px;vertical-align:middle;margin-inline-end:5px}
+/* CLI */
+.cli{position:fixed;z-index:20;inset:auto 0 0 0;height:min(62vh,520px);background:#05111a;border-top:2px solid #F5BD2D;box-shadow:0 -20px 40px #0009;display:none;flex-direction:column}
+.cli.on{display:flex}
+.cli .ch{display:flex;align-items:center;gap:8px;padding:6px 12px;background:#0d2738;flex-wrap:wrap}.cli .ch b{flex:1;font-size:14px}
+.cli .tabs{display:flex;gap:4px}.cli .tabs button{font:inherit;font-size:12px;font-weight:700;color:#fff;background:#ffffff12;border:1px solid #ffffff33;border-radius:8px;padding:2px 10px;cursor:pointer}.cli .tabs button[aria-pressed=true]{background:#3f86b3}
+#out{flex:1;overflow:auto;padding:8px 12px;direction:ltr;text-align:left;font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;white-space:pre-wrap;color:#e6f1f7}
+.inl{display:flex;align-items:center;gap:6px;padding:6px 12px;border-top:1px solid #ffffff1a;direction:ltr;font:13px ui-monospace,Consolas,monospace}
+#pr{color:#F5BD2D;white-space:nowrap}#inp{flex:1;min-width:0;font:inherit;background:transparent;color:#fff;border:0;outline:0;padding:4px 0}
+.cli .kb{font:inherit;font-size:12px;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:7px;padding:2px 8px;cursor:pointer}
+.pcf{display:none;gap:8px;flex-wrap:wrap;padding:10px 12px;direction:ltr;border-bottom:1px solid #ffffff1a;align-items:end}.pcf.on{display:flex}
+.pcf label{display:flex;flex-direction:column;font-size:12px;gap:2px;opacity:.9}.pcf input{font:13px ui-monospace,monospace;background:#0a1c29;color:#fff;border:1px solid #ffffff33;border-radius:7px;padding:5px 8px;width:150px}
+.ok{color:#3ecf8e}.er{color:#ff9a9a}.sy{color:#9fd3ff}
+.modal{position:fixed;inset:0;z-index:40;background:#000c;display:none;place-items:center;padding:16px}.modal.on{display:grid}.modal img{max-width:min(1000px,96vw);border-radius:12px;border:2px solid #F5BD2D}
+.modal button{position:absolute;top:12px;right:12px}
+@media (max-width:960px){.wrap{grid-template-columns:1fr}.sw-wrap{height:62vw;min-height:330px}}
+</style>
+<link rel="stylesheet" href="css/lab-countdown.css?r=202610131800">
+<link rel="stylesheet" href="css/home-btn.css?r=202610131945"><script src="js/home-btn.js?r=202610131945" defer></script>
+</head>
+<body>
+<script src="js/lab-countdown.js?r=202610131800"></script>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><button class="hb" id="lang" type="button"></button><a class="hb" href="ccna-lab.html" data-t="back"></a></header>
+<section class="hero"><small data-t="kick"></small><h1 data-t="title"></h1><p data-t="lead"></p></section>
+<div class="wrap">
+ <div>
+  <div class="tool">
+   <div class="g"><span class="lb" data-t="add"></span><button class="tb" data-add="router" type="button">🛜 <span data-t="router"></span></button><button class="tb" data-add="switch" type="button">🔀 <span data-t="switch"></span></button><button class="tb" data-add="pc" type="button">💻 PC</button></div>
+   <div class="g"><span class="lb" data-t="tools"></span><button class="tb" data-m="select" type="button">✋ <span data-t="select"></span></button><button class="tb" data-m="straight" type="button"><i class="sw"></i><span data-t="straight"></span></button><button class="tb" data-m="cross" type="button"><i class="sw x"></i><span data-t="cross"></span></button><button class="tb" data-m="delete" type="button">🗑 <span data-t="del"></span></button></div>
+   <div class="g"><button class="tb" id="topo" type="button">🗺 <span data-t="topo"></span></button><button class="tb" id="reset" type="button">⟲ <span data-t="reset"></span></button></div>
+  </div>
+  <div class="sw-wrap" id="sw"><div id="stage"><svg id="links"></svg><div class="empty" id="empty" data-t="empty"></div></div><div class="mode" id="mode"></div></div>
+ </div>
+ <aside class="side">
+  <div class="card"><h2 data-t="tasks"></h2><div class="score" id="score"></div><div id="list"></div><button class="chk" id="check" type="button" data-t="check"></button></div>
+  <div class="card legend" id="legend"></div>
+ </aside>
+</div>
+<div class="cli" id="cli"><div class="ch"><b id="cliT"></b><div class="tabs" id="pctabs"><button data-pt="cfg" type="button" data-t="ipcfg"></button><button data-pt="cmd" type="button" data-t="cmdp"></button></div><button class="kb" id="cliX" type="button">✕</button></div>
+ <div class="pcf" id="pcf"><label style="flex-direction:row;align-items:center;gap:6px;font-weight:700"><input type="checkbox" id="pdhcp" style="width:auto">DHCP</label><label>IPv4 Address<input id="pip" inputmode="decimal" autocomplete="off"></label><label>Subnet Mask<input id="pmask" inputmode="decimal" autocomplete="off"></label><label>Default Gateway<input id="pgw" inputmode="decimal" autocomplete="off"></label><button class="tb gold" id="psave" type="button" data-t="save"></button></div>
+ <div id="out"></div>
+ <div class="inl"><span id="pr"></span><input id="inp" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="send"><button class="kb" id="ktab" type="button">Tab</button><button class="kb" id="kq" type="button">?</button><button class="kb" id="kup" type="button">↑</button></div>
+</div>
+<div class="modal" id="modal"><button class="hb" id="mx" type="button">✕</button><img src="assets/ccna/acl-dhcp-topology.png" alt="Topology"></div>
+<div class="menu" id="menu" hidden></div>
+<script>
+var H={"r1": ">> Assign IP addresses on R1 & R2 interfaces\n   And configure Routing\nR1\nenable\nconfig t\nhostname R1\ninterface g0/0\n ip address 192.168.1.1  255.255.255.0\n no shutdown\n exit\ninterface g0/1\n ip address 12.0.0.1  255.255.255.252\n no shutdown\n exit\nip route 192.168.2.0  255.255.255.0  12.0.0.2\nusername admin1  password ccna123\nenable secret ccna123\nline vty 0\ntransport input all\nend\nwr", "r2": "R2\nenable\nconfig t\nhostname R2\ninterface g0/0\n ip address 192.168.2.1  255.255.255.0\n no shutdown\n exit\ninterface g0/1\n ip address 12.0.0.2  255.255.255.252\n no shutdown\n exit\nip route 192.168.1.0  255.255.255.0  12.0.0.1\nusername admin2  password ccna123\nenable secret ccna123\nip domain-name ccna.com\ncrypto key generate rsa modulus 1024\nline vty 0\ntransport input all\nend\nwr", "x1": ">> TASK on R1\n>> Configure Numbered Extended ACL as per below\n   Given conditions:\n>> PC1 can SSH R2 IP 12.0.0.2, but cannot Ping to R2 IP\n>> Remaining all users in R1 LAN can access any Service\n   Of any users of R2 LAN\nR1\nenable\nconf t\naccess-list 101 permit tcp host 192.168.1.10  host 12.0.0.2  eq 22\naccess-list 101 deny icmp host 192.168.1.10  host 12.0.0.2\naccess-list 101 permit ip any any\ninterface g0/1\n ip access-group 101 out\n end", "x2": ">> TASK on R2\n>> Configure Numbered Extended ACL as per below\n   Given conditions:\n>> PC2 can Telnet R1 IP 12.0.0.1, but cannot Ping to R1 IP\n>> Remaining all users in R2 LAN can access any Service\n   Of any users of R1 LAN\nR1\nenable\nconf t\naccess-list 101 permit tcp host 192.168.2.20  host 12.0.0.1  eq 23\naccess-list 101 deny icmp host 192.168.2.20  host 12.0.0.1\naccess-list 101 permit ip any any\ninterface g0/1\n ip access-group 101 out\n end"};
+window.LAB={key:"abad-ccna-extended-acl-v1",title:"Extended ACL",lead:["قوائم التحكم بالوصول الموسعة: اسمح بـ SSH و Telnet إلى الراوترات وامنع الـ ping إليها لمضيف محدد، مع السماح بباقي الحركة — بمطابقة البروتوكول والمنفذ.", "Extended access lists: allow SSH/Telnet to the routers but block ping to them for a specific host while allowing all other traffic — matching protocol and port."],tasks:function(A){var L=A.lang,st=A.st,B=A.BASE,R=A.R;function prt(a,e){return L()=="ar"?a:e}
+var X1=["permit tcp host 192.168.1.10 host 12.0.0.2 eq 22","deny icmp host 192.168.1.10 host 12.0.0.2","permit ip any any"],X2=["permit tcp host 192.168.2.20 host 12.0.0.1 eq 23","deny icmp host 192.168.2.20 host 12.0.0.1","permit ip any any"];
+function on(sn,id,l){return A.aclIs(sn[id],"101",l)&&A.agIs(sn[id],"g0/1","out","101")}
+function u(id,n){var s=R(id)&&R(id).sec;return!!(s&&s.users[n]&&s.users[n].pw=="ccna123")}
+function lg(pc,to,proto,f){return A.evFind(function(e){return e.t=="login"&&e.ok&&e.from==pc&&e.to==to&&e.proto==proto&&(!f||f(e))})}
+function pg(pc,dst,ok,f){return A.evFind(function(e){return e.t=="ping"&&e.from==pc&&e.dst==dst&&!!e.ok==ok&&(!f||f(e))})}
+function cfgOn(id,l){return on(A.snap(),id,l)}
+return B.slice(0,4).concat([
+{ar:"على R1: العناوين، مسار ثابت إلى <code>192.168.2.0/24</code>، المستخدم <code>admin1</code>، <code>enable secret</code> و <code>transport input all</code>",en:"On R1: addresses, static route to <code>192.168.2.0/24</code>, user <code>admin1</code>, <code>enable secret</code>, <code>transport input all</code>",h:H.r1,
+ c:function(){var r=B[4].c();if(r!==true)return r;if(!A.hasRoute("R1","192.168.2.0","255.255.255.0","12.0.0.2"))return"ip route 192.168.2.0 255.255.255.0 12.0.0.2";if(!u("R1","admin1"))return"username admin1 password ccna123";var s=R("R1").sec;if(s.secret!="ccna123")return"enable secret ccna123";if(s.vty.tr!="all")return"transport input all";if(!R("R1").saved)return"wr";return true}},
+{ar:"على R2: العناوين، مسار ثابت إلى <code>192.168.1.0/24</code>، المستخدم <code>admin2</code>، <code>enable secret</code>، <code>ip domain-name ccna.com</code>، مفاتيح RSA <code>1024</code> و <code>transport input all</code>",en:"On R2: addresses, static route to <code>192.168.1.0/24</code>, user <code>admin2</code>, <code>enable secret</code>, <code>ip domain-name ccna.com</code>, <code>1024</code>-bit RSA keys, <code>transport input all</code>",h:H.r2,
+ c:function(){var r=B[5].c();if(r!==true)return r;if(!A.hasRoute("R2","192.168.1.0","255.255.255.0","12.0.0.1"))return"ip route 192.168.1.0 255.255.255.0 12.0.0.1";if(!u("R2","admin2"))return"username admin2 password ccna123";var s=R("R2").sec;if(s.secret!="ccna123")return"enable secret ccna123";if(s.domain!="ccna.com")return"ip domain-name ccna.com";if(s.rsa!=1024)return"crypto key generate rsa modulus 1024";if(s.vty.tr!="all")return"transport input all";if(!R("R2").saved)return"wr";return true}},
+B[7],B[8],
+{ar:"من PC1 ادخل بـ SSH إلى R2، ومن PC2 ادخل بـ Telnet إلى R1",en:"From PC1 SSH to R2, and from PC2 Telnet to R1",h:"PC1> ssh -l admin2 12.0.0.2      (Password: ccna123)\nPC2> telnet 12.0.0.1             (Username: admin1 / Password: ccna123)",
+ c:function(){if(!lg("PC1","R2","ssh"))return prt("لم يتم الدخول بـ SSH من PC1 إلى R2","no SSH login PC1 → R2");if(!lg("PC2","R1","telnet"))return prt("لم يتم الدخول بـ Telnet من PC2 إلى R1","no Telnet login PC2 → R1");return true}},
+{ar:"ACL موسعة رقم <code>101</code> على R1: اسمح لـ PC1 بـ SSH إلى <code>12.0.0.2</code>، امنع ping منه إلى <code>12.0.0.2</code>، واسمح بالباقي — طبّقها على <code>Gi0/1 out</code>",en:"Extended ACL <code>101</code> on R1: permit PC1 SSH to <code>12.0.0.2</code>, deny its ping to <code>12.0.0.2</code>, permit everything else — apply on <code>Gi0/1 out</code>",h:H.x1,c:function(){return cfgOn("R1",X1)||prt("ACL 101 على R1 غير مطابقة أو غير مطبقة على Gi0/1 out","ACL 101 on R1 doesn't match or isn't applied on Gi0/1 out")}},
+{ar:"تحقق على R1: من PC1 ينجح SSH إلى <code>12.0.0.2</code>، يفشل ping إلى <code>12.0.0.2</code>، وينجح ping إلى PC2، ثم <code>sh access-list</code>",en:"Verify on R1: from PC1 SSH to <code>12.0.0.2</code> works, ping <code>12.0.0.2</code> fails, ping PC2 works, then <code>sh access-list</code>",h:"PC1> ssh -l admin2 12.0.0.2\nPC1> ping 12.0.0.2\nPC1> ping 192.168.2.20\nR1#sh access-list",
+ c:function(){var f=function(e){return on(e.snap,"R1",X1)};if(!lg("PC1","R2","ssh",f))return"PC1> ssh -l admin2 12.0.0.2";if(!pg("PC1","12.0.0.2",false,f))return prt("ping من PC1 إلى 12.0.0.2 يجب أن يفشل","PC1 ping to 12.0.0.2 must fail");if(!pg("PC1","192.168.2.20",true,f))return"PC1> ping 192.168.2.20";
+  if(!A.evFind(function(e){return e.t=="show"&&e.dev=="R1"&&f(e)}))return"R1#sh access-list";return true}},
+{ar:"ACL موسعة رقم <code>101</code> على R2: اسمح لـ PC2 بـ Telnet إلى <code>12.0.0.1</code>، امنع ping منه إلى <code>12.0.0.1</code>، واسمح بالباقي — طبّقها على <code>Gi0/1 out</code> <small>(الملف يكتب R1 كعنوان للقسم، لكن المهمة على R2)</small>",en:"Extended ACL <code>101</code> on R2: permit PC2 Telnet to <code>12.0.0.1</code>, deny its ping to <code>12.0.0.1</code>, permit everything else — apply on <code>Gi0/1 out</code> <small>(the file labels this block R1, but the task is on R2)</small>",h:H.x2,c:function(){return cfgOn("R2",X2)||prt("ACL 101 على R2 غير مطابقة أو غير مطبقة على Gi0/1 out","ACL 101 on R2 doesn't match or isn't applied on Gi0/1 out")}},
+{ar:"تحقق على R2: من PC2 ينجح Telnet إلى <code>12.0.0.1</code>، يفشل ping إلى <code>12.0.0.1</code>، وينجح ping إلى PC1، ثم <code>sh access-list</code>",en:"Verify on R2: from PC2 Telnet to <code>12.0.0.1</code> works, ping <code>12.0.0.1</code> fails, ping PC1 works, then <code>sh access-list</code>",h:"PC2> telnet 12.0.0.1\nPC2> ping 12.0.0.1\nPC2> ping 192.168.1.10\nR2#sh access-list",
+ c:function(){var f=function(e){return on(e.snap,"R2",X2)};if(!lg("PC2","R1","telnet",f))return"PC2> telnet 12.0.0.1";if(!pg("PC2","12.0.0.1",false,f))return prt("ping من PC2 إلى 12.0.0.1 يجب أن يفشل","PC2 ping to 12.0.0.1 must fail");if(!pg("PC2","192.168.1.10",true,f))return"PC2> ping 192.168.1.10";
+  if(!A.evFind(function(e){return e.t=="show"&&e.dev=="R2"&&f(e)}))return"R2#sh access-list";return true}}
+])}};
+</script>
+<script src="js/ccna-engine.js?r=202610140000"></script>
+<script>if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})});</script>
+</body>
+</html>
