@@ -8,10 +8,12 @@ lab:'<rect class="d b" x="3" y="4" width="18" height="12" rx="2" style="--len:70
 book:'<rect class="d b" x="3" y="5" width="18" height="16" rx="2" style="--len:70"/><path class="d" d="M3 10h18M8 3v4M16 3v4" style="--len:30"/><path class="d" d="M9 15l2 2 4-4" style="--len:15"/>',
 cert:'<rect class="d b" x="3" y="4" width="18" height="12" rx="2" style="--len:70"/><circle class="d p" cx="12" cy="16" r="3" style="--len:20"/><path class="d" d="M10 19l-1 3 3-1 3 1-1-3M7 8h10" style="--len:30"/>',
 lang:'<circle class="d b" cx="12" cy="12" r="9" style="--len:60"/><path class="d" d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" style="--len:60"/>',
+lib:'<path class="d b" d="M3 21h18" style="--len:20"/><path class="d" d="M5 21V5h3v16M10 21V3h3v18" style="--len:60"/><path class="d p" d="M15 6l3-1 3 15-3 1z" style="--len:40"/>',
 app:'<rect class="d b" x="7" y="2" width="10" height="20" rx="2" style="--len:70"/><path class="d" d="M12 7v7M9 11l3 3 3-3" style="--len:20"/><circle class="p" cx="12" cy="19" r=".6"/>'};
 var C=[
 ["exam","platform.html"+R,"محاكيات اختبارات لـ 20 جهة مانحة","Exam simulators for 20 vendors","اختبارات تفاعلية تحاكي الامتحانات الرسمية لشهادات Cisco، CompTIA، Microsoft، AWS، Red Hat وغيرها.","Interactive exams that mirror official tests for Cisco, CompTIA, Microsoft, AWS, Red Hat and more."],
 ["chart",null,"تحليل الأداء حسب المحاور","Per-domain performance analysis","بعد كل اختبار تعرف نقاط قوتك وضعفك في كل محور من محاور الشهادة.","After each exam, see your strengths and weak spots in every exam domain."],
+["lib","library.html"+R,"مكتبة المعهد","Institute Library","تصفّح كتب دوراتك ككتب تفاعلية تُقلَّب صفحاتها — للعرض فقط.","Browse your course books as interactive flipbooks — view only."],
 ["lab","ccna-lab-demo.html"+R,"معامل عملية","Hands-on labs","طبّق عملياً في معمل CCNA تجريبي داخل المتصفح.","Practice for real in an in-browser CCNA demo lab."],
 ["book","booking.html"+R,"حجز الاختبارات الدولية","Book international exams","احجز موعد اختبارك الدولي الرسمي عن طريق المعهد بسهولة.","Book your official international exam through the institute."],
 ["cert","certificate.html"+R,"طلب شهادة حضور","Attendance certificates","اطلب شهادة حضور دورتك مع تقييم الدورة.","Request your course attendance certificate along with a course evaluation."],

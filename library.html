@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10293b">
+<title>مكتبة المعهد — معهد شبكة آباد للتدريب</title>
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Cairo,sans-serif;color:#fff;min-height:100vh;background:radial-gradient(circle at 15% 10%,#3f86b344 0,transparent 45%),radial-gradient(circle at 85% 95%,#F5BD2D1c 0,transparent 40%),linear-gradient(135deg,#0a1c29,#10293b 55%,#16405e)}
+header{display:flex;align-items:center;gap:12px;padding:12px 18px;flex-wrap:wrap;max-width:1180px;margin:0 auto}
+header img{height:42px;background:#fff;border-radius:9px;padding:3px 7px}header .t{flex:1;min-width:170px}header b{display:block;font-size:17px}header small{opacity:.7;font-size:12px}
+.hb{font:inherit;font-weight:700;font-size:13px;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:9px;padding:6px 12px;cursor:pointer;text-decoration:none}
+.hero{text-align:center;padding:10px 18px 4px;max-width:900px;margin:0 auto}.hero small{color:#F5BD2D;font-weight:700}.hero h1{margin:4px 0;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800}.hero p{margin:0 auto;opacity:.8;max-width:620px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:900px;margin:18px auto 4px;padding:0 18px}
+.tools input{flex:1 1 260px;font:inherit;font-size:15px;border-radius:12px;border:1px solid #ffffff33;background:#0a1c29aa;color:#fff;padding:10px 14px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:1000px;margin:8px auto 0;padding:0 18px}
+.chips button{font:inherit;font-size:13px;font-weight:700;border-radius:999px;border:1px solid #ffffff33;background:#ffffff10;color:#fff;padding:5px 14px;cursor:pointer}
+.chips button[aria-pressed=true]{background:#F5BD2D;color:#10293b;border-color:#F5BD2D}
+.acc{text-align:center;font-size:12.5px;opacity:.7;margin-top:8px}
+.case{max-width:1180px;margin:22px auto 40px;padding:26px 22px 8px;border-radius:18px;background:linear-gradient(#0c2232,#0a1b28);box-shadow:inset 0 0 0 10px #3a2618,inset 0 0 0 12px #5a3b24,inset 0 0 60px #000a,0 30px 60px #0008}
+.shelf{position:relative;display:flex;flex-wrap:wrap;gap:26px 22px;justify-content:center;align-items:flex-end;padding:18px 18px 0;min-height:250px;perspective:1100px}
+.shelf::after{content:"";position:absolute;left:-10px;right:-10px;bottom:-22px;height:22px;border-radius:3px;background:linear-gradient(#8a5a35,#6b4226 45%,#4a2c18);box-shadow:0 12px 18px #000a,inset 0 2px 0 #b07a4c}
+.shelf+.shelf{margin-top:56px}
+.book{position:relative;width:150px;height:214px;transform-style:preserve-3d;transform:rotateY(-18deg);transition:transform .45s cubic-bezier(.2,.7,.2,1),filter .3s;cursor:pointer;border:0;padding:0;background:none;font:inherit;color:#fff;text-align:start;margin-bottom:0}
+.book .cv{position:absolute;inset:0;border-radius:3px 8px 8px 3px;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:inset 6px 0 10px #0005,inset -1px 0 0 #fff3,6px 8px 18px #0009;overflow:hidden;transform-origin:left center;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.3,.6,.2,1);backface-visibility:hidden;z-index:2}
+[dir=rtl] .book .cv{transform-origin:left center}
+.book .cv::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,#ffffff00 40%,#ffffff22 52%,#ffffff00 64%);pointer-events:none}
+.book .sp{position:absolute;top:0;left:0;width:26px;height:100%;transform:rotateY(90deg) translateZ(13px) translateX(-13px);transform-origin:left;background:linear-gradient(90deg,#0005,var(--c1) 30%,var(--c2));border-radius:3px 0 0 3px}
+.book .pg{position:absolute;inset:4px 4px 4px 2px;background:repeating-linear-gradient(90deg,#f4efe3 0 2px,#e6dfcf 2px 3px);border-radius:2px 6px 6px 2px;transform:translateZ(-14px);box-shadow:4px 4px 12px #0007}
+.book .in{position:absolute;inset:4px 4px 4px 2px;background:#fffdf7;border-radius:2px 6px 6px 2px;transform:translateZ(-1px);display:flex;align-items:center;justify-content:center;color:#10293b;font-weight:800;font-size:13px;text-align:center;padding:10px;z-index:1}
+.cv .lg{margin:12px 12px 0;background:#fff;border-radius:8px;height:40px;display:flex;align-items:center;justify-content:center;padding:4px 8px}.cv .lg img{max-height:30px;max-width:100%}
+.cv .ti,.cv .sb{unicode-bidi:plaintext}.cv .ti{padding:12px 12px 0 16px;font-weight:800;font-size:15px;line-height:1.35}.cv .sb{padding:4px 12px 0 16px;font-size:11.5px;opacity:.85;line-height:1.5}
+.cv .cd{position:absolute;bottom:10px;inset-inline-start:16px;font-size:11px;font-weight:700;background:#0004;border-radius:6px;padding:1px 8px;direction:ltr}
+.cv .gl{position:absolute;left:0;right:0;bottom:34px;height:3px;background:linear-gradient(90deg,#3f86b3,#F5BD2D)}
+.badge{position:absolute;top:-10px;inset-inline-end:-8px;z-index:5;font-size:11px;font-weight:800;border-radius:999px;padding:2px 10px;box-shadow:0 3px 8px #0006;transform:translateZ(30px)}
+.badge.ok{background:#F5BD2D;color:#10293b}.badge.soon{background:#56657299;color:#fff}.badge.lock{background:#a12a2a;color:#fff}
+.book:hover,.book:focus-visible{transform:rotateY(-6deg) translateY(-10px);outline:none}
+.book:focus-visible .cv{box-shadow:0 0 0 3px #F5BD2D,6px 8px 18px #0009}
+.book.soon{cursor:default;filter:grayscale(.85) brightness(.7)}.book.soon:hover{transform:rotateY(-18deg) translateY(-3px)}
+.book.lock{filter:grayscale(.5) brightness(.8)}
+.book.opening{z-index:50;transform:rotateY(0) translateY(-30px) translateZ(160px) scale(1.15)}
+.book .sp{display:none}.book .cv{background:linear-gradient(90deg,#0000004d,#0000001a 5%,#0000 11%),linear-gradient(135deg,var(--c1),var(--c2));box-shadow:inset -1px 0 0 #fff3,6px 8px 18px #0009;transform:translateZ(1px)}.book.opening .cv{transform:translateZ(1px) rotateY(-150deg)}.book .in{visibility:hidden}.book.opening .in{visibility:visible}.book.opening .cv{transform:rotateY(-150deg)}
+.empty{text-align:center;opacity:.7;padding:30px}
+.dim{position:fixed;inset:0;background:#06121b;opacity:0;pointer-events:none;transition:opacity .5s .55s;z-index:40}.dim.on{opacity:.85}
+footer{text-align:center;font-size:12px;opacity:.55;padding:0 0 24px}footer a{color:inherit}
+@media (max-width:600px){.book,.book.soon:hover{transform:rotateY(-6deg)}.book:hover{transform:rotateY(-2deg) translateY(-6px)}.case{padding:18px 8px 6px;box-shadow:inset 0 0 0 7px #3a2618,inset 0 0 40px #000a,0 20px 40px #0008}.shelf{gap:22px 12px;padding:14px 6px 0;min-height:200px}.book{width:128px;height:184px}.cv .ti{font-size:13.5px}.cv .sb{display:none}.shelf+.shelf{margin-top:46px}}
+@media (prefers-reduced-motion:reduce){.book,.book .cv,.dim{transition:none!important}.book,.book:hover,.book.soon:hover{transform:none}.book.opening{transform:none}.book.opening .cv{transform:none}}
+</style>
+</head>
+<body>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b id="hn"></b><small id="hs"></small></div><button class="hb" id="lang" type="button"></button><a class="hb" id="home" href="index.html"></a></header>
+<section class="hero"><small id="k"></small><h1 id="h"></h1><p id="p"></p></section>
+<div class="tools"><input id="q" type="search" autocomplete="off"></div>
+<div class="chips" id="chips" role="group"></div>
+<div class="acc" id="acc"></div>
+<main class="case" id="case" aria-live="polite"></main>
+<div class="dim" id="dim"></div>
+<footer id="ft"></footer>
+<script src="js/library-data.js?r=202610131620"></script>
+<script>
+(async function(){
+const D=window.ABAD_LIBRARY,$=id=>document.getElementById(id),RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const qs=new URLSearchParams(location.search);let L=qs.get("lang")||(()=>{try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";if(L!=="en")L="ar";
+const t=(a,b)=>L==="en"?b:a,tx=o=>o&&(o[L]||o.ar||o.en)||"";
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+let ACC={mode:"open"};try{ACC=await D.getAccess()||ACC}catch(e){}
+let V="";
+function chrome(){const H=document.documentElement;H.lang=L;H.dir=L==="en"?"ltr":"rtl";document.title=t("مكتبة المعهد — معهد شبكة آباد للتدريب","Institute Library — ABAD Network Training Institute");
+ $("hn").textContent=t("معهد شبكة آباد للتدريب","ABAD Network Training Institute");$("hs").textContent=t("منصة الاختبارات الرسمية","Official Exams Platform");
+ $("lang").textContent=L==="en"?"ع العربية":"EN English";$("home").textContent=t("الرئيسية","Home");
+ $("k").textContent=t("مكتبة المعهد","Institute library");$("h").textContent=t("رفوف كتب دوراتك","Your course bookshelf");
+ $("p").textContent=t("اختر كتاب الدورة لتصفّحه كتاباً تفاعلياً — المحتوى للعرض فقط.","Pick a course book to browse it as an interactive flipbook — view-only content.");
+ $("q").placeholder=t("ابحث باسم الدورة أو الرمز…","Search by course name or code…");$("q").setAttribute("aria-label",$("q").placeholder);
+ $("acc").textContent=ACC.mode==="enrolled"?t("تظهر لك كتب الدورات المسجّل فيها","Showing the books of your enrolled courses"):ACC.mode==="guest"?t("سجّل دخولك كطالب لفتح كتب دوراتك","Sign in as a student to open your course books"):t("نسخة تجريبية مفتوحة","Open demo");
+ $("ft").innerHTML='© '+new Date().getFullYear()+' '+esc(t("معهد شبكة آباد للتدريب — الرياض","ABAD Network Training Institute — Riyadh"));
+ const vs=[...new Set(D.books.map(b=>b.vendor))];$("chips").setAttribute("aria-label",t("تصفية حسب الجهة","Filter by vendor"));
+ $("chips").innerHTML=['<button type="button" data-v="" aria-pressed="'+(V==="")+'">'+t("الكل","All")+'</button>'].concat(vs.map(v=>'<button type="button" data-v="'+v+'" aria-pressed="'+(V===v)+'">'+esc(tx(D.vendors[v]))+'</button>')).join("");
+ $("chips").querySelectorAll("button").forEach(b=>b.onclick=()=>{V=b.dataset.v;chrome();render()})}
+function state(b){return b.status!=="available"?"soon":D.canOpen(b,ACC)?"ok":"lock"}
+function render(){const q=$("q").value.trim().toLowerCase();
+ let list=D.books.filter(b=>(!V||b.vendor===V)&&(!q||[b.id,b.code,b.title.ar,b.title.en,b.sub&&b.sub.ar,b.sub&&b.sub.en,tx(D.vendors[b.vendor])].join(" ").toLowerCase().includes(q)));
+ if(ACC.mode==="enrolled")list=list.filter(b=>state(b)==="ok"||b.status!=="available");/* لاحقاً: إخفاء ما لم يُسجَّل فيه */
+ list.sort((a,b)=>({ok:0,lock:1,soon:2})[state(a)]-({ok:0,lock:1,soon:2})[state(b)]);
+ if(!list.length){$("case").innerHTML='<div class="empty">'+t("لا توجد كتب مطابقة","No matching books")+'</div>';return}
+ const per=innerWidth<600?2:innerWidth<1000?4:6,rows=[];for(let i=0;i<list.length;i+=per)rows.push(list.slice(i,i+per));
+ $("case").innerHTML=rows.map(r=>'<div class="shelf">'+r.map(b=>{const s=state(b),v=D.vendors[b.vendor]||{};
+  const lab={ok:t("متاح","Available"),soon:t("قريبًا","Soon"),lock:"🔒 "+t("للمسجّلين","Enrolled only")}[s];
+  return '<button type="button" class="book '+s+'" data-id="'+b.id+'" style="--c1:'+b.color[0]+';--c2:'+b.color[1]+'"'+(s!=="ok"?' aria-disabled="true"':'')+' aria-label="'+esc(tx(b.title)+" — "+lab)+'">'+
+   '<span class="badge '+s+'">'+lab+'</span><span class="pg"></span><span class="in">'+t("جارٍ فتح الكتاب…","Opening…")+'</span><span class="sp"></span>'+
+   '<span class="cv"><span class="lg"><img alt="'+esc(tx(v))+'" src="'+esc(v.logo||"")+'"></span><span class="ti" style="display:block">'+esc(tx(b.title))+'</span><span class="sb" style="display:block">'+esc(tx(b.sub))+'</span><span class="gl"></span><span class="cd">'+esc(b.code||"")+'</span></span></button>'}).join("")+'</div>').join("")}
+$("case").addEventListener("click",e=>{const el=e.target.closest(".book");if(!el)return;const b=D.books.find(x=>x.id===el.dataset.id),s=state(b);
+ if(s==="soon")return;if(s==="lock"){alert(t("هذا الكتاب متاح للطلاب المسجّلين في الدورة فقط.","This book is available to enrolled students only."));return}
+ const fl=(b.files||[]).indexOf(L)>=0?L:(b.files||["en"])[0],url=b.href+(b.href.indexOf("?")>=0?"&":"?")+"lang="+fl;
+ if(RM){location.href=url;return}el.classList.add("opening");$("dim").classList.add("on");setTimeout(()=>location.href=url,1150)});
+addEventListener("pageshow",e=>{if(e.persisted){document.querySelectorAll(".book.opening").forEach(b=>b.classList.remove("opening"));$("dim").classList.remove("on")}});
+$("q").addEventListener("input",render);let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(render,200)});
+$("lang").onclick=()=>{L=L==="en"?"ar":"en";try{localStorage.setItem("abad-lang",L)}catch(e){}chrome();render()};
+chrome();render();
+})();
+</script>
+</body>
+</html>
