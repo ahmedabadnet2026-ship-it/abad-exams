@@ -40,7 +40,7 @@ body.login header{display:none}
 nav.tabs{background:#fff;border-bottom:1px solid var(--ln);display:flex;gap:4px;padding:0 18px;position:sticky;top:0;z-index:4;overflow-x:auto}
 nav.tabs button{font-family:inherit;font-weight:700;font-size:.95rem;background:none;border:0;border-bottom:4px solid transparent;padding:12px 16px;cursor:pointer;color:var(--navy);white-space:nowrap}
 nav.tabs button[aria-selected=true]{border-color:var(--gold);color:var(--blue)}nav.tabs button:disabled{opacity:.45;cursor:not-allowed}
-nav.tabs .who{margin-inline-start:auto;align-self:center;font-size:.8rem;color:var(--mut);white-space:nowrap}
+@media(max-width:640px){nav.tabs{flex-wrap:wrap;overflow-x:visible;padding:0 8px}nav.tabs button{padding:10px 10px;font-size:.88rem}nav.tabs .who{flex-basis:100%;padding:4px 0 6px}}nav.tabs .who{margin-inline-start:auto;align-self:center;font-size:.8rem;color:var(--mut);white-space:nowrap}
 body.login nav.tabs,body.login #bk,body.login #cr{display:none!important}body.bkon .evonly{display:none}
 .lgc .k2{margin-top:10px}.lgc .addk{background:none;border:0;color:var(--blue);font-family:inherit;cursor:pointer;font-size:.85rem;margin-top:6px}
 .lgc .hint{font-size:.78rem;color:var(--mut);margin:8px 0 0;text-align:start}
@@ -124,7 +124,7 @@ const AUTH={s:null,
  save(s,rem){this.s=s;try{(rem?localStorage:sessionStorage).setItem(SESS,JSON.stringify(s));(rem?sessionStorage:localStorage).removeItem(SESS)}catch(e){}},
  clear(){this.s=null;try{localStorage.removeItem(SESS);sessionStorage.removeItem(SESS)}catch(e){}},
  token(){return this.s&&this.s.token},user(){return this.s&&this.s.user},
- can(role){const u=this.user();return !!u&&u.roles.indexOf(role)>=0}};
+ can(role){const u=this.user();return !!u&&(u.roles.indexOf(role)>=0||u.roles.indexOf("admin")>=0)}};
 const TABS=[{id:"evaluations",role:"evaluations",ar:"لوحة التقييمات",en:"Evaluations"},{id:"bookings",role:"bookings",ar:"حجوزات الاختبارات",en:"Exam bookings"},{id:"certificates",role:"certificates",ar:"طلبات الشهادات",en:"Certificate requests"},{id:"users",role:"admin",ar:"المستخدمون",en:"Users"}];
 let CUR=null,EVLOADED=false;
 function tabFromHash(){const h=location.hash.replace("#","");return TABS.find(t=>t.id===h||(h==="evals"&&t.id==="evaluations"))}
