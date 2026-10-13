@@ -1,0 +1,32 @@
+body{flex-direction:column}
+footer{position:static!important;margin:24px 0 18px}
+.svc{position:relative;z-index:1;width:100%;max-width:1120px;padding:24px 20px 40px;text-align:center}
+.svc-head small{color:#F5BD2D;font-weight:700;letter-spacing:.5px}
+.svc-head h2{font-size:clamp(1.5rem,3.4vw,2.1rem);margin:6px 0 8px;font-weight:800}
+.svc-head p{opacity:.8;max-width:620px;margin:0 auto}
+.svc-stats{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:22px 0 26px}
+.svc-stat{background:#ffffff0f;border:1px solid #ffffff22;border-radius:14px;padding:10px 22px;min-width:130px}
+.svc-stat b{display:block;font-size:1.9rem;color:#F5BD2D;line-height:1.2;font-variant-numeric:tabular-nums}
+.svc-stat span{font-size:.85rem;opacity:.8}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;text-align:start}
+.svc-card{position:relative;display:block;color:#fff;text-decoration:none;background:linear-gradient(160deg,#ffffff14,#ffffff06);border:1px solid #ffffff1f;border-radius:18px;padding:20px 18px;backdrop-filter:blur(6px);overflow:hidden;transition:transform .35s ease,border-color .35s,box-shadow .35s}
+.svc-card:hover,.svc-card:focus-visible{transform:translateY(-4px);border-color:#F5BD2D88;box-shadow:0 12px 30px #0006;outline:none}
+.svc-card::after{content:"";position:absolute;inset-inline-start:0;top:0;height:3px;width:0;background:linear-gradient(90deg,#3f86b3,#F5BD2D);transition:width .8s ease .25s}
+.svc-card h3{font-size:1.05rem;margin:12px 0 6px;font-weight:700}
+.svc-card p{font-size:.88rem;opacity:.82;margin:0;line-height:1.75}
+.svc-card .more{display:inline-block;margin-top:10px;font-size:.8rem;color:#F5BD2D;font-weight:700}
+.svc-ico{width:52px;height:52px;border-radius:14px;background:#3f86b333;display:grid;place-items:center}
+.svc-ico svg{width:30px;height:30px;fill:none;stroke:#F5BD2D;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.svc-ico svg .d{stroke-dasharray:var(--len,120);stroke-dashoffset:var(--len,120)}
+.svc-ico svg .b{stroke:#8cc6ea}
+/* reveal (only when JS enabled) */
+.svc.js .svc-card,.svc.js .svc-head,.svc.js .svc-stat{opacity:0;transform:translateY(22px)}
+.svc.js .shown{opacity:1!important;transform:none!important;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.svc .svc-card.shown::after{width:100%}
+.svc .shown .svc-ico svg .d{animation:svcDraw 1.4s ease forwards .2s}
+.svc .shown .svc-ico svg .p{animation:svcPulse 3.2s ease-in-out infinite 1.6s;transform-box:fill-box;transform-origin:center}
+@keyframes svcDraw{to{stroke-dashoffset:0}}
+@keyframes svcPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.7}}
+@media (max-width:600px){.svc{padding:10px 14px 30px}.svc-grid{grid-template-columns:1fr;gap:12px}.svc-stat{min-width:0;flex:1;padding:8px 10px}.svc-stat b{font-size:1.5rem}}
+@media (prefers-reduced-motion:reduce){.svc.js .svc-card,.svc.js .svc-head,.svc.js .svc-stat{opacity:1;transform:none}
+.svc *{animation:none!important;transition:none!important}.svc-ico svg .d{stroke-dashoffset:0}.svc-card::after{width:100%}}
