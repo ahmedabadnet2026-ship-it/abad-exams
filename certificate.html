@@ -686,7 +686,7 @@ course.onchange=()=>{otherCourse.hidden=course.value!=="__other";if(!otherCourse
 start.onchange=()=>{end.min=start.value};
 /* invoice */
 /* خادم الطلبات (نفس سكربت الحجوزات) — يُملأ عبر set-bookings-url.sh */
-const BOOKINGS_SHEET_URL="https://script.google.com/macros/s/AKfycbySCiyLm8uBYHbH5KxbGxlE2Sm-yjwIn_VD3rIptihMorrQocCH3L07R-KPeYTBf9o3/exec";
+const BOOKINGS_SHEET_URL="https://script.google.com/macros/s/AKfycbz_VzO0zsH5GuftLm-hLaUP3ccBhyK1b3CdQZtFYh57Sk1_OD797oRJNhBct368saxK/exec";
 /* ===== إرسال الطلب إلى الخادم (Google Sheet) — لا يُرسَل أي من بيانات النموذج عبر واتساب ===== */
 const L2=(a,e)=>window.LANG==="en"?e:a;
 async function abadPost(url,obj,ms){if(!url)throw new Error("nourl");const ac=window.AbortController?new AbortController():null,tm=ac?setTimeout(()=>ac.abort(),ms||45000):0;
