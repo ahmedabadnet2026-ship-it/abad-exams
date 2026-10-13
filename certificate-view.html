@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#10293b">
+<title>شهادة حضور — معهد شبكة آباد للتدريب</title>
+<link rel="icon" href="icons/icon-192.png">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Cairo,sans-serif;min-height:100vh;color:#fff;background:radial-gradient(circle at 20% 10%,#3f86b355 0,transparent 45%),radial-gradient(circle at 85% 90%,#F5BD2D22 0,transparent 40%),linear-gradient(135deg,#0a1c29,#10293b 50%,#1d5479);display:flex;flex-direction:column;align-items:center;padding:18px 14px 28px}
+header{display:flex;align-items:center;gap:12px;margin:4px 0 14px}header img{height:46px;background:#fff;border-radius:10px;padding:4px 8px}header b{display:block;font-size:17px}header small{opacity:.75;font-size:12px}
+.card{width:100%;max-width:980px;background:#ffffff10;border:1px solid #ffffff22;border-radius:18px;padding:16px;backdrop-filter:blur(6px)}
+h1{margin:0 0 4px;font-size:clamp(1.2rem,3.2vw,1.6rem);color:#F5BD2D}.sub{margin:0 0 12px;opacity:.85;font-size:14px}
+.pv{background:#fff;border-radius:12px;overflow:hidden;min-height:180px;display:flex;align-items:center;justify-content:center;color:#5b7488;box-shadow:0 10px 30px #0006}
+.pv img{width:100%;display:block}
+.ac{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.ac button{font:inherit;font-weight:700;font-size:15px;border-radius:11px;padding:11px 18px;border:0;cursor:pointer;flex:1 1 200px}
+.ac .pri{background:#F5BD2D;color:#10293b}.ac .sec{background:#ffffff1a;color:#fff;border:1px solid #ffffff44}.ac button:disabled{opacity:.5;cursor:default}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;border-radius:999px;padding:4px 12px;margin-bottom:10px}.ok{background:#1c7a3d33;border:1px solid #3fbf6d;color:#bff0cf}.warn{background:#a12a2a33;border:1px solid #e06464;color:#ffd0d0}
+.err{padding:30px 10px;text-align:center}
+footer{margin-top:16px;font-size:12px;opacity:.6;text-align:center}footer a{color:inherit}
+@media print{@page{size:A4 landscape;margin:0}body{background:#fff;padding:0;display:block}header,.sub,h1,.ac,.badge,footer{display:none!important}.card{border:0;padding:0;background:none;max-width:none}.pv{box-shadow:none;border-radius:0}}
+</style>
+</head>
+<body>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div><b id="h-n">معهد شبكة آباد للتدريب</b><small id="h-s">ABAD Network Training Institute — Riyadh</small></div></header>
+<main class="card" id="app"><div class="pv" id="pv">…</div></main>
+<footer id="ft">© معهد شبكة آباد للتدريب · <a href="index.html">abad-exams</a></footer>
+<script src="js/cert-core.js?r=202610131435"></script>
+<script>
+(async function(){
+const $=id=>document.getElementById(id),app=$("app"),C=window.ABADCERT;
+let res;try{res=await C.parse(location.hash)}catch(e){res=null}
+const EN=!!(res&&res.r.lang==="en"),t=(a,b)=>EN?b:a;
+if(EN){document.documentElement.lang="en";document.documentElement.dir="ltr";$("h-n").textContent="ABAD Network Training Institute";$("h-s").textContent="Riyadh, Saudi Arabia";$("ft").firstChild.nodeValue="© ABAD Network Training Institute · "}
+if(!res||!res.r.name){app.innerHTML='<div class="err"><h1>'+t("رابط الشهادة غير صالح","Invalid certificate link")+'</h1><p class="sub">'+t("تأكد من نسخ الرابط كاملاً كما وصلك، أو تواصل مع المعهد.","Make sure you opened the full link as received, or contact the institute.")+'</p></div>';return}
+const r=res.r;document.title=t("شهادة حضور","Certificate of Attendance")+" — "+r.name;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+const badge=!res.checked?"":res.ok?'<span class="badge ok">✓ '+t("بيانات الشهادة سليمة · المرجع ","Certificate data intact · Ref ")+esc(r.id||"")+'</span>':'<span class="badge warn">⚠ '+t("تعذّر التحقق من سلامة بيانات الرابط — تواصل مع المعهد للتأكيد","Link data could not be verified — contact the institute to confirm")+'</span>';
+app.innerHTML=badge+'<h1>'+t("مبارك عليك الإنجاز يا ","Congratulations, ")+esc(r.name)+' 🎉</h1><p class="sub">'+t("شهادة حضور دورة «"+esc(r.course||"")+"» — معهد شبكة آباد للتدريب","Attendance certificate — "+esc(r.course||"")+" — ABAD Network Training Institute")+'</p>'+
+ '<div class="pv" id="pv">'+t("جارٍ تجهيز الشهادة…","Preparing your certificate…")+'</div><div class="ac"><button class="pri" id="dl" disabled>⬇ '+t("تحميل الشهادة PDF","Download certificate (PDF)")+'</button><button class="sec" id="pr" disabled>🖨 '+t("طباعة","Print")+'</button></div>';
+try{const o=await C.render(r);$("pv").innerHTML='<img alt="'+esc(t("شهادة حضور","Certificate of attendance"))+'" src="'+o.img+'">';
+ $("dl").disabled=$("pr").disabled=false;$("dl").onclick=()=>C.save(o.blob,C.fname(r));$("pr").onclick=()=>print()}
+catch(e){$("pv").textContent="⚠ "+t("تعذّر إنشاء الشهادة، حدّث الصفحة وحاول مجدداً.","Could not render the certificate — please reload.")}
+})();
+</script>
+</body>
+</html>
