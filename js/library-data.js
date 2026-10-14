@@ -23,7 +23,7 @@ window.ABAD_LIBRARY={
   {id:"aplus",vendor:"comptia",code:"220-1201/1202",title:{ar:"CompTIA A+",en:"CompTIA A+"},sub:{ar:"الدعم الفني",en:"IT support"},color:["#2d5016","#4f8a2a"],status:"soon"},
   {id:"linuxplus",vendor:"comptia",code:"XK0-006",title:{ar:"CompTIA Linux+",en:"CompTIA Linux+"},sub:{ar:"إدارة أنظمة لينكس",en:"Linux administration"},color:["#3a3a3a","#6b6b6b"],status:"soon"},
   {id:"ccna",vendor:"cisco",code:"200-301",title:{ar:"Cisco CCNA",en:"Cisco CCNA"},sub:{ar:"شبكات سيسكو",en:"Cisco networking"},color:["#0b3a5b","#1ba0d7"],status:"soon"},
-  {id:"rhcsa",vendor:"redhat",code:"EX200",title:{ar:"Red Hat RHCSA",en:"Red Hat RHCSA"},sub:{ar:"مدير أنظمة Red Hat",en:"Red Hat system administrator"},color:["#5c0b0b","#cc0000"],status:"available",files:["ar"],href:"chapters.html?b=rhcsa",
+  {id:"rhcsa",vendor:"redhat",code:"EX200",title:{ar:"Red Hat RHCSA",en:"Red Hat RHCSA"},sub:{ar:"مدير أنظمة Red Hat",en:"Red Hat system administrator"},color:["#5c0b0b","#cc0000"],status:"available",files:["ar"],href:"chapters.html?b=rhcsa",layout:"B",
    /* فصول الدورة — لإضافة فصل جديد: ضع صور الصفحات (p01.webp… و t01.webp…) في course-files/<id>/ar/ ثم أضف سطراً هنا */
    chapters:[
     {id:"rhca-el-ch02",n:"02",title:{ar:"إدارة الملفات والتنقل في Linux",en:"File Management & Navigation in Linux"},sub:{ar:"شرح الأوامر خياراً خياراً · أمثلة عملية · مسائل وحلول",en:"Commands option by option · practical examples · exercises & solutions"},pages:21,lang:"ar"},
