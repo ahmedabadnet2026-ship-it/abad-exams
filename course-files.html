@@ -63,7 +63,9 @@ header a.bk{color:#F5BD2D;text-decoration:none;font-weight:700;font-size:14px}
 <script>
 (function(){
 const COURSES={itil5:{ar:"ITIL Foundation (Version 5) — ملفات الدورة",en:"ITIL Foundation (Version 5) — Course files",back:"vendor.html#peoplecert",
- files:{en:{pages:15,dir:"course-files/itil5/en/",title:"Chapter 1 — Key Concepts of Digital Product and Service Management"},ar:null}}};
+ files:{en:{pages:15,dir:"course-files/itil5/en/",title:"Chapter 1 — Key Concepts of Digital Product and Service Management"},ar:null}},
+ "rhca-el-ch02":{ar:"RHCA-EL — الفصل 02: إدارة الملفات والتنقل في Linux",en:"RHCA-EL — Chapter 02: File Management & Navigation in Linux",back:"vendor.html#redhat",
+ files:{ar:{pages:21,dir:"course-files/rhca-el-ch02/ar/",title:"الفصل 02 — إدارة الملفات والتنقل في نظام Linux"},en:null}}};
 const $=id=>document.getElementById(id),Q=new URLSearchParams(location.search);
 let UI="ar";try{UI=localStorage.getItem("abad-lang")==="en"?"en":"ar"}catch(e){}if(Q.get("ui")==="en")UI="en";
 const t=(a,b)=>UI==="en"?b:a;if(UI==="en"){document.documentElement.lang="en";document.documentElement.dir="ltr"}

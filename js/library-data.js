@@ -23,6 +23,8 @@ window.ABAD_LIBRARY={
   {id:"aplus",vendor:"comptia",code:"220-1201/1202",title:{ar:"CompTIA A+",en:"CompTIA A+"},sub:{ar:"الدعم الفني",en:"IT support"},color:["#2d5016","#4f8a2a"],status:"soon"},
   {id:"linuxplus",vendor:"comptia",code:"XK0-006",title:{ar:"CompTIA Linux+",en:"CompTIA Linux+"},sub:{ar:"إدارة أنظمة لينكس",en:"Linux administration"},color:["#3a3a3a","#6b6b6b"],status:"soon"},
   {id:"ccna",vendor:"cisco",code:"200-301",title:{ar:"Cisco CCNA",en:"Cisco CCNA"},sub:{ar:"شبكات سيسكو",en:"Cisco networking"},color:["#0b3a5b","#1ba0d7"],status:"soon"},
+  {id:"rhca-el-ch02",vendor:"redhat",code:"RHCA-EL · 02",title:{ar:"الفصل 02 — إدارة الملفات والتنقل في Linux",en:"Chapter 02 — File Management & Navigation in Linux"},sub:{ar:"مسار RHCA – Enterprise Linux",en:"RHCA – Enterprise Linux track"},
+   color:["#5c0b0b","#cc0000"],status:"available",files:["ar"],href:"course-files.html?c=rhca-el-ch02"},
   {id:"rhcsa",vendor:"redhat",code:"EX200",title:{ar:"Red Hat RHCSA",en:"Red Hat RHCSA"},sub:{ar:"مدير أنظمة Red Hat",en:"Red Hat system administrator"},color:["#5c0b0b","#cc0000"],status:"soon"},
   {id:"pmp",vendor:"pmi",code:"PMP®",title:{ar:"PMP",en:"PMP"},sub:{ar:"إدارة المشاريع الاحترافية",en:"Project Management Professional"},color:["#10293b","#3f86b3"],status:"soon"}
  ],
