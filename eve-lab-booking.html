@@ -35,7 +35,7 @@ form{margin-top:10px;padding:20px;border-radius:18px;background:#ffffff0d;border
 .fld textarea{min-height:80px;resize:vertical}.fld input:focus,.fld select:focus,.fld textarea:focus{outline:2px solid #3f86b3;border-color:#3f86b3}
 .err{display:none;color:#ff9b8b;font-size:12.5px;margin-top:3px}.bad .err{display:block}.bad input,.bad select{border-color:#ff7b6b}
 .slots{display:flex;flex-wrap:wrap;gap:8px}.slots label{margin:0;font-weight:700}
-.slots input{position:absolute;opacity:0;pointer-events:none}.slots span{display:inline-block;padding:7px 12px;border-radius:10px;border:1px solid #ffffff44;background:#ffffff10;cursor:pointer;direction:ltr;font-size:13.5px}
+.slots input{position:absolute;opacity:0;pointer-events:none}.slots span{display:inline-block;padding:7px 12px;border-radius:10px;border:1px solid #ffffff44;background:#ffffff10;cursor:pointer;font-size:13.5px;unicode-bidi:isolate}
 .slots input:checked+span{background:#F5BD2D;color:#10293b;border-color:#F5BD2D}.slots input:focus-visible+span{outline:2px solid #fff}
 .acts{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .btn{font:inherit;font-weight:800;font-size:15px;border:0;border-radius:12px;padding:11px 22px;cursor:pointer;background:#25D366;color:#05111a}
@@ -49,7 +49,7 @@ footer{text-align:center;font-size:12px;opacity:.55;padding:0 0 24px}
 <body>
 <header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="practical-lab.html" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
 <main>
-<section class="hero"><small data-t="kick"></small><h1 data-t="h1"></h1><p data-t="lead"></p>
+<section class="hero"><small data-t="kick"></small><h1 data-t="h1" style="unicode-bidi:plaintext"></h1><p data-t="lead"></p>
 <div class="trial"><span>🧪</span><span><b data-t="trB"></b> <span data-t="tr"></span></span></div></section>
 <h2 data-t="howH"></h2>
 <div class="steps"><div class="st"><b data-t="s1"></b><span data-t="s1d"></span></div><div class="st"><b data-t="s2"></b><span data-t="s2d"></span></div><div class="st"><b data-t="s3"></b><span data-t="s3d"></span></div><div class="st"><b data-t="s4"></b><span data-t="s4d"></span></div></div>
@@ -109,7 +109,7 @@ function paint(){var i=I();document.documentElement.lang=L;document.documentElem
  $("labs").querySelectorAll(".lab").forEach(function(b){b.onclick=function(){pick(b.dataset.id,true)}});
  var cv=$("course").value,lv=$("lab").value;$("course").innerHTML='<option value="">'+S.choose[i]+'</option>'+COURSES.map(function(c,k){return '<option value="'+k+'">'+c[i]+'</option>'}).join("");$("course").value=cv;
  $("lab").innerHTML='<option value="">'+S.choose[i]+'</option>'+LABS.map(function(l){return '<option value="'+l.id+'">'+tx(l.t)+'</option>'}).join("");$("lab").value=lv||SEL;
- var sv=(document.querySelector("input[name=slot]:checked")||{}).value;$("slots").innerHTML=SLOTS.map(function(h){return '<label><input type="radio" name="slot" value="'+h+'"'+(String(h)===sv?" checked":"")+'><span>'+slotLbl(h)+'</span></label>'}).join("")}
+ var sv=(document.querySelector("input[name=slot]:checked")||{}).value;$("slots").innerHTML=SLOTS.map(function(h){return '<label><input type="radio" name="slot" value="'+h+'"'+(String(h)===sv?" checked":"")+'><span dir="'+(L==="ar"?"rtl":"ltr")+'">'+slotLbl(h)+'</span></label>'}).join("")}
 function pick(id,scroll){SEL=id;$("lab").value=id;document.querySelectorAll(".lab").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.id===id)});$("lab").closest(".fld").classList.remove("bad");if(scroll)$("formH").scrollIntoView({behavior:"smooth",block:"start"})}
 $("lab").onchange=function(){pick($("lab").value,false)};
 var toLatin=function(s){return String(s).replace(/[٠-٩]/g,function(d){return "٠١٢٣٤٥٦٧٨٩".indexOf(d)}).replace(/[۰-۹]/g,function(d){return "۰۱۲۳۴۵۶۷۸۹".indexOf(d)})};
