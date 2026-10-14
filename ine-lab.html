@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10293b">
+<title>مختبر INE — معهد شبكة آباد للتدريب</title>
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Cairo,sans-serif;color:#fff;min-height:100vh;background:radial-gradient(circle at 15% 10%,#3f86b344 0,transparent 45%),radial-gradient(circle at 85% 95%,#F5BD2D1c 0,transparent 40%),linear-gradient(135deg,#0a1c29,#10293b 55%,#16405e)}
+header{display:flex;align-items:center;gap:12px;padding:12px 18px;flex-wrap:wrap;max-width:1280px;margin:0 auto}
+header img{height:42px;background:#fff;border-radius:9px;padding:3px 7px}header .t{flex:1;min-width:170px}header b{display:block;font-size:17px}header small{opacity:.7;font-size:12px}
+.hb{font:inherit;font-weight:700;font-size:13px;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:9px;padding:6px 12px;cursor:pointer;text-decoration:none}
+.hero{text-align:center;padding:4px 18px}.hero small{color:#F5BD2D;font-weight:700}.hero h1{margin:2px 0;font-size:clamp(1.4rem,3.4vw,2.1rem);font-weight:800}.hero p{margin:0 auto;opacity:.8;max-width:720px;font-size:14px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;max-width:1100px;margin:24px auto 40px;padding:0 18px}
+.cd{position:relative;display:flex;flex-direction:column;gap:6px;padding:20px;border-radius:18px;text-decoration:none;color:#fff;background:linear-gradient(160deg,#ffffff1c,#ffffff08);border:1px solid #ffffff2e;box-shadow:0 14px 30px #0005;overflow:hidden;transition:transform .3s,border-color .3s}
+.cd::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#3f86b3,#F5BD2D)}
+a.cd:hover{transform:translateY(-4px);border-color:#F5BD2D}
+.cd .ic{font-size:2.2rem}.cd b{font-size:1.15rem;color:#F5BD2D}.cd p{margin:0;font-size:13.5px;opacity:.85;line-height:1.7;flex:1}
+.tag{align-self:flex-start;font-size:11.5px;font-weight:800;border-radius:999px;padding:2px 10px;background:#3ecf8e;color:#05111a}.tag.soon{background:#ffffff26;color:#fff}
+.go{align-self:flex-start;margin-top:6px;font-weight:800;font-size:13px;background:#F5BD2D;color:#10293b;border-radius:9px;padding:5px 14px}
+.cd.off{opacity:.6}
+</style>
+<link rel="stylesheet" href="css/home-btn.css?r=202610131945"><script src="js/home-btn.js?r=202610131945" defer></script>
+</head>
+<body>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="practical-lab.html" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
+<section class="hero"><small data-t="kick"></small><h1 data-t="sec"></h1><p data-t="lead"></p></section>
+<div class="grid">
+ <a class="cd" href="ejpt-trial-exam.html"><span class="tag" data-t="trial"></span><span class="ic">📝</span><b data-t="ej"></b><p data-t="ejd"></p><span class="go" data-t="start"></span></a>
+</div>
+<script>
+var L=(function(){try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";
+var S={inst:["معهد شبكة آباد للتدريب","ABAD Network Training Institute"],sec:["مختبر INE","INE Lab"],back:["المحاكاة العملية","Practical labs"],kick:["🛡️ أساسيات اختبار الاختراق","🛡️ Penetration testing fundamentals"],lead:["اختبارات تجريبية تعليمية مبنية على مختبر المتدربين — استكشاف وتعرّف فقط.","Educational trial exams based on the trainee lab — discovery and identification only."],trial:["تجريبي","Trial"],start:["ابدأ الاختبار ←","Start exam →"],ej:["اختبار eJPT التجريبي","eJPT Trial Exam"],ejd:["12 سؤالًا في الاستكشاف والخدمات وتطبيقات الويب، تصحيح آلي ونسبة نجاح 70٪.","12 questions on discovery, services and web apps, auto-graded with a 70% pass mark."]};
+function paint(){var i=L=="ar"?0:1;document.documentElement.lang=L;document.documentElement.dir=L=="ar"?"rtl":"ltr";document.getElementById("lang").textContent=L=="ar"?"English":"العربية";document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=S[e.dataset.t][i]});document.title=S.sec[i]+" — "+S.inst[i]}
+document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{localStorage.setItem("abad-lang",L)}catch(e){}paint()};paint();
+</script>
+</body>
+</html>
