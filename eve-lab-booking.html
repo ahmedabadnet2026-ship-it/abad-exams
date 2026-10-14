@@ -31,7 +31,7 @@ h2{font-size:1.15rem;color:#F5BD2D;margin:28px 0 10px}
 .tracks{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 .trk{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 12px;border-radius:16px;background:linear-gradient(160deg,#ffffff1c,#ffffff08);border:2px solid #ffffff2e;cursor:pointer;font:inherit;color:#fff;text-align:center;transition:transform .2s,border-color .2s}
 .trk:hover{transform:translateY(-3px);border-color:#3f86b3}.trk[aria-pressed=true]{border-color:#F5BD2D;box-shadow:0 0 0 3px #F5BD2D33}
-.trk .lg{height:46px;min-width:110px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:10px;padding:4px 12px}.trk .lg img{max-height:34px;max-width:120px}
+.trk .lg{height:56px;width:150px;max-width:100%;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:10px;padding:4px 12px}.trk .lg img{display:block;height:34px;max-width:118px;width:auto;object-fit:contain}
 .trk .lg i{font-style:normal;font-weight:800;font-size:16px;color:var(--c);letter-spacing:.3px;direction:ltr}
 .trk b{color:#F5BD2D;font-size:1.05rem}.trk small{opacity:.8;font-size:12.5px;line-height:1.5}.trk .n{font-size:11.5px;font-weight:700;background:#3f86b3;border-radius:999px;padding:1px 9px}
 .stp{display:inline-flex;width:26px;height:26px;border-radius:50%;background:#F5BD2D;color:#10293b;font-weight:800;align-items:center;justify-content:center;margin-inline-end:8px;font-size:14px;vertical-align:middle}
@@ -111,19 +111,19 @@ var TRACKS=[
   L_("sda","🧠","SD-Access Concepts / Advanced BGP","مفاهيم SD-Access (LISP/VXLAN) وسياسات BGP متقدمة.","SD-Access concepts (LISP/VXLAN) and advanced BGP policy.",150,9),
   L_("mcast","📺","Multicast","PIM Sparse Mode مع RP و IGMP والتحقق من شجرة التوزيع.","PIM sparse mode with RP, IGMP and distribution-tree verification.",120,8),
   L_("ts","🧯","Troubleshooting Challenge","تحدّي استكشاف أعطال متعددة مزروعة في شبكة مؤسسية بوقت محدد.","Timed challenge fixing multiple injected faults in an enterprise network.",120,12)]},
- {id:"forti",nm:"FORTINET",c:"#da291c",sub:["FortiGate / NSE","FortiGate / NSE"],labs:[
+ {id:"forti",logo:"assets/logos/fortinet.svg",nm:"Fortinet",c:"#da291c",sub:["FortiGate / NSE","FortiGate / NSE"],labs:[
   L_("fgset","🧱","FortiGate Initial Setup","تهيئة أولية: الواجهات والمناطق والتوجيه والوصول الإداري.","Initial config: interfaces, zones, routing and admin access.",60,3),
   L_("fgpol","📜","Firewall Policies & NAT","سياسات الجدار الناري و SNAT/VIP والتحقق من السجلات.","Firewall policies, SNAT/VIPs and log verification.",60,4),
   L_("fgips","🔒","IPsec VPN","نفق IPsec Site-to-Site بين جهازي FortiGate.","Site-to-site IPsec tunnel between two FortiGates.",90,5),
   L_("fgssl","🧳","SSL VPN","وصول المستخدمين عن بُعد عبر SSL VPN بوضعَي web و tunnel.","Remote-user SSL VPN in web and tunnel modes.",60,4),
   L_("fgsdw","🛤️","SD-WAN Basics","SD-WAN بخطّي إنترنت مع SLA وقواعد توجيه التطبيقات.","SD-WAN over two WAN links with SLAs and steering rules.",90,6)]},
- {id:"pan",nm:"paloalto",c:"#fa582d",sub:["Palo Alto Networks · PCNSA/PCNSE","Palo Alto Networks · PCNSA/PCNSE"],labs:[
+ {id:"pan",logo:"assets/logos/paloalto.svg",nm:"Palo Alto Networks",c:"#fa582d",sub:["PCNSA / PCNSE","PCNSA / PCNSE"],labs:[
   L_("paset","🧱","Initial Config & Zones","تهيئة أولية للجدار الناري: الواجهات والمناطق والموجّه الافتراضي.","Initial firewall setup: interfaces, zones and virtual router.",60,3),
   L_("papol","📜","Security Policies & NAT","سياسات الأمان وقواعد NAT والتحقق من Traffic logs.","Security policies, NAT rules and traffic log verification.",60,4),
   L_("paapp","🏷️","App-ID / User-ID","سياسات مبنية على التطبيقات والمستخدمين بدلاً من المنافذ.","Application- and user-based policies instead of ports.",90,5),
   L_("pagp","🧳","GlobalProtect VPN","بوابة GlobalProtect و Gateway للوصول الآمن عن بُعد.","GlobalProtect portal and gateway for secure remote access.",90,4),
   L_("paha","♻️","HA Basics","توافر عالٍ Active/Passive بين جدارين ناريين.","Active/passive high availability between two firewalls.",90,5)]},
- {id:"f5",nm:"F5",c:"#e4002b",sub:["BIG-IP LTM","BIG-IP LTM"],labs:[
+ {id:"f5",logo:"assets/logos/f5.svg",nm:"F5",c:"#e4002b",sub:["BIG-IP LTM","BIG-IP LTM"],labs:[
   L_("f5set","⚙️","BIG-IP Initial Setup","التهيئة الأولية: الترخيص والـ VLANs والـ Self IPs.","Initial setup: licensing, VLANs and self IPs.",60,3),
   L_("f5ltm","⚖️","LTM Virtual Servers & Pools","خوادم افتراضية ومجمّعات وطرق موازنة الحمل.","Virtual servers, pools and load-balancing methods.",60,4),
   L_("f5mon","🩺","Health Monitors","مراقبات HTTP/TCP المخصصة وسلوك الأعضاء عند الفشل.","Custom HTTP/TCP monitors and member failover behaviour.",60,4),
@@ -149,7 +149,7 @@ var SEL="",TR=null;
 function slotLbl(h){var f=function(x){var y=x>12?x-12:x;return y+(L==="ar"?" م":" PM")};return f(h)+" – "+f(h+1)}
 function paint(){var i=I();document.documentElement.lang=L;document.documentElement.dir=L==="ar"?"rtl":"ltr";$("lang").textContent=L==="ar"?"English":"العربية";
  document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=S[e.dataset.t][i]});document.title=S.h1[i]+" — "+S.inst[i];$("ft").textContent="© "+new Date().getFullYear()+" "+S.ft[i];
- $("tracks").innerHTML=TRACKS.map(function(t){return '<button type="button" class="trk" data-id="'+t.id+'" aria-pressed="'+(TR&&TR.id===t.id)+'"><span class="lg">'+(t.logo?'<img alt="Cisco" src="'+t.logo+'">':'<i style="--c:'+t.c+'">'+t.nm+'</i>')+'</span><b>'+t.nm+'</b><small>'+tx(t.sub)+'</small><span class="n">'+t.labs.length+' '+S.labsN[i]+'</span></button>'}).join("");
+ $("tracks").innerHTML=TRACKS.map(function(t){return '<button type="button" class="trk" data-id="'+t.id+'" aria-pressed="'+(TR&&TR.id===t.id)+'"><span class="lg">'+(t.logo?'<img alt="'+t.nm+'" src="'+t.logo+'">':'<i style="--c:'+t.c+'">'+t.nm+'</i>')+'</span><b>'+t.nm+'</b><small>'+tx(t.sub)+'</small><span class="n">'+t.labs.length+' '+S.labsN[i]+'</span></button>'}).join("");
  $("tracks").querySelectorAll(".trk").forEach(function(b){b.onclick=function(){track(b.dataset.id,true)}});
  var LABS=TR?TR.labs:[];
  $("trkSel").innerHTML=TR?'<span>'+S.trS[i]+' <b>'+TR.nm+'</b> · '+tx(TR.sub)+'</span><button type="button" id="chg">'+S.chg[i]+'</button>':"";if(TR)$("chg").onclick=function(){$("trkH").scrollIntoView({behavior:"smooth"})};
