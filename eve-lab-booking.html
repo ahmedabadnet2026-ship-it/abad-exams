@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10293b">
+<title>حجز مختبر الأجهزة الحقيقية (EVE-NG) — معهد شبكة آباد للتدريب</title>
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Cairo,sans-serif;color:#fff;min-height:100vh;background:radial-gradient(circle at 15% 10%,#3f86b344 0,transparent 45%),radial-gradient(circle at 85% 95%,#F5BD2D1c 0,transparent 40%),linear-gradient(135deg,#0a1c29,#10293b 55%,#16405e)}
+header{display:flex;align-items:center;gap:12px;padding:12px 18px;flex-wrap:wrap;max-width:1100px;margin:0 auto}
+header img{height:42px;background:#fff;border-radius:9px;padding:3px 7px}header .t{flex:1;min-width:170px}header b{display:block;font-size:17px}header small{opacity:.7;font-size:12px}
+.hb{font:inherit;font-weight:700;font-size:13px;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:9px;padding:6px 12px;cursor:pointer;text-decoration:none}
+main{max-width:1100px;margin:0 auto;padding:0 18px 40px}
+.hero{text-align:center;padding:6px 0 4px}.hero small{color:#F5BD2D;font-weight:700}.hero h1{margin:2px 0;font-size:clamp(1.4rem,3.4vw,2.1rem);font-weight:800}.hero p{margin:0 auto;opacity:.85;max-width:760px;font-size:14.5px;line-height:1.8}
+.trial{display:flex;gap:10px;align-items:flex-start;max-width:760px;margin:14px auto 0;padding:10px 14px;border-radius:12px;background:#F5BD2D1f;border:1px solid #F5BD2D77;font-size:13.5px;line-height:1.7}.trial b{color:#F5BD2D}
+h2{font-size:1.15rem;color:#F5BD2D;margin:28px 0 10px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;counter-reset:s}
+.st{position:relative;padding:14px 14px 14px 14px;border-radius:14px;background:#ffffff10;border:1px solid #ffffff22;font-size:13.5px;line-height:1.7}
+.st::before{counter-increment:s;content:counter(s);display:inline-flex;width:30px;height:30px;border-radius:50%;background:#F5BD2D;color:#10293b;font-weight:800;align-items:center;justify-content:center;margin-bottom:6px}
+.st b{display:block;font-size:14.5px}
+.labs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.lab{position:relative;display:flex;flex-direction:column;gap:4px;padding:16px;border-radius:16px;background:linear-gradient(160deg,#ffffff1c,#ffffff08);border:2px solid #ffffff2e;cursor:pointer;font:inherit;color:#fff;text-align:start;transition:transform .2s,border-color .2s}
+.lab:hover{transform:translateY(-3px);border-color:#3f86b3}.lab[aria-pressed=true]{border-color:#F5BD2D;box-shadow:0 0 0 3px #F5BD2D33}
+.lab .ic{font-size:1.6rem}.lab b{color:#F5BD2D;font-size:1.02rem}.lab p{margin:0;font-size:12.8px;opacity:.85;line-height:1.6;flex:1}
+.lab .mt{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.lab .mt span{font-size:11.5px;font-weight:700;border-radius:999px;padding:1px 9px;background:#3f86b3}
+.lab .ck{position:absolute;top:10px;inset-inline-end:12px;width:24px;height:24px;border-radius:50%;background:#F5BD2D;color:#10293b;font-weight:800;display:none;align-items:center;justify-content:center}.lab[aria-pressed=true] .ck{display:flex}
+form{margin-top:10px;padding:20px;border-radius:18px;background:#ffffff0d;border:1px solid #ffffff26}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}
+.fld label{display:block;font-weight:700;font-size:13.5px;margin-bottom:4px}.fld label b{color:#ff7b6b}
+.fld input,.fld select,.fld textarea{width:100%;font:inherit;font-size:15px;border-radius:10px;border:1px solid #ffffff44;background:#0a1c29;color:#fff;padding:9px 12px}
+.fld textarea{min-height:80px;resize:vertical}.fld input:focus,.fld select:focus,.fld textarea:focus{outline:2px solid #3f86b3;border-color:#3f86b3}
+.err{display:none;color:#ff9b8b;font-size:12.5px;margin-top:3px}.bad .err{display:block}.bad input,.bad select{border-color:#ff7b6b}
+.slots{display:flex;flex-wrap:wrap;gap:8px}.slots label{margin:0;font-weight:700}
+.slots input{position:absolute;opacity:0;pointer-events:none}.slots span{display:inline-block;padding:7px 12px;border-radius:10px;border:1px solid #ffffff44;background:#ffffff10;cursor:pointer;direction:ltr;font-size:13.5px}
+.slots input:checked+span{background:#F5BD2D;color:#10293b;border-color:#F5BD2D}.slots input:focus-visible+span{outline:2px solid #fff}
+.acts{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{font:inherit;font-weight:800;font-size:15px;border:0;border-radius:12px;padding:11px 22px;cursor:pointer;background:#25D366;color:#05111a}
+.hint{font-size:12.5px;opacity:.75}
+.done{display:none;margin-top:10px;padding:20px;border-radius:18px;background:#25D3661f;border:1px solid #25D36677;line-height:1.8}
+footer{text-align:center;font-size:12px;opacity:.55;padding:0 0 24px}
+@media (max-width:640px){.fg{grid-template-columns:1fr}form{padding:14px}}
+</style>
+<link rel="stylesheet" href="css/home-btn.css?r=202610131945"><script src="js/home-btn.js?r=202610131945" defer></script>
+</head>
+<body>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="practical-lab.html" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
+<main>
+<section class="hero"><small data-t="kick"></small><h1 data-t="h1"></h1><p data-t="lead"></p>
+<div class="trial"><span>🧪</span><span><b data-t="trB"></b> <span data-t="tr"></span></span></div></section>
+<h2 data-t="howH"></h2>
+<div class="steps"><div class="st"><b data-t="s1"></b><span data-t="s1d"></span></div><div class="st"><b data-t="s2"></b><span data-t="s2d"></span></div><div class="st"><b data-t="s3"></b><span data-t="s3d"></span></div><div class="st"><b data-t="s4"></b><span data-t="s4d"></span></div></div>
+<h2 data-t="labsH"></h2>
+<div class="labs" id="labs"></div>
+<h2 data-t="formH" id="formH"></h2>
+<form id="frm" novalidate>
+<div class="fg">
+<div class="fld full"><label for="name"><span data-t="fName"></span> <b>*</b></label><input id="name" autocomplete="name"><div class="err" data-t="eName"></div></div>
+<div class="fld"><label for="nid"><span data-t="fNid"></span> <b>*</b></label><input id="nid" dir="ltr" inputmode="numeric" maxlength="10" autocomplete="off" placeholder="1XXXXXXXXX / 2XXXXXXXXX"><div class="err" data-t="eNid"></div></div>
+<div class="fld"><label for="mobile"><span data-t="fMob"></span> <b>*</b></label><input id="mobile" type="tel" dir="ltr" inputmode="tel" autocomplete="tel" placeholder="05XXXXXXXX"><div class="err" data-t="eMob"></div></div>
+<div class="fld"><label for="course"><span data-t="fCourse"></span> <b>*</b></label><select id="course"></select><div class="err" data-t="eSel"></div></div>
+<div class="fld"><label for="lab"><span data-t="fLab"></span> <b>*</b></label><select id="lab"></select><div class="err" data-t="eSel"></div></div>
+<div class="fld"><label for="date"><span data-t="fDate"></span> <b>*</b></label><input id="date" type="date" dir="ltr"><div class="err" data-t="eDate"></div></div>
+<div class="fld full" id="slotFld"><label><span data-t="fSlot"></span> <b>*</b></label><div class="slots" id="slots"></div><div class="err" data-t="eSlot"></div></div>
+<div class="fld full"><label for="notes" data-t="fNotes"></label><textarea id="notes"></textarea></div>
+</div>
+<div class="acts"><button class="btn" type="submit" data-t="send"></button><span class="hint" data-t="sendH"></span></div>
+</form>
+<div class="done" id="done"></div>
+</main>
+<footer id="ft"></footer>
+<script>
+(function(){
+var WA="966561393960";
+var L=(function(){try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";if(L!=="en")L="ar";
+/* المختبرات — لإضافة مختبر جديد أضف سطراً هنا (devices ≤ 7 بسبب حد EVE-NG Freemium) */
+var LABS=[
+ {id:"basic",ic:"⚙️",t:["Basic Configuration","Basic Configuration"],d:["تهيئة أساسية لراوتر وسويتش: hostname وكلمات المرور وعناوين IP وحفظ الإعدادات.","Base router/switch setup: hostname, passwords, IP addressing and saving config."],min:60,dev:3},
+ {id:"static",ic:"🛣️",t:["Static Routing","Static Routing"],d:["بناء مسارات ثابتة ومسار افتراضي بين عدة شبكات والتحقق بـ ping و traceroute.","Static and default routes across several networks, verified with ping/traceroute."],min:60,dev:5},
+ {id:"ospf",ic:"🔁",t:["OSPF","OSPF"],d:["تفعيل OSPF أحادي المنطقة، معرفات الراوتر، الجيران وجدول التوجيه.","Single-area OSPF, router IDs, neighbours and routing table."],min:60,dev:5},
+ {id:"dhcp",ic:"🔐",t:["DHCP / Telnet / SSH","DHCP / Telnet / SSH"],d:["خادم DHCP على الراوتر، وإدارة عن بُعد عبر Telnet ثم SSH آمن.","Router DHCP server, remote management via Telnet then secure SSH."],min:60,dev:5},
+ {id:"acl",ic:"🛡️",t:["ACL (Standard / Extended)","ACL (Standard / Extended)"],d:["قوائم التحكم بالوصول القياسية والموسعة وتطبيقها على الواجهات.","Standard and extended access lists applied to interfaces."],min:60,dev:6},
+ {id:"vlan",ic:"🧩",t:["VLAN & Trunking","VLAN & Trunking"],d:["إنشاء VLANs وربط السويتشات بـ 802.1Q Trunk والتوجيه بين الشبكات.","Create VLANs, 802.1Q trunks between switches and inter-VLAN routing."],min:60,dev:7}];
+var COURSES=[["CCNA","CCNA"],["Network+","Network+"],["Linux+ / RHCSA","Linux+ / RHCSA"],["أخرى","Other"]];
+var SLOTS=[16,17,18,19,20,21];/* 4–10 مساءً، كل جلسة ساعة */
+var S={inst:["معهد شبكة آباد للتدريب","ABAD Network Training Institute"],sec:["منصة المحاكاة العملية","Practical Simulation Platform"],back:["→ المختبرات","← Labs"],
+kick:["🖥️ أجهزة حقيقية · تجريبي","🖥️ Real devices · Trial"],h1:["احجز مختبر الأجهزة الحقيقية (EVE-NG)","Book a real-device lab (EVE-NG)"],
+lead:["تدرّب على أجهزة Cisco و Linux حقيقية تعمل على خادم EVE-NG الخاص بمعهد شبكة آباد، وتفتحها من متصفحك مباشرة بدون أي تثبيت.","Practise on real Cisco and Linux devices running on the ABAD institute EVE-NG server, opened straight from your browser with nothing to install."],
+trB:["الخدمة في مرحلة تجريبية:","This service is in trial:"],tr:["نستقبل طلبات الحجز الآن، وسيُرسَل لك رابط الدخول إلى المختبر بعد تأكيد الموعد من فريق المعهد.","we're accepting booking requests now; your lab access link is sent after the institute team confirms your slot."],
+howH:["كيف تعمل الخدمة؟","How it works"],s1:["اختر المختبر","Pick a lab"],s1d:["حدّد المختبر المناسب لدورتك من القائمة.","Choose the lab that fits your course."],
+s2:["اختر الموعد","Pick a slot"],s2d:["اختر التاريخ وجلسة مدتها ساعة بين 4 و10 مساءً.","Choose a date and a 1-hour slot between 4 and 10 PM."],
+s3:["أرسل الطلب عبر واتساب","Send via WhatsApp"],s3d:["تُجهَّز رسالة الطلب تلقائياً لترسلها لفريق المعهد.","Your request message is prepared for you to send to the team."],
+s4:["استلم رابط الدخول","Get your access link"],s4d:["بعد التأكيد يصلك رابط المختبر لتفتحه من المتصفح في موعدك.","After confirmation you receive the lab link to open in your browser."],
+labsH:["اختر المختبر","Choose a lab"],formH:["بيانات الحجز","Booking details"],min:["دقيقة","min"],dev:["أجهزة","devices"],
+fName:["الاسم الكامل","Full name"],fNid:["رقم الهوية / الإقامة","National ID / Iqama"],fMob:["رقم الجوال","Mobile number"],fCourse:["الدورة","Course"],fLab:["المختبر","Lab"],fDate:["التاريخ","Date"],fSlot:["الجلسة (ساعة واحدة)","Slot (1 hour)"],fNotes:["ملاحظات","Notes"],
+eName:["يرجى إدخال الاسم الكامل (اسمان على الأقل).","Please enter your full name (at least two names)."],eNid:["رقم هوية / إقامة غير صحيح — 10 أرقام يبدأ بـ 1 (مواطن) أو 2 (مقيم).","Invalid ID / Iqama — 10 digits starting with 1 (citizen) or 2 (resident)."],
+eMob:["رقم جوال سعودي غير صحيح — مثال: 0551234567","Invalid Saudi mobile — e.g. 0551234567"],eSel:["يرجى الاختيار.","Please choose."],eDate:["يرجى اختيار تاريخ من اليوم فصاعداً.","Please choose a date from today on."],eSlot:["يرجى اختيار جلسة.","Please choose a slot."],
+choose:["— اختر —","— Choose —"],send:["إرسال الطلب عبر واتساب","Send request via WhatsApp"],sendH:["سيُفتح واتساب برسالة جاهزة — لا يُرسَل شيء قبل ضغطك إرسال.","WhatsApp opens with a ready message — nothing is sent until you press send."],
+ft:["معهد شبكة آباد للتدريب — الرياض","ABAD Network Training Institute — Riyadh"]};
+var $=function(i){return document.getElementById(i)},I=function(){return L==="ar"?0:1},tx=function(a){return a[I()]};
+var SEL="";
+function slotLbl(h){var f=function(x){var y=x>12?x-12:x;return y+(L==="ar"?" م":" PM")};return f(h)+" – "+f(h+1)}
+function paint(){var i=I();document.documentElement.lang=L;document.documentElement.dir=L==="ar"?"rtl":"ltr";$("lang").textContent=L==="ar"?"English":"العربية";
+ document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=S[e.dataset.t][i]});document.title=S.h1[i]+" — "+S.inst[i];$("ft").textContent="© "+new Date().getFullYear()+" "+S.ft[i];
+ $("labs").innerHTML=LABS.map(function(l){return '<button type="button" class="lab" data-id="'+l.id+'" aria-pressed="'+(SEL===l.id)+'"><span class="ck">✓</span><span class="ic">'+l.ic+'</span><b>'+tx(l.t)+'</b><p>'+tx(l.d)+'</p><span class="mt"><span>⏱ '+l.min+' '+S.min[i]+'</span><span>🖧 '+l.dev+' '+S.dev[i]+'</span></span></button>'}).join("");
+ $("labs").querySelectorAll(".lab").forEach(function(b){b.onclick=function(){pick(b.dataset.id,true)}});
+ var cv=$("course").value,lv=$("lab").value;$("course").innerHTML='<option value="">'+S.choose[i]+'</option>'+COURSES.map(function(c,k){return '<option value="'+k+'">'+c[i]+'</option>'}).join("");$("course").value=cv;
+ $("lab").innerHTML='<option value="">'+S.choose[i]+'</option>'+LABS.map(function(l){return '<option value="'+l.id+'">'+tx(l.t)+'</option>'}).join("");$("lab").value=lv||SEL;
+ var sv=(document.querySelector("input[name=slot]:checked")||{}).value;$("slots").innerHTML=SLOTS.map(function(h){return '<label><input type="radio" name="slot" value="'+h+'"'+(String(h)===sv?" checked":"")+'><span>'+slotLbl(h)+'</span></label>'}).join("")}
+function pick(id,scroll){SEL=id;$("lab").value=id;document.querySelectorAll(".lab").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.id===id)});$("lab").closest(".fld").classList.remove("bad");if(scroll)$("formH").scrollIntoView({behavior:"smooth",block:"start"})}
+$("lab").onchange=function(){pick($("lab").value,false)};
+var toLatin=function(s){return String(s).replace(/[٠-٩]/g,function(d){return "٠١٢٣٤٥٦٧٨٩".indexOf(d)}).replace(/[۰-۹]/g,function(d){return "۰۱۲۳۴۵۶۷۸۹".indexOf(d)})};
+/* نفس تحقق نموذج حجز الاختبار (booking.html) */
+function validID(s){s=toLatin(s).replace(/\s/g,"");if(!/^[12]\d{9}$/.test(s))return null;var sum=0;for(var i=0;i<10;i++){var d=+s[i];if(i%2===0){d*=2;d=Math.floor(d/10)+(d%10)}sum+=d}return sum%10===0?s:null}
+function normMobile(s){s=toLatin(s).replace(/[\s\-()]/g,"");if(/^(\+?966|00966)5\d{8}$/.test(s))s="0"+s.replace(/^(\+?966|00966)/,"");return /^05\d{8}$/.test(s)?s:null}
+var today=function(){var d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};$("date").min=today();
+function mark(el,bad){el.closest(".fld").classList.toggle("bad",bad);return bad}
+document.querySelectorAll(".fld input,.fld select,.fld textarea").forEach(function(e){e.addEventListener(e.type==="radio"?"change":"input",function(){e.closest(".fld").classList.remove("bad")})});
+$("slots").addEventListener("change",function(){$("slotFld").classList.remove("bad")});
+$("frm").addEventListener("submit",function(e){e.preventDefault();var bad=[],nm=$("name").value.replace(/\s+/g," ").trim(),nid=validID($("nid").value),mob=normMobile($("mobile").value),sl=document.querySelector("input[name=slot]:checked");
+ if(mark($("name"),nm.split(" ").length<2))bad.push($("name"));if(mark($("nid"),!nid))bad.push($("nid"));if(mark($("mobile"),!mob))bad.push($("mobile"));
+ if(mark($("course"),!$("course").value))bad.push($("course"));if(mark($("lab"),!$("lab").value))bad.push($("lab"));
+ if(mark($("date"),!$("date").value||$("date").value<$("date").min))bad.push($("date"));if(!sl){$("slotFld").classList.add("bad");bad.push($("slots"))}
+ if(bad.length){(bad[0].focus&&bad[0].focus());bad[0].scrollIntoView({block:"center",behavior:"smooth"});return}
+ var lab=LABS.filter(function(l){return l.id===$("lab").value})[0],c=COURSES[+$("course").value];
+ var m=["*طلب حجز مختبر الأجهزة الحقيقية (EVE-NG) — تجريبي*","*Real-device lab booking (EVE-NG) — trial*","","الاسم / Name: "+nm,(nid[0]==="1"?"رقم الهوية / ID: ":"رقم الإقامة / Iqama: ")+nid,"الجوال / Mobile: "+mob,"الدورة / Course: "+c[0]+(c[0]!==c[1]?" ("+c[1]+")":""),"المختبر / Lab: "+lab.t[1]+" ("+lab.dev+" devices, "+lab.min+" min)","التاريخ / Date: "+$("date").value,"الجلسة / Slot: "+sl.value+":00 – "+(+sl.value+1)+":00","ملاحظات / Notes: "+($("notes").value.trim()||"—")].join("\n");
+ var url="https://wa.me/"+WA+"?text="+encodeURIComponent(m);window.open(url,"_blank","noopener");
+ $("done").innerHTML="<b>"+(L==="ar"?"تم تجهيز طلبك ✓":"Your request is ready ✓")+"</b><br>"+(L==="ar"?"أكمل الإرسال في واتساب. بعد تأكيد الموعد سيصلك رابط الدخول إلى المختبر. إن لم يُفتح واتساب ":"Finish sending in WhatsApp. After your slot is confirmed you'll receive the lab access link. If WhatsApp didn't open, ")+'<a style="color:#F5BD2D" target="_blank" rel="noopener" href="'+url+'">'+(L==="ar"?"اضغط هنا":"click here")+"</a>.";$("done").style.display="block"});
+$("lang").onclick=function(){L=L==="ar"?"en":"ar";try{localStorage.setItem("abad-lang",L)}catch(e){}paint();if(SEL)pick(SEL,false)};
+var q=new URLSearchParams(location.search).get("lab");paint();if(q&&LABS.some(function(l){return l.id===q}))pick(q,false);
+})();
+</script>
+</body>
+</html>
