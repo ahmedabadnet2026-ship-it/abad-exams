@@ -59,16 +59,17 @@ header a.bk{color:#F5BD2D;text-decoration:none;font-weight:700;font-size:14px}
 </div>
 <div class="wrap"><nav class="thumbs" id="thumbs"></nav><main class="view" id="view"></main></div>
 <div class="note" id="note"></div>
+<script src="js/library-data.js?r=202610141145"></script>
 <script src="assets/vendor/page-flip.browser.js?r=202610131535"></script>
 <script>
 (function(){
 const COURSES={itil5:{ar:"ITIL Foundation (Version 5) — ملفات الدورة",en:"ITIL Foundation (Version 5) — Course files",back:"vendor.html#peoplecert",
- files:{en:{pages:15,dir:"course-files/itil5/en/",title:"Chapter 1 — Key Concepts of Digital Product and Service Management"},ar:null}},
- "rhca-el-ch02":{ar:"RHCA-EL — الفصل 02: إدارة الملفات والتنقل في Linux",en:"RHCA-EL — Chapter 02: File Management & Navigation in Linux",back:"vendor.html#redhat",
- files:{ar:{pages:21,dir:"course-files/rhca-el-ch02/ar/",title:"الفصل 02 — إدارة الملفات والتنقل في نظام Linux"},en:null}}};
+ files:{en:{pages:15,dir:"course-files/itil5/en/",title:"Chapter 1 — Key Concepts of Digital Product and Service Management"},ar:null}}};
 const $=id=>document.getElementById(id),Q=new URLSearchParams(location.search);
 let UI="ar";try{UI=localStorage.getItem("abad-lang")==="en"?"en":"ar"}catch(e){}if(Q.get("ui")==="en")UI="en";
 const t=(a,b)=>UI==="en"?b:a;if(UI==="en"){document.documentElement.lang="en";document.documentElement.dir="ltr"}
+(window.ABAD_LIBRARY&&ABAD_LIBRARY.books||[]).forEach(b=>(b.chapters||[]).forEach(c=>{const f={};["ar","en"].forEach(l=>f[l]=c.lang===l?{pages:c.pages,dir:"course-files/"+c.id+"/"+l+"/",title:(l==="ar"?"الفصل ":"Chapter ")+c.n+" — "+c.title[l]}:null);
+ COURSES[c.id]={ar:b.title.ar+" — الفصل "+c.n+": "+c.title.ar,en:b.title.en+" — Chapter "+c.n+": "+c.title.en,back:"chapters.html?b="+b.id,files:f}}));
 const C=COURSES[Q.get("c")]||COURSES.itil5;let L=Q.get("lang")==="ar"?"ar":(Q.get("lang")==="en"?"en":(C.files.ar?"ar":"en"));
 let P=1,Z=0;/* Z=0 → ملاءمة العرض */
 document.title=t(C.ar,C.en)+" — "+t("معهد شبكة آباد للتدريب","ABAD Network Training Institute");

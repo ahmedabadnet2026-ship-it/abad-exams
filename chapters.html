@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10293b">
+<title>فصول الدورة — معهد شبكة آباد للتدريب</title>
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Cairo,sans-serif;color:#fff;min-height:100vh;background:radial-gradient(circle at 15% 10%,#3f86b344 0,transparent 45%),radial-gradient(circle at 85% 95%,#F5BD2D1c 0,transparent 40%),linear-gradient(135deg,#0a1c29,#10293b 55%,#16405e)}
+header{display:flex;align-items:center;gap:12px;padding:12px 18px;flex-wrap:wrap;max-width:1000px;margin:0 auto}
+header img{height:42px;background:#fff;border-radius:9px;padding:3px 7px}header .t{flex:1;min-width:170px}header b{display:block;font-size:17px}header small{opacity:.7;font-size:12px}
+.hb{font:inherit;font-weight:700;font-size:13px;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:9px;padding:6px 12px;cursor:pointer;text-decoration:none}
+.hero{max-width:1000px;margin:10px auto 0;padding:0 18px}
+.cover{display:flex;gap:16px;align-items:center;border-radius:16px;padding:18px;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 18px 40px #0007;position:relative;overflow:hidden}
+.cover::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,#3f86b3,#F5BD2D)}
+.cover .lg{background:#fff;border-radius:10px;padding:6px 10px;flex:none}.cover .lg img{height:34px;display:block}
+.cover h1{margin:0;font-size:clamp(1.3rem,3.6vw,2rem);font-weight:800}.cover p{margin:2px 0 0;opacity:.85}
+.cover .cd{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;background:#0004;border-radius:6px;padding:1px 10px;direction:ltr}
+h2{max-width:1000px;margin:26px auto 10px;padding:0 18px;font-size:18px;color:#F5BD2D}
+.list{max-width:1000px;margin:0 auto 40px;padding:0 18px;display:grid;gap:12px}
+.ch{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;background:#ffffff0f;border:1px solid #ffffff22;color:#fff;text-decoration:none;transition:transform .2s,background .2s,border-color .2s}
+.ch:hover,.ch:focus-visible{background:#ffffff1c;border-color:#F5BD2D;transform:translateY(-2px);outline:none}
+.ch .no{flex:none;width:54px;height:54px;border-radius:12px;background:#F5BD2D;color:#10293b;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;direction:ltr}
+.ch .tx{flex:1;min-width:0}.ch b{display:block;font-size:16px;unicode-bidi:plaintext}.ch small{display:block;opacity:.75;font-size:12.5px;unicode-bidi:plaintext}
+.ch .mt{flex:none;font-size:12px;font-weight:700;background:#3f86b3;border-radius:999px;padding:3px 12px}
+.ch .go{flex:none;font-size:20px;color:#F5BD2D}
+.bk{display:none}
+/* B: شبكة أغلفة */
+.lyB{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px}
+.lyB .ch{flex-direction:column;align-items:stretch;padding:12px;gap:8px;text-align:center;position:relative}
+.lyB .bk{display:block;border-radius:6px;overflow:hidden;box-shadow:0 10px 24px #0008;aspect-ratio:170/240;background:#5c0b0b}.lyB .bk img{width:100%;height:100%;object-fit:cover;display:block}
+.lyB .no{position:absolute;top:18px;inset-inline-start:18px;width:40px;height:40px;font-size:15px}.lyB .go{display:none}.lyB .mt{align-self:center}
+/* C: خط زمني مرقّم */
+.lyC{gap:0;position:relative}.lyC::before{content:"";position:absolute;top:20px;bottom:20px;inset-inline-start:44px;width:3px;background:linear-gradient(#F5BD2D,#3f86b3);border-radius:3px}
+.lyC .ch{background:none;border:0;border-radius:0;padding:12px 18px;position:relative}.lyC .ch:hover{background:#ffffff0d;transform:none}
+.lyC .no{border-radius:50%;box-shadow:0 0 0 5px #10293b;z-index:1}.lyC .tx{border-bottom:1px dashed #ffffff22;padding-bottom:10px}
+@media (max-width:600px){.lyB{grid-template-columns:1fr 1fr;gap:10px}.lyB .ch b{font-size:13.5px}.lyB .ch small{display:none}.lyB .ch{flex-wrap:nowrap}.lyC::before{inset-inline-start:40px}.lyC .ch{flex-wrap:nowrap}.lyC .mt{display:none}}
+.empty{text-align:center;opacity:.7;padding:30px}
+footer{text-align:center;font-size:12px;opacity:.55;padding:0 0 24px}
+@media (max-width:600px){.cover{flex-direction:column;align-items:flex-start}.ch{flex-wrap:wrap}.ch .no{width:46px;height:46px;font-size:17px}.ch .go{display:none}}
+</style>
+<link rel="stylesheet" href="css/home-btn.css?r=202610131945"><script src="js/home-btn.js?r=202610131945" defer></script>
+</head>
+<body>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b id="hn"></b><small id="hs"></small></div><a class="hb" id="back" href="library.html"></a></header>
+<section class="hero" id="hero"></section>
+<h2 id="h2"></h2>
+<main class="list" id="list"></main>
+<footer id="ft"></footer>
+<script src="js/library-data.js?r=202610141145"></script>
+<script>
+(async function(){
+const D=window.ABAD_LIBRARY,$=id=>document.getElementById(id),qs=new URLSearchParams(location.search);
+let L=qs.get("lang")||(()=>{try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";if(L!=="en")L="ar";
+const t=(a,b)=>L==="en"?b:a,tx=o=>o&&(o[L]||o.ar||o.en)||"",esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+const B=D.books.find(b=>b.id===qs.get("b")&&b.chapters);if(!B){location.replace("library.html");return}
+let ACC={mode:"open"};try{ACC=await D.getAccess()||ACC}catch(e){}
+document.documentElement.lang=L;document.documentElement.dir=L==="en"?"ltr":"rtl";
+const LY=(qs.get("layout")||B.layout||"A").toUpperCase();$("list").className="list ly"+(["A","B","C"].indexOf(LY)>=0?LY:"A");
+const V=D.vendors[B.vendor]||{};document.title=tx(B.title)+" — "+t("فصول الدورة","Course chapters")+" — "+t("معهد شبكة آباد للتدريب","ABAD Network Training Institute");
+$("hn").textContent=t("معهد شبكة آباد للتدريب","ABAD Network Training Institute");$("hs").textContent=t("مكتبة المعهد","Institute library");
+$("back").textContent=t("→ المكتبة","← Library");$("back").href="library.html";
+$("hero").innerHTML='<div class="cover" style="--c1:'+B.color[0]+';--c2:'+B.color[1]+'"><span class="lg"><img alt="'+esc(tx(V))+'" src="'+esc(V.logo||"")+'"></span><div><h1>'+esc(tx(B.title))+'</h1><p>'+esc(tx(B.sub))+'</p><span class="cd">'+esc(B.code||"")+'</span></div></div>';
+$("h2").textContent=t("فصول الدورة","Course chapters")+" ("+B.chapters.length+")";
+if(!D.canOpen(B,ACC)){$("list").innerHTML='<div class="empty">'+t("هذه الفصول متاحة للطلاب المسجّلين في الدورة فقط.","These chapters are available to enrolled students only.")+'</div>'}
+else $("list").innerHTML=B.chapters.length?B.chapters.slice().sort((a,b)=>parseFloat(a.n)-parseFloat(b.n)).map(c=>'<a class="ch" href="course-files.html?c='+encodeURIComponent(c.id)+'&lang='+c.lang+'"><span class="bk"><img alt="" loading="lazy" src="course-files/'+encodeURIComponent(c.id)+'/'+c.lang+'/t01.webp"></span><span class="no">'+esc(c.n)+'</span><span class="tx"><b>'+t("الفصل ","Chapter ")+esc(c.n)+" — "+esc(tx(c.title))+'</b><small>'+esc(tx(c.sub))+'</small></span><span class="mt">'+c.pages+" "+t("صفحة","pages")+'</span><span class="go">'+(L==="en"?"→":"←")+'</span></a>').join(""):'<div class="empty">'+t("الفصول ستتوفر قريبًا","Chapters coming soon")+'</div>';
+$("ft").textContent="© "+new Date().getFullYear()+" "+t("معهد شبكة آباد للتدريب — للعرض فقط","ABAD Network Training Institute — view only");
+})();
+</script>
+</body>
+</html>
