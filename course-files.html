@@ -23,6 +23,14 @@ header a.bk{color:#F5BD2D;text-decoration:none;font-weight:700;font-size:14px}
 .bar button:disabled{opacity:.4;cursor:default}.bar .sp{flex:1}
 .bar input{width:56px;height:38px;border-radius:9px;border:1px solid #ffffff44;background:#0a1c29;color:#fff;text-align:center;font:inherit;font-weight:700}
 .bar .z{min-width:52px;text-align:center;font-size:13px;opacity:.85}
+.reader{flex:1;display:flex;flex-direction:column;min-height:0}
+.bar .fsb{color:#10293b;background:#F5BD2D;border-color:#F5BD2D}
+.reader.fs{position:fixed;inset:0;z-index:2147483000;background:linear-gradient(135deg,#0a1c29,#10293b 50%,#1d5479);height:100vh;height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.reader:fullscreen{background:linear-gradient(135deg,#0a1c29,#10293b 50%,#1d5479)}
+.reader.fs .thumbs{display:none!important}.reader.fs .view{overflow:hidden;align-items:center;padding:10px 10px 34px}
+.fsx{position:absolute;top:calc(env(safe-area-inset-top) + 10px);inset-inline-end:12px;z-index:5;width:44px;height:44px;border-radius:50%;border:2px solid #F5BD2D;background:#10293bee;color:#F5BD2D;font:800 22px/1 Cairo,sans-serif;cursor:pointer;box-shadow:0 6px 16px #0008}
+.reader.fs .bar{padding-inline-end:66px}
+html.fsl,html.fsl body{overflow:hidden}
 .wrap{flex:1;display:flex;min-height:0}
 .thumbs{width:150px;overflow-y:auto;padding:10px;background:#0a1c2999;border-inline-end:1px solid #ffffff1a;flex:none}
 .thumbs button{display:block;width:100%;border:2px solid transparent;background:none;padding:0;margin:0 0 10px;border-radius:6px;cursor:pointer;position:relative}
@@ -49,6 +57,7 @@ header a.bk{color:#F5BD2D;text-decoration:none;font-weight:700;font-size:14px}
 <body>
 <header><img src="assets/abad-logo.png" alt="ABAD" draggable="false"><div class="t"><b id="ttl">ملفات الدورة</b><small id="sub">معهد شبكة آباد للتدريب — للعرض فقط</small></div><a class="bk" id="back" href="vendor.html#peoplecert">→ رجوع</a></header>
 <div class="tabs" role="tablist" id="tabs"></div>
+<div class="reader" id="reader">
 <div class="bar" id="bar">
  <button id="prev" type="button" aria-label="السابق">›</button>
  <input id="pg" inputmode="numeric" aria-label="رقم الصفحة"><span id="of"></span>
@@ -56,10 +65,13 @@ header a.bk{color:#F5BD2D;text-decoration:none;font-weight:700;font-size:14px}
  <span class="sp"></span>
  <button id="zo" type="button" aria-label="تصغير">−</button><span class="z" id="zl">100%</span><button id="zi" type="button" aria-label="تكبير">+</button>
  <button id="fit" type="button" class="hm"></button>
+ <button id="fs" type="button" class="fsb" aria-pressed="false"></button>
 </div>
 <div class="wrap"><nav class="thumbs" id="thumbs"></nav><main class="view" id="view"></main></div>
+<button id="fsx" type="button" class="fsx" hidden></button>
+</div>
 <div class="note" id="note"></div>
-<script src="js/library-data.js?r=202610141145"></script>
+<script src="js/library-data.js?r=202610141340"></script>
 <script src="assets/vendor/page-flip.browser.js?r=202610131535"></script>
 <script>
 (function(){
@@ -89,9 +101,9 @@ function load(){tabs();const f=F();$("bar").hidden=!f;$("thumbs").hidden=!f;if(P
  RTL=f.dir_rtl===true||L==="ar";
  $("thumbs").innerHTML=Array.from({length:f.pages},(_,i)=>'<button type="button" data-p="'+(i+1)+'" aria-label="'+t("صفحة","Page")+' '+(i+1)+'"><img loading="lazy" draggable="false" alt="" src="'+src(i+1,1)+'"><span>'+(i+1)+'</span></button>').join("");
  $("thumbs").querySelectorAll("button").forEach(b=>b.onclick=()=>go(+b.dataset.p));$("of").textContent="/ "+f.pages;build(P)}
-function dims(){const v=$("view"),mob=innerWidth<700,aw=v.clientWidth-(mob?16:36),ah=v.clientHeight-(mob?44:56);
+function dims(){const v=$("view"),mob=innerWidth<700,FSm=$("reader").classList.contains("fs"),aw=v.clientWidth-(mob?16:36),ah=v.clientHeight-(mob?44:56);
  let w=mob?Math.min(aw,PW):Math.min(aw/2,PW);let h=w*PH/PW;if(!mob&&h>ah&&!Z){h=Math.max(ah,300);w=h*PW/PH}
- if(Z){w=w*Z;h=w*PH/PW}return{w:Math.round(w),h:Math.round(h),mob}}
+ if(FSm&&!Z&&h>ah){h=Math.max(ah,200);w=h*PW/PH}if(Z){w=w*Z;h=w*PH/PW}return{w:Math.round(w),h:Math.round(h),mob}}
 function build(n){const f=F(),d=dims();if(PF){try{PF.destroy()}catch(e){}PF=null}
  $("view").innerHTML='<div class="stage" id="stage" style="width:'+(d.mob?d.w:d.w*2)+'px"><div class="book" id="book"></div><div class="hint">'+(d.mob?t("اسحب لقلب الصفحة","Swipe to turn the page"):t("اضغط أو اسحب زاوية الصفحة لقلبها · ← →","Click or drag a page corner to turn · ← →"))+'</div></div>';
  const order=Array.from({length:f.pages},(_,i)=>RTL?f.pages-i:i+1);
@@ -110,6 +122,18 @@ function go(n){const f=F();if(!f||!PF)return;n=Math.max(1,Math.min(f.pages,n|0||
 const next=()=>PF&&(RTL?PF.flipPrev():PF.flipNext()),prev=()=>PF&&(RTL?PF.flipNext():PF.flipPrev());
 $("prev").onclick=prev;$("next").onclick=next;$("pg").onchange=()=>go(+$("pg").value);
 $("zi").onclick=()=>{Z=Math.min(2.5,(Z||1)+.25);build(P)};$("zo").onclick=()=>{Z=Math.max(.5,(Z||1)-.25);if(Z===1)Z=0;build(P)};$("fit").onclick=()=>{Z=0;build(P)};
+/* ملء الشاشة: Fullscreen API على حاوية الكتاب، وبديل CSS (iPhone Safari) */
+const RD=$("reader"),FSN=!!(document.fullscreenEnabled||document.webkitFullscreenEnabled)&&!!(RD.requestFullscreen||RD.webkitRequestFullscreen);
+const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
+function fsUI(on){RD.classList.toggle("fs",on);document.documentElement.classList.toggle("fsl",on);$("fsx").hidden=!on;$("fs").setAttribute("aria-pressed",on);
+ $("fs").textContent=on?t("⛶ خروج","⛶ Exit"):t("⛶ ملء الشاشة","⛶ Full screen");$("fs").title=$("fs").textContent;
+ $("fsx").textContent="✕";$("fsx").setAttribute("aria-label",t("خروج من ملء الشاشة","Exit full screen"));setTimeout(()=>F()&&build(P),60)}
+function fsOn(){if(FSN&&Q.get("fs")!=="css"){const r=RD.requestFullscreen?RD.requestFullscreen():RD.webkitRequestFullscreen();if(r&&r.catch)r.catch(()=>fsUI(true))}else fsUI(true)}
+function fsOff(){if(fsEl()){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}else fsUI(false)}
+$("fs").onclick=()=>RD.classList.contains("fs")?fsOff():fsOn();$("fsx").onclick=fsOff;
+["fullscreenchange","webkitfullscreenchange"].forEach(ev=>document.addEventListener(ev,()=>fsUI(fsEl()===RD)));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&RD.classList.contains("fs")&&!fsEl()){e.preventDefault();fsUI(false)}});
+fsUI(false);
 let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>build(P),250)});
 /* حماية العرض فقط */
 ["contextmenu","dragstart","selectstart","copy","cut"].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault()));
