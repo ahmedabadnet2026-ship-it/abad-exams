@@ -184,9 +184,10 @@ html.js.leaving{animation:pgOut .35s ease forwards}
 @keyframes pgIn{from{opacity:0}to{opacity:1}}
 @keyframes pgOut{to{opacity:0}}
 @media(prefers-reduced-motion:reduce){html,html.js.leaving{animation:none}}
-</style><style>.choose{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:30px auto 0;max-width:900px}
+</style><style>.choose{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:30px auto 0;max-width:1100px}
 .ch{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:20px 16px 18px;border-radius:18px;text-decoration:none;color:#fff;background:linear-gradient(160deg,#ffffff1c,#ffffff08);border:1px solid #ffffff2e;backdrop-filter:blur(6px);box-shadow:0 14px 30px #0005;opacity:0;animation:up .8s ease forwards;transition:transform .3s,border-color .3s,box-shadow .3s;overflow:hidden}
 .ch.c1{animation-delay:1.5s}.ch.c2{animation-delay:1.7s}.ch.c3{animation-delay:1.9s}
+.ch.c4{animation-delay:2.1s}
 .ch::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#3f86b3,#F5BD2D)}
 .ch:hover,.ch:focus-visible{transform:translateY(-4px);border-color:#F5BD2D;box-shadow:0 18px 38px #F5BD2D33;outline:none}
 .ch .ci{font-size:2.1rem;line-height:1.2;transition:transform .35s}.ch:hover .ci{transform:scale(1.12) rotate(-4deg)}
@@ -219,7 +220,7 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 <div class="herobg in"><picture><source type="image/webp" media="(max-width:700px)" srcset="assets/hero/hero-saudi-1280.webp"><source type="image/webp" srcset="assets/hero/hero-saudi.webp"><source media="(max-width:700px)" srcset="assets/hero/hero-saudi-1280.jpg"><img src="assets/hero/hero-saudi.jpg" width="2560" height="1440" alt="شاب سعودي يستخدم منصة آباد الرقمية على حاسوبه المحمول" fetchpriority="high" decoding="async"></picture></div>
 <div class="line in"></div>
 <p class="in">منصة واحدة تجمع اختبارات الشهادات المهنية العالمية، ومكتبة دوراتك، ومختبرات المحاكاة العملية — لنرافقكم خطوة بخطوة نحو النجاح.</p>
-<div class="choose"><a class="ch c1" href="platform.html?r=202610131507"><span class="ci" aria-hidden="true">🎓</span><b>منصة الاختبارات</b><small>محاكيات الاختبارات الدولية وتحليل أدائك</small><i aria-hidden="true">←</i></a><a class="ch c2" href="library.html?r=202610131620"><span class="ci" aria-hidden="true">📚</span><b>مكتبة المعهد</b><small>كتب دوراتك التفاعلية للعرض فقط</small><i aria-hidden="true">←</i></a><a class="ch c3" href="practical-lab.html?r=202610131700"><span class="ci" aria-hidden="true">🧪</span><b>منصة المحاكاة العملية</b><small>مختبرات لينكس حقيقية داخل متصفحك</small><i aria-hidden="true">←</i></a></div>
+<div class="choose"><a class="ch c1" href="platform.html?r=202610131507"><span class="ci" aria-hidden="true">🎓</span><b>منصة الاختبارات</b><small>محاكيات الاختبارات الدولية وتحليل أدائك</small><i aria-hidden="true">←</i></a><a class="ch c2" href="library.html?r=202610131620"><span class="ci" aria-hidden="true">📚</span><b>مكتبة المعهد</b><small>كتب دوراتك التفاعلية للعرض فقط</small><i aria-hidden="true">←</i></a><a class="ch c3" href="practical-lab.html?r=202610131700"><span class="ci" aria-hidden="true">🧪</span><b>منصة المحاكاة العملية</b><small>مختبرات لينكس حقيقية داخل متصفحك</small><i aria-hidden="true">←</i></a><a class="ch c4" href="my-courses.html?v=202610150420"><span class="ci" aria-hidden="true">🗂️</span><b>دوراتي</b><small>الدورات الحضورية المسجّل فيها</small><i aria-hidden="true">←</i></a></div>
 </main>
 <section class="svc" id="services" aria-label="خدمات المنصة"></section>
 <footer>© <span id="y"></span> معهد شبكة آباد للتدريب — الرياض<a class="abad-admin" href="dashboard.html" rel="nofollow" style="display:block;width:max-content;margin:10px auto 0;font-size:11px;opacity:.55;color:inherit;text-decoration:none;font-family:inherit" title="Admin login">🔒 دخول الإدارة</a></footer>
