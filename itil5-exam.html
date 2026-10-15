@@ -621,7 +621,10 @@ var S=null, sel={exam:0,mode:'std'}, tick=null, filter='all';
 
 /* ---------- setup ---------- */
 function bestOf(k){var h=load(HS)||{};return h[k];}
+function openLock(){var m=document.getElementById('itil-lock');if(m){m.classList.add('on');var c=m.querySelector('.lk-x');if(c)c.focus();}}
+function closeLock(){var m=document.getElementById('itil-lock');if(m)m.classList.remove('on');}
 function renderExams(){
+  if(sel.exam!==0)sel.exam=0;
   var g=$('exgrid');g.innerHTML='';
   EXAMS.forEach(function(ex,k){
     var reused=ex.filter(function(it){return it.from;}).length;
@@ -629,7 +632,8 @@ function renderExams(){
     if(b)bh='<span class="best '+(b.s>=PASS?'p':'f')+'">أفضل نتيجة · Best: '+b.s+'/40</span>';
     var btn=document.createElement('button');btn.type='button';btn.className='excard';btn.setAttribute('role','radio');btn.setAttribute('aria-checked',k===sel.exam?'true':'false');btn.dataset.k=k;
     btn.innerHTML='<span class="t">الاختبار <bdi>'+(k+1)+'</bdi><span class="en blk">Exam '+(k+1)+'</span></span><span class="m">40 سؤالاً · 40 questions</span>'+(reused?'<span class="reuse">يشمل '+reused+' سؤالاً مُعاداً من الاختبارات الأخرى لإكمال 40 · includes '+reused+' reused questions</span>':'')+bh;
-    btn.onclick=function(){sel.exam=k;renderExams();};
+    if(k===0){btn.innerHTML+='<span class="freeb">تجربة مجانية</span>';}else{btn.classList.add('locked');btn.setAttribute('aria-label','الاختبار '+(k+1)+' مقفل');btn.innerHTML+='<span class="lockb" aria-label="مقفل">🔒</span>';}
+    btn.onclick=function(){if(k!==0){openLock();return;}sel.exam=k;renderExams();};
     g.appendChild(btn);
   });
 }
@@ -642,11 +646,13 @@ function newAttempt(k,mode,shOpt,shQ,name){
   return{v:1,exam:k,mode:mode,shOpt:!!shOpt,shQ:!!shQ,name:name||'',items:items,ans:items.map(function(){return -1;}),flag:items.map(function(){return false;}),cur:0,start:now,end:now+MODES[mode]*60000,done:false,timeUp:false,used:0};
 }
 function begin(){
+  if(sel.exam!==0){sel.exam=0;renderExams();openLock();return;}
   S=newAttempt(sel.exam,sel.mode,$('opt-shuffle').checked,$('opt-qshuffle').checked,$('inp-name').value.trim());
   save();enterExam();
 }
 function save(){if(S&&!S.done)store(LS,S);}
 function enterExam(){
+  if(!S||S.exam!==0){S=null;store(LS,null);show('s-setup');renderExams();openLock();return;}
   $('bar-name').textContent=S.name||'—';
   $('bar-title').textContent='ITIL® Foundation (Version 5) · Exam '+(S.exam+1);
   $('bar-mode').innerHTML=S.mode==='ext'?'<bdi>75 min</bdi> · وقت إضافي':'<bdi>60 min</bdi>';
@@ -781,6 +787,7 @@ $('btn-start').onclick=function(){renderExams();show('s-setup');};
 $('btn-back').onclick=function(){show('s-welcome');};
 $('name-form').onsubmit=function(e){e.preventDefault();begin();};
 var saved=load(LS);
+if(saved&&saved.exam!==0){store(LS,null);saved=null;}
 if(saved&&saved.v===1&&!saved.done&&EXAMS[saved.exam]){$('resume-bar').classList.add('on');}
 $('btn-resume').onclick=function(){S=load(LS);$('resume-bar').classList.remove('on');if(!S)return;if(Date.now()>=S.end){enterExam();}else{enterExam();toast('تم استئناف الاختبار · Attempt resumed');}};
 $('btn-discard').onclick=function(){store(LS,null);$('resume-bar').classList.remove('on');};
@@ -891,5 +898,21 @@ window.ABAD_AN.itil=function(S,QS,PASS,NQ,MODES){var L='ABCD',c=0;
  window.ABAD_AN.render(host,bf,{key:'itil5',title:'ITIL® Foundation (Version 5)',label:'Exam '+(S.exam+1),doms:DOMS,rows:rows,correct:c,total:NQ,used:S.used,limit:MODES[S.mode]*60000,pass:Math.round(PASS/NQ*100),passNote:window.ABAD_AN.lang==='en'?'Official pass mark: 26/40 (65%).':'درجة النجاح الرسمية: 26 من 40 (65%).',attemptId:S.start,
   mapNote:window.ABAD_AN.lang==='en'?'Domains follow the ITIL Foundation syllabus areas; questions are classified by an embedded topic map (syllabus refs + keywords).':'المجالات وفق محاور منهج ITIL Foundation؛ صُنّفت الأسئلة بخريطة موضوعات مضمّنة (مراجع المنهج + الكلمات المفتاحية).'});
 };})();
-</script><!--/ABAD-AN--><script src="assets/prices.js?r=202610131507" defer></script></body>
+</script><!--/ABAD-AN--><script src="assets/prices.js?r=202610131507" defer></script><style>
+.excard .freeb{display:inline-block;margin-top:6px;font-size:12px;font-weight:800;border-radius:99px;padding:1px 10px;background:#F5BD2D;color:#10293b}
+.excard.locked{opacity:.72;background:#f4f6f9}.excard .lockb{position:absolute;top:8px;left:10px;font-size:18px}
+#itil-lock{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(16,41,59,.55);padding:16px;font-family:Cairo,system-ui,sans-serif}
+#itil-lock.on{display:flex}#itil-lock .lk{background:#fff;border-radius:18px;max-width:400px;width:100%;padding:22px;border-top:6px solid #F5BD2D;text-align:center;color:#10293b;position:relative}
+#itil-lock h3{margin:6px 0 12px;font-size:19px}#itil-lock input{width:100%;box-sizing:border-box;margin:5px 0;padding:10px;border:1px solid #dbe5ee;border-radius:10px;font-family:inherit;background:#f4f6f9}
+#itil-lock .note{font-size:13px;color:#3f86b3;font-weight:800;margin:6px 0 12px}#itil-lock .bk{display:block;background:#10293b;color:#fff;text-decoration:none;border-radius:12px;padding:11px;font-weight:800}
+#itil-lock .lk-x{position:absolute;top:8px;left:10px;border:0;background:none;font-size:22px;cursor:pointer;color:#10293b}
+</style>
+<div id="itil-lock" role="dialog" aria-modal="true" aria-labelledby="lk-t" onclick="if(event.target===this)closeLock()"><div class="lk">
+<button type="button" class="lk-x" aria-label="إغلاق" onclick="closeLock()">×</button>
+<div style="font-size:34px">🔒</div><h3 id="lk-t">سجّل دخولك لفتح باقي الاختبارات</h3>
+<form onsubmit="return false"><input type="email" placeholder="البريد الإلكتروني" disabled><input type="password" placeholder="كلمة المرور" disabled>
+<div class="note">تسجيل الدخول قريباً</div></form>
+<a class="bk" href="booking.html">احجز الآن عبر صفحة الحجز</a></div></div>
+<script>document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLock();});</script>
+</body>
 </html>
