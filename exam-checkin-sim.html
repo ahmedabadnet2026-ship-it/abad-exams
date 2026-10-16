@@ -297,5 +297,59 @@ $("restart").onclick=()=>location.reload();
 addEventListener("pagehide",stopCam);
 show(1);
 </script>
+<style>
+.pr{position:fixed;bottom:12px;inset-inline-start:12px;width:340px;max-width:calc(100vw - 24px);background:#10293b;color:#fff;border:2px solid #F5BD2D;border-radius:16px;box-shadow:0 14px 40px #0006;z-index:50;font-size:13.5px}
+.pr .ph2{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #ffffff22}
+.pr .av{width:46px;height:46px;border-radius:50%;background:linear-gradient(#3f86b3,#10293b);display:flex;align-items:center;justify-content:center;font-size:26px;flex:none;border:2px solid #F5BD2D}
+.pr .av.talk{animation:tk .5s ease infinite alternate}@keyframes tk{to{box-shadow:0 0 0 6px #F5BD2D55}}
+.pr .ph2 b{display:block}.pr .ph2 small{opacity:.7;font-size:11px}
+.pr .bd{padding:10px 12px}.pr .en{font-weight:700;direction:ltr;text-align:left;margin:0}.pr .ar{opacity:.85;margin:4px 0 0}
+.pr .pb{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 12px}
+.pr .pb button{font:inherit;font-size:12.5px;font-weight:800;border-radius:9px;padding:6px 10px;cursor:pointer;border:1px solid #ffffff44;background:#ffffff14;color:#fff}
+.pr .pb .dn{background:#F5BD2D;color:#10293b;border-color:#F5BD2D}
+.pr video{width:100%;border-radius:10px;margin-top:8px;display:none;transform:scaleX(-1)}
+.pr .tg{background:none;border:0;color:#fff;font-size:18px;cursor:pointer;margin-inline-start:auto}
+.pr.min .bd,.pr.min .pb{display:none}
+.pr .wn{color:#ff8a65}
+body{padding-bottom:260px}
+</style>
+<div class="pr" id="pr" aria-live="polite">
+<div class="ph2"><div class="av" id="pav">🧑‍💼</div><div><b>Virtual Proctor — المراقب الافتراضي</b><small>English voice · محاكاة تدريبية</small></div><button class="tg" id="ptg" title="تصغير">▾</button></div>
+<div class="bd"><p class="en" id="pen">Click “Start proctor” to hear your proctor.</p><p class="ar" id="par">اضغط "تشغيل المراقب" لسماع تعليمات المراقب بالإنجليزية.</p><video id="pvid" autoplay muted playsinline></video></div>
+<div class="pb"><button class="dn" id="pgo">▶ تشغيل المراقب</button><button id="pdone" style="display:none" class="dn">Done / تم</button><button id="prep">🔁 إعادة</button><button id="pmute">🔊 كتم</button></div>
+</div>
+<script>
+(function(){
+const S=window.speechSynthesis,SC={
+1:[["Hello, and welcome. I am your virtual proctor for today's training session. Before we begin, make sure you are alone in a quiet, private room.","مرحباً بك. أنا المراقب الافتراضي لجلسة التدريب اليوم. قبل البدء تأكد أنك وحدك في غرفة هادئة وخاصة."],["Please confirm you have a valid government I D, and that the name matches your registration. Then complete the checklist.","تأكد أن معك هوية حكومية سارية وأن الاسم مطابق للتسجيل، ثم أكمل قائمة المتطلبات."]],
+2:[["Please turn on your camera.","من فضلك شغّل الكاميرا.","cam"],["Now run the system test, and make sure every check passes.","الآن شغّل فحص الجهاز وتأكد من نجاح كل الفحوصات."]],
+3:[["Please enter your access code, and read and accept the exam rules.","أدخل رمز الدخول، ثم اقرأ قواعد الاختبار ووافق عليها."]],
+4:[["Please look directly at the camera, and keep your face inside the frame. Then take your headshot.","انظر مباشرة إلى الكاميرا وأبقِ وجهك داخل الإطار، ثم التقط صورة الوجه.","cam"]],
+5:[["Hold your I D up to the camera.","ارفع هويتك أمام الكاميرا.","cam"],["Show me the front of your I D. Make sure all four corners are visible.","أرني الوجه الأمامي للهوية مع ظهور الزوايا الأربع."],["Now turn it over, and show me the back of your I D.","الآن اقلبها وأرني الوجه الخلفي للهوية."]],
+6:[["Pan your camera slowly, three hundred and sixty degrees, around the room.","حرّك الكاميرا ببطء 360 درجة حول الغرفة."],["Now show me your desk surface, and the area around your keyboard.","الآن أرني سطح المكتب والمنطقة حول لوحة المفاتيح."],["Please remove any items that are not allowed from your desk.","من فضلك أزل أي أغراض غير مسموح بها من المكتب."]],
+7:[["Show me both wrists, please.","أرني معصميك من فضلك."],["Show me your ears, please.","أرني أذنيك من فضلك."],["Place your phone out of arm's reach.","ضع هاتفك خارج متناول يدك."]],
+8:[["A quick reminder of the rules. No talking, and do not read the questions aloud.","تذكير سريع بالقواعد: ممنوع التحدث أو قراءة الأسئلة بصوت مرتفع."],["Stay in the camera frame at all times, and do not leave your seat without permission.","ابقَ داخل إطار الكاميرا طوال الوقت ولا تغادر مقعدك بدون إذن."]],
+9:[["Thank you. Everything looks good. Your exam will now begin. Good luck.","شكراً لك، كل شيء سليم. سيبدأ اختبارك الآن. بالتوفيق."]]};
+const W=["Please keep your face in the camera frame.","من فضلك أبقِ وجهك داخل إطار الكاميرا."];
+let on=false,mute=false,q=SC[1],qi=0,last=null,step=1,wT=null;
+const $=id=>document.getElementById(id);
+function voice(){const v=S?S.getVoices():[];return v.find(x=>x.lang==="en-US"&&/Google|Samantha|Microsoft/.test(x.name))||v.find(x=>x.lang==="en-US")||v.find(x=>/^en/.test(x.lang))}
+function say(l,warn){last=l;$("pen").textContent=l[0];$("par").textContent=l[1];$("pen").className="en"+(warn?" wn":"");
+ if(!S||mute||!on)return;S.cancel();const u=new SpeechSynthesisUtterance(l[0]);u.lang="en-US";const v=voice();if(v)u.voice=v;u.rate=.95;
+ u.onstart=()=>$("pav").classList.add("talk");u.onend=u.onerror=()=>$("pav").classList.remove("talk");S.speak(u)}
+async function cam(){try{if(typeof getCam==="function"){const s=await getCam();const v=$("pvid");v.srcObject=s;v.style.display="block";v.play().catch(()=>{})}}catch(e){say(["I cannot access your camera. You may continue in simulated mode.","تعذّر الوصول للكاميرا. يمكنك المتابعة بوضع المحاكاة."])}}
+function play(){if(qi<q.length){const l=q[qi];say(l);if(l[2]==="cam")cam();$("pdone").style.display="";}else{$("pdone").style.display="none";if(step<9)setTimeout(()=>{if(qi>=q.length&&on)$("par").textContent+=" ✓ أكمل الخطوة ثم اضغط التالي."},50)}}
+function load(n){step=n;q=SC[n]||[];qi=0;if(on)play()}
+$("pgo").onclick=()=>{on=true;$("pgo").style.display="none";if(S)S.getVoices();play();sched()};
+$("pdone").onclick=()=>{qi++;play()};
+$("prep").onclick=()=>{if(last){const m=on;on=true;say(last);on=m||on}};
+$("pmute").onclick=()=>{mute=!mute;$("pmute").textContent=mute?"🔇 تشغيل الصوت":"🔊 كتم";if(mute&&S)S.cancel()};
+$("ptg").onclick=()=>{$("pr").classList.toggle("min");$("ptg").textContent=$("pr").classList.contains("min")?"▴":"▾"};
+function sched(){clearTimeout(wT);wT=setTimeout(()=>{if(on&&step>=4&&step<=8&&!(S&&S.speaking)){const p=last;say(W,true);setTimeout(()=>{if(p&&qi<q.length){last=p;$("pen").textContent=p[0];$("par").textContent=p[1];$("pen").className="en"}},6000)}sched()},45000+Math.random()*45000)}
+if(S)S.onvoiceschanged=()=>{};
+const orig=window.show;window.show=function(n){orig(n);load(n);const v=$("pvid");if(v.srcObject&&(!stream||!stream.active)){v.style.display="none";v.srcObject=null}};
+addEventListener("pagehide",()=>S&&S.cancel());
+})();
+</script>
 </body>
 </html>
