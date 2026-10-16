@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10293b">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>محاكي دخول الاختبار الدولي (أونلاين) — منصة آباد الرقمية</title>
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+:root{--navy:#10293b;--blue:#3f86b3;--gold:#F5BD2D;--ok:#2ecc71;--bad:#e74c3c;--muted:#5b6b78}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Cairo,system-ui,sans-serif;color:var(--navy);background:#f3f6f9;line-height:1.75}
+a{color:var(--blue)}
+.top{display:flex;align-items:center;gap:10px;padding:10px 16px;background:linear-gradient(180deg,#10293b,#0d2233);color:#fff;flex-wrap:wrap}
+.top img{height:38px;background:#fff;border-radius:8px;padding:2px 6px}
+.top .brand{display:flex;flex-direction:column;margin-inline-end:auto}.top .brand small{opacity:.7;font-size:12px}
+.hb{font:inherit;font-weight:700;font-size:13px;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:9px;padding:6px 12px;text-decoration:none}
+.wrap{max-width:980px;margin:0 auto;padding:18px 14px 60px}
+h1{font-size:1.5rem;margin:6px 0 2px}.sub{color:var(--muted);margin:0 0 10px}
+.disc{background:#fff8e1;border:1px solid #F5BD2D88;border-inline-start:5px solid var(--gold);border-radius:12px;padding:10px 14px;font-size:13.5px;margin-bottom:14px}
+.priv{background:#e8f3fa;border:1px solid #3f86b355;border-radius:12px;padding:8px 14px;font-size:13px;margin-bottom:14px}
+.prog{background:#dde6ee;border-radius:99px;height:10px;overflow:hidden}.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));width:0;transition:width .4s}
+.dots{display:flex;gap:4px;flex-wrap:wrap;margin:10px 0 16px}
+.dots button{font:inherit;font-size:12px;font-weight:700;border:1px solid #c9d6e1;background:#fff;color:var(--muted);border-radius:99px;padding:3px 10px;cursor:pointer}
+.dots button.on{background:var(--navy);color:#fff;border-color:var(--navy)}.dots button.done{border-color:var(--ok);color:#1e8449}
+.card{background:#fff;border:1.5px solid #e3e9ef;border-radius:18px;padding:20px;box-shadow:0 10px 30px #10293b10;position:relative;overflow:hidden}
+.card:before{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:6px;background:var(--gold)}
+.step{display:none}.step.on{display:block;animation:f .35s}@keyframes f{from{opacity:0;transform:translateY(6px)}}
+.step h2{margin:0 0 6px;font-size:1.25rem}.step h2 span{color:var(--blue)}
+.tips,.mist{border-radius:12px;padding:10px 14px;margin:12px 0;font-size:14px}
+.tips{background:#eaf7ef;border:1px solid #2ecc7155}.mist{background:#fdecea;border:1px solid #e74c3c44}
+.tips b,.mist b{display:block}.tips ul,.mist ul{margin:4px 0;padding-inline-start:20px}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid #e3e9ef;border-radius:10px;margin:6px 0;cursor:pointer;background:#fafcfd}
+.chk input{width:20px;height:20px;margin-top:4px;accent-color:var(--blue);flex:none}
+.btn{font:inherit;font-weight:800;font-size:14px;border-radius:10px;padding:9px 18px;cursor:pointer;border:1px solid var(--blue);background:#fff;color:var(--blue);text-decoration:none;display:inline-block}
+.btn.prim{background:var(--gold);border-color:var(--gold);color:var(--navy)}.btn.navy{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+.msg{font-size:13.5px;font-weight:700;margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:#1e8449}
+.sys{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:10px 0}
+.sys div{border:1px solid #e3e9ef;border-radius:12px;padding:10px;background:#fafcfd}
+.st{font-weight:800;font-size:13px}.st.ok{color:#1e8449}.st.bad{color:var(--bad)}.st.run{color:var(--blue)}
+.meter{height:10px;background:#dde6ee;border-radius:9px;overflow:hidden;margin-top:6px}.meter i{display:block;height:100%;width:0;background:var(--ok);transition:width .1s}
+.cam{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.frame{aspect-ratio:4/3;background:#0d2233;border-radius:12px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#ffffffaa;font-size:13px;text-align:center}
+.frame video,.frame canvas,.frame img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.frame .oval{position:absolute;inset:12% 28%;border:3px dashed var(--gold);border-radius:50%;pointer-events:none}
+.frame .rect{position:absolute;inset:18% 12%;border:3px dashed var(--gold);border-radius:12px;pointer-events:none}
+.ph{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.ph .slot{border:2px dashed #c9d6e1;border-radius:12px;padding:10px 6px;text-align:center;font-size:13px;cursor:pointer;background:#fafcfd}
+.ph .slot.done{border-style:solid;border-color:var(--ok);background:#eaf7ef}
+.desk{position:relative;background:linear-gradient(#c8a27a,#a9825a);border-radius:16px;padding:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}
+.it{background:#ffffffd9;border:2px solid transparent;border-radius:12px;padding:8px 4px;text-align:center;cursor:pointer;font-size:13px;font-weight:700}
+.it span{display:block;font-size:30px}.it.sel{border-color:var(--bad);background:#fdecea}
+.it.r-ok{border-color:var(--ok)!important}.it.r-bad{border-color:var(--bad)!important;background:#fdecea}.it.r-miss{border-color:var(--gold)!important;background:#fff8e1}
+.queue{text-align:center;padding:10px}.queue .n{font-size:42px;font-weight:800;color:var(--blue)}
+.chat{border:1px solid #e3e9ef;border-radius:12px;background:#fafcfd;height:240px;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:6px}
+.chat .m{max-width:80%;padding:6px 12px;border-radius:12px;font-size:13.5px}
+.chat .p{background:var(--navy);color:#fff;align-self:flex-start}.chat .u{background:#e8f3fa;align-self:flex-end}.chat .s{align-self:center;font-size:12px;color:var(--muted)}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.two ul{padding-inline-start:20px;margin:4px 0}
+.q{border:1px solid #e3e9ef;border-radius:12px;padding:10px 12px;margin:8px 0}.q p{margin:0 0 6px;font-weight:700}
+.q label{display:block;padding:4px 8px;border-radius:8px;cursor:pointer}.q label.r-ok{background:#eaf7ef}.q label.r-bad{background:#fdecea}
+.q .fb{font-size:13px;margin-top:4px;color:var(--muted)}
+.cert{border:3px double var(--gold);border-radius:16px;padding:22px;text-align:center;background:linear-gradient(#fff,#fffbef)}
+.cert h3{margin:4px 0;font-size:1.4rem}.cert table{margin:12px auto;border-collapse:collapse;font-size:14px}.cert td{padding:4px 12px;border-bottom:1px solid #eee;text-align:start}
+input[type=text]{font:inherit;padding:8px 12px;border:1.5px solid #c9d6e1;border-radius:10px;width:100%;max-width:340px;direction:ltr;text-align:center;letter-spacing:.1em}
+footer{text-align:center;color:var(--muted);font-size:12.5px;padding:20px}
+@media(max-width:700px){.cam,.two{grid-template-columns:1fr}.ph{grid-template-columns:repeat(2,1fr)}.desk{grid-template-columns:repeat(3,1fr)}.card{padding:16px 14px}h1{font-size:1.25rem}}
+@media print{.top,.dots,.prog,.nav,.disc,.priv{display:none}.step{display:none!important}#s9{display:block!important}}
+</style>
+</head>
+<body>
+<header class="top">
+<img src="assets/abad-logo.png" alt="معهد شبكة آباد للتدريب">
+<div class="brand"><b>منصة آباد الرقمية</b><small>معهد شبكة آباد للتدريب</small></div>
+<a class="hb" href="platform.html?v=202610161320">منصة الاختبارات</a>
+<a class="hb" href="index.html?v=202610161320">الرئيسية</a>
+</header>
+<div class="wrap">
+<h1>محاكي دخول الاختبار الدولي (أونلاين)</h1>
+<p class="sub">تدريب عملي على إجراءات الدخول للاختبار المراقَب عن بُعد — مشابه لإجراءات OnVUE</p>
+<div class="disc">⚠️ <b>تنبيه:</b> هذه محاكاة تدريبية من معهد شبكة آباد للتدريب لأغراض التعليم فقط، وهي <b>غير تابعة لشركة Pearson VUE ولا معتمدة منها</b>. "OnVUE" علامة تخص مالكها. الإجراءات الفعلية قد تختلف حسب الجهة المانحة؛ ارجع دائماً لتعليمات الاختبار الرسمية في بريد التأكيد.</div>
+<div class="priv">🔒 <b>خصوصيتك محفوظة:</b> كل بيانات الكاميرا والميكروفون والصور تبقى داخل متصفحك فقط ولا تُرفع أو تُحفظ على أي خادم. يمكنك إكمال المحاكاة كلها بدون كاميرا (وضع الصور الافتراضية).</div>
+<div class="prog"><i id="bar"></i></div>
+<div class="dots" id="dots"></div>
+<div class="card">
+
+<section class="step" id="s1">
+<h2><span>1.</span> قبل الاختبار</h2>
+<p>جهّز نفسك ومكانك قبل الموعد. أشّر على كل بند بعد التأكد منه:</p>
+<div id="req"></div>
+<div class="tips"><b>💡 نصائح</b><ul><li>نافذة الدخول تفتح عادةً قبل الموعد بـ 30 دقيقة وتستمر حتى 15 دقيقة بعده؛ ادخل مبكراً لتجنب التأخير.</li><li>شغّل اختبار النظام (System test) من نفس الجهاز ونفس المكان قبل يوم الاختبار.</li><li>أغلق باب الغرفة وأخبر من في المنزل بعدم الدخول.</li></ul></div>
+<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>الاسم في الهوية لا يطابق الاسم في حساب التسجيل (مثلاً اختلاف ترتيب الاسم أو حذف اسم العائلة).</li><li>استخدام جهاز العمل المقيّد بجدار حماية أو VPN شركة يمنع تشغيل التطبيق.</li><li>الاعتماد على شبكة جوال ضعيفة أو Wi-Fi مزدحم.</li></ul></div>
+</section>
+
+<section class="step" id="s2">
+<h2><span>2.</span> فحص الجهاز (System test)</h2>
+<p>يفحص النظام الكاميرا والميكروفون وسرعة الإنترنت والمتصفح/نظام التشغيل. الكاميرا والميكروفون الحقيقيان اختياريان وبإذنك فقط.</p>
+<div class="sys">
+<div><b>📷 الكاميرا</b><div class="st" id="tCam">لم يُفحص</div></div>
+<div><b>🎤 الميكروفون</b><div class="st" id="tMic">لم يُفحص</div><div class="meter"><i id="micLv"></i></div></div>
+<div><b>🌐 سرعة الإنترنت</b><div class="st" id="tNet">لم يُفحص</div></div>
+<div><b>💻 المتصفح / النظام</b><div class="st" id="tOs">لم يُفحص</div></div>
+</div>
+<div class="cam"><div class="frame" id="prev">معاينة الكاميرا تظهر هنا</div><div>
+<button class="btn navy" id="runReal">تشغيل الفحص بالكاميرا الحقيقية</button>
+<button class="btn" id="runSim" style="margin-top:6px">فحص محاكى (بدون كاميرا)</button>
+<p class="msg" id="sysMsg"></p></div></div>
+<div class="tips"><b>💡 نصائح</b><ul><li>سرعة اتصال مستقرة (يُنصح بـ 6 Mbps رفع/تنزيل تقريباً) والأفضل كابل إيثرنت.</li><li>شاشة واحدة فقط؛ افصل أي شاشة إضافية قبل البدء.</li><li>أوقف التحديثات التلقائية وبرامج المزامنة.</li></ul></div>
+<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>تطبيق آخر (Teams/Zoom) يستخدم الكاميرا فيفشل الفحص.</li><li>تشغيل الاختبار من جهاز لوحي أو جوال — غير مدعوم عادةً.</li></ul></div>
+</section>
+
+<section class="step" id="s3">
+<h2><span>3.</span> رمز الدخول وتأكيد الموعد</h2>
+<p>في الواقع تسجّل الدخول لحسابك، تختار الاختبار، تضغط "بدء الاختبار" وتنسخ <b>رمز الدخول (Access code)</b> ثم تشغّل التطبيق يدوياً وتلصق الرمز. جرّب ذلك هنا:</p>
+<p>رمز الدخول التجريبي: <b dir="ltr" id="code" style="font-size:18px;letter-spacing:.15em"></b> <button class="btn" id="copy">نسخ</button></p>
+<input type="text" id="codeIn" placeholder="ألصق الرمز هنا" autocomplete="off">
+<p style="margin-top:12px"><b>أوافق على قواعد الاختبار:</b></p>
+<div id="pol"></div>
+<p class="msg" id="codeMsg"></p>
+<div class="tips"><b>💡 نصائح</b><ul><li>قد يُطلب منك إدخال رقم جوالك لاستلام رابط تصوير الصور بالجوال — أو يمكنك استخدام كاميرا الحاسب.</li><li>بعد تشغيل التطبيق أغلق كل البرامج الأخرى (Task Manager في ويندوز / Force Quit في ماك).</li></ul></div>
+<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>البحث عن زر "بدء الاختبار" قبل وقت فتح نافذة الدخول.</li><li>انتظار تشغيل التطبيق تلقائياً بعد تنزيله — يجب تشغيله يدوياً.</li></ul></div>
+</section>
+
+<section class="step" id="s4">
+<h2><span>4.</span> صورة الوجه (Headshot)</h2>
+<p>تُقارن صورة وجهك بصورة الهوية للتأكد من هوية المختبِر. ضع وجهك داخل الإطار البيضاوي.</p>
+<div class="cam"><div class="frame" id="hsLive"><div class="oval"></div>الكاميرا غير مفعّلة</div><div class="frame" id="hsShot">لم تُلتقط صورة</div></div>
+<button class="btn navy" id="hsCam">تشغيل الكاميرا</button> <button class="btn prim" id="hsCap">التقاط</button> <button class="btn" id="hsSim">صورة افتراضية</button>
+<p class="msg" id="hsMsg"></p>
+<div class="tips"><b>💡 نصائح</b><ul><li>خلفية بلون واحد وإضاءة جيدة من الأمام.</li><li>أبعد الكاميرا بطول ذراعك وانظر مباشرة إليها.</li><li>بدون نظارة شمسية أو قبعة، والوجه كاملاً ظاهر.</li></ul></div>
+<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>إضاءة قوية خلفك (نافذة) تجعل وجهك مظلماً.</li><li>صورة مقصوصة أو ضبابية فيُطلب إعادتها.</li></ul></div>
+</section>
+
+<section class="step" id="s5">
+<h2><span>5.</span> صورة الهوية</h2>
+<p>اختر نوع الهوية: <select id="idType" style="font:inherit;padding:4px 8px;border-radius:8px"><option value="card">الهوية الوطنية / الإقامة / رخصة القيادة (وجه وخلف)</option><option value="pass">جواز السفر (صفحة الصورة فقط)</option></select></p>
+<div class="cam"><div class="frame" id="idF"><div class="rect"></div><span>الوجه الأمامي</span></div><div class="frame" id="idB"><div class="rect"></div><span>الوجه الخلفي</span></div></div>
+<button class="btn prim" id="idCapF">التقاط الأمامي</button> <button class="btn prim" id="idCapB">التقاط الخلفي</button>
+<p class="msg" id="idMsg"></p>
+<div class="tips"><b>💡 نصائح</b><ul><li>يجب أن تظهر الزوايا الأربع كاملة وأن تكون النصوص مقروءة.</li><li>هوية حكومية سارية تحمل صورتك واسمك مطابقاً لاسم التسجيل.</li><li>(المحاكاة تلتقط إطاراً من الكاميرا إن كانت مفعّلة، وإلا تعرض بطاقة افتراضية — لا يُرفع شيء.)</li></ul></div>
+<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>هوية منتهية أو صورة منسوخة/مصورة من الجوال.</li><li>أصابعك تغطي جزءاً من البطاقة أو انعكاس الضوء على الصورة.</li><li>أي اختلاف في الاسم قد يمنعك من البدء وقد تخسر رسوم الاختبار.</li></ul></div>
+</section>
+
+<section class="step" id="s6">
+<h2><span>6.</span> صور المكان</h2>
+<p>التقط 4 صور لمكان الاختبار انطلاقاً من موضع الجهاز: الأمام، الخلف، اليسار، اليمين. اضغط على كل صورة:</p>
+<div class="ph" id="ws"></div>
+<h3 style="margin:14px 0 4px">🕵️ اكتشف المخالفة</h3>
+<p style="margin:0">هذا مكتبك قبل الاختبار. اضغط على كل غرض <b>يجب إزالته</b> من المكتب/متناول اليد، ثم اضغط "تحقق".</p>
+<div class="desk" id="desk"></div>
+<button class="btn navy" id="deskChk">تحقق</button> <button class="btn" id="deskRe">إعادة</button>
+<p class="msg" id="deskMsg"></p>
+<div class="tips"><b>💡 نصائح</b><ul><li>المساحة خالية في نطاق ذراعك: لا أوراق ولا كتب ولا أقلام ولا ألواح مكتوب عليها.</li><li>الهاتف والساعة خارج متناول اليد (لكن الهاتف قريب بما يكفي إن احتاج المراقب الاتصال بك — حسب تعليماته).</li><li>غالباً يُسمح بماء في كوب شفاف بدون ملصقات — تأكد من سياسة جهة الاختبار.</li></ul></div>
+<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>نسيان شاشة ثانية متصلة حتى لو مطفأة.</li><li>ظهور شخص آخر في الغرفة أو باب مفتوح.</li></ul></div>
+</section>
+
+<section class="step" id="s7">
+<h2><span>7.</span> الانتظار في الطابور والمراقب</h2>
+<p>بعد رفع الصور تنتظر دورك؛ يراجع المستقبِل (Greeter) صورك ثم يتولى المراقب الجلسة وقد يطلب منك إجراءات. لا تغادر مكانك أثناء الانتظار.</p>
+<div class="two"><div class="queue"><div>ترتيبك في الطابور</div><div class="n" id="qn">—</div><div id="qt" style="color:var(--muted);font-size:13px"></div><button class="btn navy" id="qStart">ابدأ الانتظار</button></div>
+<div><div class="chat" id="chat"><div class="m s">ستظهر رسائل المراقب هنا</div></div><div class="acts" id="acts"></div></div></div>
+<p class="msg" id="qMsg"></p>
+<div class="tips"><b>💡 نصائح</b><ul><li>نفّذ طلبات المراقب بهدوء: تدوير الكاميرا، إظهار المعصمين، إظهار الأذنين، إظهار الهوية.</li><li>ضع الهاتف خارج متناول اليد وخلفك عادةً، ولا تلمسه إلا إذا طلب المراقب.</li></ul></div>
+<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>استخدام الجوال أثناء الانتظار أو الخروج من أمام الكاميرا.</li><li>تجاهل رسائل المحادثة فيُلغى الدخول.</li></ul></div>
+</section>
+
+<section class="step" id="s8">
+<h2><span>8.</span> قواعد أثناء الاختبار</h2>
+<div class="two"><div class="tips" style="margin:0"><b>✅ افعل</b><ul><li>ابقَ داخل إطار الكاميرا طوال الوقت.</li><li>استخدم أداة السبورة (Whiteboard) داخل التطبيق للملاحظات.</li><li>استخدم المحادثة للتواصل مع المراقب عند أي مشكلة.</li><li>التزم بسياسة الاستراحة الخاصة بالاختبار (إن وُجدت) واتبع تعليمات المراقب.</li></ul></div>
+<div class="mist" style="margin:0"><b>❌ لا تفعل</b><ul><li>لا تتحدث ولا تقرأ الأسئلة بصوت مرتفع ولا تحرك شفتيك.</li><li>لا تغادر المكان أو تقف بدون إذن.</li><li>لا تغطي فمك أو وجهك، ولا تنظر بعيداً عن الشاشة كثيراً.</li><li>لا سماعات ولا أوراق ولا هاتف ولا ساعة.</li><li>لا تسمح لأحد بدخول الغرفة.</li></ul></div></div>
+<h3 style="margin:16px 0 4px">📝 اختبار الجاهزية</h3>
+<div id="quiz"></div>
+<button class="btn navy" id="qzChk">تصحيح</button>
+<p class="msg" id="qzMsg"></p>
+</section>
+
+<section class="step" id="s9">
+<h2><span>9.</span> بدء الاختبار 🎉</h2>
+<p>أحسنت! أكملت محاكاة إجراءات الدخول. في الاختبار الحقيقي يبدأ الاختبار بعد موافقة المراقب.</p>
+<div class="cert"><img src="assets/abad-logo.png" alt="" style="height:54px"><small style="display:block;color:var(--blue);font-weight:800">معهد شبكة آباد للتدريب — منصة آباد الرقمية</small>
+<h3>إفادة جاهزية لدخول الاختبار الدولي أونلاين</h3>
+<p style="margin:4px 0">(إفادة تدريبية داخلية — ليست شهادة رسمية)</p>
+<input type="text" id="nm" placeholder="اكتب اسمك" style="direction:rtl;letter-spacing:0;margin:6px auto">
+<table id="sum"></table><p id="dt" style="font-size:13px;color:var(--muted)"></p></div>
+<div class="nav" style="justify-content:center"><a class="btn prim" href="platform.html?v=202610161320">منصة الاختبارات</a><a class="btn navy" href="booking.html?v=202610161320">احجز اختبارك</a><button class="btn" onclick="print()">طباعة</button><button class="btn" id="restart">إعادة المحاكاة</button></div>
+</section>
+
+<div class="nav" id="nav"><button class="btn" id="back">→ السابق</button><button class="btn prim" id="next">التالي ←</button></div>
+</div>
+<p style="font-size:12.5px;color:var(--muted)">المصادر: دليل الاختبار أونلاين المنشور علناً من Pearson VUE (Online testing guide) وإرشادات OnVUE المنشورة لدى الجهات المانحة. هذه الصفحة تبسيط تدريبي.</p>
+</div>
+<footer>© <span id="y"></span> معهد شبكة آباد للتدريب — الرياض</footer>
+<script>
+y.textContent=new Date().getFullYear();
+const $=id=>document.getElementById(id),N=9,names=["قبل الاختبار","فحص الجهاز","رمز الدخول","صورة الوجه","صورة الهوية","صور المكان","الطابور والمراقب","القواعد","بدء الاختبار"];
+let cur=1,done={},stream=null;
+const R={};
+function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}}
+async function getCam(audio){if(stream&&(!audio||stream.getAudioTracks().length))return stream;stopCam();
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("unsupported");
+ stream=await navigator.mediaDevices.getUserMedia({video:{width:640,height:480},audio:!!audio});return stream}
+function vid(el){let v=el.querySelector("video");if(!v){v=document.createElement("video");v.autoplay=v.muted=v.playsInline=true;el.prepend(v)}v.srcObject=stream;v.play().catch(()=>{});return v}
+function snap(el,target,label,color){const c=document.createElement("canvas");c.width=480;c.height=360;const x=c.getContext("2d");const v=el&&el.querySelector("video");
+ if(v&&stream&&v.videoWidth){x.drawImage(v,0,0,480,360)}else{x.fillStyle=color||"#3f86b3";x.fillRect(0,0,480,360);x.fillStyle="#fff";x.font="bold 30px Cairo";x.textAlign="center";x.fillText(label||"صورة افتراضية",240,190)}
+ target.innerHTML="";target.appendChild(c);return true}
+// step1
+const reqs=["غرفة هادئة وخاصة والباب مغلق، لا أحد يدخل","مكتب خالٍ تماماً من الأوراق والكتب والأجهزة","هوية حكومية سارية والاسم مطابق تماماً لاسم التسجيل","جهاز شخصي (ليس جهاز العمل) بصلاحيات تثبيت","إغلاق كل البرامج والـ VPN والمزامنة","الجهاز موصول بالكهرباء والإنترنت مستقر","الحضور قبل الموعد بـ 30 دقيقة","أعلم أن الدخول يفتح قبل الموعد بـ 30 دقيقة"];
+$("req").innerHTML=reqs.map((r,i)=>`<label class="chk"><input type="checkbox" class="rq">${r}</label>`).join("");
+// step2
+$("runReal").onclick=async()=>{const m=$("sysMsg");m.textContent="";
+ try{await getCam(true);vid($("prev"));st("tCam","ok","✓ تعمل");
+  try{const ac=new (window.AudioContext||window.webkitAudioContext)(),an=ac.createAnalyser(),src=ac.createMediaStreamSource(stream);src.connect(an);const d=new Uint8Array(an.fftSize);let mx=0,t0=Date.now();st("tMic","run","تكلّم الآن...");
+   (function lp(){an.getByteTimeDomainData(d);let s=0;for(const v of d)s=Math.max(s,Math.abs(v-128));mx=Math.max(mx,s);$("micLv").style.width=Math.min(100,s*1.6)+"%";if(Date.now()-t0<4000)requestAnimationFrame(lp);else{st("tMic",mx>4?"ok":"bad",mx>4?"✓ يلتقط الصوت":"✗ لم يُلتقط صوت (تحقق من الميكروفون)");ac.close();fin()}})()}catch(e){st("tMic","bad","✗ تعذّر الفحص");fin()}
+ }catch(e){st("tCam","bad","✗ لم يُسمح أو غير متاحة");m.className="msg bad";m.textContent="لم يتم الوصول للكاميرا/الميكروفون. يمكنك استخدام الفحص المحاكى.";simNet();osChk()}
+ simNet();osChk()};
+$("runSim").onclick=()=>{st("tCam","ok","✓ (محاكى) تعمل");st("tMic","run","...");let w=0;const iv=setInterval(()=>{w=Math.random()*90;$("micLv").style.width=w+"%"},120);setTimeout(()=>{clearInterval(iv);st("tMic","ok","✓ (محاكى) يلتقط الصوت");fin()},2500);simNet();osChk()};
+function st(id,c,t){$(id).className="st "+c;$(id).textContent=t}
+function simNet(){st("tNet","run","جارٍ القياس...");setTimeout(()=>{const dn=(8+Math.random()*40).toFixed(1),up=(4+Math.random()*15).toFixed(1);st("tNet","ok",`✓ تنزيل ${dn} / رفع ${up} Mbps (محاكى)`);fin()},2200)}
+function osChk(){const u=navigator.userAgent,mob=/Android|iPhone|iPad/i.test(u),os=/Windows/.test(u)?"Windows":/Mac/.test(u)?"macOS":/Linux/.test(u)?"Linux":"غير معروف";
+ st("tOs",mob||os==="Linux"?"bad":"ok",mob?"✗ جهاز جوال/لوحي غير مدعوم عادةً":os==="Linux"?"✗ لينكس غير مدعوم عادةً (للتدريب فقط)":"✓ "+os);fin()}
+function fin(){const ok=["tCam","tMic","tNet","tOs"].filter(i=>$(i).classList.contains("ok")).length,run=["tCam","tMic","tNet"].some(i=>$(i).classList.contains("run"));
+ if(!run&&ok>=3){R.sys=ok===4?"ناجح":"ناجح مع ملاحظات";const m=$("sysMsg");m.className="msg ok";m.textContent=ok===4?"✓ اجتاز الجهاز كل الفحوصات":"✓ يمكنك المتابعة للتدريب — عالج البند الفاشل قبل الاختبار الحقيقي"}}
+// step3
+const code="ABD-"+Math.random().toString(36).slice(2,6).toUpperCase()+"-"+(1000+Math.floor(Math.random()*9000));$("code").textContent=code;
+$("copy").onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(code);$("codeIn").value=code};
+const pols=["سأكون وحدي في الغرفة طوال الاختبار","لن أستخدم هاتفاً أو ساعة أو سماعات أو أوراقاً","لن أتحدث أو أقرأ الأسئلة بصوت مرتفع","سأبقى أمام الكاميرا ولن أغادر بدون إذن","أوافق على التسجيل بالفيديو والصوت أثناء الجلسة"];
+$("pol").innerHTML=pols.map(p=>`<label class="chk"><input type="checkbox" class="pl">${p}</label>`).join("");
+// step4
+$("hsCam").onclick=async()=>{try{await getCam();vid($("hsLive"))}catch(e){$("hsMsg").className="msg bad";$("hsMsg").textContent="الكاميرا غير متاحة — استخدم الصورة الافتراضية."}};
+$("hsCap").onclick=()=>{if(!stream){$("hsMsg").className="msg bad";$("hsMsg").textContent="شغّل الكاميرا أولاً أو اختر صورة افتراضية.";return}snap($("hsLive"),$("hsShot"));R.hs="ملتقطة (محلياً)";okm("hsMsg","✓ تم الالتقاط — الصورة في متصفحك فقط")};
+$("hsSim").onclick=()=>{snap(null,$("hsShot"),"🙂 صورة افتراضية");R.hs="افتراضية";okm("hsMsg","✓ صورة افتراضية")};
+function okm(id,t){$(id).className="msg ok";$(id).textContent=t}
+// step5
+let idf=0,idb=0;
+$("idType").onchange=()=>{const p=$("idType").value==="pass";$("idB").style.display=$("idCapB").style.display=p?"none":"";$("idF").querySelector("span")&&($("idF").querySelector("span").textContent=p?"صفحة الصورة":"الوجه الأمامي")};
+$("idCapF").onclick=()=>{const live=document.querySelector("#hsLive video");if(stream&&live){const t=$("idF");vid(t);setTimeout(()=>{snap(t,t);idf=1;idok()},300)}else{snap(null,$("idF"),"🪪 الوجه الأمامي","#10293b");idf=1;idok()}};
+$("idCapB").onclick=()=>{if(stream){const t=$("idB");vid(t);setTimeout(()=>{snap(t,t);idb=1;idok()},300)}else{snap(null,$("idB"),"🪪 الوجه الخلفي","#10293b");idb=1;idok()}};
+function idok(){const p=$("idType").value==="pass";if(idf&&(p||idb)){R.id=p?"جواز سفر":"بطاقة (وجه وخلف)";okm("idMsg","✓ اكتملت صور الهوية (محلياً)")}}
+// step6
+const dirs=["الأمام","الخلف","اليسار","اليمين"],hint=["الشاشة والمكتب أمامك","ما خلف كرسيك والباب","الجانب الأيسر من المكتب","الجانب الأيمن من المكتب"],wsd={};
+$("ws").innerHTML=dirs.map((d,i)=>`<div class="slot" data-i="${i}">📸<br><b>${d}</b><br><small>${hint[i]}</small></div>`).join("");
+$("ws").onclick=e=>{const s=e.target.closest(".slot");if(!s)return;s.classList.add("done");wsd[s.dataset.i]=1;s.querySelector("b").textContent=dirs[s.dataset.i]+" ✓"};
+const items=[["📱","هاتف",1],["📝","ملاحظات",1],["⌚","ساعة",1],["🖥️","شاشة ثانية",1],["🎧","سماعات",1],["🥛","ماء في كوب شفاف",0],["📚","كتاب",1],["💻","جهاز الاختبار",0],["🖊️","قلم وورق",1],["🪪","الهوية (للتحقق)",0],["🧮","آلة حاسبة",1],["🖱️","فأرة",0]];
+function drawDesk(){$("desk").innerHTML=items.map((t,i)=>`<div class="it" data-i="${i}"><span>${t[0]}</span>${t[1]}</div>`).join("");$("deskMsg").textContent=""}
+drawDesk();$("desk").onclick=e=>{const it=e.target.closest(".it");if(it&&!R.deskDone)it.classList.toggle("sel")};
+$("deskChk").onclick=()=>{let c=0,t=0;document.querySelectorAll(".it").forEach(el=>{const bad=items[el.dataset.i][2],s=el.classList.contains("sel");if(bad)t++;if(bad&&s){el.classList.add("r-ok");c++}else if(!bad&&s)el.classList.add("r-bad");else if(bad)el.classList.add("r-miss")});
+ const wrong=document.querySelectorAll(".it.r-bad").length;R.desk=`${c}/${t}`;const m=$("deskMsg");
+ if(c===t&&!wrong){R.deskDone=1;m.className="msg ok";m.textContent="✓ ممتاز! اكتشفت كل المخالفات. (الماء في كوب شفاف، الفأرة، الجهاز والهوية مسموحة عادةً)"}else{m.className="msg bad";m.textContent=`اكتشفت ${c} من ${t}${wrong?` واخترت ${wrong} غرضاً مسموحاً`:""}. الأصفر = فاتك، الأحمر = مسموح. اضغط إعادة.`}};
+$("deskRe").onclick=()=>{R.deskDone=0;drawDesk()};
+// step7
+const pmsg=[["مرحباً، أنا المراقب. سأراجع صورك الآن.",null],["من فضلك أظهر معصميك أمام الكاميرا.","إظهار المعصمين ✋"],["قم بتدوير الكاميرا 360 درجة ببطء لإظهار الغرفة.","تدوير الكاميرا 🔄"],["أرني أين وضعت هاتفك، ثم ضعه خارج متناول يدك.","وضع الهاتف بعيداً 📱"],["أظهر أذنيك للتأكد من عدم وجود سماعات.","إظهار الأذنين 👂"]];let pi=0,qdone=0;
+function chat(c,t){const d=document.createElement("div");d.className="m "+c;d.textContent=t;$("chat").appendChild(d);$("chat").scrollTop=1e6}
+$("qStart").onclick=()=>{$("qStart").disabled=true;$("chat").innerHTML="";let n=4+Math.floor(Math.random()*3);$("qn").textContent=n;chat("s","دخلت الطابور — لا تغادر مكانك");
+ const iv=setInterval(()=>{n--;$("qn").textContent=n>0?n:"دورك!";$("qt").textContent=n>0?`الوقت المتوقع ~ ${n*15} ثانية (مسرّع)`:"";if(n<=0){clearInterval(iv);chat("s","تم توصيلك بالمراقب");nextP()}},1500)};
+function nextP(){const [t,a]=pmsg[pi];chat("p",t);$("acts").innerHTML="";if(!a){pi++;setTimeout(nextP,1200);return}
+ const b=document.createElement("button");b.className="btn";b.textContent=a;b.onclick=()=>{chat("u","تم: "+a);pi++;if(pi<pmsg.length)setTimeout(nextP,900);else{$("acts").innerHTML="";chat("p","شكراً، كل شيء سليم. سيبدأ اختبارك بعد قليل. بالتوفيق!");qdone=1;R.q="مكتمل";okm("qMsg","✓ اجتزت مرحلة المراقب")}};
+ const w=document.createElement("button");w.className="btn";w.style.borderColor="#e74c3c";w.style.color="#e74c3c";w.textContent="أمسك الهاتف للرد على رسالة";w.onclick=()=>{chat("p","⚠️ تنبيه: لا يُسمح بلمس الهاتف. قد يؤدي ذلك لإلغاء الاختبار.")};
+ $("acts").append(b,w)}
+// step8
+const Q=[["هل يجوز قراءة الأسئلة بصوت مرتفع لتركّز؟",["نعم إذا كنت وحدي","لا، يُمنع التحدث وتحريك الشفاه"],1,"أي كلام أو تمتمة قد يُعد مخالفة."],
+["أين تكتب ملاحظاتك أثناء الاختبار؟",["ورقة جانبية","أداة السبورة داخل التطبيق","كف اليد"],1,"استخدم Whiteboard المدمجة فقط ما لم تسمح الجهة بغير ذلك."],
+["طرق الباب وأرادت أسرتك شيئاً، ماذا تفعل؟",["أقوم وأفتح بسرعة","أبقى مكاني وأتواصل مع المراقب عبر المحادثة"],1,"مغادرة المكان أو دخول شخص قد يُنهي الاختبار."],
+["متى تفتح نافذة الدخول عادةً؟",["قبل الموعد بـ 30 دقيقة","قبل الموعد بساعتين","عند الموعد تماماً"],0,"ادخل مبكراً؛ التأخر قد يُفقدك الموعد."],
+["الاسم في الهوية مختلف قليلاً عن حساب التسجيل:",["لا مشكلة","أصحّحه مع الجهة قبل الموعد بوقت كافٍ"],1,"عدم التطابق قد يمنعك من البدء ويُفقدك الرسوم."],
+["هل يمكن ترك شاشة ثانية متصلة لكن مطفأة؟",["نعم","لا، يجب فصلها"],1,"شاشة واحدة فقط مسموح بها."],
+["خرج وجهك من إطار الكاميرا لدقيقة لالتقاط قلم سقط:",["مسموح","مخالفة؛ ابقَ في الإطار واطلب من المراقب"],1,"البقاء في الإطار شرط أساسي."],
+["كوب ماء شفاف بدون ملصقات على المكتب:",["مسموح غالباً حسب سياسة الجهة","ممنوع دائماً"],0,"تحقق دائماً من سياسة جهة الاختبار."]];
+$("quiz").innerHTML=Q.map((q,i)=>`<div class="q"><p>${i+1}. ${q[0]}</p>${q[1].map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join("")}<div class="fb" id="fb${i}"></div></div>`).join("");
+$("qzChk").onclick=()=>{let s=0;Q.forEach((q,i)=>{const sel=document.querySelector(`input[name=q${i}]:checked`);document.querySelectorAll(`input[name=q${i}]`).forEach(r=>r.parentNode.className="");
+ if(sel){const ok=+sel.value===q[2];sel.parentNode.className=ok?"r-ok":"r-bad";if(ok)s++}document.querySelectorAll(`input[name=q${i}]`)[q[2]].parentNode.className="r-ok";$("fb"+i).textContent="💬 "+q[3]});
+ R.quiz=s;const m=$("qzMsg");if(s>=6){m.className="msg ok";m.textContent=`✓ نتيجتك ${s}/8 — جاهز!`}else{m.className="msg bad";m.textContent=`نتيجتك ${s}/8 — تحتاج 6 على الأقل. راجع الشرح وأعد المحاولة.`}};
+// gating
+function check(n){const m=t=>{alert(t);return false};
+ if(n===1&&[...document.querySelectorAll(".rq")].some(c=>!c.checked))return m("أكمل كل بنود قائمة المتطلبات.");
+ if(n===2&&!R.sys)return m("شغّل فحص الجهاز (حقيقي أو محاكى) وانتظر النتيجة.");
+ if(n===3){if($("codeIn").value.trim().toUpperCase()!==code){$("codeMsg").className="msg bad";$("codeMsg").textContent="رمز الدخول غير صحيح.";return false}if([...document.querySelectorAll(".pl")].some(c=>!c.checked))return m("يجب الموافقة على كل القواعد.")}
+ if(n===4&&!R.hs)return m("التقط صورة الوجه أو اختر صورة افتراضية.");
+ if(n===5&&!R.id)return m("أكمل صور الهوية.");
+ if(n===6){if(Object.keys(wsd).length<4)return m("التقط صور المكان الأربع.");if(!R.deskDone)return m("أكمل تمرين اكتشاف المخالفات بنجاح.")}
+ if(n===7&&!qdone)return m("أكمل مرحلة الطابور وطلبات المراقب.");
+ if(n===8&&!(R.quiz>=6))return m("اجتز اختبار الجاهزية (6/8 على الأقل).");
+ return true}
+function show(n){if(n!==4&&n!==5&&n!==2)stopCam();cur=n;document.querySelectorAll(".step").forEach((s,i)=>s.classList.toggle("on",i+1===n));
+ $("bar").style.width=((n-1)/(N-1)*100)+"%";$("back").disabled=n===1;$("nav").style.display=n===N?"none":"flex";$("next").textContent=n===N-1?"بدء الاختبار ←":"التالي ←";
+ $("dots").innerHTML=names.map((t,i)=>`<button class="${i+1===n?"on":done[i+1]?"done":""}" data-n="${i+1}">${i+1}. ${t}</button>`).join("");
+ if(n===N)summary();scrollTo({top:0,behavior:"smooth"})}
+$("dots").onclick=e=>{const b=e.target.closest("button");if(!b)return;const t=+b.dataset.n;if(t<=cur||done[t-1])show(t)};
+$("next").onclick=()=>{if(check(cur)){done[cur]=1;show(cur+1)}};$("back").onclick=()=>show(cur-1);
+function summary(){$("sum").innerHTML=[["فحص الجهاز",R.sys],["رمز الدخول","مُدخل ✓"],["صورة الوجه",R.hs],["الهوية",R.id],["صور المكان","4/4 ✓"],["اكتشاف المخالفات",R.desk],["المراقب",R.q],["اختبار الجاهزية",R.quiz+"/8"]].map(r=>`<tr><td>${r[0]}</td><td><b>${r[1]}</b></td></tr>`).join("");
+ $("dt").textContent="التاريخ: "+new Date().toLocaleString("ar-SA")}
+$("restart").onclick=()=>location.reload();
+addEventListener("pagehide",stopCam);
+show(1);
+</script>
+</body>
+</html>
