@@ -680,7 +680,7 @@ function data(){const vo=vendor.options[vendor.selectedIndex];let cert="";
  return{name:capName($("name").value),mobile:normMobile(mobile.value),nid:validID(nid.value),nidType:/^1/.test(toLatin(nid.value).trim())?"هوية وطنية":"إقامة",email:email.value.trim(),vendor:vendor.value?vo.text:"",cert,etype:et?et.value:"",date:date.value,time:time.value?time.options[time.selectedIndex].text:"",notes:notes.value.trim(),payment_method:(document.querySelector("input[name=paym]:checked")||{}).value||""}}
 function payNeeded(){try{return !!(window.ABAD_PRICE&&ABAD_PRICE.get(vendor.value,certSel.hidden?"":certSel.value)!=null)}catch(e){return false}}
 function payUI(){const n=payNeeded();$("payReq").hidden=!n;$("payOpt").hidden=n}
-function mark(el,bad){el.closest(".fld").classList.toggle("bad",bad);return bad}
+function mark(el,bad){el.closest(".fld").classList.toggle("bad",bad);el.closest(".fld").querySelectorAll("input,select,textarea").forEach(x=>{if(x.type==="radio"||x.type==="checkbox"){if(x===el||x.name===el.name)bad?x.setAttribute("aria-invalid","true"):x.removeAttribute("aria-invalid")}else if(x===el||!el.name)bad?x.setAttribute("aria-invalid","true"):x.removeAttribute("aria-invalid")});return bad}
 function validate(){const d=data();let bad=[];
  {const ne=nameErr($("name").value);nameErr_el.textContent=ne||nameErr_el.textContent;if(mark($("name"),!!ne))bad.push($("name"))}
  if(mark(mobile,!d.mobile))bad.push(mobile);
@@ -693,7 +693,7 @@ function validate(){const d=data();let bad=[];
  if(mark(time,!d.time))bad.push(time);
  if(payNeeded()&&mark(document.querySelector("input[name=paym]"),!d.payment_method))bad.push(document.querySelector("input[name=paym]"));
  if(bad.length){bad[0].focus();bad[0].scrollIntoView({block:"center",behavior:"smooth"});return null}return d}
-document.querySelectorAll(".fld input,.fld select,.fld textarea").forEach(e=>e.addEventListener(e.type==="radio"?"change":"input",()=>e.closest(".fld").classList.remove("bad")));
+document.querySelectorAll(".fld input,.fld select,.fld textarea").forEach(e=>e.addEventListener(e.type==="radio"?"change":"input",()=>{const f=e.closest(".fld");f.classList.remove("bad");f.querySelectorAll("[aria-invalid]").forEach(x=>x.removeAttribute("aria-invalid"))}));
 const fmtDate=s=>{try{return new Date(s+"T12:00:00").toLocaleDateString(window.LANG==="en"?"en-GB":"ar-SA-u-ca-gregory-nu-latn",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}catch(e){return s}};
 const T=window.T||(s=>s),C=window.LANG==="en"?": ":": ";
 function msg(d){return["*"+T("طلب حجز اختبار — معهد شبكة آباد للتدريب")+"*","",T("الاسم (بالإنجليزية)")+C+d.name,T("الجوال")+C+d.mobile,T(d.nidType==="إقامة"?"رقم الإقامة":"رقم الهوية")+C+d.nid,T("البريد")+C+d.email,T("الجهة")+C+d.vendor,T("الشهادة")+C+d.cert,T("نوع الاختبار")+C+T(d.etype),T("التاريخ المفضّل")+C+fmtDate(d.date)+" ("+d.date+")",T("الوقت المفضّل")+C+d.time,T("ملاحظات")+C+(d.notes||"—"),T("طريقة الدفع")+C+(d.payment_method||"—"),"",T("(أُرسل من منصة الاختبارات الرسمية)")].join("\n")}
