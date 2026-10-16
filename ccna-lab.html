@@ -67,5 +67,6 @@ document.getElementById("grid").innerHTML=LABS.map(function(l){var t=l.soon?"div
 document.getElementById("cnt").textContent=S.cnt[i].replace("%n",LABS.filter(function(l){return!l.soon}).length)}
 document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{localStorage.setItem("abad-lang",L)}catch(e){}paint()};paint();
 </script>
+<script src="js/abad-labs.js?r=202610170001" defer></script>
 </body>
 </html>
