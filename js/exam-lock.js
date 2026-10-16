@@ -1,5 +1,8 @@
 /* ABAD exam lock: first exam free trial, others locked (no backend/auth yet). */
 (function(){
+/* Prefill booking form with this exam's vendor/cert (booking.html reads #v=&c=). */
+var MAP={'aplus-core1-exam':'comptia&c=aplus','aplus-core2-exam':'comptia&c=aplus','linux-plus-exam':'comptia&c=linux','network-plus-exam':'comptia&c=network','security-plus-exam':'comptia&c=security','pmp-exam':'pmi&c=pmp','itil5-exam':'peoplecert&c=itil5'};
+var pg=(location.pathname.split('/').pop()||'').replace(/\.html$/,'');var BK='booking.html'+(MAP[pg]?'#v='+MAP[pg]:'');
 var CSS='.el-free{display:inline-block;margin:4px 6px;font-size:12px;font-weight:800;border-radius:99px;padding:1px 10px;background:#F5BD2D;color:#10293b;vertical-align:middle}'+
 '.el-locked{opacity:.75;background:#f4f6f9!important;position:relative}.el-lockb{font-size:18px;margin-inline-start:6px}'+
 '#el-modal{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;background:rgba(16,41,59,.55);padding:16px;font-family:Cairo,system-ui,sans-serif;direction:rtl}'+
@@ -10,7 +13,7 @@ var CSS='.el-free{display:inline-block;margin:4px 6px;font-size:12px;font-weight
 var HTML='<div class="lk"><button type="button" class="lk-x" aria-label="إغلاق">×</button><div style="font-size:34px">🔒</div>'+
 '<h3 id="el-t">سجّل دخولك لفتح باقي الاختبارات</h3><form onsubmit="return false"><input type="email" placeholder="البريد الإلكتروني" disabled>'+
 '<input type="password" placeholder="كلمة المرور" disabled><div class="note">تسجيل الدخول قريباً</div></form>'+
-'<a class="bk" href="booking.html">احجز الآن عبر صفحة الحجز</a></div>';
+'<a class="bk" href="'+BK+'">احجز الآن عبر صفحة الحجز</a></div>';
 function ensure(){var m=document.getElementById('el-modal');if(m)return m;
  var st=document.createElement('style');st.textContent=CSS;document.head.appendChild(st);
  m=document.createElement('div');m.id='el-modal';m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');m.setAttribute('aria-labelledby','el-t');m.innerHTML=HTML;
