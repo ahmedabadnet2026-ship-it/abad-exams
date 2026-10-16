@@ -1,9 +1,36 @@
 /* ABAD shared Home bar (links to umbrella landing index.html) */
-#abad-home{position:relative;z-index:50;display:flex;align-items:center;justify-content:flex-start;gap:10px;padding:6px 14px;background:linear-gradient(90deg,#0a1c29,#10293b 60%,#16405e);border-bottom:1px solid #F5BD2D55;font-family:Cairo,system-ui,sans-serif;box-sizing:border-box;width:100%}
-#abad-home a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#10293b;background:#F5BD2D;border-radius:999px;padding:3px 13px 3px 11px;font-weight:800;font-size:13px;line-height:1.6;box-shadow:0 3px 10px #0004;transition:transform .2s,box-shadow .2s}
-#abad-home a:hover,#abad-home a:focus-visible{transform:translateY(-1px);box-shadow:0 6px 14px #F5BD2D44;outline:none}
-#abad-home a:focus-visible{outline:2px solid #fff;outline-offset:2px}
-#abad-home span{color:#ffffffb3;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media (max-width:420px){#abad-home{padding:5px 10px}#abad-home span{font-size:11px}}
+#abad-home{position:relative;z-index:50;display:flex;align-items:center;justify-content:flex-start;gap:10px;padding:4px 14px;background:linear-gradient(90deg,#0a1c29,#10293b 60%,#16405e);border-bottom:1px solid #F5BD2D55;font-family:Cairo,system-ui,sans-serif;box-sizing:border-box;width:100%}
+#abad-home a{display:inline-flex;align-items:center;gap:6px;min-height:44px;box-sizing:border-box;text-decoration:none;color:#10293b;background:#F5BD2D;border-radius:999px;padding:3px 14px 3px 12px;font-weight:800;font-size:13px;line-height:1.6;box-shadow:0 3px 10px #0004;transition:transform .2s,box-shadow .2s}
+#abad-home a:hover,#abad-home a:focus-visible{transform:translateY(-1px);box-shadow:0 6px 14px #F5BD2D44}
+#abad-home span{color:#ffffffcc;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+#abad-home .abad-lt{margin-inline-start:auto;flex:none;display:inline-flex;align-items:center;gap:6px;min-height:44px;min-width:44px;padding:0 14px;border-radius:999px;border:1.5px solid #F5BD2D;background:transparent;color:#fff;font:800 13px/1 Cairo,system-ui,sans-serif;cursor:pointer;transition:background .2s,color .2s}
+#abad-home .abad-lt b{color:#F5BD2D;font-weight:800}#abad-home .abad-lt i{font-style:normal}
+#abad-home .abad-lt:hover{background:#F5BD2D;color:#10293b}#abad-home .abad-lt:hover b{color:#10293b}
+@media (max-width:420px){#abad-home{padding:4px 10px}#abad-home span{font-size:11px}#abad-home .abad-lt i{display:none}}
 @media print{#abad-home{display:none!important}}
 @media (prefers-reduced-motion:reduce){#abad-home a{transition:none}}
+/* Sitewide visible keyboard focus (WCAG 2.4.7) */
+:focus-visible{outline:3px solid #F5BD2D!important;outline-offset:2px!important;box-shadow:0 0 0 5px #10293b66}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #3f86b3!important;outline-offset:1px!important}
+/* Floating widgets (WhatsApp support + install pill): AA contrast, compact on mobile, never over form fields */
+a.abad-sup{background:#117a3e!important;color:#fff!important}a.abad-sup:hover{background:#0d6532!important}
+@media (max-width:800px){
+ a.abad-sup:not(.inl){width:48px;height:48px;padding:0!important;justify-content:center;border-radius:50%;bottom:16px!important}
+ a.abad-sup:not(.inl) span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+ .pwa{bottom:12px!important;transform-origin:left bottom}
+ body:has(> a.abad-sup:not(.inl)),body:has(> .pwa){padding-bottom:84px}
+ html.abad-typing a.abad-sup:not(.inl),html.abad-typing .pwa{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+}
+/* Touch targets >=44px (WCAG 2.5.5) for shared chrome */
+.langbtn{min-height:44px!important;min-width:44px!important}
+@media (min-width:801px){.hdr .nav a{min-height:44px;display:inline-flex;align-items:center}}
+@media (max-width:800px){.hdr .nav a.book,.hdr .nav a.cta{min-height:44px;display:inline-flex!important;align-items:center}}
+@media (max-width:480px){.hdr .nav a.cta{display:none!important}}
+footer ul a,footer li a{display:inline-flex;align-items:center;min-height:44px;min-width:44px}
+a.abad-admin{min-height:44px;line-height:44px!important;padding:0 12px;opacity:.85!important}
+a.abad-back{min-height:44px;display:inline-flex!important;align-items:center}
+.pwa-x{min-width:44px!important;min-height:44px!important}
+a.abad-sup{min-height:44px}
+.contact a{display:inline-flex;align-items:center;min-height:44px}
+.types label,.payb,label:has(> input[type=radio]),label:has(> input[type=checkbox]){min-height:44px;display:flex;align-items:center;gap:8px;cursor:pointer}
+input[type=radio],input[type=checkbox]{width:20px;height:20px;accent-color:#3f86b3}

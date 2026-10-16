@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1"><script src="js/abad-i18n.js?r=202610162110"></script>
 <meta name="theme-color" content="#10293b">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>مختبر INE — معهد شبكة آباد للتدريب</title>
@@ -98,13 +98,20 @@ a{color:#F5BD2D}
  .top .brand b{font-size:13px}
  .timer{font-size:15px}
 }
+
+/* ABAD fixes 2026-10-16: h1, touch targets */
+.top .brand h1{margin:0;font-size:15px;line-height:1.2;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+button,.btn,.hb,a.hb,#openTab,#btnNew{min-height:44px}
+.ov a,p>a{display:inline-flex;align-items:center;min-height:44px}
+.top .btn,.top .hb,.top button{display:inline-flex;align-items:center;justify-content:center}
+#openTab,#btnNew{min-height:44px;display:inline-flex;align-items:center;padding:0 10px}
 </style>
-<link rel="stylesheet" href="css/home-btn.css?r=202610131945"><script src="js/home-btn.js?r=202610131945" defer></script>
+<link rel="stylesheet" href="css/home-btn.css?r=202610162110"><script src="js/home-btn.js?r=202610162110" defer></script>
 </head>
 <body>
 <header class="top">
  <img src="assets/abad-logo.png" alt="ABAD">
- <div class="brand"><b>مختبر INE · eJPT تجريبي</b><small>معهد شبكة آباد للتدريب · استكشاف وتعرّف فقط</small></div>
+ <div class="brand"><h1>مختبر INE · eJPT تجريبي</h1><small>معهد شبكة آباد للتدريب · استكشاف وتعرّف فقط</small></div>
  <span class="pill stop" id="status">لم يبدأ</span>
  <span class="timer" id="timer" aria-live="polite">60:00</span>
  <div class="btns">

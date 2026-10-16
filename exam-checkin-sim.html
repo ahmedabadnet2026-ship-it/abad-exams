@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-app-lang>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1"><script src="js/abad-i18n.js?r=202610162110"></script>
 <meta name="theme-color" content="#10293b">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Online Exam Check-in — Training Simulator | منصة آباد الرقمية</title>
@@ -10,14 +10,14 @@
 <link rel="manifest" href="manifest.webmanifest">
 <style>
 @font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
-:root{--navy:#10293b;--blue:#1f6fb2;--blue2:#3f86b3;--gold:#F5BD2D;--ok:#1e9e5a;--bad:#d64541;--warn:#e08a00;--bg:#f2f4f7;--line:#dfe3e8;--txt:#1d2733;--mut:#5f6b7a}
+:root{--navy:#10293b;--blue:#2b6a94;--blue2:#3f86b3;--gold:#F5BD2D;--ok:#1e9e5a;--bad:#d64541;--warn:#e08a00;--bg:#f2f4f7;--line:#dfe3e8;--txt:#1d2733;--mut:#5f6b7a}
 *{box-sizing:border-box}html,body{margin:0}
-body{font-family:"Segoe UI",Roboto,Helvetica,Arial,Cairo,sans-serif;color:var(--txt);background:var(--bg);line-height:1.55;font-size:15px}
+body{font-family:Cairo,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--txt);background:var(--bg);line-height:1.55;font-size:15px}
 svg.i{width:20px;height:20px;flex:none;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 /* app bar */
 .bar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;height:58px;padding:0 18px;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 1px 4px #0000000d}
-.bar .lg{width:34px;height:34px;border-radius:8px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center}
-.bar .tt{font-weight:700;font-size:16px}.bar .tt small{display:block;font-weight:500;font-size:11.5px;color:var(--mut)}
+.bar .lg{width:34px;height:34px;border-radius:8px;background:var(--navy);border:2px solid var(--gold);color:#fff;display:flex;align-items:center;justify-content:center}
+.bar .tt{font-weight:700;font-size:16px;margin:0;line-height:1.3;min-width:0}.bar .tt small{display:block;font-weight:500;font-size:11.5px;color:var(--mut)}
 .bar .sp{margin-left:auto;display:flex;gap:8px;align-items:center}
 .chip{font-size:12px;font-weight:600;border-radius:99px;padding:4px 10px;background:#eef4fa;color:var(--blue);display:flex;gap:6px;align-items:center}
 .chip.rec{background:#fdecec;color:var(--bad)}.chip.rec:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--bad);animation:bl 1.2s infinite}
@@ -47,11 +47,11 @@ details.ar summary:after{content:"▾";margin-right:auto;transition:transform .2
 details.ar .c{padding:0 16px 12px;font-size:14px;line-height:1.85}
 details.ar .c p{margin:0 0 8px}
 .terms{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.terms span{background:#fff;border:1px solid #f0d9a0;border-radius:8px;padding:2px 8px;font-size:13px}.terms b{direction:ltr;unicode-bidi:isolate;font-family:"Segoe UI",Arial,sans-serif}
+.terms span{background:#fff;border:1px solid #f0d9a0;border-radius:8px;padding:2px 8px;font-size:13px}.terms b{direction:ltr;unicode-bidi:isolate;font-family:Cairo,"Segoe UI",Arial,sans-serif}
 /* components */
 .btn{font:inherit;font-weight:600;font-size:15px;border-radius:10px;padding:11px 22px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--txt);display:inline-flex;gap:8px;align-items:center;transition:transform .15s,box-shadow .2s,background .2s;text-decoration:none}
 .btn:hover{box-shadow:0 3px 10px #0000001a}.btn:active{transform:scale(.97)}
-.btn.p{background:var(--blue);border-color:var(--blue);color:#fff}.btn.p:hover{background:#185c95}
+.btn.p{background:var(--navy);border-color:var(--navy);color:#fff}.btn.p:hover{background:#1b3d55}
 .btn.g{background:var(--gold);border-color:var(--gold);color:var(--navy)}
 .btn.sm{font-size:13px;padding:7px 14px}
 .btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
@@ -125,7 +125,7 @@ details.ar .c p{margin:0 0 8px}
 .tips b{display:flex;gap:6px;align-items:center}.tips ul{margin:6px 0 0;padding-left:18px}
 .code{font-family:Consolas,monospace;font-size:22px;letter-spacing:.12em;background:#f4f6f8;border:1px dashed #b9c4cf;border-radius:10px;padding:8px 16px}
 input.tx{font:inherit;font-size:17px;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;width:100%;max-width:360px;font-family:Consolas,monospace;letter-spacing:.08em}
-input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb233}
+input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #3f86b333}
 .done{text-align:center}.done .big{width:84px;height:84px;border-radius:50%;background:var(--ok);color:#fff;margin:6px auto 12px;display:flex;align-items:center;justify-content:center;animation:pop .5s}
 .done .big svg{width:44px;height:44px;stroke-width:3}@keyframes pop{0%{transform:scale(.3)}70%{transform:scale(1.1)}}
 .cert{border:2px solid var(--gold);border-radius:16px;padding:22px;margin:16px auto;max-width:560px;background:linear-gradient(#fff,#fffbf0)}
@@ -150,7 +150,25 @@ input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb
 .main{padding:18px 16px}.camw,.queue,.rules,.tips{grid-template-columns:1fr}.ws{grid-template-columns:repeat(2,1fr)}.desk{grid-template-columns:repeat(3,1fr)}.bar .tt small,.bar .chip{display:none}.step h2{font-size:20px}
 .proc{left:10px;right:10px;width:auto;bottom:10px}.proc .pv{display:none}}
 @media print{.bar,.side,.proc,.foot,details,.disc,.prog,.nopr{display:none!important}.app{display:block}.main{border:0}}
+/* ABAD fixes 2026-10-16: brand, touch targets, mobile overflow, compact proctor, i18n */
+.app>*{min-width:0}.side{max-width:100%}details.ar .c,details.ar summary{overflow-wrap:anywhere;word-break:normal}
+.btn,.lnk,.seg button{min-height:44px}.btn.sm{padding:9px 14px}.lnk{display:inline-flex;align-items:center;padding:0 14px}
+#pmin{min-width:44px;justify-content:center}.ck{min-height:48px}.q label{min-height:44px}
+details.ar summary{min-height:44px}
+html.lang-en details.ar .terms,html.lang-en #par,html.lang-en .arx,html.lang-en .disc .r{display:none!important}
+html.lang-en details.ar{direction:ltr;font-family:Cairo,"Segoe UI",sans-serif}html.lang-en details.ar summary:after{margin-right:0;margin-left:auto}
+@media(max-width:780px){
+ .bar{height:auto;min-height:58px;padding:6px 12px;gap:8px}.bar .tt{font-size:14px}.bar .lg{display:none}
+ .sl{max-width:100%}.app{padding:8px}
+ .proc{left:8px!important;right:8px!important;bottom:8px!important;max-height:42vh;display:flex;flex-direction:column}
+ .proc .hd{padding:6px 10px}.av{width:34px;height:34px}.av svg{width:20px;height:20px}
+ .proc .sub{min-height:0;padding:8px 12px;overflow:auto;font-size:13.5px}.proc .pb{padding:0 10px 10px}
+ .proc.min .sub{display:block!important;padding:6px 12px}.proc.min .sub .en{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px}.proc.min .sub .arx{display:none}
+ .proc.min #pmin svg{transform:rotate(180deg)}
+ body{padding-bottom:150px!important}
+}
 </style>
+<link rel="stylesheet" href="css/home-btn.css?r=202610162110"><script src="js/home-btn.js?r=202610162110" defer></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute"><defs>
@@ -177,8 +195,8 @@ input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb
 
 <header class="bar">
 <div class="lg"><svg class="i"><use href="#i-shield"/></svg></div>
-<div class="tt">Online Exam Check-in — Training Simulator<small>Abad Training Institute · منصة آباد الرقمية</small></div>
-<div class="sp"><span class="chip" id="recChip"><svg class="i" style="width:14px;height:14px"><use href="#i-lock"/></svg>Local only · no upload</span><a class="lnk" href="platform.html?v=202610161830">Exams</a></div>
+<h1 class="tt">Online Exam Check-in — Training Simulator<small>Abad Training Institute · منصة آباد الرقمية</small></h1>
+<div class="sp"><span class="chip" id="recChip"><svg class="i" style="width:14px;height:14px"><use href="#i-lock"/></svg>Local only · no upload</span><a class="lnk" id="homeLnk" href="index.html">🏠 Home</a></div>
 </header>
 <div class="prog"><i id="bar"></i></div>
 
@@ -190,7 +208,7 @@ input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb
 <section class="step" id="s1">
 <div class="kick">Step 1 of 9</div><h2>Before you begin</h2>
 <p class="lead">Confirm your testing environment meets every requirement. You will not be able to start a real exam if any item fails.</p>
-<details class="ar" open><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<details class="ar" lang="ar" dir="rtl" open><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
 <p>قبل الاختبار الدولي الأونلاين يجب أن يكون مكانك وجهازك جاهزين. أي مخالفة هنا (اسم غير مطابق، جهاز عمل، شخص في الغرفة) قد تمنعك من بدء الاختبار وقد تخسر رسومه بالكامل.</p>
 <p>نافذة الدخول (Check-in window) تفتح عادةً قبل الموعد بـ 30 دقيقة وتبقى حتى 15 دقيقة بعده.</p>
 <div class="terms"><span><b>Check-in window</b> = فترة تسجيل الدخول</span><span><b>Valid ID</b> = هوية سارية</span><span><b>Registration</b> = بيانات التسجيل</span><span><b>Testing environment</b> = بيئة الاختبار</span></div></div></details>
@@ -201,7 +219,7 @@ input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb
 <section class="step" id="s2">
 <div class="kick">Step 2 of 9</div><h2>System test</h2>
 <p class="lead">We'll check your webcam, microphone, internet connection and operating system. Camera access is optional — everything stays on this device.</p>
-<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<details class="ar" lang="ar" dir="rtl"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
 <p>فحص النظام يتأكد أن جهازك قادر على تشغيل تطبيق الاختبار: الكاميرا لترى المراقب، الميكروفون لسماع الغرفة، الإنترنت المستقر لعدم انقطاع الجلسة. انقطاع الاتصال أثناء الاختبار الحقيقي قد يُنهي الاختبار.</p>
 <div class="terms"><span><b>System test</b> = فحص النظام</span><span><b>Webcam</b> = كاميرا الويب</span><span><b>Bandwidth</b> = سرعة الاتصال</span><span><b>Secure browser</b> = المتصفح الآمن</span></div></div></details>
 <div class="cards">
@@ -218,7 +236,7 @@ input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb
 <section class="step" id="s3">
 <div class="kick">Step 3 of 9</div><h2>Access code & exam agreement</h2>
 <p class="lead">In a real check-in you sign in, select your exam, click <b>Begin exam</b>, copy your access code and launch the test app manually.</p>
-<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<details class="ar" lang="ar" dir="rtl"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
 <p>رمز الدخول هو رمز فريد لجلستك يربط تطبيق الاختبار بموعدك. بعد إدخاله توافق على قواعد الاختبار؛ هذه الموافقة تعني أنك تقبل التسجيل بالفيديو والصوت وأن أي مخالفة تبرّر إلغاء الاختبار.</p>
 <div class="terms"><span><b>Access code</b> = رمز الدخول</span><span><b>Appointment</b> = الموعد</span><span><b>Exam agreement / NDA</b> = اتفاقية الاختبار / السرية</span><span><b>Begin exam</b> = بدء الاختبار</span></div></div></details>
 <p style="margin:0 0 6px;font-weight:600">Your access code</p>
@@ -233,7 +251,7 @@ input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb
 <section class="step" id="s4">
 <div class="kick">Step 4 of 9</div><h2>Take your headshot</h2>
 <p class="lead">Position your face inside the oval, look directly at the camera, then take the photo.</p>
-<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<details class="ar" lang="ar" dir="rtl"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
 <p>صورة الوجه تُقارن بصورة هويتك للتأكد أنك أنت الشخص المسجّل، وقد تظهر في تقرير النتيجة. استخدم إضاءة أمامية جيدة وخلفية بلون واحد، وبدون نظارة شمسية أو قبعة.</p>
 <div class="terms"><span><b>Headshot</b> = صورة الوجه</span><span><b>Face guide</b> = إطار توجيه الوجه</span><span><b>Retake</b> = إعادة التصوير</span><span><b>Identity verification</b> = التحقق من الهوية</span></div></div></details>
 <div class="camw"><div class="cam" id="hsCam"><div class="ph"><svg class="i"><use href="#i-cam"/></svg>Camera is off</div><div class="ov"><div class="oval"></div></div><div class="lbl">Center your face in the oval</div></div>
@@ -244,7 +262,7 @@ input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb
 <section class="step" id="s5">
 <div class="kick">Step 5 of 9</div><h2>Photograph your ID</h2>
 <p class="lead">Choose your ID type and fit the card inside the frame. All four corners must be visible and the text readable.</p>
-<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<details class="ar" lang="ar" dir="rtl"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
 <p>تُستخدم صورة الهوية مع المستقبِل (Greeter) للتحقق من شخصيتك. البطاقة الوطنية أو الإقامة أو الرخصة: وجه وخلف. جواز السفر: صفحة الصورة فقط. أي اختلاف بين الاسم في الهوية واسم التسجيل قد يمنعك من الاختبار.</p>
 <div class="terms"><span><b>Government-issued ID</b> = هوية حكومية</span><span><b>Front / Back</b> = الوجه / الخلف</span><span><b>Photo page</b> = صفحة الصورة</span><span><b>Greeter</b> = موظف الاستقبال والتحقق</span></div></div></details>
 <div class="seg" id="idSeg"><button class="on" data-t="card">ID card / Driver's license</button><button data-t="pass">Passport</button></div>
@@ -256,7 +274,7 @@ input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb
 <section class="step" id="s6">
 <div class="kick">Step 6 of 9</div><h2>Workspace photos</h2>
 <p class="lead">Take four photos of your testing space from your seat: front, back, left and right.</p>
-<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<details class="ar" lang="ar" dir="rtl"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
 <p>صور المكان الأربع يستخدمها المراقب مرجعاً أثناء الجلسة ولأغراض الأمن والتدقيق. يجب أن يكون المكتب خالياً في نطاق ذراعك، والهاتف والساعة بعيدين، ولا شاشات إضافية ولا أوراق.</p>
 <div class="terms"><span><b>Workspace photos</b> = صور مكان الاختبار</span><span><b>Arm's reach</b> = متناول اليد</span><span><b>Prohibited items</b> = أغراض ممنوعة</span><span><b>Clear desk</b> = مكتب خالٍ</span></div></div></details>
 <div class="ws" id="ws"></div>
@@ -270,7 +288,7 @@ input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb
 <section class="step" id="s7">
 <div class="kick">Step 7 of 9</div><h2>Queue & proctor</h2>
 <p class="lead">Stay in front of your computer. A greeter will review your photos, then a proctor will connect.</p>
-<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<details class="ar" lang="ar" dir="rtl"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
 <p>بعد رفع الصور تدخل طابور الانتظار. المستقبِل (Greeter) يراجع صورك وهويتك، ثم يتولى المراقب (Proctor) الجلسة وقد يطلب تدوير الكاميرا أو إظهار المعصمين والأذنين. مغادرة المكان أو لمس الهاتف هنا قد يلغي الدخول.</p>
 <div class="terms"><span><b>Queue</b> = طابور الانتظار</span><span><b>Greeter</b> = المستقبِل</span><span><b>Proctor</b> = المراقب</span><span><b>Pan the camera</b> = تدوير الكاميرا</span></div></div></details>
 <div class="queue"><div class="qbox"><div class="ring" id="ring" style="animation-play-state:paused"></div><div class="qn" id="qn">—</div><b id="qh">Ready to join the queue</b><p style="color:var(--mut);font-size:13.5px" id="qt">You are in the queue — a greeter will be with you shortly.</p><button class="btn p" id="qStart">Join queue</button></div>
@@ -281,7 +299,7 @@ input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb
 <section class="step" id="s8">
 <div class="kick">Step 8 of 9</div><h2>Exam rules & readiness check</h2>
 <p class="lead">These behaviours are monitored throughout the session by video, audio and AI flagging.</p>
-<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<details class="ar" lang="ar" dir="rtl"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
 <p>أثناء الاختبار تُراقَب حركتك وصوتك باستمرار. الكلام أو تحريك الشفاه، النظر بعيداً كثيراً، أو الخروج من الإطار قد يُسجَّل مخالفة ويُلغى الاختبار. استخدم السبورة الإلكترونية داخل التطبيق للملاحظات، والمحادثة لطلب المساعدة.</p>
 <div class="terms"><span><b>Whiteboard</b> = السبورة الإلكترونية</span><span><b>Stay in frame</b> = البقاء داخل الإطار</span><span><b>Unscheduled break</b> = استراحة غير مجدولة</span><span><b>Revoked</b> = إلغاء النتيجة</span></div></div></details>
 <div class="rules"><div class="do"><b>Do</b><ul><li>Stay fully in the camera frame</li><li>Use the built-in whiteboard for notes</li><li>Use chat to contact the proctor</li><li>Follow your exam's break policy</li></ul></div>
@@ -310,13 +328,13 @@ input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb
 <aside class="proc" id="proc">
 <div class="hd"><div class="av" id="pav"><svg class="i"><use href="#i-user"/></svg></div><div><b>Proctor (virtual)</b><small>English voice · Arabic subtitles</small></div><button class="btn sm" id="pmin" style="margin-left:auto;padding:4px 6px;background:transparent;color:#fff;border-color:#ffffff44" title="Minimize"><svg class="i"><use href="#i-min"/></svg></button></div>
 <div class="pv" id="pv"><span class="chip rec rc" id="prec" style="display:none">LIVE · local</span><span>Your camera preview appears here</span><video id="pvid" autoplay muted playsinline style="display:none"></video></div>
-<div class="sub"><p class="en" id="pen">Click “Start proctor” to hear your proctor.</p><p class="arx" id="par">اضغط "Start proctor" لسماع تعليمات المراقب بالإنجليزية مع الترجمة.</p></div>
+<div class="sub"><p class="en" id="pen">Click “Start proctor” to hear your proctor.</p><p class="arx" id="par" lang="ar" dir="rtl">اضغط "Start proctor" لسماع تعليمات المراقب بالإنجليزية مع الترجمة.</p></div>
 <div class="pb"><button class="btn p sm" id="pgo"><svg class="i"><use href="#i-play"/></svg>Start proctor</button><button class="btn g sm" id="pdone" style="display:none"><svg class="i"><use href="#i-check"/></svg>Done / تم</button><button class="btn sm" id="prep" title="Replay"><svg class="i"><use href="#i-rep"/></svg>Replay</button><button class="btn sm" id="pmute"><svg class="i"><use href="#i-vol"/></svg>Mute</button></div>
 </aside>
 </div>
 
 <div class="disc"><div><b>Training simulation.</b> This page is an educational simulation by Abad Training Institute, similar to OnVUE-style online proctored check-in. It is <b>not affiliated with, endorsed by, or connected to Pearson VUE</b>; OnVUE is a trademark of its owner. Real procedures vary by exam sponsor — always follow your official confirmation email. Camera, microphone and photos never leave your browser.
-<div class="r">محاكاة تدريبية من معهد شبكة آباد للتدريب، غير تابعة لشركة Pearson VUE. بيانات الكاميرا والصور تبقى في متصفحك فقط ولا تُرفع إطلاقاً.</div>
+<div class="r" lang="ar" dir="rtl">محاكاة تدريبية من معهد شبكة آباد للتدريب، غير تابعة لشركة Pearson VUE. بيانات الكاميرا والصور تبقى في متصفحك فقط ولا تُرفع إطلاقاً.</div>
 <div style="margin-top:4px">Sources: Pearson VUE public "Online testing guide" (PDF) and OnVUE guides published by exam sponsors.</div></div></div>
 
 <script>
@@ -444,7 +462,9 @@ $("pgo").onclick=()=>{on=true;$("pgo").style.display="none";if(S)S.getVoices();p
 $("pdone").onclick=()=>{qi++;play()};
 $("prep").onclick=()=>{if(last){on=true;$("pgo").style.display="none";say(last)}};
 $("pmute").onclick=()=>{mute=!mute;$("pmute").innerHTML=`<svg class="i"><use href="#i-${mute?"mute":"vol"}"/></svg>${mute?"Unmute":"Mute"}`;if(mute&&S)S.cancel()};
-$("pmin").onclick=()=>$("proc").classList.toggle("min");
+$("pmin").onclick=()=>{const m=$("proc").classList.toggle("min");$("pmin").setAttribute("aria-expanded",String(!m))};
+if(matchMedia("(max-width:780px)").matches){$("proc").classList.add("min");$("pmin").setAttribute("aria-expanded","false")}
+(function(){const en=(window.ABAD_LANG||"ar")==="en",a=$("homeLnk");if(a)a.textContent=en?"🏠 Home":"🏠 الرئيسية"})();
 function sched(){clearTimeout(wT);wT=setTimeout(()=>{if(on&&step>=4&&step<=8&&!(S&&S.speaking)){const p=last;say(W,true);setTimeout(()=>{if(p&&last===W){last=p;$("pen").textContent=p[0].replace(/I D/g,"ID");$("par").textContent=p[1];$("pen").className="en"}},6000)}sched()},45000+Math.random()*45000)}
 const orig=show;show=function(n){orig(n);step=n;q=SC[n]||[];qi=0;if(on)play()};
 addEventListener("pagehide",()=>S&&S.cancel());

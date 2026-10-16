@@ -5,11 +5,11 @@ var MAP={'aplus-core1-exam':'comptia&c=aplus','aplus-core2-exam':'comptia&c=aplu
 var pg=(location.pathname.split('/').pop()||'').replace(/\.html$/,'');var BK='booking.html'+(MAP[pg]?'#v='+MAP[pg]:'');
 var CSS='.el-free{display:inline-block;margin:4px 6px;font-size:12px;font-weight:800;border-radius:99px;padding:1px 10px;background:#F5BD2D;color:#10293b;vertical-align:middle}'+
 '.el-locked{opacity:.75;background:#f4f6f9!important;position:relative}.el-lockb{font-size:18px;margin-inline-start:6px}'+
-'#el-modal{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;background:rgba(16,41,59,.55);padding:16px;font-family:Cairo,system-ui,sans-serif;direction:rtl}'+
+'#el-modal{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;background:rgba(16,41,59,.55);padding:16px;font-family:Cairo,system-ui,sans-serif}'+
 '#el-modal.on{display:flex}#el-modal .lk{background:#fff;border-radius:18px;max-width:400px;width:100%;padding:22px;border-top:6px solid #F5BD2D;text-align:center;color:#10293b;position:relative}'+
 '#el-modal h3{margin:6px 0 12px;font-size:19px}#el-modal input{width:100%;box-sizing:border-box;margin:5px 0;padding:10px;border:1px solid #dbe5ee;border-radius:10px;font-family:inherit;background:#f4f6f9}'+
 '#el-modal .note{font-size:13px;color:#3f86b3;font-weight:800;margin:6px 0 12px}#el-modal .bk{display:block;background:#10293b;color:#fff;text-decoration:none;border-radius:12px;padding:11px;font-weight:800}'+
-'#el-modal .lk-x{position:absolute;top:8px;left:10px;border:0;background:none;font-size:22px;cursor:pointer;color:#10293b}';
+'#el-modal .lk-x{position:absolute;top:4px;inset-inline-end:6px;min-width:44px;min-height:44px;border:0;background:none;font-size:22px;cursor:pointer;color:#10293b}';
 var HTML='<div class="lk"><button type="button" class="lk-x" aria-label="إغلاق">×</button><div style="font-size:34px">🔒</div>'+
 '<h3 id="el-t">سجّل دخولك لفتح باقي الاختبارات</h3><form onsubmit="return false"><input type="email" placeholder="البريد الإلكتروني" disabled>'+
 '<input type="password" placeholder="كلمة المرور" disabled><div class="note">تسجيل الدخول قريباً</div></form>'+
