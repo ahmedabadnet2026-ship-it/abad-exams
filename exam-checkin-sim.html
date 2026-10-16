@@ -1,353 +1,452 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#10293b">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>محاكي دخول الاختبار الدولي (أونلاين) — منصة آباد الرقمية</title>
+<title>Online Exam Check-in — Training Simulator | منصة آباد الرقمية</title>
 <link rel="icon" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
 <style>
 @font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
-:root{--navy:#10293b;--blue:#3f86b3;--gold:#F5BD2D;--ok:#2ecc71;--bad:#e74c3c;--muted:#5b6b78}
+:root{--navy:#10293b;--blue:#1f6fb2;--blue2:#3f86b3;--gold:#F5BD2D;--ok:#1e9e5a;--bad:#d64541;--warn:#e08a00;--bg:#f2f4f7;--line:#dfe3e8;--txt:#1d2733;--mut:#5f6b7a}
 *{box-sizing:border-box}html,body{margin:0}
-body{font-family:Cairo,system-ui,sans-serif;color:var(--navy);background:#f3f6f9;line-height:1.75}
-a{color:var(--blue)}
-.top{display:flex;align-items:center;gap:10px;padding:10px 16px;background:linear-gradient(180deg,#10293b,#0d2233);color:#fff;flex-wrap:wrap}
-.top img{height:38px;background:#fff;border-radius:8px;padding:2px 6px}
-.top .brand{display:flex;flex-direction:column;margin-inline-end:auto}.top .brand small{opacity:.7;font-size:12px}
-.hb{font:inherit;font-weight:700;font-size:13px;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:9px;padding:6px 12px;text-decoration:none}
-.wrap{max-width:980px;margin:0 auto;padding:18px 14px 60px}
-h1{font-size:1.5rem;margin:6px 0 2px}.sub{color:var(--muted);margin:0 0 10px}
-.disc{background:#fff8e1;border:1px solid #F5BD2D88;border-inline-start:5px solid var(--gold);border-radius:12px;padding:10px 14px;font-size:13.5px;margin-bottom:14px}
-.priv{background:#e8f3fa;border:1px solid #3f86b355;border-radius:12px;padding:8px 14px;font-size:13px;margin-bottom:14px}
-.prog{background:#dde6ee;border-radius:99px;height:10px;overflow:hidden}.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));width:0;transition:width .4s}
-.dots{display:flex;gap:4px;flex-wrap:wrap;margin:10px 0 16px}
-.dots button{font:inherit;font-size:12px;font-weight:700;border:1px solid #c9d6e1;background:#fff;color:var(--muted);border-radius:99px;padding:3px 10px;cursor:pointer}
-.dots button.on{background:var(--navy);color:#fff;border-color:var(--navy)}.dots button.done{border-color:var(--ok);color:#1e8449}
-.card{background:#fff;border:1.5px solid #e3e9ef;border-radius:18px;padding:20px;box-shadow:0 10px 30px #10293b10;position:relative;overflow:hidden}
-.card:before{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:6px;background:var(--gold)}
-.step{display:none}.step.on{display:block;animation:f .35s}@keyframes f{from{opacity:0;transform:translateY(6px)}}
-.step h2{margin:0 0 6px;font-size:1.25rem}.step h2 span{color:var(--blue)}
-.tips,.mist{border-radius:12px;padding:10px 14px;margin:12px 0;font-size:14px}
-.tips{background:#eaf7ef;border:1px solid #2ecc7155}.mist{background:#fdecea;border:1px solid #e74c3c44}
-.tips b,.mist b{display:block}.tips ul,.mist ul{margin:4px 0;padding-inline-start:20px}
-.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid #e3e9ef;border-radius:10px;margin:6px 0;cursor:pointer;background:#fafcfd}
-.chk input{width:20px;height:20px;margin-top:4px;accent-color:var(--blue);flex:none}
-.btn{font:inherit;font-weight:800;font-size:14px;border-radius:10px;padding:9px 18px;cursor:pointer;border:1px solid var(--blue);background:#fff;color:var(--blue);text-decoration:none;display:inline-block}
-.btn.prim{background:var(--gold);border-color:var(--gold);color:var(--navy)}.btn.navy{background:var(--navy);border-color:var(--navy);color:#fff}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
-.msg{font-size:13.5px;font-weight:700;margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:#1e8449}
-.sys{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:10px 0}
-.sys div{border:1px solid #e3e9ef;border-radius:12px;padding:10px;background:#fafcfd}
-.st{font-weight:800;font-size:13px}.st.ok{color:#1e8449}.st.bad{color:var(--bad)}.st.run{color:var(--blue)}
-.meter{height:10px;background:#dde6ee;border-radius:9px;overflow:hidden;margin-top:6px}.meter i{display:block;height:100%;width:0;background:var(--ok);transition:width .1s}
-.cam{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
-.frame{aspect-ratio:4/3;background:#0d2233;border-radius:12px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#ffffffaa;font-size:13px;text-align:center}
-.frame video,.frame canvas,.frame img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-.frame .oval{position:absolute;inset:12% 28%;border:3px dashed var(--gold);border-radius:50%;pointer-events:none}
-.frame .rect{position:absolute;inset:18% 12%;border:3px dashed var(--gold);border-radius:12px;pointer-events:none}
-.ph{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
-.ph .slot{border:2px dashed #c9d6e1;border-radius:12px;padding:10px 6px;text-align:center;font-size:13px;cursor:pointer;background:#fafcfd}
-.ph .slot.done{border-style:solid;border-color:var(--ok);background:#eaf7ef}
-.desk{position:relative;background:linear-gradient(#c8a27a,#a9825a);border-radius:16px;padding:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}
-.it{background:#ffffffd9;border:2px solid transparent;border-radius:12px;padding:8px 4px;text-align:center;cursor:pointer;font-size:13px;font-weight:700}
-.it span{display:block;font-size:30px}.it.sel{border-color:var(--bad);background:#fdecea}
-.it.r-ok{border-color:var(--ok)!important}.it.r-bad{border-color:var(--bad)!important;background:#fdecea}.it.r-miss{border-color:var(--gold)!important;background:#fff8e1}
-.queue{text-align:center;padding:10px}.queue .n{font-size:42px;font-weight:800;color:var(--blue)}
-.chat{border:1px solid #e3e9ef;border-radius:12px;background:#fafcfd;height:240px;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:6px}
-.chat .m{max-width:80%;padding:6px 12px;border-radius:12px;font-size:13.5px}
-.chat .p{background:var(--navy);color:#fff;align-self:flex-start}.chat .u{background:#e8f3fa;align-self:flex-end}.chat .s{align-self:center;font-size:12px;color:var(--muted)}
-.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.two ul{padding-inline-start:20px;margin:4px 0}
-.q{border:1px solid #e3e9ef;border-radius:12px;padding:10px 12px;margin:8px 0}.q p{margin:0 0 6px;font-weight:700}
-.q label{display:block;padding:4px 8px;border-radius:8px;cursor:pointer}.q label.r-ok{background:#eaf7ef}.q label.r-bad{background:#fdecea}
-.q .fb{font-size:13px;margin-top:4px;color:var(--muted)}
-.cert{border:3px double var(--gold);border-radius:16px;padding:22px;text-align:center;background:linear-gradient(#fff,#fffbef)}
-.cert h3{margin:4px 0;font-size:1.4rem}.cert table{margin:12px auto;border-collapse:collapse;font-size:14px}.cert td{padding:4px 12px;border-bottom:1px solid #eee;text-align:start}
-input[type=text]{font:inherit;padding:8px 12px;border:1.5px solid #c9d6e1;border-radius:10px;width:100%;max-width:340px;direction:ltr;text-align:center;letter-spacing:.1em}
-footer{text-align:center;color:var(--muted);font-size:12.5px;padding:20px}
-@media(max-width:700px){.cam,.two{grid-template-columns:1fr}.ph{grid-template-columns:repeat(2,1fr)}.desk{grid-template-columns:repeat(3,1fr)}.card{padding:16px 14px}h1{font-size:1.25rem}}
-@media print{.top,.dots,.prog,.nav,.disc,.priv{display:none}.step{display:none!important}#s9{display:block!important}}
+body{font-family:"Segoe UI",Roboto,Helvetica,Arial,Cairo,sans-serif;color:var(--txt);background:var(--bg);line-height:1.55;font-size:15px}
+svg.i{width:20px;height:20px;flex:none;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* app bar */
+.bar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;height:58px;padding:0 18px;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 1px 4px #0000000d}
+.bar .lg{width:34px;height:34px;border-radius:8px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center}
+.bar .tt{font-weight:700;font-size:16px}.bar .tt small{display:block;font-weight:500;font-size:11.5px;color:var(--mut)}
+.bar .sp{margin-left:auto;display:flex;gap:8px;align-items:center}
+.chip{font-size:12px;font-weight:600;border-radius:99px;padding:4px 10px;background:#eef4fa;color:var(--blue);display:flex;gap:6px;align-items:center}
+.chip.rec{background:#fdecec;color:var(--bad)}.chip.rec:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--bad);animation:bl 1.2s infinite}
+@keyframes bl{50%{opacity:.2}}
+.lnk{font-size:13px;color:var(--mut);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:5px 10px;background:#fff}
+.prog{height:4px;background:#e4e8ed}.prog i{display:block;height:100%;width:0;background:var(--blue);transition:width .5s ease}
+/* layout */
+.app{display:grid;grid-template-columns:250px minmax(0,1fr) 320px;gap:18px;max-width:1360px;margin:0 auto;padding:18px}
+.side,.main,.proc{background:#fff;border:1px solid var(--line);border-radius:14px}
+.side{padding:14px;align-self:start;position:sticky;top:80px}
+.side h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:2px 6px 10px}
+.sl{list-style:none;margin:0;padding:0}
+.sl li{display:flex;gap:10px;align-items:center;padding:9px 8px;border-radius:9px;font-size:14px;color:var(--mut);cursor:default;transition:background .2s}
+.sl li .n{width:26px;height:26px;border-radius:50%;border:2px solid #c8d0d9;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;transition:.3s}
+.sl li.on{background:#eef4fa;color:var(--blue);font-weight:600}.sl li.on .n{border-color:var(--blue);background:var(--blue);color:#fff}
+.sl li.dn{color:var(--txt);cursor:pointer}.sl li.dn .n{border-color:var(--ok);background:var(--ok);color:#fff}
+.main{padding:26px 28px;min-height:560px;overflow:hidden}
+.step{display:none}.step.on{display:block;animation:in .45s ease}@keyframes in{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+.kick{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+.step h2{font-size:24px;margin:4px 0 6px;font-weight:700}
+.lead{color:var(--mut);margin:0 0 16px}
+/* Arabic help */
+details.ar{direction:rtl;font-family:Cairo,sans-serif;background:#fffaf0;border:1px solid #f5d27a;border-radius:12px;margin:0 0 18px;overflow:hidden}
+details.ar summary{cursor:pointer;padding:10px 14px;font-weight:700;color:#8a5a00;list-style:none;display:flex;gap:8px;align-items:center}
+details.ar summary::-webkit-details-marker{display:none}
+details.ar summary:after{content:"▾";margin-right:auto;transition:transform .25s}details.ar[open] summary:after{transform:rotate(180deg)}
+details.ar .c{padding:0 16px 12px;font-size:14px;line-height:1.85}
+details.ar .c p{margin:0 0 8px}
+.terms{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.terms span{background:#fff;border:1px solid #f0d9a0;border-radius:8px;padding:2px 8px;font-size:13px}.terms b{direction:ltr;unicode-bidi:isolate;font-family:"Segoe UI",Arial,sans-serif}
+/* components */
+.btn{font:inherit;font-weight:600;font-size:15px;border-radius:10px;padding:11px 22px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--txt);display:inline-flex;gap:8px;align-items:center;transition:transform .15s,box-shadow .2s,background .2s;text-decoration:none}
+.btn:hover{box-shadow:0 3px 10px #0000001a}.btn:active{transform:scale(.97)}
+.btn.p{background:var(--blue);border-color:var(--blue);color:#fff}.btn.p:hover{background:#185c95}
+.btn.g{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.btn.sm{font-size:13px;padding:7px 14px}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.foot{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);margin-top:24px;padding-top:18px}
+.list{display:grid;gap:8px}
+.ck{display:flex;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:10px;cursor:pointer;transition:.2s;background:#fff}
+.ck:hover{border-color:#b9c7d6}.ck input{width:20px;height:20px;accent-color:var(--blue);flex:none}
+.ck:has(input:checked){background:#f0f7f2;border-color:#a8d8b9}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:6px 0 16px}
+.sc{border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center;transition:.3s}
+.sc .ic{width:52px;height:52px;margin:0 auto 8px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#eef1f5;color:var(--mut);transition:.3s}
+.sc .ic svg{width:26px;height:26px}
+.sc b{display:block}.sc small{color:var(--mut);font-size:12.5px;display:block;min-height:36px}
+.sc.ok{border-color:#a8d8b9;background:#f6fbf7}.sc.ok .ic{background:var(--ok);color:#fff}
+.sc.bad{border-color:#f0b4b2;background:#fdf6f6}.sc.bad .ic{background:var(--bad);color:#fff}
+.sc.run .ic{animation:sp 1s linear infinite;background:#e3eef8;color:var(--blue)}@keyframes sp{to{transform:rotate(360deg)}}
+.meter{height:6px;background:#e4e8ed;border-radius:6px;overflow:hidden;margin-top:6px}.meter i{display:block;height:100%;width:0;background:var(--ok);transition:width .1s}
+.camw{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;align-items:start}
+.cam{position:relative;aspect-ratio:4/3;background:#1b2530;border-radius:14px;overflow:hidden;color:#9fb0c2;display:flex;align-items:center;justify-content:center;text-align:center;font-size:14px}
+.cam video,.cam canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cam video{transform:scaleX(-1)}
+.cam .ov{position:absolute;inset:0;pointer-events:none}
+.cam .oval{position:absolute;left:32%;right:32%;top:12%;bottom:14%;border:3px solid #ffffffd0;border-radius:50%;box-shadow:0 0 0 999px #0000006b}
+.cam .idf{position:absolute;left:14%;right:14%;top:22%;bottom:22%;border:3px solid #ffffffd0;border-radius:14px;box-shadow:0 0 0 999px #0000006b}
+.cam .idf:before,.cam .idf:after{content:"";position:absolute;width:26px;height:26px;border:4px solid var(--gold)}
+.cam .idf:before{top:-5px;left:-5px;border-right:0;border-bottom:0}.cam .idf:after{bottom:-5px;right:-5px;border-left:0;border-top:0}
+.cam .lbl{position:absolute;bottom:10px;left:0;right:0;color:#fff;font-size:13px;font-weight:600;text-shadow:0 1px 3px #000}
+.cam .ph{position:relative;z-index:1;padding:20px}
+.cam .ph svg{width:46px;height:46px;display:block;margin:0 auto 6px;stroke-width:1.5}
+.cam.flash:after{content:"";position:absolute;inset:0;background:#fff;animation:fl .4s forwards}@keyframes fl{to{opacity:0}}
+.shot{border:1px solid var(--line);border-radius:14px;padding:12px}
+.shot h4{margin:0 0 8px;font-size:14px}
+.thumb{aspect-ratio:4/3;border-radius:10px;background:#eef1f5;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:13px;margin-bottom:8px}
+.thumb canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.thumb.ok{outline:2px solid var(--ok)}
+.st{font-size:13px;font-weight:600;margin-top:10px;min-height:20px}.st.ok{color:var(--ok)}.st.bad{color:var(--bad)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.seg button{font:inherit;font-size:13.5px;padding:8px 14px;border:0;background:#fff;cursor:pointer}.seg button.on{background:var(--blue);color:#fff}
+.ws{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.ws .t{border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s;background:#fff}
+.ws .t:hover{transform:translateY(-2px);box-shadow:0 4px 12px #0000001a}
+.ws .t .thumb{margin:0;border-radius:0}.ws .t div.l{padding:8px;font-size:13px;font-weight:600;display:flex;justify-content:space-between}
+.ws .t.ok{border-color:var(--ok)}
+.desk{border-radius:14px;padding:16px;background:linear-gradient(160deg,#d9b48a,#b88b5d);display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:10px 0;box-shadow:inset 0 -8px 0 #0000001a}
+.it{background:#ffffffe6;border:2px solid transparent;border-radius:12px;padding:10px 4px;text-align:center;cursor:pointer;font-size:12.5px;font-weight:600;transition:.2s}
+.it:hover{transform:translateY(-2px)}.it span{display:block;font-size:30px;line-height:1.2}
+.it.sel{border-color:var(--bad);background:#fdecec}.it.rok{border-color:var(--ok)!important;background:#eaf7ef}.it.rbad{border-color:var(--bad)!important}.it.rmiss{border-color:var(--warn)!important;background:#fff4e0}
+.queue{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.qbox{border:1px solid var(--line);border-radius:14px;padding:22px;text-align:center}
+.ring{width:110px;height:110px;margin:6px auto 10px;border-radius:50%;border:8px solid #e4e8ed;border-top-color:var(--blue);animation:sp 1.3s linear infinite}
+.qn{font-size:34px;font-weight:700;color:var(--blue)}
+.chat{border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;height:360px}
+.chat .hd{padding:10px 14px;border-bottom:1px solid var(--line);font-weight:600;font-size:14px;display:flex;gap:8px;align-items:center}
+.chat .hd i{width:9px;height:9px;border-radius:50%;background:#aab4bf}.chat .hd i.on{background:var(--ok)}
+.chat .bd{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:#fafbfc}
+.m{max-width:85%;padding:8px 12px;border-radius:14px;font-size:14px;animation:in .3s}
+.m.p{background:#fff;border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}.m.p small{display:block;color:var(--mut);font-size:11px}
+.m.u{background:var(--blue);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.m.s{align-self:center;color:var(--mut);font-size:12px;background:none}.m.w{border-color:#f0b4b2;background:#fdf6f6}
+.chat .ac{padding:10px;border-top:1px solid var(--line);display:flex;gap:6px;flex-wrap:wrap}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.rules div{border-radius:12px;padding:14px 16px}.rules ul{margin:6px 0 0;padding-left:18px}.rules li{margin:4px 0;font-size:14px}
+.do{background:#f0f8f3;border:1px solid #bfe3cc}.dont{background:#fdf4f4;border:1px solid #f0c4c2}
+.q{border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0}.q p{margin:0 0 8px;font-weight:600}
+.q label{display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:14px}.q label:hover{background:#f4f6f8}
+.q label.rok{background:#eaf7ef}.q label.rbad{background:#fdecec}.q .fb{font-size:13px;color:var(--mut);margin-top:4px}
+.msg{font-size:14px;font-weight:600;margin-top:10px}.msg.ok{color:var(--ok)}.msg.bad{color:var(--bad)}
+.tips{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.tips div{border-radius:12px;padding:12px 14px;font-size:13.5px;background:#f4f8fc;border:1px solid #d6e4f1}.tips div.x{background:#fdf6f6;border-color:#f0c9c7}
+.tips b{display:flex;gap:6px;align-items:center}.tips ul{margin:6px 0 0;padding-left:18px}
+.code{font-family:Consolas,monospace;font-size:22px;letter-spacing:.12em;background:#f4f6f8;border:1px dashed #b9c4cf;border-radius:10px;padding:8px 16px}
+input.tx{font:inherit;font-size:17px;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;width:100%;max-width:360px;font-family:Consolas,monospace;letter-spacing:.08em}
+input.tx:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #1f6fb233}
+.done{text-align:center}.done .big{width:84px;height:84px;border-radius:50%;background:var(--ok);color:#fff;margin:6px auto 12px;display:flex;align-items:center;justify-content:center;animation:pop .5s}
+.done .big svg{width:44px;height:44px;stroke-width:3}@keyframes pop{0%{transform:scale(.3)}70%{transform:scale(1.1)}}
+.cert{border:2px solid var(--gold);border-radius:16px;padding:22px;margin:16px auto;max-width:560px;background:linear-gradient(#fff,#fffbf0)}
+.cert table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}.cert td{padding:6px 8px;border-bottom:1px solid #eee;text-align:left}.cert td:last-child{text-align:right;font-weight:600}
+/* proctor */
+.proc{align-self:start;position:sticky;top:80px;overflow:hidden}
+.proc .hd{background:var(--navy);color:#fff;padding:12px 14px;display:flex;gap:10px;align-items:center}
+.av{width:44px;height:44px;border-radius:50%;background:linear-gradient(#3f86b3,#10293b);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;flex:none;transition:box-shadow .2s}
+.av svg{width:26px;height:26px;stroke:#fff}.av.talk{animation:tk .45s ease infinite alternate}@keyframes tk{to{box-shadow:0 0 0 6px #F5BD2D66}}
+.proc .hd b{display:block;font-size:14px}.proc .hd small{opacity:.75;font-size:11.5px}
+.pv{position:relative;aspect-ratio:4/3;background:#1b2530;display:flex;align-items:center;justify-content:center;color:#8697a8;font-size:12.5px}
+.pv video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.pv .rc{position:absolute;top:8px;left:8px;z-index:2}
+.sub{padding:12px 14px;min-height:96px}.sub .en{font-weight:600;margin:0}.sub .en.w{color:var(--bad)}
+.sub .arx{direction:rtl;font-family:Cairo,sans-serif;color:var(--mut);margin:6px 0 0;font-size:14px}
+.pb{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 14px}
+.disc{max-width:1360px;margin:0 auto 26px;padding:0 18px;font-size:12.5px;color:var(--mut)}
+.disc div{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;padding:10px 14px}
+.disc .r{direction:rtl;font-family:Cairo,sans-serif;margin-top:4px}
+@media(max-width:1150px){.app{grid-template-columns:220px minmax(0,1fr)}.proc{grid-column:1/-1;position:fixed;right:12px;bottom:12px;top:auto;width:300px;z-index:40;box-shadow:0 12px 40px #0004}.proc.min .pv,.proc.min .sub,.proc.min .pb{display:none}body{padding-bottom:20px}}
+@media(max-width:780px){.app{grid-template-columns:1fr;padding:10px;gap:10px}.side{position:static;padding:8px}.side h3{display:none}.sl{display:flex;overflow-x:auto;gap:4px}.sl li{flex:none;padding:6px 8px;font-size:12.5px}.sl li span.t{display:none}.sl li.on span.t{display:inline}
+.main{padding:18px 16px}.camw,.queue,.rules,.tips{grid-template-columns:1fr}.ws{grid-template-columns:repeat(2,1fr)}.desk{grid-template-columns:repeat(3,1fr)}.bar .tt small,.bar .chip{display:none}.step h2{font-size:20px}
+.proc{left:10px;right:10px;width:auto;bottom:10px}.proc .pv{display:none}}
+@media print{.bar,.side,.proc,.foot,details,.disc,.prog,.nopr{display:none!important}.app{display:block}.main{border:0}}
 </style>
 </head>
 <body>
-<header class="top">
-<img src="assets/abad-logo.png" alt="معهد شبكة آباد للتدريب">
-<div class="brand"><b>منصة آباد الرقمية</b><small>معهد شبكة آباد للتدريب</small></div>
-<a class="hb" href="platform.html?v=202610161320">منصة الاختبارات</a>
-<a class="hb" href="index.html?v=202610161320">الرئيسية</a>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-cam" viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></symbol>
+<symbol id="i-wifi" viewBox="0 0 24 24"><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M2 9a15 15 0 0 1 20 0"/><circle cx="12" cy="19.5" r="1"/></symbol>
+<symbol id="i-pc" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-id" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2.5"/><path d="M13 10h5M13 14h4"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></symbol>
+<symbol id="i-rep" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10"/></symbol>
+<symbol id="i-vol" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+<symbol id="i-mute" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="m23 9-6 6M17 9l6 6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+<symbol id="i-room" viewBox="0 0 24 24"><path d="M3 21V8l9-5 9 5v13"/><path d="M9 21v-6h6v6"/></symbol>
+<symbol id="i-min" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+</defs></svg>
+
+<header class="bar">
+<div class="lg"><svg class="i"><use href="#i-shield"/></svg></div>
+<div class="tt">Online Exam Check-in — Training Simulator<small>Abad Training Institute · منصة آباد الرقمية</small></div>
+<div class="sp"><span class="chip" id="recChip"><svg class="i" style="width:14px;height:14px"><use href="#i-lock"/></svg>Local only · no upload</span><a class="lnk" href="platform.html?v=202610161830">Exams</a></div>
 </header>
-<div class="wrap">
-<h1>محاكي دخول الاختبار الدولي (أونلاين)</h1>
-<p class="sub">تدريب عملي على إجراءات الدخول للاختبار المراقَب عن بُعد — مشابه لإجراءات OnVUE</p>
-<div class="disc">⚠️ <b>تنبيه:</b> هذه محاكاة تدريبية من معهد شبكة آباد للتدريب لأغراض التعليم فقط، وهي <b>غير تابعة لشركة Pearson VUE ولا معتمدة منها</b>. "OnVUE" علامة تخص مالكها. الإجراءات الفعلية قد تختلف حسب الجهة المانحة؛ ارجع دائماً لتعليمات الاختبار الرسمية في بريد التأكيد.</div>
-<div class="priv">🔒 <b>خصوصيتك محفوظة:</b> كل بيانات الكاميرا والميكروفون والصور تبقى داخل متصفحك فقط ولا تُرفع أو تُحفظ على أي خادم. يمكنك إكمال المحاكاة كلها بدون كاميرا (وضع الصور الافتراضية).</div>
 <div class="prog"><i id="bar"></i></div>
-<div class="dots" id="dots"></div>
-<div class="card">
+
+<div class="app">
+<aside class="side"><h3>Check-in steps</h3><ul class="sl" id="sl"></ul></aside>
+
+<main class="main">
 
 <section class="step" id="s1">
-<h2><span>1.</span> قبل الاختبار</h2>
-<p>جهّز نفسك ومكانك قبل الموعد. أشّر على كل بند بعد التأكد منه:</p>
-<div id="req"></div>
-<div class="tips"><b>💡 نصائح</b><ul><li>نافذة الدخول تفتح عادةً قبل الموعد بـ 30 دقيقة وتستمر حتى 15 دقيقة بعده؛ ادخل مبكراً لتجنب التأخير.</li><li>شغّل اختبار النظام (System test) من نفس الجهاز ونفس المكان قبل يوم الاختبار.</li><li>أغلق باب الغرفة وأخبر من في المنزل بعدم الدخول.</li></ul></div>
-<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>الاسم في الهوية لا يطابق الاسم في حساب التسجيل (مثلاً اختلاف ترتيب الاسم أو حذف اسم العائلة).</li><li>استخدام جهاز العمل المقيّد بجدار حماية أو VPN شركة يمنع تشغيل التطبيق.</li><li>الاعتماد على شبكة جوال ضعيفة أو Wi-Fi مزدحم.</li></ul></div>
+<div class="kick">Step 1 of 9</div><h2>Before you begin</h2>
+<p class="lead">Confirm your testing environment meets every requirement. You will not be able to start a real exam if any item fails.</p>
+<details class="ar" open><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<p>قبل الاختبار الدولي الأونلاين يجب أن يكون مكانك وجهازك جاهزين. أي مخالفة هنا (اسم غير مطابق، جهاز عمل، شخص في الغرفة) قد تمنعك من بدء الاختبار وقد تخسر رسومه بالكامل.</p>
+<p>نافذة الدخول (Check-in window) تفتح عادةً قبل الموعد بـ 30 دقيقة وتبقى حتى 15 دقيقة بعده.</p>
+<div class="terms"><span><b>Check-in window</b> = فترة تسجيل الدخول</span><span><b>Valid ID</b> = هوية سارية</span><span><b>Registration</b> = بيانات التسجيل</span><span><b>Testing environment</b> = بيئة الاختبار</span></div></div></details>
+<div class="list" id="req"></div>
+<div class="tips"><div><b><svg class="i"><use href="#i-check"/></svg>Tips</b><ul><li>Run the system test on the same computer and network days before.</li><li>Tell household members not to enter the room.</li></ul></div><div class="x"><b><svg class="i"><use href="#i-alert"/></svg>Common mistakes</b><ul><li>Name on ID doesn't match registration.</li><li>Using a corporate laptop with VPN / firewall.</li></ul></div></div>
 </section>
 
 <section class="step" id="s2">
-<h2><span>2.</span> فحص الجهاز (System test)</h2>
-<p>يفحص النظام الكاميرا والميكروفون وسرعة الإنترنت والمتصفح/نظام التشغيل. الكاميرا والميكروفون الحقيقيان اختياريان وبإذنك فقط.</p>
-<div class="sys">
-<div><b>📷 الكاميرا</b><div class="st" id="tCam">لم يُفحص</div></div>
-<div><b>🎤 الميكروفون</b><div class="st" id="tMic">لم يُفحص</div><div class="meter"><i id="micLv"></i></div></div>
-<div><b>🌐 سرعة الإنترنت</b><div class="st" id="tNet">لم يُفحص</div></div>
-<div><b>💻 المتصفح / النظام</b><div class="st" id="tOs">لم يُفحص</div></div>
+<div class="kick">Step 2 of 9</div><h2>System test</h2>
+<p class="lead">We'll check your webcam, microphone, internet connection and operating system. Camera access is optional — everything stays on this device.</p>
+<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<p>فحص النظام يتأكد أن جهازك قادر على تشغيل تطبيق الاختبار: الكاميرا لترى المراقب، الميكروفون لسماع الغرفة، الإنترنت المستقر لعدم انقطاع الجلسة. انقطاع الاتصال أثناء الاختبار الحقيقي قد يُنهي الاختبار.</p>
+<div class="terms"><span><b>System test</b> = فحص النظام</span><span><b>Webcam</b> = كاميرا الويب</span><span><b>Bandwidth</b> = سرعة الاتصال</span><span><b>Secure browser</b> = المتصفح الآمن</span></div></div></details>
+<div class="cards">
+<div class="sc" id="tCam"><div class="ic"><svg class="i"><use href="#i-cam"/></svg></div><b>Webcam</b><small>Not tested</small></div>
+<div class="sc" id="tMic"><div class="ic"><svg class="i"><use href="#i-mic"/></svg></div><b>Microphone</b><small>Not tested</small><div class="meter"><i id="micLv"></i></div></div>
+<div class="sc" id="tNet"><div class="ic"><svg class="i"><use href="#i-wifi"/></svg></div><b>Connection</b><small>Not tested</small></div>
+<div class="sc" id="tOs"><div class="ic"><svg class="i"><use href="#i-pc"/></svg></div><b>OS & browser</b><small>Not tested</small></div>
 </div>
-<div class="cam"><div class="frame" id="prev">معاينة الكاميرا تظهر هنا</div><div>
-<button class="btn navy" id="runReal">تشغيل الفحص بالكاميرا الحقيقية</button>
-<button class="btn" id="runSim" style="margin-top:6px">فحص محاكى (بدون كاميرا)</button>
-<p class="msg" id="sysMsg"></p></div></div>
-<div class="tips"><b>💡 نصائح</b><ul><li>سرعة اتصال مستقرة (يُنصح بـ 6 Mbps رفع/تنزيل تقريباً) والأفضل كابل إيثرنت.</li><li>شاشة واحدة فقط؛ افصل أي شاشة إضافية قبل البدء.</li><li>أوقف التحديثات التلقائية وبرامج المزامنة.</li></ul></div>
-<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>تطبيق آخر (Teams/Zoom) يستخدم الكاميرا فيفشل الفحص.</li><li>تشغيل الاختبار من جهاز لوحي أو جوال — غير مدعوم عادةً.</li></ul></div>
+<div class="row"><button class="btn p" id="runReal"><svg class="i"><use href="#i-cam"/></svg>Run test with my camera</button><button class="btn" id="runSim">Run simulated test</button></div>
+<p class="msg" id="sysMsg"></p>
+<div class="tips"><div><b><svg class="i"><use href="#i-check"/></svg>Tips</b><ul><li>Prefer a wired connection; ~6 Mbps up/down is a safe target.</li><li>Only one monitor may be connected.</li></ul></div><div class="x"><b><svg class="i"><use href="#i-alert"/></svg>Common mistakes</b><ul><li>Teams/Zoom still holding the camera.</li><li>Testing on a tablet or phone.</li></ul></div></div>
 </section>
 
 <section class="step" id="s3">
-<h2><span>3.</span> رمز الدخول وتأكيد الموعد</h2>
-<p>في الواقع تسجّل الدخول لحسابك، تختار الاختبار، تضغط "بدء الاختبار" وتنسخ <b>رمز الدخول (Access code)</b> ثم تشغّل التطبيق يدوياً وتلصق الرمز. جرّب ذلك هنا:</p>
-<p>رمز الدخول التجريبي: <b dir="ltr" id="code" style="font-size:18px;letter-spacing:.15em"></b> <button class="btn" id="copy">نسخ</button></p>
-<input type="text" id="codeIn" placeholder="ألصق الرمز هنا" autocomplete="off">
-<p style="margin-top:12px"><b>أوافق على قواعد الاختبار:</b></p>
-<div id="pol"></div>
+<div class="kick">Step 3 of 9</div><h2>Access code & exam agreement</h2>
+<p class="lead">In a real check-in you sign in, select your exam, click <b>Begin exam</b>, copy your access code and launch the test app manually.</p>
+<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<p>رمز الدخول هو رمز فريد لجلستك يربط تطبيق الاختبار بموعدك. بعد إدخاله توافق على قواعد الاختبار؛ هذه الموافقة تعني أنك تقبل التسجيل بالفيديو والصوت وأن أي مخالفة تبرّر إلغاء الاختبار.</p>
+<div class="terms"><span><b>Access code</b> = رمز الدخول</span><span><b>Appointment</b> = الموعد</span><span><b>Exam agreement / NDA</b> = اتفاقية الاختبار / السرية</span><span><b>Begin exam</b> = بدء الاختبار</span></div></div></details>
+<p style="margin:0 0 6px;font-weight:600">Your access code</p>
+<div class="row"><span class="code" id="code"></span><button class="btn sm" id="copy">Copy access code</button></div>
+<p style="margin:16px 0 6px;font-weight:600">Paste access code into the app</p>
+<input class="tx" id="codeIn" placeholder="ABD-XXXX-0000" autocomplete="off">
+<p style="margin:18px 0 8px;font-weight:600">I agree that:</p>
+<div class="list" id="pol"></div>
 <p class="msg" id="codeMsg"></p>
-<div class="tips"><b>💡 نصائح</b><ul><li>قد يُطلب منك إدخال رقم جوالك لاستلام رابط تصوير الصور بالجوال — أو يمكنك استخدام كاميرا الحاسب.</li><li>بعد تشغيل التطبيق أغلق كل البرامج الأخرى (Task Manager في ويندوز / Force Quit في ماك).</li></ul></div>
-<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>البحث عن زر "بدء الاختبار" قبل وقت فتح نافذة الدخول.</li><li>انتظار تشغيل التطبيق تلقائياً بعد تنزيله — يجب تشغيله يدوياً.</li></ul></div>
 </section>
 
 <section class="step" id="s4">
-<h2><span>4.</span> صورة الوجه (Headshot)</h2>
-<p>تُقارن صورة وجهك بصورة الهوية للتأكد من هوية المختبِر. ضع وجهك داخل الإطار البيضاوي.</p>
-<div class="cam"><div class="frame" id="hsLive"><div class="oval"></div>الكاميرا غير مفعّلة</div><div class="frame" id="hsShot">لم تُلتقط صورة</div></div>
-<button class="btn navy" id="hsCam">تشغيل الكاميرا</button> <button class="btn prim" id="hsCap">التقاط</button> <button class="btn" id="hsSim">صورة افتراضية</button>
-<p class="msg" id="hsMsg"></p>
-<div class="tips"><b>💡 نصائح</b><ul><li>خلفية بلون واحد وإضاءة جيدة من الأمام.</li><li>أبعد الكاميرا بطول ذراعك وانظر مباشرة إليها.</li><li>بدون نظارة شمسية أو قبعة، والوجه كاملاً ظاهر.</li></ul></div>
-<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>إضاءة قوية خلفك (نافذة) تجعل وجهك مظلماً.</li><li>صورة مقصوصة أو ضبابية فيُطلب إعادتها.</li></ul></div>
+<div class="kick">Step 4 of 9</div><h2>Take your headshot</h2>
+<p class="lead">Position your face inside the oval, look directly at the camera, then take the photo.</p>
+<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<p>صورة الوجه تُقارن بصورة هويتك للتأكد أنك أنت الشخص المسجّل، وقد تظهر في تقرير النتيجة. استخدم إضاءة أمامية جيدة وخلفية بلون واحد، وبدون نظارة شمسية أو قبعة.</p>
+<div class="terms"><span><b>Headshot</b> = صورة الوجه</span><span><b>Face guide</b> = إطار توجيه الوجه</span><span><b>Retake</b> = إعادة التصوير</span><span><b>Identity verification</b> = التحقق من الهوية</span></div></div></details>
+<div class="camw"><div class="cam" id="hsCam"><div class="ph"><svg class="i"><use href="#i-cam"/></svg>Camera is off</div><div class="ov"><div class="oval"></div></div><div class="lbl">Center your face in the oval</div></div>
+<div class="shot"><h4>Your photo</h4><div class="thumb" id="hsT">No photo yet</div>
+<div class="row"><button class="btn p sm" id="hsOn">Turn on camera</button><button class="btn p sm" id="hsTake">Take photo</button><button class="btn sm" id="hsRe">Retake</button><button class="btn sm" id="hsSim">Use sample</button></div><div class="st" id="hsMsg"></div></div></div>
 </section>
 
 <section class="step" id="s5">
-<h2><span>5.</span> صورة الهوية</h2>
-<p>اختر نوع الهوية: <select id="idType" style="font:inherit;padding:4px 8px;border-radius:8px"><option value="card">الهوية الوطنية / الإقامة / رخصة القيادة (وجه وخلف)</option><option value="pass">جواز السفر (صفحة الصورة فقط)</option></select></p>
-<div class="cam"><div class="frame" id="idF"><div class="rect"></div><span>الوجه الأمامي</span></div><div class="frame" id="idB"><div class="rect"></div><span>الوجه الخلفي</span></div></div>
-<button class="btn prim" id="idCapF">التقاط الأمامي</button> <button class="btn prim" id="idCapB">التقاط الخلفي</button>
-<p class="msg" id="idMsg"></p>
-<div class="tips"><b>💡 نصائح</b><ul><li>يجب أن تظهر الزوايا الأربع كاملة وأن تكون النصوص مقروءة.</li><li>هوية حكومية سارية تحمل صورتك واسمك مطابقاً لاسم التسجيل.</li><li>(المحاكاة تلتقط إطاراً من الكاميرا إن كانت مفعّلة، وإلا تعرض بطاقة افتراضية — لا يُرفع شيء.)</li></ul></div>
-<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>هوية منتهية أو صورة منسوخة/مصورة من الجوال.</li><li>أصابعك تغطي جزءاً من البطاقة أو انعكاس الضوء على الصورة.</li><li>أي اختلاف في الاسم قد يمنعك من البدء وقد تخسر رسوم الاختبار.</li></ul></div>
+<div class="kick">Step 5 of 9</div><h2>Photograph your ID</h2>
+<p class="lead">Choose your ID type and fit the card inside the frame. All four corners must be visible and the text readable.</p>
+<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<p>تُستخدم صورة الهوية مع المستقبِل (Greeter) للتحقق من شخصيتك. البطاقة الوطنية أو الإقامة أو الرخصة: وجه وخلف. جواز السفر: صفحة الصورة فقط. أي اختلاف بين الاسم في الهوية واسم التسجيل قد يمنعك من الاختبار.</p>
+<div class="terms"><span><b>Government-issued ID</b> = هوية حكومية</span><span><b>Front / Back</b> = الوجه / الخلف</span><span><b>Photo page</b> = صفحة الصورة</span><span><b>Greeter</b> = موظف الاستقبال والتحقق</span></div></div></details>
+<div class="seg" id="idSeg"><button class="on" data-t="card">ID card / Driver's license</button><button data-t="pass">Passport</button></div>
+<div class="camw"><div class="cam" id="idCam"><div class="ph"><svg class="i"><use href="#i-id"/></svg>Camera off — sample mode available</div><div class="ov"><div class="idf"></div></div><div class="lbl" id="idLbl">Front of ID</div></div>
+<div class="shot"><h4 id="idH1">Front</h4><div class="thumb" id="idF">—</div><div id="backBox"><h4>Back</h4><div class="thumb" id="idB">—</div></div>
+<div class="row"><button class="btn p sm" id="idTake">Take photo</button><button class="btn sm" id="idRe">Retake</button></div><div class="st" id="idMsg"></div></div></div>
 </section>
 
 <section class="step" id="s6">
-<h2><span>6.</span> صور المكان</h2>
-<p>التقط 4 صور لمكان الاختبار انطلاقاً من موضع الجهاز: الأمام، الخلف، اليسار، اليمين. اضغط على كل صورة:</p>
-<div class="ph" id="ws"></div>
-<h3 style="margin:14px 0 4px">🕵️ اكتشف المخالفة</h3>
-<p style="margin:0">هذا مكتبك قبل الاختبار. اضغط على كل غرض <b>يجب إزالته</b> من المكتب/متناول اليد، ثم اضغط "تحقق".</p>
+<div class="kick">Step 6 of 9</div><h2>Workspace photos</h2>
+<p class="lead">Take four photos of your testing space from your seat: front, back, left and right.</p>
+<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<p>صور المكان الأربع يستخدمها المراقب مرجعاً أثناء الجلسة ولأغراض الأمن والتدقيق. يجب أن يكون المكتب خالياً في نطاق ذراعك، والهاتف والساعة بعيدين، ولا شاشات إضافية ولا أوراق.</p>
+<div class="terms"><span><b>Workspace photos</b> = صور مكان الاختبار</span><span><b>Arm's reach</b> = متناول اليد</span><span><b>Prohibited items</b> = أغراض ممنوعة</span><span><b>Clear desk</b> = مكتب خالٍ</span></div></div></details>
+<div class="ws" id="ws"></div>
+<h3 style="margin:22px 0 4px;font-size:18px">Find the violations</h3>
+<p class="lead" style="margin-bottom:6px">Click every item that must be removed before the proctor will release your exam.</p>
 <div class="desk" id="desk"></div>
-<button class="btn navy" id="deskChk">تحقق</button> <button class="btn" id="deskRe">إعادة</button>
+<div class="row"><button class="btn p sm" id="deskChk">Check workspace</button><button class="btn sm" id="deskRe">Reset</button></div>
 <p class="msg" id="deskMsg"></p>
-<div class="tips"><b>💡 نصائح</b><ul><li>المساحة خالية في نطاق ذراعك: لا أوراق ولا كتب ولا أقلام ولا ألواح مكتوب عليها.</li><li>الهاتف والساعة خارج متناول اليد (لكن الهاتف قريب بما يكفي إن احتاج المراقب الاتصال بك — حسب تعليماته).</li><li>غالباً يُسمح بماء في كوب شفاف بدون ملصقات — تأكد من سياسة جهة الاختبار.</li></ul></div>
-<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>نسيان شاشة ثانية متصلة حتى لو مطفأة.</li><li>ظهور شخص آخر في الغرفة أو باب مفتوح.</li></ul></div>
 </section>
 
 <section class="step" id="s7">
-<h2><span>7.</span> الانتظار في الطابور والمراقب</h2>
-<p>بعد رفع الصور تنتظر دورك؛ يراجع المستقبِل (Greeter) صورك ثم يتولى المراقب الجلسة وقد يطلب منك إجراءات. لا تغادر مكانك أثناء الانتظار.</p>
-<div class="two"><div class="queue"><div>ترتيبك في الطابور</div><div class="n" id="qn">—</div><div id="qt" style="color:var(--muted);font-size:13px"></div><button class="btn navy" id="qStart">ابدأ الانتظار</button></div>
-<div><div class="chat" id="chat"><div class="m s">ستظهر رسائل المراقب هنا</div></div><div class="acts" id="acts"></div></div></div>
+<div class="kick">Step 7 of 9</div><h2>Queue & proctor</h2>
+<p class="lead">Stay in front of your computer. A greeter will review your photos, then a proctor will connect.</p>
+<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<p>بعد رفع الصور تدخل طابور الانتظار. المستقبِل (Greeter) يراجع صورك وهويتك، ثم يتولى المراقب (Proctor) الجلسة وقد يطلب تدوير الكاميرا أو إظهار المعصمين والأذنين. مغادرة المكان أو لمس الهاتف هنا قد يلغي الدخول.</p>
+<div class="terms"><span><b>Queue</b> = طابور الانتظار</span><span><b>Greeter</b> = المستقبِل</span><span><b>Proctor</b> = المراقب</span><span><b>Pan the camera</b> = تدوير الكاميرا</span></div></div></details>
+<div class="queue"><div class="qbox"><div class="ring" id="ring" style="animation-play-state:paused"></div><div class="qn" id="qn">—</div><b id="qh">Ready to join the queue</b><p style="color:var(--mut);font-size:13.5px" id="qt">You are in the queue — a greeter will be with you shortly.</p><button class="btn p" id="qStart">Join queue</button></div>
+<div class="chat"><div class="hd"><i id="dot"></i><svg class="i"><use href="#i-chat"/></svg>Chat with proctor</div><div class="bd" id="chat"><div class="m s">Messages will appear here</div></div><div class="ac" id="acts"></div></div></div>
 <p class="msg" id="qMsg"></p>
-<div class="tips"><b>💡 نصائح</b><ul><li>نفّذ طلبات المراقب بهدوء: تدوير الكاميرا، إظهار المعصمين، إظهار الأذنين، إظهار الهوية.</li><li>ضع الهاتف خارج متناول اليد وخلفك عادةً، ولا تلمسه إلا إذا طلب المراقب.</li></ul></div>
-<div class="mist"><b>⛔ أخطاء شائعة</b><ul><li>استخدام الجوال أثناء الانتظار أو الخروج من أمام الكاميرا.</li><li>تجاهل رسائل المحادثة فيُلغى الدخول.</li></ul></div>
 </section>
 
 <section class="step" id="s8">
-<h2><span>8.</span> قواعد أثناء الاختبار</h2>
-<div class="two"><div class="tips" style="margin:0"><b>✅ افعل</b><ul><li>ابقَ داخل إطار الكاميرا طوال الوقت.</li><li>استخدم أداة السبورة (Whiteboard) داخل التطبيق للملاحظات.</li><li>استخدم المحادثة للتواصل مع المراقب عند أي مشكلة.</li><li>التزم بسياسة الاستراحة الخاصة بالاختبار (إن وُجدت) واتبع تعليمات المراقب.</li></ul></div>
-<div class="mist" style="margin:0"><b>❌ لا تفعل</b><ul><li>لا تتحدث ولا تقرأ الأسئلة بصوت مرتفع ولا تحرك شفتيك.</li><li>لا تغادر المكان أو تقف بدون إذن.</li><li>لا تغطي فمك أو وجهك، ولا تنظر بعيداً عن الشاشة كثيراً.</li><li>لا سماعات ولا أوراق ولا هاتف ولا ساعة.</li><li>لا تسمح لأحد بدخول الغرفة.</li></ul></div></div>
-<h3 style="margin:16px 0 4px">📝 اختبار الجاهزية</h3>
+<div class="kick">Step 8 of 9</div><h2>Exam rules & readiness check</h2>
+<p class="lead">These behaviours are monitored throughout the session by video, audio and AI flagging.</p>
+<details class="ar"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c">
+<p>أثناء الاختبار تُراقَب حركتك وصوتك باستمرار. الكلام أو تحريك الشفاه، النظر بعيداً كثيراً، أو الخروج من الإطار قد يُسجَّل مخالفة ويُلغى الاختبار. استخدم السبورة الإلكترونية داخل التطبيق للملاحظات، والمحادثة لطلب المساعدة.</p>
+<div class="terms"><span><b>Whiteboard</b> = السبورة الإلكترونية</span><span><b>Stay in frame</b> = البقاء داخل الإطار</span><span><b>Unscheduled break</b> = استراحة غير مجدولة</span><span><b>Revoked</b> = إلغاء النتيجة</span></div></div></details>
+<div class="rules"><div class="do"><b>Do</b><ul><li>Stay fully in the camera frame</li><li>Use the built-in whiteboard for notes</li><li>Use chat to contact the proctor</li><li>Follow your exam's break policy</li></ul></div>
+<div class="dont"><b>Don't</b><ul><li>Talk, mumble or read questions aloud</li><li>Leave your seat or let anyone enter</li><li>Cover your mouth or face</li><li>Use phone, watch, headphones or paper</li></ul></div></div>
+<h3 style="font-size:18px;margin:0">Readiness check</h3>
 <div id="quiz"></div>
-<button class="btn navy" id="qzChk">تصحيح</button>
+<button class="btn p" id="qzChk">Submit answers</button>
 <p class="msg" id="qzMsg"></p>
 </section>
 
 <section class="step" id="s9">
-<h2><span>9.</span> بدء الاختبار 🎉</h2>
-<p>أحسنت! أكملت محاكاة إجراءات الدخول. في الاختبار الحقيقي يبدأ الاختبار بعد موافقة المراقب.</p>
-<div class="cert"><img src="assets/abad-logo.png" alt="" style="height:54px"><small style="display:block;color:var(--blue);font-weight:800">معهد شبكة آباد للتدريب — منصة آباد الرقمية</small>
-<h3>إفادة جاهزية لدخول الاختبار الدولي أونلاين</h3>
-<p style="margin:4px 0">(إفادة تدريبية داخلية — ليست شهادة رسمية)</p>
-<input type="text" id="nm" placeholder="اكتب اسمك" style="direction:rtl;letter-spacing:0;margin:6px auto">
-<table id="sum"></table><p id="dt" style="font-size:13px;color:var(--muted)"></p></div>
-<div class="nav" style="justify-content:center"><a class="btn prim" href="platform.html?v=202610161320">منصة الاختبارات</a><a class="btn navy" href="booking.html?v=202610161320">احجز اختبارك</a><button class="btn" onclick="print()">طباعة</button><button class="btn" id="restart">إعادة المحاكاة</button></div>
+<div class="done"><div class="big"><svg class="i"><use href="#i-check"/></svg></div>
+<div class="kick">Step 9 of 9</div><h2>Check-in complete — your exam will now begin</h2>
+<p class="lead">In a real session the proctor now launches your exam. You've completed the training simulation.</p></div>
+<details class="ar nopr"><summary><svg class="i"><use href="#i-info"/></svg>ماذا تعني هذه الخطوة؟</summary><div class="c"><p>عند اكتمال الدخول يُطلق المراقب الاختبار ويبدأ المؤقت. من هذه اللحظة تسري كل القواعد حتى تنهي الاختبار وتظهر شاشة النهاية. بالتوفيق!</p>
+<div class="terms"><span><b>Launch exam</b> = إطلاق الاختبار</span><span><b>Score report</b> = تقرير النتيجة</span></div></div></details>
+<div class="cert"><img src="assets/abad-logo.png" alt="" style="height:50px"><div class="kick" style="margin-top:6px">Abad Training Institute</div><h3 style="margin:4px 0">Online Check-in Readiness</h3><small style="color:var(--mut)">Internal training statement — not an official certificate</small>
+<input class="tx" id="nm" placeholder="Your name" style="display:block;margin:12px auto 0;text-align:center;font-family:inherit;letter-spacing:0">
+<table id="sum"></table><p id="dt" style="font-size:12.5px;color:var(--mut);margin-bottom:0"></p></div>
+<div class="row nopr" style="justify-content:center"><a class="btn p" href="platform.html?v=202610161830">Go to exams platform</a><a class="btn g" href="booking.html?v=202610161830">Book your exam</a><button class="btn" onclick="print()">Print</button><button class="btn" onclick="location.reload()">Restart</button></div>
 </section>
 
-<div class="nav" id="nav"><button class="btn" id="back">→ السابق</button><button class="btn prim" id="next">التالي ←</button></div>
+<div class="foot" id="foot"><button class="btn" id="back">← Back</button><button class="btn p" id="next">Next →</button></div>
+</main>
+
+<aside class="proc" id="proc">
+<div class="hd"><div class="av" id="pav"><svg class="i"><use href="#i-user"/></svg></div><div><b>Proctor (virtual)</b><small>English voice · Arabic subtitles</small></div><button class="btn sm" id="pmin" style="margin-left:auto;padding:4px 6px;background:transparent;color:#fff;border-color:#ffffff44" title="Minimize"><svg class="i"><use href="#i-min"/></svg></button></div>
+<div class="pv" id="pv"><span class="chip rec rc" id="prec" style="display:none">LIVE · local</span><span>Your camera preview appears here</span><video id="pvid" autoplay muted playsinline style="display:none"></video></div>
+<div class="sub"><p class="en" id="pen">Click “Start proctor” to hear your proctor.</p><p class="arx" id="par">اضغط "Start proctor" لسماع تعليمات المراقب بالإنجليزية مع الترجمة.</p></div>
+<div class="pb"><button class="btn p sm" id="pgo"><svg class="i"><use href="#i-play"/></svg>Start proctor</button><button class="btn g sm" id="pdone" style="display:none"><svg class="i"><use href="#i-check"/></svg>Done / تم</button><button class="btn sm" id="prep" title="Replay"><svg class="i"><use href="#i-rep"/></svg>Replay</button><button class="btn sm" id="pmute"><svg class="i"><use href="#i-vol"/></svg>Mute</button></div>
+</aside>
 </div>
-<p style="font-size:12.5px;color:var(--muted)">المصادر: دليل الاختبار أونلاين المنشور علناً من Pearson VUE (Online testing guide) وإرشادات OnVUE المنشورة لدى الجهات المانحة. هذه الصفحة تبسيط تدريبي.</p>
-</div>
-<footer>© <span id="y"></span> معهد شبكة آباد للتدريب — الرياض</footer>
+
+<div class="disc"><div><b>Training simulation.</b> This page is an educational simulation by Abad Training Institute, similar to OnVUE-style online proctored check-in. It is <b>not affiliated with, endorsed by, or connected to Pearson VUE</b>; OnVUE is a trademark of its owner. Real procedures vary by exam sponsor — always follow your official confirmation email. Camera, microphone and photos never leave your browser.
+<div class="r">محاكاة تدريبية من معهد شبكة آباد للتدريب، غير تابعة لشركة Pearson VUE. بيانات الكاميرا والصور تبقى في متصفحك فقط ولا تُرفع إطلاقاً.</div>
+<div style="margin-top:4px">Sources: Pearson VUE public "Online testing guide" (PDF) and OnVUE guides published by exam sponsors.</div></div></div>
+
 <script>
-y.textContent=new Date().getFullYear();
-const $=id=>document.getElementById(id),N=9,names=["قبل الاختبار","فحص الجهاز","رمز الدخول","صورة الوجه","صورة الهوية","صور المكان","الطابور والمراقب","القواعد","بدء الاختبار"];
-let cur=1,done={},stream=null;
-const R={};
-function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}}
-async function getCam(audio){if(stream&&(!audio||stream.getAudioTracks().length))return stream;stopCam();
+const $=id=>document.getElementById(id),N=9;
+const NAMES=["Before you begin","System test","Access code","Headshot","ID photos","Workspace","Queue & proctor","Exam rules","Start exam"];
+let cur=1,done={},stream=null;const R={};
+const ico=n=>`<svg class="i"><use href="#i-${n}"/></svg>`;
+/* camera (local only) */
+async function getCam(audio){if(stream&&stream.active&&(!audio||stream.getAudioTracks().length))return stream;stopCam();
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("unsupported");
- stream=await navigator.mediaDevices.getUserMedia({video:{width:640,height:480},audio:!!audio});return stream}
-function vid(el){let v=el.querySelector("video");if(!v){v=document.createElement("video");v.autoplay=v.muted=v.playsInline=true;el.prepend(v)}v.srcObject=stream;v.play().catch(()=>{});return v}
-function snap(el,target,label,color){const c=document.createElement("canvas");c.width=480;c.height=360;const x=c.getContext("2d");const v=el&&el.querySelector("video");
- if(v&&stream&&v.videoWidth){x.drawImage(v,0,0,480,360)}else{x.fillStyle=color||"#3f86b3";x.fillRect(0,0,480,360);x.fillStyle="#fff";x.font="bold 30px Cairo";x.textAlign="center";x.fillText(label||"صورة افتراضية",240,190)}
- target.innerHTML="";target.appendChild(c);return true}
-// step1
-const reqs=["غرفة هادئة وخاصة والباب مغلق، لا أحد يدخل","مكتب خالٍ تماماً من الأوراق والكتب والأجهزة","هوية حكومية سارية والاسم مطابق تماماً لاسم التسجيل","جهاز شخصي (ليس جهاز العمل) بصلاحيات تثبيت","إغلاق كل البرامج والـ VPN والمزامنة","الجهاز موصول بالكهرباء والإنترنت مستقر","الحضور قبل الموعد بـ 30 دقيقة","أعلم أن الدخول يفتح قبل الموعد بـ 30 دقيقة"];
-$("req").innerHTML=reqs.map((r,i)=>`<label class="chk"><input type="checkbox" class="rq">${r}</label>`).join("");
-// step2
-$("runReal").onclick=async()=>{const m=$("sysMsg");m.textContent="";
- try{await getCam(true);vid($("prev"));st("tCam","ok","✓ تعمل");
-  try{const ac=new (window.AudioContext||window.webkitAudioContext)(),an=ac.createAnalyser(),src=ac.createMediaStreamSource(stream);src.connect(an);const d=new Uint8Array(an.fftSize);let mx=0,t0=Date.now();st("tMic","run","تكلّم الآن...");
-   (function lp(){an.getByteTimeDomainData(d);let s=0;for(const v of d)s=Math.max(s,Math.abs(v-128));mx=Math.max(mx,s);$("micLv").style.width=Math.min(100,s*1.6)+"%";if(Date.now()-t0<4000)requestAnimationFrame(lp);else{st("tMic",mx>4?"ok":"bad",mx>4?"✓ يلتقط الصوت":"✗ لم يُلتقط صوت (تحقق من الميكروفون)");ac.close();fin()}})()}catch(e){st("tMic","bad","✗ تعذّر الفحص");fin()}
- }catch(e){st("tCam","bad","✗ لم يُسمح أو غير متاحة");m.className="msg bad";m.textContent="لم يتم الوصول للكاميرا/الميكروفون. يمكنك استخدام الفحص المحاكى.";simNet();osChk()}
- simNet();osChk()};
-$("runSim").onclick=()=>{st("tCam","ok","✓ (محاكى) تعمل");st("tMic","run","...");let w=0;const iv=setInterval(()=>{w=Math.random()*90;$("micLv").style.width=w+"%"},120);setTimeout(()=>{clearInterval(iv);st("tMic","ok","✓ (محاكى) يلتقط الصوت");fin()},2500);simNet();osChk()};
-function st(id,c,t){$(id).className="st "+c;$(id).textContent=t}
-function simNet(){st("tNet","run","جارٍ القياس...");setTimeout(()=>{const dn=(8+Math.random()*40).toFixed(1),up=(4+Math.random()*15).toFixed(1);st("tNet","ok",`✓ تنزيل ${dn} / رفع ${up} Mbps (محاكى)`);fin()},2200)}
-function osChk(){const u=navigator.userAgent,mob=/Android|iPhone|iPad/i.test(u),os=/Windows/.test(u)?"Windows":/Mac/.test(u)?"macOS":/Linux/.test(u)?"Linux":"غير معروف";
- st("tOs",mob||os==="Linux"?"bad":"ok",mob?"✗ جهاز جوال/لوحي غير مدعوم عادةً":os==="Linux"?"✗ لينكس غير مدعوم عادةً (للتدريب فقط)":"✓ "+os);fin()}
-function fin(){const ok=["tCam","tMic","tNet","tOs"].filter(i=>$(i).classList.contains("ok")).length,run=["tCam","tMic","tNet"].some(i=>$(i).classList.contains("run"));
- if(!run&&ok>=3){R.sys=ok===4?"ناجح":"ناجح مع ملاحظات";const m=$("sysMsg");m.className="msg ok";m.textContent=ok===4?"✓ اجتاز الجهاز كل الفحوصات":"✓ يمكنك المتابعة للتدريب — عالج البند الفاشل قبل الاختبار الحقيقي"}}
-// step3
+ stream=await navigator.mediaDevices.getUserMedia({video:{width:640,height:480},audio:!!audio});syncCams();return stream}
+function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}syncCams()}
+function attach(el){let v=el.querySelector("video");if(!stream){if(v)v.remove();return}if(!v){v=document.createElement("video");v.autoplay=v.muted=v.playsInline=true;el.prepend(v)}if(v.srcObject!==stream){v.srcObject=stream;v.play().catch(()=>{})}}
+function syncCams(){["hsCam","idCam"].forEach(i=>attach($(i)));const pv=$("pvid");if(stream){pv.srcObject=stream;pv.style.display="block";pv.play().catch(()=>{});$("prec").style.display=""}else{pv.style.display="none";pv.srcObject=null;$("prec").style.display="none"}}
+function snap(src,target,label,color){const c=document.createElement("canvas");c.width=640;c.height=480;const x=c.getContext("2d");const v=src&&src.querySelector("video");
+ if(v&&stream&&v.videoWidth){x.translate(640,0);x.scale(-1,1);x.drawImage(v,0,0,640,480)}else{const g=x.createLinearGradient(0,0,640,480);g.addColorStop(0,color||"#3f86b3");g.addColorStop(1,"#10293b");x.fillStyle=g;x.fillRect(0,0,640,480);x.fillStyle="#fff";x.font="600 34px Segoe UI,Arial";x.textAlign="center";x.fillText(label||"Sample photo",320,250)}
+ target.innerHTML="";target.appendChild(c);target.classList.add("ok");if(src){src.classList.remove("flash");void src.offsetWidth;src.classList.add("flash")}}
+/* step 1 */
+const reqs=["Quiet, private room with the door closed — no one else present","Clear desk: no papers, books, devices or writing within arm's reach","Valid government-issued ID; name matches my registration exactly","Personal computer (not a work laptop) with admin rights","All other apps, VPNs and sync tools closed","Computer plugged into power; stable internet","I will start check-in 30 minutes before my appointment","I understand check-in opens 30 min before and closes 15 min after start time"];
+$("req").innerHTML=reqs.map(r=>`<label class="ck"><input type="checkbox" class="rq"><span>${r}</span></label>`).join("");
+/* step 2 */
+function sc(id,c,t){const e=$(id);e.className="sc "+c;e.querySelector("small").textContent=t;e.querySelector(".ic").innerHTML=ico(c==="ok"?"check":c==="bad"?"x":{tCam:"cam",tMic:"mic",tNet:"wifi",tOs:"pc"}[id])}
+$("runReal").onclick=async()=>{$("sysMsg").textContent="";sc("tCam","run","Requesting access…");
+ try{await getCam(true);sc("tCam","ok","Camera detected");micTest()}catch(e){sc("tCam","bad","Access denied or unavailable");sc("tMic","bad","Not available");$("sysMsg").className="msg bad";$("sysMsg").textContent="Camera/mic not available. You can use the simulated test."}
+ net();os()};
+$("runSim").onclick=()=>{sc("tCam","ok","Camera detected (simulated)");sc("tMic","run","Listening…");const iv=setInterval(()=>$("micLv").style.width=Math.random()*90+"%",120);setTimeout(()=>{clearInterval(iv);$("micLv").style.width="0";sc("tMic","ok","Audio detected (simulated)");fin()},2500);net();os()};
+function micTest(){try{const ac=new (window.AudioContext||window.webkitAudioContext)(),an=ac.createAnalyser();ac.createMediaStreamSource(stream).connect(an);const d=new Uint8Array(an.fftSize);let mx=0,t0=Date.now();sc("tMic","run","Say something…");
+ (function lp(){an.getByteTimeDomainData(d);let s=0;for(const v of d)s=Math.max(s,Math.abs(v-128));mx=Math.max(mx,s);$("micLv").style.width=Math.min(100,s*1.6)+"%";if(Date.now()-t0<4000)requestAnimationFrame(lp);else{mx>4?sc("tMic","ok","Audio detected"):sc("tMic","bad","No audio detected");ac.close();fin()}})()}catch(e){sc("tMic","bad","Test failed");fin()}}
+function net(){sc("tNet","run","Measuring…");setTimeout(()=>{sc("tNet","ok",`↓ ${(8+Math.random()*40).toFixed(1)} / ↑ ${(4+Math.random()*15).toFixed(1)} Mbps (simulated)`);fin()},2200)}
+function os(){const u=navigator.userAgent,mob=/Android|iPhone|iPad/i.test(u),o=/Windows/.test(u)?"Windows":/Mac/.test(u)?"macOS":/Linux/.test(u)?"Linux":"Unknown";
+ mob?sc("tOs","bad","Mobile/tablet not supported"):o==="Linux"?sc("tOs","bad","Linux usually not supported"):sc("tOs","ok",o+" · supported");fin()}
+function fin(){const ids=["tCam","tMic","tNet","tOs"],ok=ids.filter(i=>$(i).classList.contains("ok")).length;if(ids.some(i=>$(i).classList.contains("run")))return;
+ if(ok>=3){R.sys=ok===4?"Passed":"Passed with warnings";$("sysMsg").className="msg ok";$("sysMsg").textContent=ok===4?"✓ Your system passed all checks.":"✓ You may continue training — fix the failed item before a real exam."}}
+/* step 3 */
 const code="ABD-"+Math.random().toString(36).slice(2,6).toUpperCase()+"-"+(1000+Math.floor(Math.random()*9000));$("code").textContent=code;
-$("copy").onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(code);$("codeIn").value=code};
-const pols=["سأكون وحدي في الغرفة طوال الاختبار","لن أستخدم هاتفاً أو ساعة أو سماعات أو أوراقاً","لن أتحدث أو أقرأ الأسئلة بصوت مرتفع","سأبقى أمام الكاميرا ولن أغادر بدون إذن","أوافق على التسجيل بالفيديو والصوت أثناء الجلسة"];
-$("pol").innerHTML=pols.map(p=>`<label class="chk"><input type="checkbox" class="pl">${p}</label>`).join("");
-// step4
-$("hsCam").onclick=async()=>{try{await getCam();vid($("hsLive"))}catch(e){$("hsMsg").className="msg bad";$("hsMsg").textContent="الكاميرا غير متاحة — استخدم الصورة الافتراضية."}};
-$("hsCap").onclick=()=>{if(!stream){$("hsMsg").className="msg bad";$("hsMsg").textContent="شغّل الكاميرا أولاً أو اختر صورة افتراضية.";return}snap($("hsLive"),$("hsShot"));R.hs="ملتقطة (محلياً)";okm("hsMsg","✓ تم الالتقاط — الصورة في متصفحك فقط")};
-$("hsSim").onclick=()=>{snap(null,$("hsShot"),"🙂 صورة افتراضية");R.hs="افتراضية";okm("hsMsg","✓ صورة افتراضية")};
-function okm(id,t){$(id).className="msg ok";$(id).textContent=t}
-// step5
-let idf=0,idb=0;
-$("idType").onchange=()=>{const p=$("idType").value==="pass";$("idB").style.display=$("idCapB").style.display=p?"none":"";$("idF").querySelector("span")&&($("idF").querySelector("span").textContent=p?"صفحة الصورة":"الوجه الأمامي")};
-$("idCapF").onclick=()=>{const live=document.querySelector("#hsLive video");if(stream&&live){const t=$("idF");vid(t);setTimeout(()=>{snap(t,t);idf=1;idok()},300)}else{snap(null,$("idF"),"🪪 الوجه الأمامي","#10293b");idf=1;idok()}};
-$("idCapB").onclick=()=>{if(stream){const t=$("idB");vid(t);setTimeout(()=>{snap(t,t);idb=1;idok()},300)}else{snap(null,$("idB"),"🪪 الوجه الخلفي","#10293b");idb=1;idok()}};
-function idok(){const p=$("idType").value==="pass";if(idf&&(p||idb)){R.id=p?"جواز سفر":"بطاقة (وجه وخلف)";okm("idMsg","✓ اكتملت صور الهوية (محلياً)")}}
-// step6
-const dirs=["الأمام","الخلف","اليسار","اليمين"],hint=["الشاشة والمكتب أمامك","ما خلف كرسيك والباب","الجانب الأيسر من المكتب","الجانب الأيمن من المكتب"],wsd={};
-$("ws").innerHTML=dirs.map((d,i)=>`<div class="slot" data-i="${i}">📸<br><b>${d}</b><br><small>${hint[i]}</small></div>`).join("");
-$("ws").onclick=e=>{const s=e.target.closest(".slot");if(!s)return;s.classList.add("done");wsd[s.dataset.i]=1;s.querySelector("b").textContent=dirs[s.dataset.i]+" ✓"};
-const items=[["📱","هاتف",1],["📝","ملاحظات",1],["⌚","ساعة",1],["🖥️","شاشة ثانية",1],["🎧","سماعات",1],["🥛","ماء في كوب شفاف",0],["📚","كتاب",1],["💻","جهاز الاختبار",0],["🖊️","قلم وورق",1],["🪪","الهوية (للتحقق)",0],["🧮","آلة حاسبة",1],["🖱️","فأرة",0]];
-function drawDesk(){$("desk").innerHTML=items.map((t,i)=>`<div class="it" data-i="${i}"><span>${t[0]}</span>${t[1]}</div>`).join("");$("deskMsg").textContent=""}
-drawDesk();$("desk").onclick=e=>{const it=e.target.closest(".it");if(it&&!R.deskDone)it.classList.toggle("sel")};
-$("deskChk").onclick=()=>{let c=0,t=0;document.querySelectorAll(".it").forEach(el=>{const bad=items[el.dataset.i][2],s=el.classList.contains("sel");if(bad)t++;if(bad&&s){el.classList.add("r-ok");c++}else if(!bad&&s)el.classList.add("r-bad");else if(bad)el.classList.add("r-miss")});
- const wrong=document.querySelectorAll(".it.r-bad").length;R.desk=`${c}/${t}`;const m=$("deskMsg");
- if(c===t&&!wrong){R.deskDone=1;m.className="msg ok";m.textContent="✓ ممتاز! اكتشفت كل المخالفات. (الماء في كوب شفاف، الفأرة، الجهاز والهوية مسموحة عادةً)"}else{m.className="msg bad";m.textContent=`اكتشفت ${c} من ${t}${wrong?` واخترت ${wrong} غرضاً مسموحاً`:""}. الأصفر = فاتك، الأحمر = مسموح. اضغط إعادة.`}};
-$("deskRe").onclick=()=>{R.deskDone=0;drawDesk()};
-// step7
-const pmsg=[["مرحباً، أنا المراقب. سأراجع صورك الآن.",null],["من فضلك أظهر معصميك أمام الكاميرا.","إظهار المعصمين ✋"],["قم بتدوير الكاميرا 360 درجة ببطء لإظهار الغرفة.","تدوير الكاميرا 🔄"],["أرني أين وضعت هاتفك، ثم ضعه خارج متناول يدك.","وضع الهاتف بعيداً 📱"],["أظهر أذنيك للتأكد من عدم وجود سماعات.","إظهار الأذنين 👂"]];let pi=0,qdone=0;
-function chat(c,t){const d=document.createElement("div");d.className="m "+c;d.textContent=t;$("chat").appendChild(d);$("chat").scrollTop=1e6}
-$("qStart").onclick=()=>{$("qStart").disabled=true;$("chat").innerHTML="";let n=4+Math.floor(Math.random()*3);$("qn").textContent=n;chat("s","دخلت الطابور — لا تغادر مكانك");
- const iv=setInterval(()=>{n--;$("qn").textContent=n>0?n:"دورك!";$("qt").textContent=n>0?`الوقت المتوقع ~ ${n*15} ثانية (مسرّع)`:"";if(n<=0){clearInterval(iv);chat("s","تم توصيلك بالمراقب");nextP()}},1500)};
-function nextP(){const [t,a]=pmsg[pi];chat("p",t);$("acts").innerHTML="";if(!a){pi++;setTimeout(nextP,1200);return}
- const b=document.createElement("button");b.className="btn";b.textContent=a;b.onclick=()=>{chat("u","تم: "+a);pi++;if(pi<pmsg.length)setTimeout(nextP,900);else{$("acts").innerHTML="";chat("p","شكراً، كل شيء سليم. سيبدأ اختبارك بعد قليل. بالتوفيق!");qdone=1;R.q="مكتمل";okm("qMsg","✓ اجتزت مرحلة المراقب")}};
- const w=document.createElement("button");w.className="btn";w.style.borderColor="#e74c3c";w.style.color="#e74c3c";w.textContent="أمسك الهاتف للرد على رسالة";w.onclick=()=>{chat("p","⚠️ تنبيه: لا يُسمح بلمس الهاتف. قد يؤدي ذلك لإلغاء الاختبار.")};
+$("copy").onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(code).catch(()=>{});$("copy").textContent="Copied ✓";$("codeIn").value=code};
+const pols=["I will be alone in the room for the entire exam","I will not use a phone, watch, headphones or notes","I will not talk or read questions aloud","I will stay in view of the camera and not leave my seat","I consent to video and audio recording of my session"];
+$("pol").innerHTML=pols.map(p=>`<label class="ck"><input type="checkbox" class="pl"><span>${p}</span></label>`).join("");
+/* step 4 */
+const msg=(id,c,t)=>{$(id).className="st "+c;$(id).textContent=t};
+$("hsOn").onclick=async()=>{try{await getCam();msg("hsMsg","ok","Camera on — preview stays on this device")}catch(e){msg("hsMsg","bad","Camera unavailable — use the sample photo.")}};
+$("hsTake").onclick=()=>{if(!stream)return msg("hsMsg","bad","Turn on the camera first, or use a sample.");snap($("hsCam"),$("hsT"));R.hs="Captured (local)";msg("hsMsg","ok","✓ Headshot accepted")};
+$("hsRe").onclick=()=>{R.hs=0;$("hsT").className="thumb";$("hsT").textContent="No photo yet";msg("hsMsg","","")};
+$("hsSim").onclick=()=>{snap(null,$("hsT"),"Sample headshot");R.hs="Sample";msg("hsMsg","ok","✓ Sample headshot used")};
+/* step 5 */
+let idT="card",idN=0;
+$("idSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;[...$("idSeg").children].forEach(x=>x.classList.toggle("on",x===b));idT=b.dataset.t;resetId()};
+function resetId(){idN=0;R.id=0;["idF","idB"].forEach(i=>{$(i).className="thumb";$(i).textContent="—"});$("backBox").style.display=idT==="pass"?"none":"";$("idH1").textContent=idT==="pass"?"Photo page":"Front";$("idLbl").textContent=idT==="pass"?"Passport photo page":"Front of ID";msg("idMsg","","")}
+$("idTake").onclick=()=>{const tgt=idN===0?$("idF"):$("idB");snap(stream?$("idCam"):null,tgt,idN===0?(idT==="pass"?"Passport photo page":"ID — front"):"ID — back","#1f4e79");idN++;
+ if(idT==="pass"||idN>=2){R.id=idT==="pass"?"Passport":"ID card (front + back)";msg("idMsg","ok","✓ ID photos complete")}else{$("idLbl").textContent="Now flip — back of ID";msg("idMsg","ok","Front captured. Now the back.")}};
+$("idRe").onclick=resetId;
+/* step 6 */
+const dirs=["Front","Back","Left","Right"],wsd={};
+$("ws").innerHTML=dirs.map((d,i)=>`<div class="t" data-i="${i}"><div class="thumb" id="w${i}">${ico("room")}</div><div class="l">${d}<span id="wk${i}" style="color:var(--blue)">Take photo</span></div></div>`).join("");
+$("ws").onclick=e=>{const t=e.target.closest(".t");if(!t)return;const i=t.dataset.i;snap(null,$("w"+i),dirs[i]+" view","#5a7d99");t.classList.add("ok");$("wk"+i).innerHTML=`<span style="color:var(--ok)">✓ Done</span>`;wsd[i]=1};
+const items=[["📱","Phone",1],["📝","Notes",1],["⌚","Watch",1],["🖥️","2nd monitor",1],["🎧","Headphones",1],["🥛","Water (clear glass)",0],["📚","Book",1],["💻","Exam computer",0],["🖊️","Pen & paper",1],["🪪","Your ID",0],["🧮","Calculator",1],["🖱️","Mouse",0]];
+function desk(){R.deskDone=0;$("desk").innerHTML=items.map((t,i)=>`<div class="it" data-i="${i}"><span>${t[0]}</span>${t[1]}</div>`).join("");$("deskMsg").textContent=""}desk();
+$("desk").onclick=e=>{const it=e.target.closest(".it");if(it&&!R.deskDone)it.classList.toggle("sel")};
+$("deskChk").onclick=()=>{let c=0,t=0,w=0;document.querySelectorAll(".it").forEach(el=>{const bad=items[el.dataset.i][2],s=el.classList.contains("sel");el.classList.remove("rok","rbad","rmiss");if(bad)t++;if(bad&&s){el.classList.add("rok");c++}else if(!bad&&s){el.classList.add("rbad");w++}else if(bad)el.classList.add("rmiss")});
+ R.desk=c+"/"+t;if(c===t&&!w){R.deskDone=1;$("deskMsg").className="msg ok";$("deskMsg").textContent="✓ Workspace cleared. Clear water glass, mouse, exam computer and ID are typically allowed."}else{$("deskMsg").className="msg bad";$("deskMsg").textContent=`Found ${c} of ${t}${w?`, and flagged ${w} allowed item(s)`:""}. Orange = missed, red = allowed. Press Reset to try again.`}};
+/* step 7 */
+const PM=[["Hello, I'm your proctor today. I've reviewed your photos.",null],["Please show me both of your wrists.","Show wrists"],["Please pan your camera slowly around the room.","Pan camera"],["Show me where your phone is, then place it out of arm's reach.","Phone away"],["Please show me your ears.","Show ears"]];let pi=0,qdone=0;
+function chat(c,t,who){const d=document.createElement("div");d.className="m "+c;d.innerHTML=(who?`<small>${who}</small>`:"")+t;$("chat").appendChild(d);$("chat").scrollTop=1e6}
+$("qStart").onclick=()=>{$("qStart").style.display="none";$("ring").style.animationPlayState="running";$("chat").innerHTML="";let n=4+Math.floor(Math.random()*3);$("qn").textContent=n;$("qh").textContent="You are in the queue";chat("s","Joined queue — do not leave your seat");
+ const iv=setInterval(()=>{n--;$("qn").textContent=n>0?n:"✓";$("qt").textContent=n>0?`Position ${n} · estimated wait ~${n*15}s (accelerated)`:"A greeter has verified your photos. Proctor connected.";if(n<=0){clearInterval(iv);$("ring").style.animationPlayState="paused";$("ring").style.borderColor="var(--ok)";$("qh").textContent="Connected";$("dot").classList.add("on");chat("s","Proctor joined the chat");np()}},1500)};
+function np(){const [t,a]=PM[pi];chat("p",t,"Proctor");$("acts").innerHTML="";if(!a){pi++;setTimeout(np,1200);return}
+ const b=document.createElement("button");b.className="btn p sm";b.textContent=a+" ✓";b.onclick=()=>{chat("u",a+" — done");pi++;if(pi<PM.length)setTimeout(np,900);else{$("acts").innerHTML="";chat("p","Thank you. Everything looks good. Your exam will start shortly.","Proctor");qdone=1;R.q="Completed";$("qMsg").className="msg ok";$("qMsg").textContent="✓ Proctor check passed"}};
+ const w=document.createElement("button");w.className="btn sm";w.style.color="var(--bad)";w.textContent="Pick up phone to reply";w.onclick=()=>{const d=document.createElement("div");chat("p w","⚠️ Warning: touching your phone is not allowed and may end your exam.","Proctor")};
  $("acts").append(b,w)}
-// step8
-const Q=[["هل يجوز قراءة الأسئلة بصوت مرتفع لتركّز؟",["نعم إذا كنت وحدي","لا، يُمنع التحدث وتحريك الشفاه"],1,"أي كلام أو تمتمة قد يُعد مخالفة."],
-["أين تكتب ملاحظاتك أثناء الاختبار؟",["ورقة جانبية","أداة السبورة داخل التطبيق","كف اليد"],1,"استخدم Whiteboard المدمجة فقط ما لم تسمح الجهة بغير ذلك."],
-["طرق الباب وأرادت أسرتك شيئاً، ماذا تفعل؟",["أقوم وأفتح بسرعة","أبقى مكاني وأتواصل مع المراقب عبر المحادثة"],1,"مغادرة المكان أو دخول شخص قد يُنهي الاختبار."],
-["متى تفتح نافذة الدخول عادةً؟",["قبل الموعد بـ 30 دقيقة","قبل الموعد بساعتين","عند الموعد تماماً"],0,"ادخل مبكراً؛ التأخر قد يُفقدك الموعد."],
-["الاسم في الهوية مختلف قليلاً عن حساب التسجيل:",["لا مشكلة","أصحّحه مع الجهة قبل الموعد بوقت كافٍ"],1,"عدم التطابق قد يمنعك من البدء ويُفقدك الرسوم."],
-["هل يمكن ترك شاشة ثانية متصلة لكن مطفأة؟",["نعم","لا، يجب فصلها"],1,"شاشة واحدة فقط مسموح بها."],
-["خرج وجهك من إطار الكاميرا لدقيقة لالتقاط قلم سقط:",["مسموح","مخالفة؛ ابقَ في الإطار واطلب من المراقب"],1,"البقاء في الإطار شرط أساسي."],
-["كوب ماء شفاف بدون ملصقات على المكتب:",["مسموح غالباً حسب سياسة الجهة","ممنوع دائماً"],0,"تحقق دائماً من سياسة جهة الاختبار."]];
+/* step 8 */
+const Q=[["Can you read questions aloud to help you focus?",["Yes, if I'm alone","No — talking and lip movement are not allowed"],1,"Any speaking or mumbling can be flagged."],
+["Where do you take notes during the exam?",["A sheet of paper","The built-in whiteboard","On my hand"],1,"Use the on-screen whiteboard unless your sponsor allows otherwise."],
+["Someone knocks on the door. What do you do?",["Get up and answer quickly","Stay seated and message the proctor"],1,"Leaving or letting someone in can end the exam."],
+["When does check-in usually open?",["30 minutes before the appointment","2 hours before","Exactly at start time"],0,"Start early to avoid losing your slot."],
+["Your ID name differs slightly from your registration:",["No problem","Fix it with the sponsor well before exam day"],1,"Mismatch can block you and forfeit the fee."],
+["Can a second monitor stay connected if it's turned off?",["Yes","No — it must be disconnected"],1,"Only one monitor is allowed."],
+["You leave the frame for a minute to pick up a pen:",["Allowed","Violation — stay in frame and ask the proctor"],1,"Staying in frame is mandatory."],
+["A clear glass of water with no label on the desk:",["Usually allowed, per sponsor policy","Never allowed"],0,"Always confirm your sponsor's policy."]];
 $("quiz").innerHTML=Q.map((q,i)=>`<div class="q"><p>${i+1}. ${q[0]}</p>${q[1].map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join("")}<div class="fb" id="fb${i}"></div></div>`).join("");
-$("qzChk").onclick=()=>{let s=0;Q.forEach((q,i)=>{const sel=document.querySelector(`input[name=q${i}]:checked`);document.querySelectorAll(`input[name=q${i}]`).forEach(r=>r.parentNode.className="");
- if(sel){const ok=+sel.value===q[2];sel.parentNode.className=ok?"r-ok":"r-bad";if(ok)s++}document.querySelectorAll(`input[name=q${i}]`)[q[2]].parentNode.className="r-ok";$("fb"+i).textContent="💬 "+q[3]});
- R.quiz=s;const m=$("qzMsg");if(s>=6){m.className="msg ok";m.textContent=`✓ نتيجتك ${s}/8 — جاهز!`}else{m.className="msg bad";m.textContent=`نتيجتك ${s}/8 — تحتاج 6 على الأقل. راجع الشرح وأعد المحاولة.`}};
-// gating
-function check(n){const m=t=>{alert(t);return false};
- if(n===1&&[...document.querySelectorAll(".rq")].some(c=>!c.checked))return m("أكمل كل بنود قائمة المتطلبات.");
- if(n===2&&!R.sys)return m("شغّل فحص الجهاز (حقيقي أو محاكى) وانتظر النتيجة.");
- if(n===3){if($("codeIn").value.trim().toUpperCase()!==code){$("codeMsg").className="msg bad";$("codeMsg").textContent="رمز الدخول غير صحيح.";return false}if([...document.querySelectorAll(".pl")].some(c=>!c.checked))return m("يجب الموافقة على كل القواعد.")}
- if(n===4&&!R.hs)return m("التقط صورة الوجه أو اختر صورة افتراضية.");
- if(n===5&&!R.id)return m("أكمل صور الهوية.");
- if(n===6){if(Object.keys(wsd).length<4)return m("التقط صور المكان الأربع.");if(!R.deskDone)return m("أكمل تمرين اكتشاف المخالفات بنجاح.")}
- if(n===7&&!qdone)return m("أكمل مرحلة الطابور وطلبات المراقب.");
- if(n===8&&!(R.quiz>=6))return m("اجتز اختبار الجاهزية (6/8 على الأقل).");
- return true}
-function show(n){if(n!==4&&n!==5&&n!==2)stopCam();cur=n;document.querySelectorAll(".step").forEach((s,i)=>s.classList.toggle("on",i+1===n));
- $("bar").style.width=((n-1)/(N-1)*100)+"%";$("back").disabled=n===1;$("nav").style.display=n===N?"none":"flex";$("next").textContent=n===N-1?"بدء الاختبار ←":"التالي ←";
- $("dots").innerHTML=names.map((t,i)=>`<button class="${i+1===n?"on":done[i+1]?"done":""}" data-n="${i+1}">${i+1}. ${t}</button>`).join("");
- if(n===N)summary();scrollTo({top:0,behavior:"smooth"})}
-$("dots").onclick=e=>{const b=e.target.closest("button");if(!b)return;const t=+b.dataset.n;if(t<=cur||done[t-1])show(t)};
+$("qzChk").onclick=()=>{let s=0;Q.forEach((q,i)=>{const sel=document.querySelector(`input[name=q${i}]:checked`),all=document.querySelectorAll(`input[name=q${i}]`);all.forEach(r=>r.parentNode.className="");
+ if(sel){if(+sel.value===q[2])s++;else sel.parentNode.className="rbad"}all[q[2]].parentNode.className="rok";$("fb"+i).textContent="ℹ "+q[3]});
+ R.quiz=s;$("qzMsg").className="msg "+(s>=6?"ok":"bad");$("qzMsg").textContent=s>=6?`✓ Score ${s}/8 — you're ready.`:`Score ${s}/8 — you need at least 6. Review and try again.`};
+/* nav */
+function need(t){alert(t);return false}
+function check(n){
+ if(n===1&&[...document.querySelectorAll(".rq")].some(c=>!c.checked))return need("Please confirm every requirement.");
+ if(n===2&&!R.sys)return need("Run the system test (real or simulated) and wait for results.");
+ if(n===3){if($("codeIn").value.trim().toUpperCase()!==code){$("codeMsg").className="msg bad";$("codeMsg").textContent="Invalid access code.";return false}if([...document.querySelectorAll(".pl")].some(c=>!c.checked))return need("You must accept all exam rules.")}
+ if(n===4&&!R.hs)return need("Take your headshot or use a sample.");
+ if(n===5&&!R.id)return need("Complete your ID photos.");
+ if(n===6){if(Object.keys(wsd).length<4)return need("Take all four workspace photos.");if(!R.deskDone)return need("Complete the 'Find the violations' check.")}
+ if(n===7&&!qdone)return need("Complete the queue and proctor requests.");
+ if(n===8&&!(R.quiz>=6))return need("Pass the readiness check (6/8 or higher).");return true}
+function side(){$("sl").innerHTML=NAMES.map((t,i)=>`<li class="${i+1===cur?"on":done[i+1]?"dn":""}" data-n="${i+1}"><span class="n">${done[i+1]&&i+1!==cur?"✓":i+1}</span><span class="t">${t}</span></li>`).join("")}
+function show(n){cur=n;if(n===9)stopCam();document.querySelectorAll(".step").forEach((s,i)=>s.classList.toggle("on",i+1===n));
+ $("bar").style.width=((n-1)/(N-1)*100)+"%";$("back").disabled=n===1;$("foot").style.display=n===N?"none":"flex";$("next").innerHTML=n===N-1?"Start exam →":"Next →";side();syncCams();
+ if(n===9)summary();window.scrollTo({top:0,behavior:"smooth"})}
+$("sl").onclick=e=>{const li=e.target.closest("li");if(!li)return;const t=+li.dataset.n;if(t<=cur||done[t-1])show(t)};
 $("next").onclick=()=>{if(check(cur)){done[cur]=1;show(cur+1)}};$("back").onclick=()=>show(cur-1);
-function summary(){$("sum").innerHTML=[["فحص الجهاز",R.sys],["رمز الدخول","مُدخل ✓"],["صورة الوجه",R.hs],["الهوية",R.id],["صور المكان","4/4 ✓"],["اكتشاف المخالفات",R.desk],["المراقب",R.q],["اختبار الجاهزية",R.quiz+"/8"]].map(r=>`<tr><td>${r[0]}</td><td><b>${r[1]}</b></td></tr>`).join("");
- $("dt").textContent="التاريخ: "+new Date().toLocaleString("ar-SA")}
-$("restart").onclick=()=>location.reload();
+function summary(){$("sum").innerHTML=[["System test",R.sys],["Access code","Verified"],["Headshot",R.hs],["ID",R.id],["Workspace photos","4 / 4"],["Find the violations",R.desk],["Proctor check",R.q],["Readiness check",R.quiz+" / 8"]].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("");$("dt").textContent="Completed: "+new Date().toLocaleString("en-GB")}
 addEventListener("pagehide",stopCam);
 show(1);
 </script>
-<style>
-.pr{position:fixed;bottom:12px;inset-inline-start:12px;width:340px;max-width:calc(100vw - 24px);background:#10293b;color:#fff;border:2px solid #F5BD2D;border-radius:16px;box-shadow:0 14px 40px #0006;z-index:50;font-size:13.5px}
-.pr .ph2{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #ffffff22}
-.pr .av{width:46px;height:46px;border-radius:50%;background:linear-gradient(#3f86b3,#10293b);display:flex;align-items:center;justify-content:center;font-size:26px;flex:none;border:2px solid #F5BD2D}
-.pr .av.talk{animation:tk .5s ease infinite alternate}@keyframes tk{to{box-shadow:0 0 0 6px #F5BD2D55}}
-.pr .ph2 b{display:block}.pr .ph2 small{opacity:.7;font-size:11px}
-.pr .bd{padding:10px 12px}.pr .en{font-weight:700;direction:ltr;text-align:left;margin:0}.pr .ar{opacity:.85;margin:4px 0 0}
-.pr .pb{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 12px}
-.pr .pb button{font:inherit;font-size:12.5px;font-weight:800;border-radius:9px;padding:6px 10px;cursor:pointer;border:1px solid #ffffff44;background:#ffffff14;color:#fff}
-.pr .pb .dn{background:#F5BD2D;color:#10293b;border-color:#F5BD2D}
-.pr video{width:100%;border-radius:10px;margin-top:8px;display:none;transform:scaleX(-1)}
-.pr .tg{background:none;border:0;color:#fff;font-size:18px;cursor:pointer;margin-inline-start:auto}
-.pr.min .bd,.pr.min .pb{display:none}
-.pr .wn{color:#ff8a65}
-body{padding-bottom:260px}
-</style>
-<div class="pr" id="pr" aria-live="polite">
-<div class="ph2"><div class="av" id="pav">🧑‍💼</div><div><b>Virtual Proctor — المراقب الافتراضي</b><small>English voice · محاكاة تدريبية</small></div><button class="tg" id="ptg" title="تصغير">▾</button></div>
-<div class="bd"><p class="en" id="pen">Click “Start proctor” to hear your proctor.</p><p class="ar" id="par">اضغط "تشغيل المراقب" لسماع تعليمات المراقب بالإنجليزية.</p><video id="pvid" autoplay muted playsinline></video></div>
-<div class="pb"><button class="dn" id="pgo">▶ تشغيل المراقب</button><button id="pdone" style="display:none" class="dn">Done / تم</button><button id="prep">🔁 إعادة</button><button id="pmute">🔊 كتم</button></div>
-</div>
 <script>
 (function(){
 const S=window.speechSynthesis,SC={
 1:[["Hello, and welcome. I am your virtual proctor for today's training session. Before we begin, make sure you are alone in a quiet, private room.","مرحباً بك. أنا المراقب الافتراضي لجلسة التدريب اليوم. قبل البدء تأكد أنك وحدك في غرفة هادئة وخاصة."],["Please confirm you have a valid government I D, and that the name matches your registration. Then complete the checklist.","تأكد أن معك هوية حكومية سارية وأن الاسم مطابق للتسجيل، ثم أكمل قائمة المتطلبات."]],
-2:[["Please turn on your camera.","من فضلك شغّل الكاميرا.","cam"],["Now run the system test, and make sure every check passes.","الآن شغّل فحص الجهاز وتأكد من نجاح كل الفحوصات."]],
-3:[["Please enter your access code, and read and accept the exam rules.","أدخل رمز الدخول، ثم اقرأ قواعد الاختبار ووافق عليها."]],
-4:[["Please look directly at the camera, and keep your face inside the frame. Then take your headshot.","انظر مباشرة إلى الكاميرا وأبقِ وجهك داخل الإطار، ثم التقط صورة الوجه.","cam"]],
+2:[["Please turn on your camera.","من فضلك شغّل الكاميرا.","cam"],["Now run the system test, and make sure every check passes.","الآن شغّل فحص النظام وتأكد من نجاح كل الفحوصات."]],
+3:[["Please enter your access code, then read and accept the exam rules.","أدخل رمز الدخول، ثم اقرأ قواعد الاختبار ووافق عليها."]],
+4:[["Please look directly at the camera, and keep your face inside the oval. Then take your headshot.","انظر مباشرة إلى الكاميرا وأبقِ وجهك داخل الإطار البيضاوي، ثم التقط صورة الوجه.","cam"]],
 5:[["Hold your I D up to the camera.","ارفع هويتك أمام الكاميرا.","cam"],["Show me the front of your I D. Make sure all four corners are visible.","أرني الوجه الأمامي للهوية مع ظهور الزوايا الأربع."],["Now turn it over, and show me the back of your I D.","الآن اقلبها وأرني الوجه الخلفي للهوية."]],
-6:[["Pan your camera slowly, three hundred and sixty degrees, around the room.","حرّك الكاميرا ببطء 360 درجة حول الغرفة."],["Now show me your desk surface, and the area around your keyboard.","الآن أرني سطح المكتب والمنطقة حول لوحة المفاتيح."],["Please remove any items that are not allowed from your desk.","من فضلك أزل أي أغراض غير مسموح بها من المكتب."]],
-7:[["Show me both wrists, please.","أرني معصميك من فضلك."],["Show me your ears, please.","أرني أذنيك من فضلك."],["Place your phone out of arm's reach.","ضع هاتفك خارج متناول يدك."]],
+6:[["Pan your camera slowly, three hundred and sixty degrees, around the room.","حرّك الكاميرا ببطء 360 درجة حول الغرفة.","cam"],["Now show me your desk surface, and the area around your keyboard.","الآن أرني سطح المكتب والمنطقة حول لوحة المفاتيح."],["Please remove any items that are not allowed from your desk.","من فضلك أزل أي أغراض غير مسموح بها من المكتب."]],
+7:[["Show me both wrists, please.","أرني معصميك من فضلك.","cam"],["Show me your ears, please.","أرني أذنيك من فضلك."],["Place your phone out of arm's reach.","ضع هاتفك خارج متناول يدك."]],
 8:[["A quick reminder of the rules. No talking, and do not read the questions aloud.","تذكير سريع بالقواعد: ممنوع التحدث أو قراءة الأسئلة بصوت مرتفع."],["Stay in the camera frame at all times, and do not leave your seat without permission.","ابقَ داخل إطار الكاميرا طوال الوقت ولا تغادر مقعدك بدون إذن."]],
 9:[["Thank you. Everything looks good. Your exam will now begin. Good luck.","شكراً لك، كل شيء سليم. سيبدأ اختبارك الآن. بالتوفيق."]]};
 const W=["Please keep your face in the camera frame.","من فضلك أبقِ وجهك داخل إطار الكاميرا."];
 let on=false,mute=false,q=SC[1],qi=0,last=null,step=1,wT=null;
-const $=id=>document.getElementById(id);
-function voice(){const v=S?S.getVoices():[];return v.find(x=>x.lang==="en-US"&&/Google|Samantha|Microsoft/.test(x.name))||v.find(x=>x.lang==="en-US")||v.find(x=>/^en/.test(x.lang))}
-function say(l,warn){last=l;$("pen").textContent=l[0];$("par").textContent=l[1];$("pen").className="en"+(warn?" wn":"");
+function voice(){const v=S?S.getVoices():[];return v.find(x=>x.lang==="en-US"&&/Google|Samantha|Microsoft|Aria|Jenny/.test(x.name))||v.find(x=>x.lang==="en-US")||v.find(x=>/^en/.test(x.lang))}
+function say(l,warn){last=l;$("pen").textContent=l[0].replace(/I D/g,"ID");$("par").textContent=l[1];$("pen").className="en"+(warn?" w":"");
  if(!S||mute||!on)return;S.cancel();const u=new SpeechSynthesisUtterance(l[0]);u.lang="en-US";const v=voice();if(v)u.voice=v;u.rate=.95;
  u.onstart=()=>$("pav").classList.add("talk");u.onend=u.onerror=()=>$("pav").classList.remove("talk");S.speak(u)}
-async function cam(){try{if(typeof getCam==="function"){const s=await getCam();const v=$("pvid");v.srcObject=s;v.style.display="block";v.play().catch(()=>{})}}catch(e){say(["I cannot access your camera. You may continue in simulated mode.","تعذّر الوصول للكاميرا. يمكنك المتابعة بوضع المحاكاة."])}}
-function play(){if(qi<q.length){const l=q[qi];say(l);if(l[2]==="cam")cam();$("pdone").style.display="";}else{$("pdone").style.display="none";if(step<9)setTimeout(()=>{if(qi>=q.length&&on)$("par").textContent+=" ✓ أكمل الخطوة ثم اضغط التالي."},50)}}
-function load(n){step=n;q=SC[n]||[];qi=0;if(on)play()}
+async function cam(){if(stream&&stream.active)return;try{await getCam()}catch(e){say(["I cannot access your camera. You may continue in simulated mode.","تعذّر الوصول للكاميرا. يمكنك المتابعة بوضع المحاكاة."])}}
+function play(){if(qi<q.length){const l=q[qi];say(l);if(l[2]==="cam")cam();$("pdone").style.display=""}else{$("pdone").style.display="none";if(step<9)$("par").textContent+=" ✓ أكمل الخطوة ثم اضغط Next."}}
 $("pgo").onclick=()=>{on=true;$("pgo").style.display="none";if(S)S.getVoices();play();sched()};
 $("pdone").onclick=()=>{qi++;play()};
-$("prep").onclick=()=>{if(last){const m=on;on=true;say(last);on=m||on}};
-$("pmute").onclick=()=>{mute=!mute;$("pmute").textContent=mute?"🔇 تشغيل الصوت":"🔊 كتم";if(mute&&S)S.cancel()};
-$("ptg").onclick=()=>{$("pr").classList.toggle("min");$("ptg").textContent=$("pr").classList.contains("min")?"▴":"▾"};
-function sched(){clearTimeout(wT);wT=setTimeout(()=>{if(on&&step>=4&&step<=8&&!(S&&S.speaking)){const p=last;say(W,true);setTimeout(()=>{if(p&&qi<q.length){last=p;$("pen").textContent=p[0];$("par").textContent=p[1];$("pen").className="en"}},6000)}sched()},45000+Math.random()*45000)}
-if(S)S.onvoiceschanged=()=>{};
-const orig=window.show;window.show=function(n){orig(n);load(n);const v=$("pvid");if(v.srcObject&&(!stream||!stream.active)){v.style.display="none";v.srcObject=null}};
+$("prep").onclick=()=>{if(last){on=true;$("pgo").style.display="none";say(last)}};
+$("pmute").onclick=()=>{mute=!mute;$("pmute").innerHTML=`<svg class="i"><use href="#i-${mute?"mute":"vol"}"/></svg>${mute?"Unmute":"Mute"}`;if(mute&&S)S.cancel()};
+$("pmin").onclick=()=>$("proc").classList.toggle("min");
+function sched(){clearTimeout(wT);wT=setTimeout(()=>{if(on&&step>=4&&step<=8&&!(S&&S.speaking)){const p=last;say(W,true);setTimeout(()=>{if(p&&last===W){last=p;$("pen").textContent=p[0].replace(/I D/g,"ID");$("par").textContent=p[1];$("pen").className="en"}},6000)}sched()},45000+Math.random()*45000)}
+const orig=show;show=function(n){orig(n);step=n;q=SC[n]||[];qi=0;if(on)play()};
 addEventListener("pagehide",()=>S&&S.cancel());
 })();
 </script>
