@@ -15,7 +15,9 @@ const ABAD_LABS = [
 function abad_data_dir(): string {
   static $dir = null;
   if ($dir !== null) return $dir;
-  $cands = [dirname(__DIR__, 2) . '/private_html/abad-data', rtrim(sys_get_temp_dir(), '/') . '/abad-data'];
+  $__pos = strpos(__DIR__, '/public_html');
+  $__root = $__pos !== false ? substr(__DIR__, 0, $__pos) : dirname(__DIR__, 2);
+  $cands = [$__root . '/private_html/abad-data', rtrim(sys_get_temp_dir(), '/') . '/abad-data'];
   foreach ($cands as $d) {
     if (!is_dir($d)) @mkdir($d, 0700, true);
     if (is_dir($d) && is_writable($d)) {
