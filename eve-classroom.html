@@ -9,80 +9,168 @@
 <link rel="manifest" href="manifest.webmanifest">
 <style>
 @font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+:root{--navy:#10293b;--blue:#3f86b3;--gold:#F5BD2D;--ok:#3ecf8e;--bad:#ff5d6c}
 *{box-sizing:border-box}html,body{margin:0}
-body{font-family:Cairo,sans-serif;color:#fff;min-height:100vh;background:radial-gradient(circle at 15% 10%,#3f86b344 0,transparent 45%),radial-gradient(circle at 85% 95%,#F5BD2D1c 0,transparent 40%),linear-gradient(135deg,#0a1c29,#10293b 55%,#16405e)}
-header{display:flex;align-items:center;gap:12px;padding:12px 18px;flex-wrap:wrap;max-width:1100px;margin:0 auto}
+body{font-family:Cairo,sans-serif;color:#fff;min-height:100vh;background:radial-gradient(circle at 15% 8%,#3f86b340 0,transparent 45%),radial-gradient(circle at 85% 95%,#F5BD2D18 0,transparent 40%),linear-gradient(135deg,#071622,#10293b 55%,#16405e)}
+header{display:flex;align-items:center;gap:12px;padding:12px 18px;flex-wrap:wrap;max-width:1140px;margin:0 auto}
 header img{height:42px;background:#fff;border-radius:9px;padding:3px 7px}header .t{flex:1;min-width:170px}header b{display:block;font-size:17px}header small{opacity:.7;font-size:12px}
 .hb{font:inherit;font-weight:700;font-size:13px;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:9px;padding:6px 12px;cursor:pointer;text-decoration:none}
-main{max-width:1100px;margin:0 auto;padding:0 18px 40px}
-.hero{text-align:center;padding:4px 0}.hero small{color:#F5BD2D;font-weight:700}.hero h1{margin:2px 0;font-size:clamp(1.4rem,3.4vw,2.1rem);font-weight:800}.hero p{margin:0 auto;opacity:.85;max-width:720px;font-size:14px;line-height:1.8}
-.note{display:flex;gap:8px;align-items:flex-start;max-width:720px;margin:12px auto 0;padding:9px 14px;border-radius:12px;background:#F5BD2D1f;border:1px solid #F5BD2D77;font-size:13px;line-height:1.7}
-/* classroom */
-.room{position:relative;margin:20px auto 0;padding:22px 18px 26px;border-radius:22px;background:linear-gradient(180deg,#ffffff12,#ffffff05);border:1px solid #ffffff26;box-shadow:0 14px 30px #0005;overflow:hidden}
-.room::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#3f86b3,#F5BD2D)}
-.front{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:26px}
-.board{width:min(520px,92%);aspect-ratio:16/4.2;border-radius:10px;background:linear-gradient(160deg,#16405e,#0a1c29);border:5px solid #c9d3db;box-shadow:0 8px 20px #0006,inset 0 0 24px #3f86b355;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:800;font-size:clamp(13px,2.4vw,17px);color:#cfe6f5}
-.board i{font-style:normal;color:#F5BD2D}
-.teacher{display:flex;align-items:center;gap:8px;padding:6px 18px;border-radius:10px;background:#8a5a2b;border-bottom:5px solid #5e3c1c;font-size:12.5px;font-weight:700;color:#fff3df;box-shadow:0 6px 14px #0005}
-.aisle{font-size:11.5px;opacity:.55;text-align:center;margin:-12px 0 14px;letter-spacing:.5px}
-.seats{display:grid;grid-template-columns:repeat(4,1fr);gap:26px 20px}
-.seat{display:flex;flex-direction:column;align-items:center}
-.desk{position:relative;width:100%;max-width:190px;padding:12px 12px 10px;border-radius:10px 10px 6px 6px;background:linear-gradient(180deg,#a8743f,#8a5a2b);border-bottom:6px solid #5e3c1c;box-shadow:0 8px 14px #0005;display:flex;flex-direction:column;align-items:center}
+main{max-width:1140px;margin:0 auto;padding:0 18px 40px}
+.hero{text-align:center}.hero small{color:var(--gold);font-weight:700}.hero h1{margin:2px 0;font-size:clamp(1.4rem,3.4vw,2.1rem);font-weight:800}.hero p{margin:0 auto;opacity:.85;max-width:720px;font-size:14px;line-height:1.8}
+/* steps */
+.steps{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px auto 0;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:flex;align-items:center;gap:8px;padding:7px 14px 7px 12px;border-radius:999px;background:#ffffff10;border:1px solid #ffffff22;font-size:13px;font-weight:700}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--gold);color:var(--navy);font-weight:800}
+.steps .ar{opacity:.5;align-self:center}
+/* room */
+.room{position:relative;margin:18px auto 0;padding:20px 18px 26px;border-radius:24px;background:linear-gradient(180deg,#ffffff10,#ffffff04);border:1px solid #ffffff22;box-shadow:0 18px 40px #0006;overflow:hidden}
+.room::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--blue),var(--gold))}
+.front{display:flex;flex-direction:column;align-items:center;margin-bottom:22px}
+/* instructor screen */
+.tv{position:relative;width:min(900px,100%);aspect-ratio:16/7.2;border-radius:16px;border:8px solid #1b2730;outline:2px solid #ffffff22;background:radial-gradient(ellipse at 50% 120%,#3f86b355,transparent 60%),radial-gradient(circle at 80% 10%,#2b6f9a33,transparent 40%),linear-gradient(180deg,#06121c,#0b2236);box-shadow:0 18px 40px #000a,0 0 60px #3f86b333;overflow:hidden}
+.tv::before{content:"";position:absolute;inset:0;background:linear-gradient(#ffffff06 1px,transparent 1px) 0 0/100% 4px;pointer-events:none;z-index:3}
+.tv::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,#ffffff0d 50%,transparent 60%);pointer-events:none;z-index:3}
+.grid{position:absolute;inset:auto -20% -10% -20%;height:55%;background:linear-gradient(#3f86b333 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,#3f86b333 1px,transparent 1px) 0 0/40px 40px;transform:perspective(300px) rotateX(60deg);transform-origin:bottom;mask-image:linear-gradient(transparent,#000);-webkit-mask-image:linear-gradient(transparent,#000);animation:gr 6s linear infinite}
+@keyframes gr{to{background-position:0 40px,0 0}}
+.tvt{position:absolute;top:3%;inset-inline:0;text-align:center;z-index:2}
+.tvt b{display:inline-block;font-size:clamp(18px,4.2vw,40px);font-weight:800;background:linear-gradient(90deg,#fff,#cfe6f5 40%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 24px #3f86b366}
+.tvt small{display:block;font-size:clamp(9px,1.4vw,13px);color:#9cc7e3;letter-spacing:.5px}
+svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.st{position:absolute;z-index:2;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;width:15%}
+.card{width:100%;max-width:120px;padding:6% 4% 5%;border-radius:12px;background:linear-gradient(160deg,#1d4f74cc,#0b2236e6);border:1px solid #6fb6e266;box-shadow:0 0 0 #3f86b300;text-align:center;opacity:.55;transform:translateY(4px);transition:.5s}
+.card img,.card svg{display:block;height:clamp(14px,2.6vw,30px);max-width:85%;margin:0 auto 4%;filter:brightness(0) invert(1)}
+.card b{display:block;font-size:clamp(9px,1.5vw,15px);line-height:1.2}.card small{display:block;font-size:clamp(7px,1vw,10px);opacity:.75}
+.ped{width:46%;aspect-ratio:3/1;margin-top:8%;border-radius:50%;background:radial-gradient(ellipse,#bfe6ff,#3f86b3 45%,#0b2236 72%);box-shadow:0 0 14px #3f86b3;opacity:.6;transition:.5s}
+.num{margin-top:4%;display:grid;place-items:center;width:clamp(14px,2.4vw,26px);aspect-ratio:1;border-radius:50%;border:2px solid #9cc7e3;font-size:clamp(8px,1.3vw,13px);font-weight:800;background:#0b2236;transition:.5s}
+.st.on .card{opacity:1;transform:none;border-color:var(--gold);box-shadow:0 0 22px #3f86b3aa,0 0 0 1px #F5BD2D55}
+.st.on .ped{opacity:1;box-shadow:0 0 28px #8fd3ff,0 0 60px #3f86b3}
+.st.on .num{border-color:var(--gold);color:var(--gold);box-shadow:0 0 12px #F5BD2D88}
+.rocket{position:absolute;z-index:2;width:12%;transform:translate(-50%,-78%) rotate(-38deg);filter:drop-shadow(0 0 16px #F5BD2D88)}
+.rocket .fl{transform-origin:50% 0;animation:fl .18s ease-in-out infinite alternate}
+@keyframes fl{from{transform:scaleY(.85) scaleX(.95);opacity:.85}to{transform:scaleY(1.15) scaleX(1.05);opacity:1}}
+.rocket{animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{margin-top:-1.2%}}
+.rlab{position:absolute;z-index:2;transform:translate(-50%,0);font-size:clamp(13px,2.4vw,24px);font-weight:800;letter-spacing:.5px;color:#fff;padding:.1em .6em;border-radius:999px;background:linear-gradient(90deg,#F5BD2D33,#3f86b344);border:1px solid #F5BD2D;white-space:nowrap;text-shadow:0 0 8px #F5BD2D,0 0 18px #F5BD2D;box-shadow:0 0 18px #F5BD2D88,inset 0 0 10px #F5BD2D44;animation:gw 2s ease-in-out infinite}@keyframes gw{50%{box-shadow:0 0 28px #F5BD2Dcc,inset 0 0 14px #F5BD2D66}}
+.flow{stroke-dasharray:60 940;animation:fw 4s linear infinite}
+@keyframes fw{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+.desk-t{margin-top:-4px;display:flex;align-items:center;gap:8px;padding:6px 22px;border-radius:0 0 12px 12px;background:#8a5a2b;border-bottom:5px solid #5e3c1c;font-size:12.5px;font-weight:700;color:#fff3df;box-shadow:0 6px 14px #0005}
+/* seats */
+.seats{display:grid;grid-template-columns:repeat(4,1fr);gap:28px 20px}
+.seat{display:flex;flex-direction:column;align-items:center;opacity:0;transform:translateY(18px);animation:in .6s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*60ms + .2s)}
+@keyframes in{to{opacity:1;transform:none}}
+.desk{position:relative;width:100%;max-width:200px;padding:12px 12px 10px;border-radius:10px 10px 6px 6px;background:linear-gradient(180deg,#b07a43,#8a5a2b);border-bottom:6px solid #5e3c1c;box-shadow:0 8px 14px #0005;display:flex;flex-direction:column;align-items:center;transition:transform .3s,box-shadow .3s}
 .desk::before,.desk::after{content:"";position:absolute;bottom:-20px;width:6px;height:14px;background:#5e3c1c;border-radius:0 0 3px 3px}
 .desk::before{inset-inline-start:12px}.desk::after{inset-inline-end:12px}
-/* laptop: the screen is the clickable element */
-.scr{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:82%;aspect-ratio:16/10;border-radius:8px 8px 2px 2px;border:5px solid #1b2730;background:linear-gradient(160deg,#16405e,#0a1c29);color:#fff;text-decoration:none;box-shadow:0 0 0 #3f86b300;transition:transform .25s,box-shadow .25s,background .25s,border-color .25s;transform-origin:bottom center}
-.scr b{font-size:clamp(13px,1.9vw,16px);font-weight:800;color:#F5BD2D;line-height:1.3}
-.scr small{font-size:11px;opacity:.75;direction:ltr}
-.scr .go{position:absolute;inset:auto 0 4px;text-align:center;font-size:10.5px;font-weight:800;color:#10293b;opacity:0;transform:translateY(4px);transition:.25s}
-.scr .go span{background:#F5BD2D;border-radius:6px;padding:0 7px}
-.scr::after{content:"";position:absolute;top:5px;inset-inline-end:6px;width:7px;height:7px;border-radius:50%;background:#3ecf8e;box-shadow:0 0 6px #3ecf8e}
-.base{width:100%;height:7px;margin-top:0;border-radius:0 0 6px 6px;background:linear-gradient(180deg,#c9d3db,#8b98a3);box-shadow:0 3px 4px #0004}
-.base::after{content:"";display:block;width:22%;height:3px;margin:0 auto;background:#6e7a84;border-radius:0 0 4px 4px}
+.seat:hover .desk{transform:translateY(-4px);box-shadow:0 16px 24px #0007}
 .lap{width:100%;display:flex;flex-direction:column;align-items:center}
-.lap .base{width:96%}
-.scr:hover,.scr:focus-visible{transform:translateY(-5px) scale(1.06);border-color:#F5BD2D;background:linear-gradient(160deg,#3f86b3,#16405e);box-shadow:0 10px 24px #3f86b388,0 0 0 3px #F5BD2D55}
+.scr{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:84%;aspect-ratio:16/10;border-radius:8px 8px 2px 2px;border:5px solid #1b2730;background:linear-gradient(160deg,#16405e,#0a1c29);color:#fff;text-decoration:none;transition:transform .25s,box-shadow .25s,background .25s,border-color .25s;transform-origin:bottom center;overflow:hidden}
+.scr::before{content:"";position:absolute;inset:0;background:radial-gradient(circle,#8fd3ff66,transparent 70%);opacity:0;animation:boot 1.2s ease-out forwards;animation-delay:calc(var(--i)*60ms + .5s)}
+@keyframes boot{30%{opacity:1}100%{opacity:0}}
+.scr b{font-size:clamp(13px,1.9vw,16px);font-weight:800;color:var(--gold);line-height:1.3}
+.scr small{font-size:11px;opacity:.75;direction:ltr}
+.scr .go{position:absolute;inset:auto 0 4px;text-align:center;font-size:10.5px;font-weight:800;color:var(--navy);opacity:0;transform:translateY(4px);transition:.25s}
+.scr .go span{background:var(--gold);border-radius:6px;padding:0 7px}
+.dot{position:absolute;top:5px;inset-inline-end:6px;width:8px;height:8px;border-radius:50%;background:#9aa7b1;box-shadow:0 0 0 2px #0004}
+.dot.ok{background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pl 2s infinite}.dot.bad{background:var(--bad);box-shadow:0 0 8px var(--bad)}
+@keyframes pl{50%{box-shadow:0 0 2px var(--ok)}}
+.base{width:96%;height:7px;border-radius:0 0 6px 6px;background:linear-gradient(180deg,#c9d3db,#8b98a3);box-shadow:0 3px 4px #0004}
+.base::after{content:"";display:block;width:22%;height:3px;margin:0 auto;background:#6e7a84;border-radius:0 0 4px 4px}
+.scr:hover,.scr:focus-visible{transform:translateY(-5px) scale(1.06);border-color:var(--gold);background:linear-gradient(160deg,#3f86b3,#16405e);box-shadow:0 10px 24px #3f86b388,0 0 0 3px #F5BD2D55}
 .scr:hover .go,.scr:focus-visible .go{opacity:1;transform:none}
-.seat:hover .chair .bk,.seat:focus-within .chair .bk{background:#3f86b3}
-/* chair */
 .chair{margin-top:24px;display:flex;flex-direction:column;align-items:center}
-.chair .st{width:62px;height:16px;border-radius:8px;background:#2a5a7d;box-shadow:0 4px 8px #0005}
-.chair .bk{width:70px;height:26px;margin-top:4px;border-radius:6px 6px 14px 14px;background:#245070;border-top:4px solid #F5BD2D;transition:background .25s}
-.legend{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:22px;font-size:12px;opacity:.75}
-.legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#3ecf8e;margin-inline-end:6px}
+.chair .s{width:62px;height:16px;border-radius:8px;background:#2a5a7d;box-shadow:0 4px 8px #0005}
+.chair .bk{width:70px;height:26px;margin-top:4px;border-radius:6px 6px 14px 14px;background:#245070;border-top:4px solid var(--gold);transition:background .25s}
+.seat:hover .chair .bk,.seat:focus-within .chair .bk{background:var(--blue)}
+.mine .desk{box-shadow:0 0 0 3px var(--gold),0 0 26px #F5BD2D66}
+.mine .chair .bk{background:var(--gold);border-top-color:#fff}
+.tag{margin-top:6px;font-size:11px;font-weight:800;color:var(--navy);background:var(--gold);border-radius:6px;padding:0 8px;visibility:hidden}
+.mine .tag{visibility:visible}
+.pick{margin-top:6px;font:inherit;font-size:11px;font-weight:700;color:#cfe6f5;background:none;border:1px dashed #ffffff44;border-radius:6px;padding:0 8px;cursor:pointer}
+.mine .pick{display:none}
+.legend{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:22px;font-size:12px;opacity:.8}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-inline-end:6px;vertical-align:middle}
 @media (max-width:860px){.seats{grid-template-columns:repeat(3,1fr)}}
-@media (max-width:560px){.room{padding:18px 10px 22px}.seats{grid-template-columns:repeat(2,1fr);gap:22px 12px}.desk{padding:10px 8px 8px}.scr{width:90%;border-width:4px}.chair .st{width:50px}.chair .bk{width:56px;height:22px}}
-@media (prefers-reduced-motion:reduce){.scr,.scr .go,.chair .bk{transition:none}}
+@media (max-width:560px){.room{padding:14px 8px 22px}.tv{border-width:5px;aspect-ratio:5/4}.tvt{top:2%}.st{width:18.5%}.card{border-radius:8px}.rocket{width:17%}.rlab{font-size:12px}.seats{grid-template-columns:repeat(2,1fr);gap:22px 12px}.desk{padding:10px 8px 8px}.scr{width:90%;border-width:4px}.chair .s{width:50px}.chair .bk{width:56px;height:22px}.steps li{font-size:12px}.steps .ar{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.seat{opacity:1;transform:none}.st .card,.st .ped{opacity:1}}
 </style>
-<link rel="stylesheet" href="css/home-btn.css?v=abad-202610182350"><script src="js/home-btn.js?v=abad-202610182350" defer></script>
+<link rel="stylesheet" href="css/home-btn.css?v=abad-202610190050"><script src="js/home-btn.js?v=abad-202610190050" defer></script>
 </head>
 <body>
-<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="practical-lab.html?v=abad-202610182350" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="network-camp.html?v=abad-202610190050" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
 <main>
 <section class="hero"><small data-t="kick"></small><h1 data-t="title"></h1><p data-t="lead"></p>
-<div class="note" role="note"><span>ℹ️</span><span data-t="note"></span></div></section>
-<section class="room" aria-labelledby="rt">
- <div class="front"><div class="board" id="rt"><i>🖥️</i><span data-t="board"></span></div><div class="teacher">👨‍🏫 <span data-t="teacher"></span></div></div>
+<ol class="steps"><li data-t="s1"></li><span class="ar">←</span><li data-t="s2"></li><span class="ar">←</span><li data-t="s3"></li></ol></section>
+<section class="room" aria-labelledby="tvt">
+ <div class="front">
+  <div class="tv" id="tv" role="img" aria-labelledby="tvt">
+   <div class="grid"></div>
+   <div class="tvt"><b id="tvt" data-t="camp"></b><small data-t="campsub"></small></div>
+   <svg class="path" viewBox="0 0 1000 450" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="pg" x1="1" x2="0"><stop offset="0" stop-color="#3f86b3"/><stop offset=".7" stop-color="#8fd3ff"/><stop offset="1" stop-color="#F5BD2D"/></linearGradient>
+    <filter id="gl" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="6"/></filter></defs>
+    <path id="rd" d="M985 405 C 870 405, 820 385, 700 380 S 540 370, 460 335 S 320 290, 240 270 S 140 245, 95 215" fill="none" stroke="#3f86b3" stroke-width="26" stroke-opacity=".18" stroke-linecap="round"/>
+    <use href="#rd" stroke="url(#pg)" stroke-width="6" filter="url(#gl)"/>
+    <use href="#rd" stroke="url(#pg)" stroke-width="3"/>
+    <use href="#rd" class="flow" stroke="#fff" stroke-width="5" pathLength="1000" filter="url(#gl)"/>
+    <use href="#rd" class="flow" stroke="#fff" stroke-width="2.5" pathLength="1000"/>
+   </svg>
+   <div id="stations"></div>
+   <svg class="rocket" id="rocket" viewBox="0 0 60 120" aria-hidden="true">
+    <defs><radialGradient id="fg" cx=".5" cy="0" r="1"><stop offset="0" stop-color="#fff"/><stop offset=".3" stop-color="#F5BD2D"/><stop offset="1" stop-color="#ff5a1f" stop-opacity="0"/></radialGradient></defs>
+    <g class="fl"><path d="M20 86 Q30 125 40 86Z" fill="url(#fg)" transform="translate(0 0)"/></g>
+    <path d="M30 4 C48 22 48 56 42 84 H18 C12 56 12 22 30 4Z" fill="#e8f1f7" stroke="#9cc7e3"/>
+    <path d="M30 4 C38 12 42 22 43 30 H17 C18 22 22 12 30 4Z" fill="#F5BD2D"/>
+    <circle cx="30" cy="44" r="8" fill="#10293b" stroke="#3f86b3" stroke-width="3"/>
+    <path d="M18 64 L6 88 L18 84Z M42 64 L54 88 L42 84Z" fill="#3f86b3"/>
+   </svg>
+   <div class="rlab" id="rlab" dir="ltr" data-t="goal"></div>
+  </div>
+  <div class="desk-t">👨‍🏫 <span data-t="teacher"></span></div>
+ </div>
  <div class="seats" id="seats"></div>
- <div class="legend"><span data-t="legend"></span></div>
+ <div class="legend"><span><i style="background:var(--ok)"></i><span data-t="lgOk"></span></span><span><i style="background:var(--bad)"></i><span data-t="lgBad"></span></span><span><i style="background:var(--gold)"></i><span data-t="lgMine"></span></span></div>
 </section>
 </main>
 <script>
 var L=(function(){try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";
-var S={inst:["معهد شبكة آباد للتدريب","ABAD Network Training Institute"],sec:["منصة المحاكاة العملية","Practical Simulation Platform"],back:["→ المختبرات","← Labs"],
-kick:["🧑‍💻 أجهزة المعمل","🧑‍💻 Lab machines"],title:["المعمل","The Lab"],lead:["اختر مقعدك واضغط على شاشة الجهاز لفتح جهاز المعمل الخاص بك في نافذة جديدة.","Pick your seat and click the laptop screen to open your lab machine in a new tab."],
-note:["يعمل كل مقعد عبر رابط آمن (HTTPS) من أي مكان — استخدم بيانات الدخول التي يزوّدك بها المدرّب.","Each seat works over a secure HTTPS link from anywhere — use the login details provided by your instructor."],
-board:["شاشة المدرب","Instructor screen"],teacher:["مكتب المدرب","Instructor desk"],seat:["مقعد","Seat"],open:["افتح ←","Open →"],legend:["12 جهازًا · اضغط على الشاشة للفتح","12 machines · click a screen to open"]};
-var box=document.getElementById("seats");
+var S={inst:["معهد شبكة آباد للتدريب","ABAD Network Training Institute"],sec:["منصة المحاكاة العملية","Practical Simulation Platform"],back:["→ معسكر الشبكات","← Networking Camp"],
+kick:["🧑‍💻 معمل EVE-NG","🧑‍💻 EVE-NG Lab"],title:["المعمل","The Lab"],lead:["اختر مقعدك واضغط على شاشة اللابتوب لفتح جهاز المعمل الخاص بك في نافذة جديدة — يعمل عبر رابط آمن (HTTPS) من أي مكان.","Pick your seat and click the laptop screen to open your lab machine in a new tab — secure HTTPS link, works from anywhere."],
+s1:["اختر مقعدك","Pick your seat"],s2:["افتح اللابتوب","Open the laptop"],s3:["سجّل بالبيانات من المدرّب","Log in with your instructor's details"],
+camp:["معسكر الشبكات","Networking Bootcamp"],campsub:["مسار واضح من الأساسيات إلى الاحتراف","A clear path from fundamentals to expert"],goal:["Project","Project"],
+teacher:["مكتب المدرب","Instructor desk"],seat:["مقعد","Seat"],open:["افتح ←","Open →"],mine:["مقعدي","My seat"],pick:["هذا مقعدي","This is my seat"],
+lgOk:["متصل","Online"],lgBad:["غير متاح","Offline"],lgMine:["مقعدي","My seat"],chk:["جارٍ الفحص…","Checking…"]};
+var MS='<svg viewBox="0 0 24 24"><rect width="11" height="11"/><rect x="13" width="11" height="11"/><rect y="13" width="11" height="11"/><rect x="13" y="13" width="11" height="11"/></svg>';
+var ST=[["Network+","CompTIA",'<img src="assets/logos/comptia.svg" alt="">'],["CCNA","Cisco",'<img src="assets/logos/cisco.svg" alt="">'],["CCNP","Cisco",'<img src="assets/logos/cisco.svg" alt="">'],["MCSA","Microsoft",MS],["NSE4","Fortinet",'<img src="assets/logos/fortinet.svg" alt="">']];
+var RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* stations along path */
+(function(){var p=document.getElementById("rd"),len=p.getTotalLength(),box=document.getElementById("stations"),els=[];
+ var at=[.14,.31,.48,.65,.82];
+ ST.forEach(function(s,i){var pt=p.getPointAtLength(len*at[i]),d=document.createElement("div");d.className="st";d.style.left=pt.x/10+"%";d.style.top=pt.y/4.5+"%";
+  d.innerHTML='<div class="card">'+s[2]+'<b dir="ltr">'+s[0]+'</b><small dir="ltr">'+s[1]+'</small></div><div class="ped"></div><div class="num">'+(i+1)+'</div>';
+  box.appendChild(d);els.push(d)});
+ /* stations sit so pedestal is on the path: shift down by num+ped height */
+ els.forEach(function(e){e.style.transform="translate(-50%,calc(-100% + 2.2em))"});
+ var e=p.getPointAtLength(len),r=document.getElementById("rocket"),rl=document.getElementById("rlab");r.style.left=e.x/10+"%";r.style.top=e.y/4.5+"%";rl.style.left=e.x/10+"%";rl.style.top=(e.y/4.5+9)+"%";
+ if(RM){els.forEach(function(e){e.classList.add("on")});return}
+ var k=0;setInterval(function(){if(k<els.length)els[k].classList.add("on");else if(k>els.length+2){els.forEach(function(e){e.classList.remove("on")});k=-1}k++},800)})();
+/* seats */
+var box=document.getElementById("seats"),MY=(function(){try{return +localStorage.getItem("abad-eve-seat")||0}catch(e){return 0}})();
 for(var n=1;n<=12;n++){var id="eve-"+(n<10?"0":"")+n,url="https://eve"+n+".abad-labs.com/";
- var d=document.createElement("div");d.className="seat";
- d.innerHTML='<div class="desk"><div class="lap"><a class="scr" target="_blank" rel="noopener" href="'+url+'" data-seat="'+n+'"><b><span data-t="seat"></span> '+n+'</b><small>'+id+'</small><span class="go"><span data-t="open"></span></span></a><div class="base"></div></div></div><div class="chair" aria-hidden="true"><div class="st"></div><div class="bk"></div></div>';
+ var d=document.createElement("div");d.className="seat"+(n==MY?" mine":"");d.style.setProperty("--i",n);d.dataset.n=n;
+ d.innerHTML='<div class="desk"><div class="lap"><a class="scr" target="_blank" rel="noopener" href="'+url+'" data-seat="'+n+'" data-lab="eve"><i class="dot" data-n="'+n+'"></i><b><span data-t="seat"></span> '+n+'</b><small>'+id+'</small><span class="go"><span data-t="open"></span></span></a><div class="base"></div></div></div><div class="chair" aria-hidden="true"><div class="s"></div><div class="bk"></div></div><span class="tag" data-t="mine"></span><button type="button" class="pick" data-t="pick"></button>';
  box.appendChild(d)}
-box.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.scr");if(a&&window.abadLabPing)window.abadLabPing("eve")});
+function setMine(n){MY=n;try{localStorage.setItem("abad-eve-seat",n)}catch(e){}document.querySelectorAll(".seat").forEach(function(s){s.classList.toggle("mine",+s.dataset.n==n)})}
+box.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.scr");if(a){setMine(+a.dataset.seat);if(window.abadLabPing)window.abadLabPing("eve");return}
+ var b=e.target.closest&&e.target.closest(".pick");if(b)setMine(+b.closest(".seat").dataset.n)});
+/* live status: EVE favicon loads only if the seat is reachable */
+function probe(n){var dot=document.querySelector('.dot[data-n="'+n+'"]'),im=new Image(),done=0,t=setTimeout(function(){fin(0)},8000);
+ function fin(ok){if(done)return;done=1;clearTimeout(t);dot.className="dot "+(ok?"ok":"bad");dot.title=S[ok?"lgOk":"lgBad"][L=="ar"?0:1]}
+ im.onload=function(){fin(1)};im.onerror=function(){fin(0)};im.src="https://eve"+n+".abad-labs.com/favicon.ico?t="+Date.now()}
+function probeAll(){for(var n=1;n<=12;n++)probe(n)}probeAll();setInterval(probeAll,60000);
 function paint(){var i=L=="ar"?0:1;document.documentElement.lang=L;document.documentElement.dir=L=="ar"?"rtl":"ltr";document.getElementById("lang").textContent=L=="ar"?"English":"العربية";document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=S[e.dataset.t][i]});
  document.querySelectorAll("a.scr").forEach(function(a){a.setAttribute("aria-label",S.seat[i]+" "+a.dataset.seat)});document.title=S.title[i]+" — "+S.inst[i]}
 document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{localStorage.setItem("abad-lang",L)}catch(e){}paint()};paint();
 </script>
-<script src="js/abad-labs.js?v=abad-202610182350" defer></script>
+<script src="js/abad-labs.js?v=abad-202610190050" defer></script>
 </body>
 </html>
