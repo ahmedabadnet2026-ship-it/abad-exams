@@ -54,10 +54,10 @@ main{max-width:1100px;margin:0 auto;padding:0 18px 40px}
 @media (max-width:560px){.room{padding:18px 10px 22px}.seats{grid-template-columns:repeat(2,1fr);gap:22px 12px}.desk{padding:10px 8px 8px}.scr{width:90%;border-width:4px}.chair .st{width:50px}.chair .bk{width:56px;height:22px}}
 @media (prefers-reduced-motion:reduce){.scr,.scr .go,.chair .bk{transition:none}}
 </style>
-<link rel="stylesheet" href="css/home-btn.css?v=abad-202610182200"><script src="js/home-btn.js?v=abad-202610182200" defer></script>
+<link rel="stylesheet" href="css/home-btn.css?v=abad-202610182350"><script src="js/home-btn.js?v=abad-202610182350" defer></script>
 </head>
 <body>
-<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="practical-lab.html?v=abad-202610182200" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="practical-lab.html?v=abad-202610182350" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
 <main>
 <section class="hero"><small data-t="kick"></small><h1 data-t="title"></h1><p data-t="lead"></p>
 <div class="note" role="note"><span>ℹ️</span><span data-t="note"></span></div></section>
@@ -71,10 +71,10 @@ main{max-width:1100px;margin:0 auto;padding:0 18px 40px}
 var L=(function(){try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";
 var S={inst:["معهد شبكة آباد للتدريب","ABAD Network Training Institute"],sec:["منصة المحاكاة العملية","Practical Simulation Platform"],back:["→ المختبرات","← Labs"],
 kick:["🧑‍💻 أجهزة المعمل","🧑‍💻 Lab machines"],title:["المعمل","The Lab"],lead:["اختر مقعدك واضغط على شاشة الجهاز لفتح جهاز المعمل الخاص بك في نافذة جديدة.","Pick your seat and click the laptop screen to open your lab machine in a new tab."],
-note:["تعمل أجهزة المعمل حاليًا من داخل شبكة المعهد فقط — الروابط الخارجية قريبًا.","Lab machines currently work from inside the institute network only — external links coming soon."],
+note:["يعمل كل مقعد عبر رابط آمن (HTTPS) من أي مكان — استخدم بيانات الدخول التي يزوّدك بها المدرّب.","Each seat works over a secure HTTPS link from anywhere — use the login details provided by your instructor."],
 board:["شاشة المدرب","Instructor screen"],teacher:["مكتب المدرب","Instructor desk"],seat:["مقعد","Seat"],open:["افتح ←","Open →"],legend:["12 جهازًا · اضغط على الشاشة للفتح","12 machines · click a screen to open"]};
 var box=document.getElementById("seats");
-for(var n=1;n<=12;n++){var id="eve-"+(n<10?"0":"")+n,url="http://192.168.200."+(200+n)+"/";
+for(var n=1;n<=12;n++){var id="eve-"+(n<10?"0":"")+n,url="https://eve"+n+".abad-labs.com/";
  var d=document.createElement("div");d.className="seat";
  d.innerHTML='<div class="desk"><div class="lap"><a class="scr" target="_blank" rel="noopener" href="'+url+'" data-seat="'+n+'"><b><span data-t="seat"></span> '+n+'</b><small>'+id+'</small><span class="go"><span data-t="open"></span></span></a><div class="base"></div></div></div><div class="chair" aria-hidden="true"><div class="st"></div><div class="bk"></div></div>';
  box.appendChild(d)}
@@ -83,6 +83,6 @@ function paint(){var i=L=="ar"?0:1;document.documentElement.lang=L;document.docu
  document.querySelectorAll("a.scr").forEach(function(a){a.setAttribute("aria-label",S.seat[i]+" "+a.dataset.seat)});document.title=S.title[i]+" — "+S.inst[i]}
 document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{localStorage.setItem("abad-lang",L)}catch(e){}paint()};paint();
 </script>
-<script src="js/abad-labs.js?v=abad-202610182200" defer></script>
+<script src="js/abad-labs.js?v=abad-202610182350" defer></script>
 </body>
 </html>
