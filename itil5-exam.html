@@ -410,7 +410,7 @@ body{font-family:"Cairo","Segoe UI",Tahoma,"Noto Sans Arabic",Arial,system-ui,sa
 @media (max-width:600px){.mode-chip{display:none}.cand small{display:none}}
 </style>
 <style>/* ABAD: mobile fix for top bar only */@media(max-width:760px){.topbar .in{flex-wrap:wrap;row-gap:6px}.topbar .tag:not(.abad-back){display:none}.topbar .abad-back{margin-inline-start:auto!important}}</style>
-<link rel="stylesheet" href="css/home-btn.css?r=202610162110"><script src="js/home-btn.js?r=202610162110" defer></script>
+<link rel="stylesheet" href="css/home-btn.css?r=2026101821"><script src="js/home-btn.js?r=2026101821" defer></script>
 <style>.lang-en .arr{display:inline-block;transform:scaleX(-1)}.lang-en #btn-prev .en::before{content:"\2190  "}</style>
 </head>
 <body>
@@ -738,6 +738,7 @@ function finish(){
   S.done=true;S.used=Math.min(Date.now(),S.end)-S.start;S.finishedAt=Date.now();
   store(LS,null);
   var sc=score(),h=load(HS)||{};if(!h[S.exam]||sc>h[S.exam].s)h[S.exam]={s:sc,t:Date.now()};store(HS,h);
+  try{(window.abadResult||function(o){(window.__abadRQ=window.__abadRQ||[]).push(o)})({exam_id:"itil5-"+(S.exam+1),score:sc,total:NQ,duration_sec:Math.round((S.used||0)/1000)})}catch(x){}
   renderResult();show('s-result');try{window.ABAD_AN&&ABAD_AN.itil&&ABAD_AN.itil(S,QS,PASS,NQ,MODES)}catch(e){}
 }
 /* ---------- result ---------- */

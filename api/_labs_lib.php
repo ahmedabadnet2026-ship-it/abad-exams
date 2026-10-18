@@ -53,7 +53,7 @@ function abad_labs_tx(?callable $fn = null): array {
 
 function abad_session(): void {
   if (session_status() === PHP_SESSION_ACTIVE) return;
-  session_name('abadadm');
+  session_name('wordpress_abadadm'); // name must contain "wordpress_" or Cloudways Varnish strips it on GET
   session_set_cookie_params(['lifetime' => 0, 'path' => '/', 'httponly' => true, 'samesite' => 'Strict',
     'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off']);
   session_start();

@@ -41,7 +41,7 @@ main{max-width:860px;margin:16px auto 48px;padding:0 18px}
 .bar>i{display:block;height:100%;background:linear-gradient(90deg,#3f86b3,#F5BD2D);border-radius:999px;width:0;transition:width .4s}
 @media(max-width:520px){.bar-row{grid-template-columns:1fr;gap:4px}}
 </style>
-<link rel="stylesheet" href="css/home-btn.css?r=202610162110"><script src="js/home-btn.js?r=202610162110" defer></script>
+<link rel="stylesheet" href="css/home-btn.css?r=2026101821"><script src="js/home-btn.js?r=2026101821" defer></script>
 </head>
 <body>
 <header>
@@ -135,6 +135,7 @@ function grade(){
  });
  var pct=Math.round((ok/Q.length)*100);
  var pass=pct>=70;
+ try{(window.abadResult||function(o){(window.__abadRQ=window.__abadRQ||[]).push(o)})({exam_id:"ejpt-trial",score:ok,total:Q.length,domains:by})}catch(x){}
  var res=document.getElementById("result");
  res.classList.add("show");
  document.getElementById("scoreline").innerHTML=ok+" / "+Q.length+' <span style="font-size:1rem;opacity:.85">('+pct+'٪)</span>';

@@ -13,6 +13,18 @@
     document.body.insertBefore(b,document.body.firstChild);
     function paint(){var en=lang()==="en";b.dir=en?"ltr":"rtl";b.lang=en?"en":"ar";a.textContent=en?"🏠 Home":"🏠 الرئيسية";a.title=en?"ABAD Digital Platform":"منصة آباد الرقمية";s.textContent=en?"ABAD Digital Platform":"منصة آباد الرقمية";
       if(t){t.innerHTML=en?'<b>ع</b><i>العربية</i>':'<b>EN</b><i>English</i>';t.setAttribute("aria-label",en?"التبديل إلى العربية":"Switch to English");t.lang=en?"ar":"en"}}
+    /* account link (only when the PHP backend answers; nothing is shown on GitHub Pages) */
+    var acc=null,who=null;function accPaint(){if(!acc)return;var en=lang()==="en";
+      if(who){var nm=(en?(who.full_name_en||who.full_name_ar):(who.full_name_ar||who.full_name_en))||who.email;acc.textContent="👤 "+nm.split(" ")[0];
+        acc.href=who.role==="admin"||who.role==="staff"?"admin/index.php":"my-courses.html";acc.title=en?"My account":"حسابي"}
+      else{acc.textContent=en?"👤 Sign in":"👤 دخول";acc.href="login.html?next="+encodeURIComponent(location.pathname.split("/").pop()+location.search);acc.title=en?"Sign in / Register":"تسجيل الدخول / إنشاء حساب"}}
+    function accMount(st){who=st&&st.user||null;if(!st){if(acc){acc.remove();acc=null}return}
+      if(!acc){acc=document.createElement("a");acc.className="abad-acc";b.insertBefore(acc,t||null)}accPaint()}
+    function apiReady(){if(window.ABAD_API)window.ABAD_API.me().then(accMount)}
+    document.addEventListener("abad-auth",function(e){accMount(e.detail&&e.detail.available?e.detail:null)});
+    if(!/(^|\.)github\.io$/.test(location.hostname)&&location.protocol!=="file:"){
+      if(window.ABAD_API)apiReady();else{var sc=document.createElement("script");sc.src="js/abad-api.js?r=2026101821";sc.async=true;sc.onload=apiReady;document.head.appendChild(sc)}}
+    var p0=paint;paint=function(){p0();accPaint()};
     paint();try{new MutationObserver(paint).observe(document.documentElement,{attributes:true,attributeFilter:["lang","dir"]})}catch(e){}
     addEventListener("storage",paint)}
   /* hide floating widgets while typing in a form field (mobile keyboards) */

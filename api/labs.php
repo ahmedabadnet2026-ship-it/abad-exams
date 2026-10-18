@@ -18,7 +18,7 @@ function pub(array $data, bool $admin): array {
 
 $m = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 if ($m === 'GET') {
-  $admin = isset($_COOKIE['abadadm']) && abad_is_admin();
+  $admin = isset($_COOKIE['wordpress_abadadm']) && abad_is_admin();
   out(pub(abad_labs_tx(), $admin));
 }
 if ($m !== 'POST') out(['error' => 'method'], 405);

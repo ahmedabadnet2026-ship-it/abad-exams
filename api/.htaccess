@@ -1,0 +1,6 @@
+# ABAD API — no listings, no direct access to internals
+Options -Indexes
+<FilesMatch "^(_.*\.php|.*\.sql|.*\.md)$">
+  Require all denied
+</FilesMatch>
+RedirectMatch 404 /api/(bin|migrations)(/.*)?$

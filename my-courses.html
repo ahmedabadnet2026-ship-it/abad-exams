@@ -22,13 +22,39 @@ header img{height:42px;background:#fff;border-radius:9px;padding:3px 7px}header 
 .empty p{opacity:.85;line-height:1.8;margin:6px 0 0}
 footer{text-align:center;opacity:.6;font-size:12px;padding:0 18px 24px}
 .hb{min-height:44px;display:inline-flex;align-items:center}
+.crs{margin:0;padding:20px;border-radius:18px;background:linear-gradient(160deg,#ffffff1c,#ffffff08);border:1px solid #ffffff2e;box-shadow:0 14px 30px #0005;position:relative;overflow:hidden}
+.crs::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#3f86b3,#F5BD2D)}
+.crs h2{margin:0 0 4px;font-size:1.15rem;color:#F5BD2D}.crs p{opacity:.85;line-height:1.7;margin:6px 0}.crs .meta{font-size:13px;opacity:.75}
+.crs .pill{display:inline-block;background:#ffffff1f;border-radius:999px;padding:1px 12px;font-size:12px;font-weight:700;margin-inline-end:6px}
+.cta{display:inline-flex;align-items:center;min-height:44px;background:#F5BD2D;color:#10293b;font-weight:800;border-radius:11px;padding:6px 18px;text-decoration:none;margin-top:10px}
+.res{max-width:900px;margin:0 auto 40px;padding:0 18px}.res table{width:100%;border-collapse:collapse;background:#ffffff10;border-radius:14px;overflow:hidden;font-size:14px}
+.res th,.res td{padding:9px 12px;text-align:start;border-bottom:1px solid #ffffff1a}.res th{background:#ffffff14}.res h2{color:#F5BD2D;font-size:1.15rem}
 </style>
-<link rel="stylesheet" href="css/home-btn.css?r=202610162110"><script src="js/home-btn.js?r=202610162110" defer></script>
+<link rel="stylesheet" href="css/home-btn.css?r=2026101821"><script src="js/home-btn.js?r=2026101821" defer></script><script src="js/abad-api.js?r=2026101821" defer></script>
 </head>
 <body>
 <header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b>منصة آباد الرقمية</b><small>معهد شبكة آباد للتدريب</small></div></header>
 <section class="hero"><small>منصة آباد الرقمية</small><h1>دوراتي</h1><p>هنا هتظهر الدورات المسجّل فيها</p></section>
 <main class="grid"><section class="empty"><div class="ic" aria-hidden="true">🏫</div><h2>الدورات الحضورية</h2><div class="soon">قريباً</div><p>ستظهر الدورات بعد الحجز والتأكيد</p></section><section class="empty"><div class="ic" aria-hidden="true">💻</div><h2>الدورات أونلاين</h2><div class="soon">قريباً</div><p>ستظهر الدورات بعد الحجز والتأكيد</p></section></main>
+<section class="res" id="myres" hidden></section>
 <footer>© معهد شبكة آباد للتدريب</footer>
+<script>
+/* Live data from the platform API when available (Cloudways); static "coming soon" cards stay on GitHub Pages. */
+addEventListener("DOMContentLoaded",function(){if(!window.ABAD_API)return;
+  var EN=window.LANG==="en";function T(a,e){return EN?e:a}
+  function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+  ABAD_API.me().then(function(s){if(!s)return;var g=document.querySelector("main.grid");
+    if(!s.user){var c=el("section","crs");c.append(el("h2","",T("سجّل الدخول لعرض دوراتك","Sign in to see your courses")),el("p","",T("أنشئ حساباً أو سجّل الدخول لمتابعة دوراتك المسجّلة ونتائج اختباراتك التجريبية.","Create an account or sign in to follow your enrolled courses and practice-exam results.")));
+      var a=el("a","cta",T("تسجيل الدخول / حساب جديد","Sign in / Create account"));a.href="login.html?next=my-courses.html";c.append(a);g.prepend(c);return}
+    ABAD_API.req("courses.php").then(function(j){if(!j.ok)return;if(!j.items.length){var c=el("section","crs");c.append(el("h2","",T("لا توجد دورات مسجّلة بعد","No enrolled courses yet")),el("p","",T("ستظهر دوراتك هنا بعد تأكيد التسجيل من المعهد.","Your courses will appear here once the institute confirms your enrollment.")));g.prepend(c);return}
+      g.innerHTML="";j.items.forEach(function(x){var c=el("section","crs");var t=EN?(x.title_en||x.title_ar):x.title_ar;c.append(el("h2","",t));
+        var m=el("div","meta");m.append(el("span","pill",x.delivery==="online"?T("أونلاين","Online"):T("حضوري","On-site")),el("span","pill",{active:T("نشط","Active"),completed:T("مكتمل","Completed")}[x.enrollment_status]||x.enrollment_status));
+        if(x.start_date)m.append(el("span","",(x.start_date||"")+(x.end_date?" → "+x.end_date:"")));c.append(m);
+        var d=EN?(x.description_en||x.description_ar):x.description_ar;if(d)c.append(el("p","",d));
+        if(x.link_url&&/^(https:\/\/|[a-z0-9][a-z0-9._\/-]*\.html)/i.test(x.link_url)){var a=el("a","cta",T("فتح الدورة","Open course"));a.href=x.link_url;c.append(a)}g.append(c)})});
+    ABAD_API.req("results.php").then(function(j){if(!j.ok||!j.items.length)return;var r=document.getElementById("myres");r.hidden=false;r.append(el("h2","",T("نتائج اختباراتي التجريبية","My practice-exam results")));
+      var tb=el("table"),h=el("tr");[T("التاريخ","Date"),T("الاختبار","Exam"),T("الدرجة","Score"),T("النسبة","Percent")].forEach(function(x){h.append(el("th","",x))});tb.append(h);
+      j.items.slice(0,30).forEach(function(x){var tr=el("tr");[String(x.created_at).slice(0,16),x.exam_id,x.score+" / "+x.total,x.percent+"%"].forEach(function(v){var td=el("td","",v);td.dir="ltr";tr.append(td)});tb.append(tr)});r.append(tb)})})});
+</script>
 </body>
 </html>

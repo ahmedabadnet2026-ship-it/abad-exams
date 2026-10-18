@@ -6,6 +6,9 @@
 #abad-home .abad-lt{margin-inline-start:auto;flex:none;display:inline-flex;align-items:center;gap:6px;min-height:44px;min-width:44px;padding:0 14px;border-radius:999px;border:1.5px solid #F5BD2D;background:transparent;color:#fff;font:800 13px/1 Cairo,system-ui,sans-serif;cursor:pointer;transition:background .2s,color .2s}
 #abad-home .abad-lt b{color:#F5BD2D;font-weight:800}#abad-home .abad-lt i{font-style:normal}
 #abad-home .abad-lt:hover{background:#F5BD2D;color:#10293b}#abad-home .abad-lt:hover b{color:#10293b}
+#abad-home a.abad-acc{margin-inline-start:auto;flex:none;background:transparent;color:#fff;border:1.5px solid #3f86b3;box-shadow:none;max-width:42vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;line-height:38px;padding:0 12px}
+#abad-home a.abad-acc:hover,#abad-home a.abad-acc:focus-visible{background:#3f86b3;transform:none}
+#abad-home a.abad-acc+.abad-lt{margin-inline-start:0}
 @media (max-width:420px){#abad-home{padding:4px 10px}#abad-home span{font-size:11px}#abad-home .abad-lt i{display:none}}
 @media print{#abad-home{display:none!important}}
 @media (prefers-reduced-motion:reduce){#abad-home a{transition:none}}

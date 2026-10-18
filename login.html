@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-app-lang>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10293b">
+<title>تسجيل الدخول — منصة آباد الرقمية</title>
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Cairo,sans-serif;color:#fff;min-height:100vh;background:radial-gradient(circle at 15% 10%,#3f86b344 0,transparent 45%),radial-gradient(circle at 85% 95%,#F5BD2D1c 0,transparent 40%),linear-gradient(135deg,#0a1c29,#10293b 55%,#16405e)}
+header{display:flex;align-items:center;gap:12px;padding:12px 18px;max-width:1180px;margin:0 auto}
+header img{height:42px;background:#fff;border-radius:9px;padding:3px 7px}header b{display:block;font-size:17px}header small{opacity:.7;font-size:12px}
+main{max-width:480px;margin:10px auto 40px;padding:0 16px}
+.card{background:linear-gradient(160deg,#ffffff1c,#ffffff08);border:1px solid #ffffff2e;border-radius:18px;padding:22px;box-shadow:0 14px 30px #0005;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#3f86b3,#F5BD2D)}
+h1{margin:0 0 4px;font-size:1.5rem}.sub{opacity:.8;margin:0 0 16px;font-size:14px}
+.tabs{display:flex;gap:6px;margin-bottom:16px;background:#0006;border-radius:12px;padding:4px}
+.tabs button{flex:1;font:inherit;font-weight:800;border:0;border-radius:9px;padding:9px;cursor:pointer;background:transparent;color:#fff;min-height:44px}
+.tabs button[aria-selected=true]{background:#F5BD2D;color:#10293b}
+label{display:block;font-size:13px;font-weight:700;margin:10px 0 4px}label small{opacity:.7;font-weight:400}
+input{width:100%;font:inherit;padding:11px 12px;border-radius:10px;border:1px solid #ffffff44;background:#ffffffee;color:#10293b;min-height:44px}
+input[aria-invalid=true]{border-color:#ff8a80;box-shadow:0 0 0 2px #ff8a8055}
+.btn{display:block;width:100%;margin-top:18px;font:inherit;font-weight:800;font-size:16px;border:0;border-radius:11px;padding:12px;cursor:pointer;background:#F5BD2D;color:#10293b;min-height:48px;text-decoration:none;text-align:center}
+.btn.alt{background:transparent;color:#fff;border:1.5px solid #3f86b3;margin-top:10px}.btn:disabled{opacity:.6;cursor:wait}
+.msg{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:14px;display:none}.msg.err{display:block;background:#c0392b33;border:1px solid #ff8a8077}.msg.ok{display:block;background:#17803d33;border:1px solid #6fdc9a77}
+.off{text-align:center}.off a{color:#F5BD2D}
+.hide{display:none!important}
+footer{text-align:center;opacity:.6;font-size:12px;padding:0 18px 24px}
+</style>
+<link rel="stylesheet" href="css/home-btn.css?r=2026101821"><script src="js/home-btn.js?r=2026101821" defer></script>
+<script src="js/abad-api.js?r=2026101821"></script>
+</head>
+<body>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div><b data-ar="منصة آباد الرقمية" data-en="ABAD Digital Platform">منصة آباد الرقمية</b><small data-ar="معهد شبكة آباد للتدريب" data-en="ABAD Network Training Institute">معهد شبكة آباد للتدريب</small></div></header>
+<main>
+<section class="card" id="box">
+  <h1 id="h" data-ar="حسابي في المنصة" data-en="My platform account">حسابي في المنصة</h1>
+  <p class="sub" data-ar="سجّل الدخول لمتابعة دوراتك وحفظ نتائج اختباراتك التجريبية." data-en="Sign in to follow your courses and keep your practice-exam results.">سجّل الدخول لمتابعة دوراتك وحفظ نتائج اختباراتك التجريبية.</p>
+  <div id="loading" class="sub" data-ar="جارٍ التحميل…" data-en="Loading…">جارٍ التحميل…</div>
+
+  <div id="offline" class="off hide"><p data-ar="تسجيل الدخول متاح على المنصة الرسمية فقط." data-en="Sign-in is available on the official platform only.">تسجيل الدخول متاح على المنصة الرسمية فقط.</p>
+    <a class="btn" href="https://abad-labs.com/abad-digital/login.html" data-ar="الانتقال إلى المنصة الرسمية" data-en="Go to the official platform">الانتقال إلى المنصة الرسمية</a></div>
+
+  <div id="signed" class="hide"><p id="hello"></p>
+    <a class="btn" id="goNext" href="my-courses.html" data-ar="دوراتي" data-en="My courses">دوراتي</a>
+    <a class="btn alt hide" id="goAdmin" href="admin/index.php" data-ar="لوحة الإدارة" data-en="Admin panel">لوحة الإدارة</a>
+    <button class="btn alt" id="out" type="button" data-ar="تسجيل الخروج" data-en="Sign out">تسجيل الخروج</button></div>
+
+  <div id="forms" class="hide">
+    <div class="tabs" role="tablist"><button type="button" role="tab" id="tLogin" aria-selected="true" data-ar="تسجيل الدخول" data-en="Sign in">تسجيل الدخول</button><button type="button" role="tab" id="tReg" aria-selected="false" data-ar="حساب جديد" data-en="Create account">حساب جديد</button></div>
+    <form id="fLogin" novalidate>
+      <label for="le" data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</label><input id="le" type="email" dir="ltr" autocomplete="username" required>
+      <label for="lp" data-ar="كلمة المرور" data-en="Password">كلمة المرور</label><input id="lp" type="password" dir="ltr" autocomplete="current-password" required>
+      <button class="btn" type="submit" data-ar="دخول" data-en="Sign in">دخول</button>
+    </form>
+    <form id="fReg" class="hide" novalidate>
+      <label for="ra" data-ar="الاسم الكامل بالعربية" data-en="Full name (Arabic)">الاسم الكامل بالعربية</label><input id="ra" autocomplete="name" maxlength="190">
+      <label for="rn"><span data-ar="الاسم بالإنجليزية" data-en="Full name (English)">الاسم بالإنجليزية</span> <small data-ar="(كما في الهوية — للشهادات)" data-en="(as on your ID — for certificates)">(كما في الهوية — للشهادات)</small></label><input id="rn" dir="ltr" lang="en" maxlength="190" placeholder="Ahmed Mohammed Ali Alqahtani">
+      <label for="re" data-ar="البريد الإلكتروني *" data-en="Email *">البريد الإلكتروني *</label><input id="re" type="email" dir="ltr" autocomplete="email" required maxlength="190">
+      <label for="rm" data-ar="رقم الجوال" data-en="Mobile number">رقم الجوال</label><input id="rm" type="tel" dir="ltr" inputmode="tel" autocomplete="tel" placeholder="05xxxxxxxx">
+      <label for="ri"><span data-ar="رقم الهوية / الإقامة" data-en="National ID / Iqama">رقم الهوية / الإقامة</span> <small data-ar="(اختياري)" data-en="(optional)">(اختياري)</small></label><input id="ri" dir="ltr" inputmode="numeric" maxlength="10">
+      <label for="rp" data-ar="كلمة المرور * (8 أحرف على الأقل)" data-en="Password * (min. 8 characters)">كلمة المرور * (8 أحرف على الأقل)</label><input id="rp" type="password" dir="ltr" autocomplete="new-password" required minlength="8">
+      <label for="rp2" data-ar="تأكيد كلمة المرور *" data-en="Confirm password *">تأكيد كلمة المرور *</label><input id="rp2" type="password" dir="ltr" autocomplete="new-password" required>
+      <button class="btn" type="submit" data-ar="إنشاء الحساب" data-en="Create account">إنشاء الحساب</button>
+    </form>
+  </div>
+  <div class="msg" id="msg" role="alert" aria-live="polite"></div>
+</section>
+</main>
+<footer data-ar="© معهد شبكة آباد للتدريب" data-en="© ABAD Network Training Institute">© معهد شبكة آباد للتدريب</footer>
+<script>
+(function(){
+  function L(){try{var q=new URLSearchParams(location.search).get("lang");if(q==="en"||q==="ar"){localStorage.setItem("abad-lang",q);return q}return localStorage.getItem("abad-lang")==="en"?"en":"ar"}catch(e){return "ar"}}
+  var EN=L()==="en";function T(a,e){return EN?e:a}
+  function applyLang(){EN=L()==="en";document.documentElement.lang=EN?"en":"ar";document.documentElement.dir=EN?"ltr":"rtl";document.title=T("تسجيل الدخول — منصة آباد الرقمية","Sign in — ABAD Digital Platform");
+    document.querySelectorAll("[data-ar]").forEach(function(el){el.textContent=el.getAttribute(EN?"data-en":"data-ar")});paintUser()}
+  window.abadToggleLang=function(){try{localStorage.setItem("abad-lang",EN?"ar":"en")}catch(e){}applyLang();document.dispatchEvent(new CustomEvent("abad-auth",{detail:ABAD_API.state.available?ABAD_API.state:null}))};
+  var $=function(i){return document.getElementById(i)},msg=$("msg");
+  function show(t,ok){msg.textContent=t;msg.className="msg "+(ok?"ok":"err")}function clear(){msg.className="msg";msg.textContent=""}
+  var nx=new URLSearchParams(location.search).get("next")||"";if(!/^[a-z0-9][a-z0-9._-]*\.html(\?[^\s<>"]*)?$/i.test(nx)||/^login\.html/i.test(nx))nx="";
+  function paintUser(){var u=ABAD_API.state.user;if(!u)return;$("hello").textContent=T("مرحباً ","Welcome, ")+((EN?(u.full_name_en||u.full_name_ar):(u.full_name_ar||u.full_name_en))||u.email)+" 👋";
+    $("goNext").href=nx||"my-courses.html";$("goNext").textContent=nx?T("متابعة","Continue"):T("دوراتي","My courses");$("goAdmin").classList.toggle("hide",!(u.role==="admin"||u.role==="staff"))}
+  function view(){var s=ABAD_API.state;$("loading").classList.add("hide");$("offline").classList.toggle("hide",s.available);
+    $("forms").classList.toggle("hide",!s.available||!!s.user);$("signed").classList.toggle("hide",!s.user);paintUser()}
+  function tab(reg){$("tLogin").setAttribute("aria-selected",!reg);$("tReg").setAttribute("aria-selected",reg);$("fLogin").classList.toggle("hide",reg);$("fReg").classList.toggle("hide",!reg);clear()}
+  $("tLogin").onclick=function(){tab(false)};$("tReg").onclick=function(){tab(true)};if(location.hash==="#register")tab(true);
+  var ERR={invalid_credentials:["البريد أو كلمة المرور غير صحيحة.","Incorrect email or password."],rate_limited:["محاولات كثيرة — انتظر 15 دقيقة ثم أعد المحاولة.","Too many attempts — wait 15 minutes and try again."],
+    email_taken:["هذا البريد مسجّل مسبقاً — سجّل الدخول بدلاً من ذلك.","This email is already registered — sign in instead."],csrf:["انتهت صلاحية الجلسة — حدّث الصفحة.","Session expired — refresh the page."],
+    network:["تعذّر الاتصال — تحقّق من الإنترنت.","Connection failed — check your internet."]};
+  var FLD={full_name:["ra",T("أدخل اسمك.","Enter your name.")],full_name_en:["rn",T("الاسم بالإنجليزية بأحرف إنجليزية فقط.","English letters only.")],email:["re",T("البريد غير صحيح.","Invalid email.")],
+    phone:["rm",T("رقم جوال سعودي غير صحيح — مثال 0551234567.","Invalid Saudi mobile — e.g. 0551234567.")],national_id:["ri",T("رقم الهوية / الإقامة غير صحيح.","Invalid national ID / Iqama.")],password:["rp",T("كلمة المرور 8 أحرف على الأقل.","Password must be at least 8 characters.")]};
+  function errText(j){var e=ERR[j&&j.error];return e?T(e[0],e[1]):T("تعذّر تنفيذ الطلب — أعد المحاولة.","Request failed — please try again.")}
+  function done(j){if(!j.ok)return false;view();if(nx)setTimeout(function(){location.href=nx},400);show(T("تم بنجاح ✓","Done ✓"),true);return true}
+  function busy(f,b){f.querySelector("[type=submit]").disabled=b}
+  $("fLogin").onsubmit=function(e){e.preventDefault();clear();var f=this;if(!$("le").value.trim()||!$("lp").value){show(T("أدخل البريد وكلمة المرور.","Enter your email and password."));return}
+    busy(f,true);ABAD_API.login($("le").value.trim(),$("lp").value).then(function(j){if(!done(j))show(errText(j))}).finally(function(){busy(f,false)})};
+  $("fReg").onsubmit=function(e){e.preventDefault();clear();var f=this;f.querySelectorAll("[aria-invalid]").forEach(function(x){x.removeAttribute("aria-invalid")});
+    if($("rp").value!==$("rp2").value){$("rp2").setAttribute("aria-invalid","true");show(T("كلمتا المرور غير متطابقتين.","Passwords do not match."));return}
+    busy(f,true);ABAD_API.register({full_name_ar:$("ra").value.trim(),full_name_en:$("rn").value.trim(),email:$("re").value.trim(),phone:$("rm").value.trim(),national_id:$("ri").value.trim(),password:$("rp").value})
+      .then(function(j){if(done(j))return;if(j.error==="invalid"&&j.fields){var m=[];j.fields.forEach(function(k){var x=FLD[k];if(x){$(x[0]).setAttribute("aria-invalid","true");m.push(x[1])}});show(m.join(" "));return}show(errText(j))})
+      .finally(function(){busy(f,false)})};
+  $("out").onclick=function(){ABAD_API.logout().then(function(){view();tab(false)})};
+  applyLang();ABAD_API.me().then(view);
+})();
+</script>
+</body>
+</html>
