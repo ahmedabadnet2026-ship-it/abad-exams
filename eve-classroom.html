@@ -71,7 +71,6 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 .scr .go{position:absolute;inset:auto 0 4px;text-align:center;font-size:10.5px;font-weight:800;color:var(--navy);opacity:0;transform:translateY(4px);transition:.25s}
 .scr .go span{background:var(--gold);border-radius:6px;padding:0 7px}
 .dot{position:absolute;top:5px;inset-inline-end:6px;width:8px;height:8px;border-radius:50%;background:#9aa7b1;box-shadow:0 0 0 2px #0004}
-.dot.ok{background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pl 2s infinite}.dot.bad{background:var(--bad);box-shadow:0 0 8px var(--bad)}
 @keyframes pl{50%{box-shadow:0 0 2px var(--ok)}}
 .base{width:96%;height:7px;border-radius:0 0 6px 6px;background:linear-gradient(180deg,#c9d3db,#8b98a3);box-shadow:0 3px 4px #0004}
 .base::after{content:"";display:block;width:22%;height:3px;margin:0 auto;background:#6e7a84;border-radius:0 0 4px 4px}
@@ -89,17 +88,39 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 .mine .pick{display:none}
 .legend{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:22px;font-size:12px;opacity:.8}
 .legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-inline-end:6px;vertical-align:middle}
+/* live status */
+.dot{width:12px;height:12px;top:6px;inset-inline-end:7px;transition:background .4s}
+.dot.ok{background:var(--ok);--g:var(--ok);animation:lamp 2.2s ease-in-out infinite}
+.dot.idle{background:#6fa8cf;--g:#6fa8cf;animation:lamp 3.6s ease-in-out infinite}
+.dot.bad{background:var(--bad);--g:var(--bad);animation:lamp 1.4s ease-in-out infinite}
+@keyframes lamp{0%,100%{box-shadow:0 0 3px var(--g),0 0 0 2px #0004}50%{box-shadow:0 0 12px var(--g),0 0 22px var(--g),0 0 0 2px #0004}}
+.bars{width:84%;margin-top:7px;display:grid;gap:3px;font-size:9.5px;font-weight:700;color:#fff3df;direction:ltr}
+.bar{display:grid;grid-template-columns:26px 1fr 30px;align-items:center;gap:4px}
+.bar u{display:block;height:5px;border-radius:3px;background:#0005;overflow:hidden;text-decoration:none}
+.bar u i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,var(--ok),var(--gold) 70%,var(--bad));background-size:var(--bs,100%) 100%;transition:width .8s}
+.bar em{font-style:normal;text-align:end;opacity:.85}
+.act{font-size:10px;font-weight:800;color:var(--navy);background:var(--ok);border-radius:6px;padding:0 6px;margin-top:4px;display:inline-block;visibility:hidden;min-height:1.4em}
+.seat.run .act{visibility:visible}
+.load{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;margin:16px auto 0;padding:12px 18px;max-width:720px;border-radius:18px;background:#ffffff0d;border:1px solid #ffffff22}
+.gauge{position:relative;width:170px;height:96px}
+.gauge svg{width:100%;height:100%}
+.gauge .nd{transform-origin:85px 85px;transition:transform 1s cubic-bezier(.3,1.4,.5,1)}
+.gauge b{position:absolute;inset:auto 0 0;text-align:center;font-size:20px;font-weight:800}
+.kpis{display:grid;gap:6px;font-size:13px}.kpis b{color:var(--gold);font-size:18px;margin-inline-end:6px}
+.kpis .na{color:#ffb4bb;font-weight:800}
 @media (max-width:860px){.seats{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:560px){.room{padding:14px 8px 22px}.tv{border-width:5px;aspect-ratio:5/4}.tvt{top:2%}.st{width:18.5%}.card{border-radius:8px}.rocket{width:17%}.rlab{font-size:12px}.seats{grid-template-columns:repeat(2,1fr);gap:22px 12px}.desk{padding:10px 8px 8px}.scr{width:90%;border-width:4px}.chair .s{width:50px}.chair .bk{width:56px;height:22px}.steps li{font-size:12px}.steps .ar{display:none}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.seat{opacity:1;transform:none}.st .card,.st .ped{opacity:1}}
 </style>
-<link rel="stylesheet" href="css/home-btn.css?v=abad-202610190050"><script src="js/home-btn.js?v=abad-202610190050" defer></script>
+<link rel="stylesheet" href="css/home-btn.css?v=abad-202610200115"><script src="js/home-btn.js?v=abad-202610200115" defer></script>
 </head>
 <body>
-<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="network-camp.html?v=abad-202610190050" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="network-camp.html?v=abad-202610200115" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
 <main>
 <section class="hero"><small data-t="kick"></small><h1 data-t="title"></h1><p data-t="lead"></p>
 <ol class="steps"><li data-t="s1"></li><span class="ar">←</span><li data-t="s2"></li><span class="ar">←</span><li data-t="s3"></li></ol></section>
+<section class="load" aria-live="polite"><div class="gauge"><svg viewBox="0 0 170 96" aria-hidden="true"><defs><linearGradient id="gg"><stop offset="0" stop-color="#3ecf8e"/><stop offset=".55" stop-color="#F5BD2D"/><stop offset="1" stop-color="#ff5d6c"/></linearGradient></defs><path d="M15 85 A70 70 0 0 1 155 85" fill="none" stroke="#ffffff1a" stroke-width="14" stroke-linecap="round"/><path d="M15 85 A70 70 0 0 1 155 85" fill="none" stroke="url(#gg)" stroke-width="14" stroke-linecap="round" opacity=".9"/><g class="nd" id="nd" style="transform:rotate(-90deg)"><path d="M85 85 L85 26" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="85" cy="85" r="7" fill="#F5BD2D"/></g></svg><b id="gv">–</b></div>
+<div class="kpis"><div><span data-t="lab"></span>: <span id="ls" class="na"></span></div><div><b id="kd">–</b><span data-t="devs"></span></div><div><b id="ko">–</b><span data-t="online"></span></div></div></section>
 <section class="room" aria-labelledby="tvt">
  <div class="front">
   <div class="tv" id="tv" role="img" aria-labelledby="tvt">
@@ -128,7 +149,7 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
   <div class="desk-t">👨‍🏫 <span data-t="teacher"></span></div>
  </div>
  <div class="seats" id="seats"></div>
- <div class="legend"><span><i style="background:var(--ok)"></i><span data-t="lgOk"></span></span><span><i style="background:var(--bad)"></i><span data-t="lgBad"></span></span><span><i style="background:var(--gold)"></i><span data-t="lgMine"></span></span></div>
+ <div class="legend"><span><i style="background:var(--ok)"></i><span data-t="lgOk"></span></span><span><i style="background:#6fa8cf"></i><span data-t="lgIdle"></span></span><span><i style="background:var(--bad)"></i><span data-t="lgBad"></span></span><span><i style="background:var(--gold)"></i><span data-t="lgMine"></span></span></div>
 </section>
 </main>
 <script>
@@ -138,7 +159,7 @@ kick:["🧑‍💻 معمل EVE-NG","🧑‍💻 EVE-NG Lab"],title:["المعم
 s1:["اختر مقعدك","Pick your seat"],s2:["افتح اللابتوب","Open the laptop"],s3:["سجّل بالبيانات من المدرّب","Log in with your instructor's details"],
 camp:["معسكر الشبكات","Networking Bootcamp"],campsub:["مسار واضح من الأساسيات إلى الاحتراف","A clear path from fundamentals to expert"],goal:["Project","Project"],
 teacher:["مكتب المدرب","Instructor desk"],seat:["مقعد","Seat"],open:["افتح ←","Open →"],mine:["مقعدي","My seat"],pick:["هذا مقعدي","This is my seat"],
-lgOk:["متصل","Online"],lgBad:["غير متاح","Offline"],lgMine:["مقعدي","My seat"],chk:["جارٍ الفحص…","Checking…"]};
+lgOk:["طالب يعمل","Student working"],lgIdle:["متصل — خامل","Online — idle"],lgBad:["غير متاح","Offline"],lab:["حمل المعمل","Lab load"],devs:["جهاز نشط","active devices"],online:["مقعد متصل من 12","seats online of 12"],na:["غير متاح","Unavailable"],low:["خفيف","Light"],mid:["متوسط","Moderate"],high:["مرتفع","High"],nodes:["أجهزة","nodes"],ld:["الحمل","Load"],lgMine:["مقعدي","My seat"],chk:["جارٍ الفحص…","Checking…"]};
 var MS='<svg viewBox="0 0 24 24"><rect width="11" height="11"/><rect x="13" width="11" height="11"/><rect y="13" width="11" height="11"/><rect x="13" y="13" width="11" height="11"/></svg>';
 var ST=[["Network+","CompTIA",'<img src="assets/logos/comptia.svg" alt="">'],["CCNA","Cisco",'<img src="assets/logos/cisco.svg" alt="">'],["CCNP","Cisco",'<img src="assets/logos/cisco.svg" alt="">'],["MCSA","Microsoft",MS],["NSE4","Fortinet",'<img src="assets/logos/fortinet.svg" alt="">']];
 var RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -157,20 +178,40 @@ var RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
 var box=document.getElementById("seats"),MY=(function(){try{return +localStorage.getItem("abad-eve-seat")||0}catch(e){return 0}})();
 for(var n=1;n<=12;n++){var id="eve-"+(n<10?"0":"")+n,url="https://eve"+n+".abad-labs.com/";
  var d=document.createElement("div");d.className="seat"+(n==MY?" mine":"");d.style.setProperty("--i",n);d.dataset.n=n;
- d.innerHTML='<div class="desk"><div class="lap"><a class="scr" target="_blank" rel="noopener" href="'+url+'" data-seat="'+n+'" data-lab="eve"><i class="dot" data-n="'+n+'"></i><b><span data-t="seat"></span> '+n+'</b><small>'+id+'</small><span class="go"><span data-t="open"></span></span></a><div class="base"></div></div></div><div class="chair" aria-hidden="true"><div class="s"></div><div class="bk"></div></div><span class="tag" data-t="mine"></span><button type="button" class="pick" data-t="pick"></button>';
+ d.innerHTML='<div class="desk"><div class="lap"><a class="scr" target="_blank" rel="noopener" href="'+url+'" data-seat="'+n+'" data-lab="eve"><i class="dot" data-n="'+n+'"></i><b><span data-t="seat"></span> '+n+'</b><small>'+id+'</small><span class="go"><span data-t="open"></span></span></a><div class="base"></div></div><div class="bars" data-n="'+n+'"><div class="bar">CPU<u><i class="c"></i></u><em class="cv">–</em></div><div class="bar">RAM<u><i class="m"></i></u><em class="mv">–</em></div></div><span class="act"></span></div><div class="chair" aria-hidden="true"><div class="s"></div><div class="bk"></div></div><span class="tag" data-t="mine"></span><button type="button" class="pick" data-t="pick"></button>';
  box.appendChild(d)}
 function setMine(n){MY=n;try{localStorage.setItem("abad-eve-seat",n)}catch(e){}document.querySelectorAll(".seat").forEach(function(s){s.classList.toggle("mine",+s.dataset.n==n)})}
 box.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.scr");if(a){setMine(+a.dataset.seat);if(window.abadLabPing)window.abadLabPing("eve");return}
  var b=e.target.closest&&e.target.closest(".pick");if(b)setMine(+b.closest(".seat").dataset.n)});
-/* live status: EVE favicon loads only if the seat is reachable */
-function probe(n){var dot=document.querySelector('.dot[data-n="'+n+'"]'),im=new Image(),done=0,t=setTimeout(function(){fin(0)},8000);
- function fin(ok){if(done)return;done=1;clearTimeout(t);dot.className="dot "+(ok?"ok":"bad");dot.title=S[ok?"lgOk":"lgBad"][L=="ar"?0:1]}
+/* live status from status.abad-labs.com (fallback: favicon probe) */
+var API="https://status.abad-labs.com/",LAST=null,FAILS=0;
+function tr(k){return S[k][L=="ar"?0:1]}
+function setSeat(n,st,v){var dot=document.querySelector('.dot[data-n="'+n+'"]'),seat=dot.closest(".seat"),bx=seat.querySelector(".bars");
+ dot.className="dot "+st;seat.classList.toggle("run",st=="ok");
+ var c=v&&v.up?v.cpu:null,m=v&&v.up&&v.mem_total?100*v.mem_used/v.mem_total:null;
+ bx.querySelector(".c").style.width=(c==null?0:Math.min(100,c))+"%";bx.querySelector(".m").style.width=(m==null?0:Math.min(100,m))+"%";
+ bx.querySelector(".cv").textContent=c==null?"–":Math.round(c)+"%";bx.querySelector(".mv").textContent=m==null?"–":Math.round(m)+"%";
+ seat.querySelector(".act").textContent=v&&v.active?v.active+" "+tr("nodes"):"";
+ var t=tr("seat")+" "+n+" — "+tr(st=="ok"?"lgOk":st=="idle"?"lgIdle":"lgBad");
+ if(v&&v.up)t+="\nCPU "+Math.round(v.cpu)+"%  ·  RAM "+(v.mem_used/1024).toFixed(1)+"/"+(v.mem_total/1024).toFixed(1)+" GB\n"+tr("ld")+" "+v.load+"  ·  "+v.active+" "+tr("nodes");
+ seat.querySelector("a.scr").title=t;dot.title=t}
+function gauge(p){var nd=document.getElementById("nd"),gv=document.getElementById("gv"),ls=document.getElementById("ls");
+ if(p==null){nd.style.transform="rotate(-90deg)";gv.textContent="–";ls.textContent=tr("na");ls.className="na";document.getElementById("kd").textContent="–";document.getElementById("ko").textContent="–";return}
+ nd.style.transform="rotate("+(-90+1.8*Math.min(100,p))+"deg)";gv.textContent=Math.round(p)+"%";ls.className="";ls.textContent=tr(p<50?"low":p<80?"mid":"high");ls.style.color=p<50?"var(--ok)":p<80?"var(--gold)":"var(--bad)"}
+function render(d){LAST=d;var up=0,act=0,cpu=0;
+ d.seats.forEach(function(v){var st=!v.up?"bad":v.active>0?"ok":"idle";setSeat(v.seat,st,v);if(v.up){up++;cpu+=v.cpu}act+=v.active||0});
+ gauge(up?Math.max(cpu/up,0):0);document.getElementById("kd").textContent=act;document.getElementById("ko").textContent=up}
+function probe(n){var im=new Image(),done=0,t=setTimeout(function(){fin(0)},8000);
+ function fin(ok){if(done)return;done=1;clearTimeout(t);setSeat(n,ok?"idle":"bad",null)}
  im.onload=function(){fin(1)};im.onerror=function(){fin(0)};im.src="https://eve"+n+".abad-labs.com/favicon.ico?t="+Date.now()}
-function probeAll(){for(var n=1;n<=12;n++)probe(n)}probeAll();setInterval(probeAll,60000);
+function poll(){var c=window.AbortController?new AbortController():null,t=setTimeout(function(){c&&c.abort()},4500);
+ fetch(API,{cache:"no-store",signal:c&&c.signal}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){clearTimeout(t);if(!d||!d.seats)throw 0;FAILS=0;render(d)})
+ .catch(function(){clearTimeout(t);LAST=null;gauge(null);if(FAILS++%12==0)for(var n=1;n<=12;n++)probe(n)})}
+for(var n=1;n<=12;n++)setSeat(n,"",null);gauge(null);poll();setInterval(poll,5000);
 function paint(){var i=L=="ar"?0:1;document.documentElement.lang=L;document.documentElement.dir=L=="ar"?"rtl":"ltr";document.getElementById("lang").textContent=L=="ar"?"English":"العربية";document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=S[e.dataset.t][i]});
- document.querySelectorAll("a.scr").forEach(function(a){a.setAttribute("aria-label",S.seat[i]+" "+a.dataset.seat)});document.title=S.title[i]+" — "+S.inst[i]}
+ document.querySelectorAll("a.scr").forEach(function(a){a.setAttribute("aria-label",S.seat[i]+" "+a.dataset.seat)});document.title=S.title[i]+" — "+S.inst[i];if(LAST)render(LAST);else gauge(null)}
 document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{localStorage.setItem("abad-lang",L)}catch(e){}paint()};paint();
 </script>
-<script src="js/abad-labs.js?v=abad-202610190050" defer></script>
+<script src="js/abad-labs.js?v=abad-202610200115" defer></script>
 </body>
 </html>
