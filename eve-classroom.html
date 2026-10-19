@@ -108,43 +108,43 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 .gauge b{position:absolute;inset:auto 0 0;text-align:center;font-size:20px;font-weight:800}
 .kpis{display:grid;gap:6px;font-size:13px}.kpis b{color:var(--gold);font-size:18px;margin-inline-end:6px}
 .kpis .na{color:#ffb4bb;font-weight:800}
+/* instructor screen = live status board */
+.tv{aspect-ratio:auto;min-height:clamp(300px,42vw,420px)}
+.tvt{position:relative;top:auto;padding-top:12px}.tvt b{font-size:clamp(15px,2.4vw,24px)}
+.board{position:relative;z-index:2;display:grid;grid-template-columns:minmax(200px,1fr) 2fr;gap:18px;align-items:center;padding:8px 22px 24px}
+.board .load{display:flex;flex-direction:column;align-items:center;gap:6px}
+.gauge{width:min(240px,100%);height:auto;aspect-ratio:170/96}.gv{font-size:clamp(22px,3.4vw,34px);font-weight:800;line-height:1;margin-top:-6px}
+.board .kpis{text-align:center}
+.tiles{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.tile{position:relative;padding:7px 7px 6px;border-radius:10px;background:linear-gradient(160deg,#1d4f74aa,#0b2236e6);border:1px solid #6fb6e244;font-size:10px;direction:ltr;transition:border-color .4s,box-shadow .4s}
+.tile b{display:block;font-size:13px;color:var(--gold);text-align:start}
+.tile .dot{top:8px;inset-inline-end:7px}
+.tile.ok{border-color:#3ecf8e88;box-shadow:0 0 14px #3ecf8e33}.tile.bad{border-color:#ff5d6c88}
+.tile .bar{grid-template-columns:22px 1fr;gap:3px;margin-top:3px;font-size:8.5px;opacity:.9}
+.tile .n{display:block;font-size:9px;opacity:.75;margin-top:2px}
+@media (max-width:760px){.board{grid-template-columns:1fr;padding:6px 10px 16px}.tiles{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:420px){.tiles{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:860px){.seats{grid-template-columns:repeat(3,1fr)}}
-@media (max-width:560px){.room{padding:14px 8px 22px}.tv{border-width:5px;aspect-ratio:5/4}.tvt{top:2%}.st{width:18.5%}.card{border-radius:8px}.rocket{width:17%}.rlab{font-size:12px}.seats{grid-template-columns:repeat(2,1fr);gap:22px 12px}.desk{padding:10px 8px 8px}.scr{width:90%;border-width:4px}.chair .s{width:50px}.chair .bk{width:56px;height:22px}.steps li{font-size:12px}.steps .ar{display:none}}
+@media (max-width:560px){.room{padding:14px 8px 22px}.tv{border-width:5px}.tvt{top:2%}.st{width:18.5%}.card{border-radius:8px}.rocket{width:17%}.rlab{font-size:12px}.seats{grid-template-columns:repeat(2,1fr);gap:22px 12px}.desk{padding:10px 8px 8px}.scr{width:90%;border-width:4px}.chair .s{width:50px}.chair .bk{width:56px;height:22px}.steps li{font-size:12px}.steps .ar{display:none}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.seat{opacity:1;transform:none}.st .card,.st .ped{opacity:1}}
 </style>
-<link rel="stylesheet" href="css/home-btn.css?v=abad-202610200115"><script src="js/home-btn.js?v=abad-202610200115" defer></script>
+<link rel="stylesheet" href="css/home-btn.css?v=abad-202610200130"><script src="js/home-btn.js?v=abad-202610200130" defer></script>
 </head>
 <body>
-<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="network-camp.html?v=abad-202610200115" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="network-camp.html?v=abad-202610200130" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
 <main>
 <section class="hero"><small data-t="kick"></small><h1 data-t="title"></h1><p data-t="lead"></p>
 <ol class="steps"><li data-t="s1"></li><span class="ar">←</span><li data-t="s2"></li><span class="ar">←</span><li data-t="s3"></li></ol></section>
-<section class="load" aria-live="polite"><div class="gauge"><svg viewBox="0 0 170 96" aria-hidden="true"><defs><linearGradient id="gg"><stop offset="0" stop-color="#3ecf8e"/><stop offset=".55" stop-color="#F5BD2D"/><stop offset="1" stop-color="#ff5d6c"/></linearGradient></defs><path d="M15 85 A70 70 0 0 1 155 85" fill="none" stroke="#ffffff1a" stroke-width="14" stroke-linecap="round"/><path d="M15 85 A70 70 0 0 1 155 85" fill="none" stroke="url(#gg)" stroke-width="14" stroke-linecap="round" opacity=".9"/><g class="nd" id="nd" style="transform:rotate(-90deg)"><path d="M85 85 L85 26" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="85" cy="85" r="7" fill="#F5BD2D"/></g></svg><b id="gv">–</b></div>
-<div class="kpis"><div><span data-t="lab"></span>: <span id="ls" class="na"></span></div><div><b id="kd">–</b><span data-t="devs"></span></div><div><b id="ko">–</b><span data-t="online"></span></div></div></section>
 <section class="room" aria-labelledby="tvt">
  <div class="front">
   <div class="tv" id="tv" role="img" aria-labelledby="tvt">
    <div class="grid"></div>
    <div class="tvt"><b id="tvt" data-t="camp"></b><small data-t="campsub"></small></div>
-   <svg class="path" viewBox="0 0 1000 450" preserveAspectRatio="none" aria-hidden="true">
-    <defs><linearGradient id="pg" x1="1" x2="0"><stop offset="0" stop-color="#3f86b3"/><stop offset=".7" stop-color="#8fd3ff"/><stop offset="1" stop-color="#F5BD2D"/></linearGradient>
-    <filter id="gl" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="6"/></filter></defs>
-    <path id="rd" d="M985 405 C 870 405, 820 385, 700 380 S 540 370, 460 335 S 320 290, 240 270 S 140 245, 95 215" fill="none" stroke="#3f86b3" stroke-width="26" stroke-opacity=".18" stroke-linecap="round"/>
-    <use href="#rd" stroke="url(#pg)" stroke-width="6" filter="url(#gl)"/>
-    <use href="#rd" stroke="url(#pg)" stroke-width="3"/>
-    <use href="#rd" class="flow" stroke="#fff" stroke-width="5" pathLength="1000" filter="url(#gl)"/>
-    <use href="#rd" class="flow" stroke="#fff" stroke-width="2.5" pathLength="1000"/>
-   </svg>
-   <div id="stations"></div>
-   <svg class="rocket" id="rocket" viewBox="0 0 60 120" aria-hidden="true">
-    <defs><radialGradient id="fg" cx=".5" cy="0" r="1"><stop offset="0" stop-color="#fff"/><stop offset=".3" stop-color="#F5BD2D"/><stop offset="1" stop-color="#ff5a1f" stop-opacity="0"/></radialGradient></defs>
-    <g class="fl"><path d="M20 86 Q30 125 40 86Z" fill="url(#fg)" transform="translate(0 0)"/></g>
-    <path d="M30 4 C48 22 48 56 42 84 H18 C12 56 12 22 30 4Z" fill="#e8f1f7" stroke="#9cc7e3"/>
-    <path d="M30 4 C38 12 42 22 43 30 H17 C18 22 22 12 30 4Z" fill="#F5BD2D"/>
-    <circle cx="30" cy="44" r="8" fill="#10293b" stroke="#3f86b3" stroke-width="3"/>
-    <path d="M18 64 L6 88 L18 84Z M42 64 L54 88 L42 84Z" fill="#3f86b3"/>
-   </svg>
-   <div class="rlab" id="rlab" dir="ltr" data-t="goal"></div>
+   <div class="board" aria-live="polite">
+    <div class="load"><div class="gauge"><svg viewBox="0 0 170 96" aria-hidden="true"><defs><linearGradient id="gg"><stop offset="0" stop-color="#3ecf8e"/><stop offset=".55" stop-color="#F5BD2D"/><stop offset="1" stop-color="#ff5d6c"/></linearGradient></defs><path d="M15 85 A70 70 0 0 1 155 85" fill="none" stroke="#ffffff1a" stroke-width="14" stroke-linecap="round"/><path d="M15 85 A70 70 0 0 1 155 85" fill="none" stroke="url(#gg)" stroke-width="14" stroke-linecap="round" opacity=".9"/><g class="nd" id="nd" style="transform:rotate(-90deg)"><path d="M85 85 L85 30" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="85" cy="85" r="7" fill="#F5BD2D"/></g></svg></div><b id="gv" class="gv">–</b>
+     <div class="kpis"><div><span data-t="lab"></span>: <span id="ls" class="na"></span></div><div><b id="kd">–</b><span data-t="devs"></span></div><div><b id="ko">–</b><span data-t="online"></span></div></div></div>
+    <div class="tiles" id="tiles"></div>
+   </div>
   </div>
   <div class="desk-t">👨‍🏫 <span data-t="teacher"></span></div>
  </div>
@@ -163,17 +163,9 @@ lgOk:["طالب يعمل","Student working"],lgIdle:["متصل — خامل","On
 var MS='<svg viewBox="0 0 24 24"><rect width="11" height="11"/><rect x="13" width="11" height="11"/><rect y="13" width="11" height="11"/><rect x="13" y="13" width="11" height="11"/></svg>';
 var ST=[["Network+","CompTIA",'<img src="assets/logos/comptia.svg" alt="">'],["CCNA","Cisco",'<img src="assets/logos/cisco.svg" alt="">'],["CCNP","Cisco",'<img src="assets/logos/cisco.svg" alt="">'],["MCSA","Microsoft",MS],["NSE4","Fortinet",'<img src="assets/logos/fortinet.svg" alt="">']];
 var RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
-/* stations along path */
-(function(){var p=document.getElementById("rd"),len=p.getTotalLength(),box=document.getElementById("stations"),els=[];
- var at=[.14,.31,.48,.65,.82];
- ST.forEach(function(s,i){var pt=p.getPointAtLength(len*at[i]),d=document.createElement("div");d.className="st";d.style.left=pt.x/10+"%";d.style.top=pt.y/4.5+"%";
-  d.innerHTML='<div class="card">'+s[2]+'<b dir="ltr">'+s[0]+'</b><small dir="ltr">'+s[1]+'</small></div><div class="ped"></div><div class="num">'+(i+1)+'</div>';
-  box.appendChild(d);els.push(d)});
- /* stations sit so pedestal is on the path: shift down by num+ped height */
- els.forEach(function(e){e.style.transform="translate(-50%,calc(-100% + 2.2em))"});
- var e=p.getPointAtLength(len),r=document.getElementById("rocket"),rl=document.getElementById("rlab");r.style.left=e.x/10+"%";r.style.top=e.y/4.5+"%";rl.style.left=e.x/10+"%";rl.style.top=(e.y/4.5+9)+"%";
- if(RM){els.forEach(function(e){e.classList.add("on")});return}
- var k=0;setInterval(function(){if(k<els.length)els[k].classList.add("on");else if(k>els.length+2){els.forEach(function(e){e.classList.remove("on")});k=-1}k++},800)})();
+/* course path + rocket removed from the instructor screen (see git history 51def48); replaced by live status board */
+/* status board tiles */
+(function(){var t=document.getElementById("tiles");for(var n=1;n<=12;n++){var e=document.createElement("div");e.className="tile";e.dataset.n=n;e.innerHTML='<i class="dot"></i><b>'+n+'</b><div class="bar">CPU<u><i class="c"></i></u></div><div class="bar">RAM<u><i class="m"></i></u></div><span class="n">–</span>';t.appendChild(e)}})();
 /* seats */
 var box=document.getElementById("seats"),MY=(function(){try{return +localStorage.getItem("abad-eve-seat")||0}catch(e){return 0}})();
 for(var n=1;n<=12;n++){var id="eve-"+(n<10?"0":"")+n,url="https://eve"+n+".abad-labs.com/";
@@ -194,7 +186,8 @@ function setSeat(n,st,v){var dot=document.querySelector('.dot[data-n="'+n+'"]'),
  seat.querySelector(".act").textContent=v&&v.active?v.active+" "+tr("nodes"):"";
  var t=tr("seat")+" "+n+" — "+tr(st=="ok"?"lgOk":st=="idle"?"lgIdle":"lgBad");
  if(v&&v.up)t+="\nCPU "+Math.round(v.cpu)+"%  ·  RAM "+(v.mem_used/1024).toFixed(1)+"/"+(v.mem_total/1024).toFixed(1)+" GB\n"+tr("ld")+" "+v.load+"  ·  "+v.active+" "+tr("nodes");
- seat.querySelector("a.scr").title=t;dot.title=t}
+ seat.querySelector("a.scr").title=t;dot.title=t;
+ var tl=document.querySelector('.tile[data-n="'+n+'"]');if(tl){tl.className="tile "+st;tl.title=t;tl.querySelector(".dot").className="dot "+st;tl.querySelector(".c").style.width=(c==null?0:Math.min(100,c))+"%";tl.querySelector(".m").style.width=(m==null?0:Math.min(100,m))+"%";tl.querySelector(".n").textContent=v&&v.up?(v.active+" "+tr("nodes")):st=="bad"?tr("lgBad"):"–"}}
 function gauge(p){var nd=document.getElementById("nd"),gv=document.getElementById("gv"),ls=document.getElementById("ls");
  if(p==null){nd.style.transform="rotate(-90deg)";gv.textContent="–";ls.textContent=tr("na");ls.className="na";document.getElementById("kd").textContent="–";document.getElementById("ko").textContent="–";return}
  nd.style.transform="rotate("+(-90+1.8*Math.min(100,p))+"deg)";gv.textContent=Math.round(p)+"%";ls.className="";ls.textContent=tr(p<50?"low":p<80?"mid":"high");ls.style.color=p<50?"var(--ok)":p<80?"var(--gold)":"var(--bad)"}
@@ -212,6 +205,6 @@ function paint(){var i=L=="ar"?0:1;document.documentElement.lang=L;document.docu
  document.querySelectorAll("a.scr").forEach(function(a){a.setAttribute("aria-label",S.seat[i]+" "+a.dataset.seat)});document.title=S.title[i]+" — "+S.inst[i];if(LAST)render(LAST);else gauge(null)}
 document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{localStorage.setItem("abad-lang",L)}catch(e){}paint()};paint();
 </script>
-<script src="js/abad-labs.js?v=abad-202610200115" defer></script>
+<script src="js/abad-labs.js?v=abad-202610200130" defer></script>
 </body>
 </html>
