@@ -1,4 +1,4 @@
-/* ABAD exam lock: first exam free trial, others locked (no backend/auth yet). */
+/* ABAD exam lock (public copy): first exam free trial, others locked; sign-in uses the single platform login (login.html). */
 (function(){
 /* Prefill booking form with this exam's vendor/cert (booking.html reads #v=&c=). */
 var MAP={'aplus-core1-exam':'comptia&c=aplus','aplus-core2-exam':'comptia&c=aplus','linux-plus-exam':'comptia&c=linux','network-plus-exam':'comptia&c=network','security-plus-exam':'comptia&c=security','pmp-exam':'pmi&c=pmp','itil5-exam':'peoplecert&c=itil5'};
@@ -11,8 +11,8 @@ var CSS='.el-free{display:inline-block;margin:4px 6px;font-size:12px;font-weight
 '#el-modal .note{font-size:13px;color:#3f86b3;font-weight:800;margin:6px 0 12px}#el-modal .bk{display:block;background:#10293b;color:#fff;text-decoration:none;border-radius:12px;padding:11px;font-weight:800}'+
 '#el-modal .lk-x{position:absolute;top:4px;inset-inline-end:6px;min-width:44px;min-height:44px;border:0;background:none;font-size:22px;cursor:pointer;color:#10293b}';
 var HTML='<div class="lk"><button type="button" class="lk-x" aria-label="إغلاق">×</button><div style="font-size:34px">🔒</div>'+
-'<h3 id="el-t">سجّل دخولك لفتح باقي الاختبارات</h3><form onsubmit="return false"><input type="email" placeholder="البريد الإلكتروني" disabled>'+
-'<input type="password" placeholder="كلمة المرور" disabled><div class="note">تسجيل الدخول قريباً</div></form>'+
+'<h3 id="el-t">سجّل دخولك لفتح اختباراتك</h3><div class="note">حساب واحد على منصة آباد — تُفتح الاختبارات التي حجزتها من خلال المعهد تلقائيًا بعد تسجيل الدخول.</div>'+
+'<a class="bk" style="background:#3f86b3;margin-bottom:8px" href="login.html?next='+encodeURIComponent(pg+'.html')+'">تسجيل الدخول</a>'+
 '<a class="bk" href="'+BK+'">احجز الآن عبر صفحة الحجز</a></div>';
 function ensure(){var m=document.getElementById('el-modal');if(m)return m;
  var st=document.createElement('style');st.textContent=CSS;document.head.appendChild(st);

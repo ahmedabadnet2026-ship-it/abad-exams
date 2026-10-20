@@ -51,7 +51,7 @@ abd_admin_top('مقاعد المعمل', $me);
 .sc li{margin-bottom:6px}.sc ul{list-style:none;margin:0;padding:0;font-size:13px}.off{opacity:.55}</style>
 <div class="card solo">
   <h1>💺 مقاعد معمل EVE-NG</h1>
-  <p class="mut">كل متدرب له مقعد واحد. عند الضغط على مقعده في صفحة المعمل يصله رمز دخول على بريده، ثم تفتح له صفحة دخول EVE-NG. الأوقات بتوقيت الرياض.</p>
+  <p class="mut">كل متدرب له مقعد واحد. بعد تسجيل دخوله إلى المنصة (نفس حساب الاختبارات) يفتح مقعده مباشرة من صفحة المعمل دون رمز إضافي. الأوقات بتوقيت الرياض.</p>
   <?php if ($flash): ?><div class="<?= $flash[1] ? 'err' : 'okm' ?>"><?=h($flash[0])?></div><?php endif; ?>
   <form class="f" method="post"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="assign">
     <label>المقعد<select name="seat" required><?php for ($i = 1; $i <= ABD_LAB_SEATS; $i++): ?><option value="<?=$i?>"><?=$i?></option><?php endfor; ?></select></label>

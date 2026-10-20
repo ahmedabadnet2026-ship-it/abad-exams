@@ -124,7 +124,7 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 .tile .n{display:block;font-size:9px;opacity:.75;margin-top:2px}
 @media (max-width:760px){.board{grid-template-columns:1fr;padding:6px 10px 16px}.tiles{grid-template-columns:repeat(4,1fr)}}
 @media (max-width:420px){.tiles{grid-template-columns:repeat(3,1fr)}}
-/* seat gate (login + email code) */
+/* seat gate (single platform login) */
 .gate-on .pick{display:none}
 .seat.locked .scr{filter:grayscale(.7) brightness(.6);cursor:not-allowed}.seat.locked .scr:hover{transform:none;box-shadow:none;border-color:#1b2730}
 .seat.locked .scr::after{content:"🔒";position:absolute;top:4px;inset-inline-start:6px;font-size:12px}
@@ -134,7 +134,6 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 .mdb{width:min(400px,100%);border-radius:18px;background:linear-gradient(160deg,#16405e,#0b2236);border:1px solid #F5BD2D88;box-shadow:0 20px 60px #000a,0 0 40px #3f86b355;padding:22px 20px;text-align:center;position:relative}
 .mdb::before{content:"";position:absolute;inset:0 0 auto;height:3px;border-radius:18px 18px 0 0;background:linear-gradient(90deg,var(--blue),var(--gold))}
 .mdb h3{margin:0 0 6px;font-size:19px}.mdb p{margin:0 0 12px;font-size:13.5px;opacity:.9;line-height:1.8}
-.otp{font:inherit;font-size:28px;font-weight:800;letter-spacing:10px;text-align:center;direction:ltr;width:100%;padding:8px 10px 8px 20px;border-radius:12px;border:2px solid var(--gold);background:#071622;color:#fff;margin-bottom:10px}
 .mbtn{font:inherit;font-weight:800;font-size:14px;border:0;border-radius:10px;padding:9px 18px;cursor:pointer;background:var(--gold);color:var(--navy);text-decoration:none;display:inline-block;margin:3px}
 .mbtn.l{background:#ffffff1a;color:#fff;border:1px solid #ffffff33}.mbtn[disabled]{opacity:.5;cursor:wait}
 .merr{min-height:1.4em;color:#ffb4bb;font-size:13px;font-weight:700;margin-bottom:6px}
@@ -142,10 +141,10 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 @media (max-width:560px){.room{padding:14px 8px 22px}.tv{border-width:5px}.tvt{top:2%}.st{width:18.5%}.card{border-radius:8px}.rocket{width:17%}.rlab{font-size:12px}.seats{grid-template-columns:repeat(2,1fr);gap:22px 12px}.desk{padding:10px 8px 8px}.scr{width:90%;border-width:4px}.chair .s{width:50px}.chair .bk{width:56px;height:22px}.steps li{font-size:12px}.steps .ar{display:none}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.seat{opacity:1;transform:none}.st .card,.st .ped{opacity:1}}
 </style>
-<link rel="stylesheet" href="css/home-btn.css?v=abad-202610200200"><script src="js/home-btn.js?v=abad-202610200200" defer></script>
+<link rel="stylesheet" href="css/home-btn.css?v=abad-202610201400"><script src="js/home-btn.js?v=abad-202610201400" defer></script>
 </head>
 <body>
-<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="network-camp.html?v=abad-202610200200" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="network-camp.html?v=abad-202610201400" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
 <main>
 <section class="hero"><small data-t="kick"></small><h1 data-t="title"></h1><p data-t="lead"></p>
 <ol class="steps"><li data-t="s1"></li><span class="ar">←</span><li data-t="s2"></li><span class="ar">←</span><li data-t="s3"></li></ol></section>
@@ -168,7 +167,6 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 </section>
 </main>
 <div class="md" id="md" role="dialog" aria-modal="true" aria-labelledby="mdt"><div class="mdb"><h3 id="mdt"></h3><p id="mdp"></p>
- <div id="mdf" hidden><input class="otp" id="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*" aria-label="OTP"></div>
  <div class="merr" id="merr"></div><div id="mda"></div></div></div>
 <script>
 var L=(function(){try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";
@@ -178,11 +176,9 @@ s1:["اختر مقعدك","Pick your seat"],s2:["افتح اللابتوب","Ope
 camp:["معسكر الشبكات","Networking Bootcamp"],campsub:["حالة المعمل الآن","Live lab status"],goal:["Project","Project"],
 teacher:["مكتب المدرب","Instructor desk"],seat:["مقعد","Seat"],open:["افتح ←","Open →"],mine:["مقعدي","My seat"],pick:["هذا مقعدي","This is my seat"],
 gNoLogin:["سجّل الدخول إلى المنصة لاستخدام مقعدك في المعمل.","Log in to the platform to use your lab seat."],gLogin:["تسجيل الدخول","Log in"],gNoSeat:["لم يُعيَّن لك مقعد بعد — تواصل مع المدرّب.","No seat assigned yet — contact your instructor."],
-gMine:["مقعدك هو رقم","Your seat is number"],gStaff:["دخول المدرّب: يمكنك فتح أي مقعد برمز.","Instructor access: any seat with a code."],gNotMine:["هذا ليس مقعدك.","This is not your seat."],
-oT:["رمز دخول المقعد","Seat access code"],oAsk:["سنرسل رمزًا مكوّنًا من 6 أرقام إلى بريدك المسجّل. أدخله لتنتقل إلى صفحة دخول EVE-NG.","We'll email a 6-digit code to your registered address. Enter it to continue to the EVE-NG login."],
-oSend:["أرسل الرمز","Send code"],oSent:["أُرسل الرمز إلى","Code sent to"],oVerify:["تأكيد ودخول","Verify & open"],oResend:["إعادة الإرسال","Resend"],oClose:["إغلاق","Close"],
-eRate:["طلبات كثيرة، انتظر قليلًا ثم أعد المحاولة.","Too many requests, please wait and retry."],eWrong:["رمز غير صحيح. المحاولات المتبقية:","Wrong code. Attempts left:"],eExp:["انتهت صلاحية الرمز، اطلب رمزًا جديدًا.","Code expired, request a new one."],
-eMail:["تعذّر إرسال البريد الآن، حاول لاحقًا.","Couldn't send the email now, try later."],eNet:["تعذّر الاتصال، حاول مرة أخرى.","Connection failed, try again."],eSeat:["هذا المقعد غير مخصص لك.","This seat isn't assigned to you."],
+gMine:["مقعدك هو رقم","Your seat is number"],gStaff:["دخول المدرّب: يمكنك فتح أي مقعد.","Instructor access: any seat."],gNotMine:["هذا ليس مقعدك.","This is not your seat."],gHi:["مرحبًا","Hi"],gOut:["خروج","Log out"],
+oT:["دخول المعمل","Lab access"],oOpen:["جارٍ فتح مقعدك…","Opening your seat…"],oClose:["إغلاق","Close"],
+eRate:["طلبات كثيرة، انتظر قليلًا ثم أعد المحاولة.","Too many requests, please wait and retry."],eNet:["تعذّر الاتصال، حاول مرة أخرى.","Connection failed, try again."],eSeat:["هذا المقعد غير مخصص لك.","This seat isn't assigned to you."],
 lgOk:["طالب يعمل","Student working"],lgIdle:["متصل — خامل","Online — idle"],lgBad:["غير متاح","Offline"],lab:["حمل المعمل","Lab load"],devs:["جهاز نشط","active devices"],online:["مقعد متصل من 12","seats online of 12"],na:["غير متاح","Unavailable"],low:["خفيف","Light"],mid:["متوسط","Moderate"],high:["مرتفع","High"],nodes:["أجهزة","nodes"],ld:["الحمل","Load"],lgMine:["مقعدي","My seat"],chk:["جارٍ الفحص…","Checking…"]};
 var MS='<svg viewBox="0 0 24 24"><rect width="11" height="11"/><rect x="13" width="11" height="11"/><rect y="13" width="11" height="11"/><rect x="13" y="13" width="11" height="11"/></svg>';
 var ST=[["Network+","CompTIA",'<img src="assets/logos/comptia.svg" alt="">'],["CCNA","Cisco",'<img src="assets/logos/cisco.svg" alt="">'],["CCNP","Cisco",'<img src="assets/logos/cisco.svg" alt="">'],["MCSA","Microsoft",MS],["NSE4","Fortinet",'<img src="assets/logos/fortinet.svg" alt="">']];
@@ -225,50 +221,45 @@ function poll(){var c=window.AbortController?new AbortController():null,t=setTim
  fetch(API,{cache:"no-store",signal:c&&c.signal}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){clearTimeout(t);if(!d||!d.seats)throw 0;FAILS=0;render(d)})
  .catch(function(){clearTimeout(t);LAST=null;gauge(null);if(FAILS++%12==0)for(var n=1;n<=12;n++)probe(n)})}
 for(var n=1;n<=12;n++)setSeat(n,"",null);gauge(null);poll();setInterval(poll,5000);
-/* ---- seat gate: platform login + email OTP → signed token → eveN.abad-labs.com/?t=… ----
+/* ---- seat gate: single platform login (same account/session as the exams) → signed token → eveN.abad-labs.com/?t=… ----
+   No second sign-in: the logged-in user's assigned seat (abd_lab_seats) opens directly.
    Active only when the platform API with lab_seat.php is reachable (Cloudways); elsewhere seats open directly as before. */
-var G={on:false,user:null,seat:null,staff:false,cur:0};
+var G={on:false,user:null,seat:null,staff:false};
 function gq(p,o){return window.ABAD_API?ABAD_API.req(p,o):Promise.reject(0)}
+function gname(){var u=G.user;return u?(L=="en"?u.full_name_en||u.full_name_ar:u.full_name_ar||u.full_name_en)||u.email:""}
 function gbar(){var b=document.getElementById("gbar");if(!G.on)return;
  if(!G.user){b.innerHTML=tr("gNoLogin")+' <a href="login.html?next=eve-classroom.html">'+tr("gLogin")+"</a>";return}
- b.textContent=G.staff?tr("gStaff"):G.seat?tr("gMine")+" "+G.seat:tr("gNoSeat")}
+ b.textContent=tr("gHi")+" "+gname()+" — "+(G.staff?tr("gStaff"):G.seat?tr("gMine")+" "+G.seat:tr("gNoSeat"));
+ var o=document.createElement("a");o.href="#";o.textContent=" · "+tr("gOut");o.onclick=function(e){e.preventDefault();ABAD_API.logout().then(function(){location.reload()})};b.appendChild(o)}
 function gapply(){document.body.classList.toggle("gate-on",G.on);if(!G.on)return;
  document.querySelectorAll(".seat").forEach(function(s){var n=+s.dataset.n;s.classList.toggle("locked",!G.staff&&n!==G.seat)});
  if(G.seat)setMine(G.seat);gbar()}
 function ginit(){if(!window.ABAD_API)return;ABAD_API.me().then(function(st){if(!st)return;
- return gq("lab_seat.php?action=mine").then(function(j){
-  if(j.ok){G.on=true;G.user=st.user;G.seat=j.seat||null;G.staff=!!j.staff}else if(j.error==="auth"){G.on=true;G.user=null}
-  gapply()})}).catch(function(){})}
-var MD=document.getElementById("md"),OTP=document.getElementById("otp");
-function mopen(t,p,btns,form){document.getElementById("mdt").textContent=t;document.getElementById("mdp").textContent=p;document.getElementById("merr").textContent="";
- document.getElementById("mdf").hidden=!form;var a=document.getElementById("mda");a.innerHTML="";
+ if(!st.user){G.on=true;G.user=null;gapply();return}
+ return gq("lab_seat.php?action=mine").then(function(j){if(j.ok){G.on=true;G.user=st.user;G.seat=j.seat||null;G.staff=!!j.staff}gapply()})}).catch(function(){})}
+var MD=document.getElementById("md");
+function mopen(t,p,btns){document.getElementById("mdt").textContent=t;document.getElementById("mdp").textContent=p;document.getElementById("merr").textContent="";
+ var a=document.getElementById("mda");a.innerHTML="";
  btns.forEach(function(b){var e=document.createElement(b.href?"a":"button");e.className="mbtn"+(b.l?" l":"");e.textContent=b.t;if(b.href)e.href=b.href;else{e.type="button";e.onclick=b.f}a.appendChild(e)});
- MD.classList.add("open");if(form){OTP.value="";setTimeout(function(){OTP.focus()},50)}}
+ MD.classList.add("open")}
 function mclose(){MD.classList.remove("open")}
 MD.addEventListener("click",function(e){if(e.target===MD)mclose()});document.addEventListener("keydown",function(e){if(e.key==="Escape")mclose()});
-function merr(k,x){document.getElementById("merr").textContent=tr(k)+(x!=null?" "+x:"")}
-function ebusy(on){document.querySelectorAll("#mda .mbtn").forEach(function(b){b.disabled=on})}
-function gerr(j){var e=j&&j.error;merr(e==="rate_limited"?"eRate":e==="wrong_code"?"eWrong":e==="expired"?"eExp":e==="mail_failed"?"eMail":e==="not_your_seat"?"eSeat":"eNet",e==="wrong_code"?j.left:null)}
-function gsend(){ebusy(true);gq("lab_seat.php",{method:"POST",body:{action:"request",seat:G.cur}}).then(function(j){ebusy(false);
-  if(!j.ok)return gerr(j);
-  mopen(tr("oT")+" — "+tr("seat")+" "+G.cur,tr("oSent")+" "+j.sent_to,[{t:tr("oVerify"),f:gverify},{t:tr("oResend"),f:gsend,l:1},{t:tr("oClose"),f:mclose,l:1}],true)})
- .catch(function(){ebusy(false);merr("eNet")})}
-function gverify(){var c=(OTP.value||"").replace(/[٠-٩]/g,function(d){return "٠١٢٣٤٥٦٧٨٩".indexOf(d)}).replace(/\D/g,"");if(c.length!==6){OTP.focus();return}
- ebusy(true);gq("lab_seat.php",{method:"POST",body:{action:"verify",seat:G.cur,code:c}}).then(function(j){
-  if(j.ok&&j.url&&/^https:\/\/eve\d{1,2}\.abad-labs\.com\//.test(j.url)){location.href=j.url;return}ebusy(false);gerr(j)}).catch(function(){ebusy(false);merr("eNet")})}
-OTP.addEventListener("keydown",function(e){if(e.key==="Enter")gverify()});
-OTP.addEventListener("input",function(){if(OTP.value.replace(/\D/g,"").length===6)gverify()});
+function gopen(n){mopen(tr("oT")+" — "+tr("seat")+" "+n,tr("oOpen"),[{t:tr("oClose"),f:mclose,l:1}]);
+ gq("lab_seat.php",{method:"POST",body:{action:"open",seat:n}}).then(function(j){
+  if(j.ok&&j.url&&/^https:\/\/eve\d{1,2}\.abad-labs\.com\//.test(j.url)){setMine(n);location.href=j.url;return}
+  document.getElementById("merr").textContent=tr(j&&j.error==="rate_limited"?"eRate":j&&j.error==="not_your_seat"?"eSeat":"eNet")})
+ .catch(function(){document.getElementById("merr").textContent=tr("eNet")})}
 /* returns true when the click was handled by the gate */
 function gclick(n){if(!G.on)return false;
  if(!G.user){mopen(tr("oT"),tr("gNoLogin"),[{t:tr("gLogin"),href:"login.html?next=eve-classroom.html"},{t:tr("oClose"),f:mclose,l:1}]);return true}
  if(!G.staff&&n!==G.seat){mopen(tr("oT"),G.seat?tr("gNotMine")+" "+tr("gMine")+" "+G.seat:tr("gNoSeat"),[{t:tr("oClose"),f:mclose,l:1}]);return true}
- G.cur=n;mopen(tr("oT")+" — "+tr("seat")+" "+n,tr("oAsk"),[{t:tr("oSend"),f:gsend},{t:tr("oClose"),f:mclose,l:1}]);return true}
+ gopen(n);return true}
 document.addEventListener("DOMContentLoaded",ginit);
 function paint(){var i=L=="ar"?0:1;document.documentElement.lang=L;document.documentElement.dir=L=="ar"?"rtl":"ltr";document.getElementById("lang").textContent=L=="ar"?"English":"العربية";document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=S[e.dataset.t][i]});
  document.querySelectorAll("a.scr").forEach(function(a){a.setAttribute("aria-label",S.seat[i]+" "+a.dataset.seat)});document.title=S.title[i]+" — "+S.inst[i];if(LAST)render(LAST);else gauge(null);gbar()}
 document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{localStorage.setItem("abad-lang",L)}catch(e){}paint()};paint();
 </script>
 <script src="js/abad-api.js?r=2026101821" defer></script>
-<script src="js/abad-labs.js?v=abad-202610200200" defer></script>
+<script src="js/abad-labs.js?v=abad-202610201400" defer></script>
 </body>
 </html>

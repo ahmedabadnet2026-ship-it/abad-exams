@@ -181,7 +181,7 @@ function results(){const L=S.last;if(!L)return home();const p=Math.round(L.corre
  <div class="exp"><b>الإجابة الصحيحة:</b> <span dir="ltr">${q.type==='cls'?q.ans.map((c,i)=>(i+1)+'→'+c).join('; '):(q.ans.join(', ')||'—')}</span> · <b>إجابتك:</b> <span dir="ltr">${q.type==='cls'?x.a.map((c,i)=>(i+1)+'→'+(c||'—')).join('; '):(x.a.join(', ')||'—')}</span><br><b>الشرح:</b> ${q.exp?`<span class="qtext" style="display:block">${esc(q.exp)}</span>`:'لا يوجد شرح في المصدر لهذا السؤال.'}${q.note?`<br><b style="color:var(--bad)">ملاحظة المدرب:</b> <span dir="ltr">${esc(q.note)}</span>`:''}</div></div>`}).join('')}`;window.scrollTo(0,0)}
 if(S.run){S.exam=S.run.exam;if(S.run.mode==='brkoffer')brkOffer();else show();startTick()}else home();
 </script>
-<script src="js/exam-lock.js?r=202610162110"></script><script>ExamLock.runTemplate();</script>
+<script src="js/exam-lock.js?v=abad-202610201400"></script><script>ExamLock.runTemplate();</script>
 <script>(function(){var L=null;try{var q=new URLSearchParams(location.search).get("lang");L=q||(location.hash.match(/lang=(en|ar)/)||[])[1]||localStorage.getItem("abad-lang")}catch(e){}
 if(L!=="en")return;function f(){var a=document.querySelector(".abad-back");if(!a)return;a.textContent="← Back to platform";a.style.direction="ltr";var h=a.getAttribute("href");if(h&&!/lang=/.test(h)){var p=h.split("#");a.setAttribute("href",p[0]+(p[0].indexOf("?")<0?"?":"&")+"lang=en"+(p[1]?"#"+p[1]:""))}}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",f);else f()})()</script><!--ABAD-AN--><style>#abad-an{font-family:Cairo,system-ui,sans-serif;color:#10293b;margin:18px 0;display:grid;gap:14px;text-align:start}
