@@ -178,7 +178,7 @@ kick:["🧑‍💻 معمل EVE-NG","🧑‍💻 EVE-NG Lab"],title:["المعم
 s1:["اختر مقعدك","Pick your seat"],s2:["افتح اللابتوب","Open the laptop"],s3:["سجّل بالبيانات من المدرّب","Log in with your instructor's details"],
 camp:["معسكر الشبكات","Networking Bootcamp"],campsub:["حالة المعمل الآن","Live lab status"],goal:["Project","Project"],
 teacher:["مكتب المدرب","Instructor desk"],seat:["مقعد","Seat"],open:["افتح ←","Open →"],mine:["مقعدي","My seat"],pick:["هذا مقعدي","This is my seat"],
-gNoLogin:["سجّل الدخول إلى المنصة لاستخدام مقعدك في المعمل.","Log in to the platform to use your lab seat."],gLogin:["تسجيل الدخول","Log in"],gNoSeat:["لم يُعيَّن لك مقعد بعد — تواصل مع المدرّب.","No seat assigned yet — contact your instructor."],
+gNoLogin:["سجّل الدخول إلى المنصة لاستخدام مقعدك في المعمل.","Log in to the platform to use your lab seat."],gLogin:["تسجيل الدخول","Log in"],gNoSeat:["لم يُعيَّن لك مقعد بعد. احجز مقعدًا في المعمل وسيفتح لك هنا تلقائيًا.","No seat assigned yet. Book a lab seat and it will open for you here."],gBook:["احجز مقعدًا","Book a seat"],
 gMine:["مقعدك هو رقم","Your seat is number"],gStaff:["دخول المدرّب: يمكنك فتح أي مقعد.","Instructor access: any seat."],gNotMine:["هذا ليس مقعدك.","This is not your seat."],gHi:["مرحبًا","Hi"],gOut:["خروج","Log out"],
 oT:["دخول المعمل","Lab access"],cSend:["جارٍ إرسال رمز التأكيد إلى بريدك…","Sending a confirmation code to your email…"],cSent:["أرسلنا رمز تأكيد من 6 أرقام مع بيانات دخول EVE-NG لمقعدك إلى","We emailed a 6-digit confirmation code and your seat's EVE-NG login to"],cGo:["تأكيد وفتح المقعد","Confirm & open seat"],cRe:["إعادة إرسال الرمز","Resend code"],cOk:["تم التأكيد ✓ سجّل الدخول إلى EVE-NG باسم المستخدم:","Confirmed ✓ Sign in to EVE-NG as:"],cPw:["كلمة المرور في رسالة البريد.","The password is in the email."],cOpen:["افتح المقعد ←","Open seat →"],eWrong:["الرمز غير صحيح. المحاولات المتبقية:","Wrong code. Attempts left:"],eExp:["انتهت صلاحية الرمز — أعد الإرسال.","Code expired — resend."],eMail:["تعذّر إرسال البريد الآن، حاول لاحقًا.","Could not send the email now, try later."],eCode:["أدخل الرمز المكوّن من 6 أرقام.","Enter the 6-digit code."],oOpen:["جارٍ فتح مقعدك…","Opening your seat…"],oClose:["إغلاق","Close"],
 eRate:["طلبات كثيرة، انتظر قليلًا ثم أعد المحاولة.","Too many requests, please wait and retry."],eNet:["تعذّر الاتصال، حاول مرة أخرى.","Connection failed, try again."],eSeat:["هذا المقعد غير مخصص لك.","This seat isn't assigned to you."],
@@ -234,6 +234,7 @@ function gname(){var u=G.user;return u?(L=="en"?u.full_name_en||u.full_name_ar:u
 function gbar(){var b=document.getElementById("gbar");if(!G.on)return;
  if(!G.user){b.innerHTML=tr("gNoLogin")+' <a href="login.html?next=eve-classroom.html">'+tr("gLogin")+"</a>";return}
  b.textContent=tr("gHi")+" "+gname()+" — "+(G.staff?tr("gStaff"):G.seat?tr("gMine")+" "+G.seat:tr("gNoSeat"));
+ if(!G.staff&&!G.seat){var k=document.createElement("a");k.href="eve-lab-booking.html";k.textContent=" · "+tr("gBook");b.appendChild(k)}
  var o=document.createElement("a");o.href="#";o.textContent=" · "+tr("gOut");o.onclick=function(e){e.preventDefault();ABAD_API.logout().then(function(){location.reload()})};b.appendChild(o)}
 function gapply(){document.body.classList.toggle("gate-on",G.on);if(!G.on)return;
  document.querySelectorAll(".seat").forEach(function(s){var n=+s.dataset.n;s.classList.toggle("locked",!G.staff&&n!==G.seat)});
@@ -271,7 +272,7 @@ function gverify(n){var O=document.getElementById("otp"),c=O.value.replace(/\D/g
 /* returns true when the click was handled by the gate */
 function gclick(n){if(!G.on)return false;
  if(!G.user){mopen(tr("oT"),tr("gNoLogin"),[{t:tr("gLogin"),href:"login.html?next=eve-classroom.html"},{t:tr("oClose"),f:mclose,l:1}]);return true}
- if(!G.staff&&n!==G.seat){mopen(tr("oT"),G.seat?tr("gNotMine")+" "+tr("gMine")+" "+G.seat:tr("gNoSeat"),[{t:tr("oClose"),f:mclose,l:1}]);return true}
+ if(!G.staff&&n!==G.seat){mopen(tr("oT"),G.seat?tr("gNotMine")+" "+tr("gMine")+" "+G.seat:tr("gNoSeat"),(G.seat?[]:[{t:tr("gBook"),href:"eve-lab-booking.html"}]).concat([{t:tr("oClose"),f:mclose,l:1}]));return true}
  gopen(n);return true}
 document.addEventListener("DOMContentLoaded",ginit);
 function paint(){var i=L=="ar"?0:1;document.documentElement.lang=L;document.documentElement.dir=L=="ar"?"rtl":"ltr";document.getElementById("lang").textContent=L=="ar"?"English":"العربية";document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=S[e.dataset.t][i]});

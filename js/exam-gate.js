@@ -13,7 +13,7 @@ var MAP={"aplus-core1-exam":["aplus-core1","comptia","aplus"],"aplus-core2-exam"
  "security-plus-exam":["security-plus","comptia","security"],"linux-plus-exam":["linux-plus","comptia","linux"],"pmp-exam":["pmp","pmi","pmp"],"itil5-exam":["itil5","peoplecert","itil5"],"ejpt-trial-exam":["ejpt-trial","ine","ejpt"]};
 var EN=function(){try{return localStorage.getItem("abad-lang")==="en"}catch(e){return false}};
 var T={lock:["يفتح بعد الحجز من خلال المعهد","Opens after booking through the institute"],book:["احجز من خلال المعهد","Book through the institute"],
- login:["تسجيل الدخول","Sign in"],logout:["خروج","Log out"],open:["متاح لك","Open for you"],needLogin:["سجّل الدخول لفتح اختباراتك","Sign in to unlock your exams"],needLoginS:["سجّل الدخول لفتح خدماتك","Sign in to unlock your services"],mlock:["تُفتح الماتريال بعد التسجيل في الدورة من خلال المعهد","Material opens after enrolling through the institute"],llock:["يُفتح اللاب بعد حجز مقعد من خلال المعهد","Lab opens after booking a seat through the institute"],seat:["مقعدك","Your seat"],
+ login:["تسجيل الدخول","Sign in"],logout:["خروج","Log out"],open:["متاح لك","Open for you"],needLogin:["سجّل الدخول لفتح اختباراتك","Sign in to unlock your exams"],needLoginS:["سجّل الدخول لفتح خدماتك","Sign in to unlock your services"],mlock:["تُفتح الماتريال بعد التسجيل في الدورة من خلال المعهد","Material opens after enrolling through the institute"],llock:["لم يُعيَّن لك مقعد بعد — احجز مقعدًا من خلال المعهد","No seat assigned yet — book a seat through the institute"],seat:["مقعدك","Your seat"],
  email:["البريد الإلكتروني","Email"],pw:["كلمة المرور","Password"],go:["دخول","Sign in"],reg:["ليس لديك حساب؟ أنشئ حسابًا","No account? Create one"],close:["إغلاق","Close"],
  lt:["تسجيل الدخول إلى منصة آباد","Sign in to the Abad platform"],lp:["حساب واحد للاختبارات والمعمل. تُفتح اختباراتك المحجوزة تلقائيًا.","One account for exams and the lab. Your booked exams unlock automatically."],
  bad:["البريد أو كلمة المرور غير صحيحة.","Wrong email or password."],rate:["محاولات كثيرة، انتظر قليلًا.","Too many attempts, please wait."],net:["تعذّر الاتصال، حاول مرة أخرى.","Connection failed, try again."]};
@@ -91,7 +91,8 @@ function markSvc(){var logged=!!(ST&&ST.user),mt=(ENT&&ENT.materials)||{},lb=(EN
  document.querySelectorAll("[data-abad-lab]").forEach(function(a){a.dataset.xg=1;if(a.dataset.xgHref===undefined)a.dataset.xgHref=a.getAttribute("href")||"";
   if(logged&&(lb.length||(ENT&&ENT.staff))){a.setAttribute("href",lb.length?lb[0].url:"eve-classroom.html");
    a.insertAdjacentHTML("beforeend",'<span class="xg-ok">✓ '+(lb.length?t("seat")+" "+lb[0].seat:t("open"))+"</span>");return}
-  a.classList.add("xg-lock");a.setAttribute("aria-label","🔒 "+a.textContent.trim());note(a,logged?t("llock"):t("needLoginS"),logged,"eve-lab-booking.html")})}
+  if(logged){a.setAttribute("href","eve-classroom.html");note(a,t("llock"),true,"eve-lab-booking.html");return}   /* no seat: the lab page explains + offers booking */
+  a.classList.add("xg-lock");a.setAttribute("aria-label","🔒 "+a.textContent.trim());note(a,t("needLoginS"),false,"eve-lab-booking.html")})}
 document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest(".xg-lock[data-abad-material],.xg-lock[data-abad-lab]");if(!a||e.target.closest(".xg-note"))return;
  e.preventDefault();e.stopImmediatePropagation();if(!(ST&&ST.user))openLogin();else location.href=a.hasAttribute("data-abad-lab")?"eve-lab-booking.html":"booking.html"},true);
 /* ---------- single source: api/my_services.php ---------- */
