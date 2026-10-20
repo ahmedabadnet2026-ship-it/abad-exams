@@ -115,11 +115,11 @@ function abd_mail_is_sender(string $to): bool {
   return false;
 }
 function abd_lab_code_mail(string $to, string $name, int $seat, string $code, ?array $cred): bool {
-  $rows = ['المقعد' => 'EVE ' . $seat . ' — eve' . $seat . '.abad-labs.com'];
-  if ($cred) { $rows['اسم المستخدم في EVE-NG'] = $cred['user']; $rows['كلمة المرور في EVE-NG'] = $cred['pass']; }
-  $html = abd_code_mail_html($name, 'المعمل', 'رمز تأكيد فتح <b>مقعد ' . $seat . '</b> في معمل EVE-NG. أدخله في صفحة المعمل، ثم سجّل الدخول إلى EVE-NG ببيانات مقعدك:', $code, $rows);
+  $rows = ['المقعد' => 'مقعد ' . $seat];
+  if ($cred) { $rows['اسم المستخدم'] = $cred['user']; $rows['كلمة المرور'] = $cred['pass']; }
+  $html = abd_code_mail_html($name, 'المعمل', 'رمز تأكيد فتح <b>مقعد ' . $seat . '</b> في المعمل. أدخله في صفحة المعمل، ثم سجّل الدخول ببيانات مقعدك:', $code, $rows);
   $text = "معهد شبكة آباد للتدريب — المعمل\nرمز فتح مقعد $seat: $code\n"
-    . ($cred ? "EVE-NG: {$cred['user']} / {$cred['pass']}\n" : '') . "ينتهي خلال 10 دقائق ويُستخدم مرة واحدة. لا تشاركه مع أحد.";
+    . ($cred ? "اسم المستخدم: {$cred['user']} / كلمة المرور: {$cred['pass']}\n" : '') . "ينتهي خلال 10 دقائق ويُستخدم مرة واحدة. لا تشاركه مع أحد.";
   return abd_smtp_send($to, 'رمز فتح مقعد المعمل ' . $seat . ': ' . $code, $html, $text);
 }
 

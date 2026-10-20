@@ -22,7 +22,7 @@ const ABD_MATERIALS = [
   'nse4'          => ['title' => 'Fortinet NSE4 — Course Material',      'file' => 'nse4.pdf',          'mime' => 'application/pdf'],
   'rhcsa'         => ['title' => 'Red Hat RHCSA — Course Material',      'file' => 'rhcsa.pdf',         'mime' => 'application/pdf'],
 ];
-const ABD_ENT_KINDS = ['exam' => 'اختبار', 'material' => 'ماتريال', 'lab' => 'لاب (مقعد EVE)'];
+const ABD_ENT_KINDS = ['exam' => 'اختبار', 'material' => 'ماتريال', 'lab' => 'لاب (مقعد)'];
 
 function abd_material_dir(): string {
   $pos = strpos(__DIR__, '/public_html');
@@ -37,7 +37,7 @@ function abd_material_dir(): string {
 function abd_ent_refs(string $kind): array {
   if ($kind === 'exam') { $o = []; foreach (abd_exam_certs() as $id => $c) $o[$id] = $c['title']; return $o; }
   if ($kind === 'material') { $o = []; foreach (ABD_MATERIALS as $id => $m) $o[$id] = $m['title']; return $o; }
-  if ($kind === 'lab') { $o = []; for ($i = 1; $i <= ABD_LAB_SEATS; $i++) $o[(string)$i] = 'EVE ' . $i; return $o; }
+  if ($kind === 'lab') { $o = []; for ($i = 1; $i <= ABD_LAB_SEATS; $i++) $o[(string)$i] = 'مقعد ' . $i; return $o; }
   return [];
 }
 
@@ -64,6 +64,6 @@ function abd_services_of(array $u): array {
     $mats[] = ['id' => $id, 'title' => $m['title'], 'url' => 'api/material.php?id=' . rawurlencode($id)];
   $labs = [];
   foreach (abd_lab_seats_of((int)$u['id']) as $s)
-    $labs[] = ['id' => 'eve-' . $s, 'seat' => $s, 'title' => 'معمل EVE — المقعد ' . $s, 'url' => 'eve-classroom.html?seat=' . $s];
+    $labs[] = ['id' => 'eve-' . $s, 'seat' => $s, 'title' => 'المعمل — مقعد ' . $s, 'url' => 'eve-classroom.html?seat=' . $s];
   return ['exams' => $exams, 'materials' => $mats, 'labs' => $labs];
 }

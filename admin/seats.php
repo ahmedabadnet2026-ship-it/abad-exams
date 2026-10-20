@@ -50,7 +50,7 @@ abd_admin_top('مقاعد المعمل', $me);
 .sc h3{margin:0 0 6px;font-size:15px;display:flex;justify-content:space-between}.sc h3 span{color:var(--g);background:var(--n);border-radius:8px;padding:0 8px}
 .sc li{margin-bottom:6px}.sc ul{list-style:none;margin:0;padding:0;font-size:13px}.off{opacity:.55}</style>
 <div class="card solo">
-  <h1>💺 مقاعد معمل EVE-NG</h1>
+  <h1>💺 مقاعد المعمل</h1>
   <p class="mut">كل متدرب له مقعد واحد. بعد تسجيل دخوله إلى المنصة (نفس حساب الاختبارات) يفتح مقعده مباشرة من صفحة المعمل دون رمز إضافي. الأوقات بتوقيت الرياض.</p>
   <?php if ($flash): ?><div class="<?= $flash[1] ? 'err' : 'okm' ?>"><?=h($flash[0])?></div><?php endif; ?>
   <form class="f" method="post"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="assign">
