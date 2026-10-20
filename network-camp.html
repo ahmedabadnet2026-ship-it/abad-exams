@@ -31,8 +31,8 @@ a.cd:hover{transform:translateY(-4px);border-color:#F5BD2D}
 <header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="camps.html?v=abad-202610190050" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
 <section class="hero"><small data-t="kick"></small><h1 data-t="nc"></h1><p data-t="lead"></p></section>
 <div class="grid">
- <a class="cd" data-lab="eve" href="eve-classroom.html?v=abad-202610190050"><span class="tag" data-t="t1"></span><span class="ic">🏫</span><b data-t="lab"></b><p data-t="labd"></p><span class="go" data-t="open"></span></a>
- <a class="cd" href="network-camp-material.html?v=abad-202610190050"><span class="tag soon" data-t="t2"></span><span class="ic">📘</span><b data-t="mat"></b><p data-t="matd"></p><span class="go" data-t="open"></span></a>
+ <a class="cd" data-lab="eve" data-abad-lab href="eve-classroom.html?v=abad-202610201800"><span class="tag" data-t="t1"></span><span class="ic">🏫</span><b data-t="lab"></b><p data-t="labd"></p><span class="go" data-t="open"></span></a>
+ <a class="cd" href="network-camp-material.html?v=abad-202610201800"><span class="tag soon" data-t="t2"></span><span class="ic">📘</span><b data-t="mat"></b><p data-t="matd"></p><span class="go" data-t="open"></span></a>
 </div>
 <script>
 var L=(function(){try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";
@@ -41,5 +41,6 @@ function paint(){var i=L=="ar"?0:1;document.documentElement.lang=L;document.docu
 document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{localStorage.setItem("abad-lang",L)}catch(e){}paint()};paint();
 </script>
 <script src="js/abad-labs.js?v=abad-202610190050" defer></script>
+<script src="js/abad-api.js?r=2026101821" defer></script><script src="js/exam-gate.js?v=abad-202610201800" defer></script>
 </body>
 </html>

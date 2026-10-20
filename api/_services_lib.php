@@ -17,6 +17,9 @@ const ABD_MATERIALS = [
   'network-plus'  => ['title' => 'CompTIA Network+ — Course Material',   'file' => 'network-plus.pdf',  'mime' => 'application/pdf'],
   'security-plus' => ['title' => 'CompTIA Security+ — Course Material',  'file' => 'security-plus.pdf', 'mime' => 'application/pdf'],
   'linux-plus'    => ['title' => 'CompTIA Linux+ — Course Material',     'file' => 'linux-plus.pdf',    'mime' => 'application/pdf'],
+  'ccnp'          => ['title' => 'Cisco CCNP — Course Material',         'file' => 'ccnp.pdf',          'mime' => 'application/pdf'],
+  'mcsa'          => ['title' => 'Microsoft MCSA — Course Material',     'file' => 'mcsa.pdf',          'mime' => 'application/pdf'],
+  'nse4'          => ['title' => 'Fortinet NSE4 — Course Material',      'file' => 'nse4.pdf',          'mime' => 'application/pdf'],
   'rhcsa'         => ['title' => 'Red Hat RHCSA — Course Material',      'file' => 'rhcsa.pdf',         'mime' => 'application/pdf'],
 ];
 const ABD_ENT_KINDS = ['exam' => 'اختبار', 'material' => 'ماتريال', 'lab' => 'لاب (مقعد EVE)'];

@@ -144,7 +144,7 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 <link rel="stylesheet" href="css/home-btn.css?v=abad-202610201400"><script src="js/home-btn.js?v=abad-202610201400" defer></script>
 </head>
 <body>
-<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="network-camp.html?v=abad-202610201400" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="network-camp.html?v=abad-202610201800" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
 <main>
 <section class="hero"><small data-t="kick"></small><h1 data-t="title"></h1><p data-t="lead"></p>
 <ol class="steps"><li data-t="s1"></li><span class="ar">←</span><li data-t="s2"></li><span class="ar">←</span><li data-t="s3"></li></ol></section>
@@ -222,8 +222,9 @@ function poll(){var c=window.AbortController?new AbortController():null,t=setTim
  .catch(function(){clearTimeout(t);LAST=null;gauge(null);if(FAILS++%12==0)for(var n=1;n<=12;n++)probe(n)})}
 for(var n=1;n<=12;n++)setSeat(n,"",null);gauge(null);poll();setInterval(poll,5000);
 /* ---- seat gate: single platform login (same account/session as the exams) → signed token → eveN.abad-labs.com/?t=… ----
-   No second sign-in: the logged-in user's assigned seat (abd_lab_seats) opens directly.
-   Active only when the platform API with lab_seat.php is reachable (Cloudways); elsewhere seats open directly as before. */
+   No second sign-in: the logged-in user's assigned seat opens directly. Seat comes from api/my_services.php (same source as خدماتي:
+   abd_lab_seats + abd_entitlements kind=lab).
+   Active only when the platform API (my_services.php / lab_seat.php) is reachable (Cloudways); elsewhere seats open directly as before. */
 var G={on:false,user:null,seat:null,staff:false};
 function gq(p,o){return window.ABAD_API?ABAD_API.req(p,o):Promise.reject(0)}
 function gname(){var u=G.user;return u?(L=="en"?u.full_name_en||u.full_name_ar:u.full_name_ar||u.full_name_en)||u.email:""}
@@ -236,7 +237,7 @@ function gapply(){document.body.classList.toggle("gate-on",G.on);if(!G.on)return
  if(G.seat)setMine(G.seat);gbar()}
 function ginit(){if(!window.ABAD_API)return;ABAD_API.me().then(function(st){if(!st)return;
  if(!st.user){G.on=true;G.user=null;gapply();return}
- return gq("lab_seat.php?action=mine").then(function(j){if(j.ok){G.on=true;G.user=st.user;G.seat=j.seat||null;G.staff=!!j.staff}gapply()})}).catch(function(){})}
+ return gq("my_services.php").then(function(j){if(j.ok&&j.logged_in){var lb=(j.services&&j.services.labs)||[];G.on=true;G.user=st.user;G.seat=lb.length?+lb[0].seat:null;G.staff=!!j.staff}gapply()})}).catch(function(){})}
 var MD=document.getElementById("md");
 function mopen(t,p,btns){document.getElementById("mdt").textContent=t;document.getElementById("mdp").textContent=p;document.getElementById("merr").textContent="";
  var a=document.getElementById("mda");a.innerHTML="";

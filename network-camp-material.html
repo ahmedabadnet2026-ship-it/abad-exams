@@ -28,21 +28,23 @@ a.cd:hover{transform:translateY(-4px);border-color:#F5BD2D}
 <link rel="stylesheet" href="css/home-btn.css?r=2026101821"><script src="js/home-btn.js?r=2026101821" defer></script>
 </head>
 <body>
-<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="network-camp.html?v=abad-202610190050" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><a class="hb" href="network-camp.html?v=abad-202610201800" data-t="back"></a><button class="hb" id="lang" type="button"></button></header>
 <section class="hero"><small data-t="kick"></small><h1 data-t="mat"></h1><p data-t="lead"></p></section>
 <div class="grid">
- <div class="cd off"><span class="tag soon" data-t="soon"></span><img src="assets/logos/comptia.svg" alt="" style="height:30px;align-self:flex-start;filter:brightness(0) invert(1)"><b dir="ltr" style="align-self:flex-start">Network+</b><p>CompTIA</p></div>
- <div class="cd off"><span class="tag soon" data-t="soon"></span><img src="assets/logos/cisco.svg" alt="" style="height:30px;align-self:flex-start;filter:brightness(0) invert(1)"><b dir="ltr" style="align-self:flex-start">CCNA</b><p>Cisco</p></div>
- <div class="cd off"><span class="tag soon" data-t="soon"></span><img src="assets/logos/cisco.svg" alt="" style="height:30px;align-self:flex-start;filter:brightness(0) invert(1)"><b dir="ltr" style="align-self:flex-start">CCNP</b><p>Cisco</p></div>
- <div class="cd off"><span class="tag soon" data-t="soon"></span><span class="ic">🪟</span><b dir="ltr" style="align-self:flex-start">MCSA</b><p>Microsoft</p></div>
- <div class="cd off"><span class="tag soon" data-t="soon"></span><img src="assets/logos/fortinet.svg" alt="" style="height:30px;align-self:flex-start;filter:brightness(0) invert(1)"><b dir="ltr" style="align-self:flex-start">NSE4</b><p>Fortinet</p></div>
+ <a class="cd" data-abad-material="network-camp"><span class="ic">📦</span><b data-t="pack"></b><p data-t="packd"></p></a>
+ <a class="cd" data-abad-material="network-plus"><img src="assets/logos/comptia.svg" alt="" style="height:30px;align-self:flex-start;filter:brightness(0) invert(1)"><b dir="ltr" style="align-self:flex-start">Network+</b><p>CompTIA</p></a>
+ <a class="cd" data-abad-material="ccna"><img src="assets/logos/cisco.svg" alt="" style="height:30px;align-self:flex-start;filter:brightness(0) invert(1)"><b dir="ltr" style="align-self:flex-start">CCNA</b><p>Cisco</p></a>
+ <a class="cd" data-abad-material="ccnp"><img src="assets/logos/cisco.svg" alt="" style="height:30px;align-self:flex-start;filter:brightness(0) invert(1)"><b dir="ltr" style="align-self:flex-start">CCNP</b><p>Cisco</p></a>
+ <a class="cd" data-abad-material="mcsa"><span class="ic">🪟</span><b dir="ltr" style="align-self:flex-start">MCSA</b><p>Microsoft</p></a>
+ <a class="cd" data-abad-material="nse4"><img src="assets/logos/fortinet.svg" alt="" style="height:30px;align-self:flex-start;filter:brightness(0) invert(1)"><b dir="ltr" style="align-self:flex-start">NSE4</b><p>Fortinet</p></a>
 </div>
 <script>
 var L=(function(){try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";
-var S={"mat": ["الماتريال — معسكر الشبكات", "Material — Networking Camp"], "kick": ["📘 مواد المعسكر", "📘 Camp materials"], "lead": ["مواد الدورات قيد الإعداد وستتوفر هنا قريبًا.", "Course materials are being prepared and will be available here soon."], "back": ["→ معسكر الشبكات", "← Networking Camp"], "soon": ["قريبًا", "Coming soon"], "inst": ["معهد شبكة آباد للتدريب", "ABAD Network Training Institute"], "sec": ["منصة آباد الرقمية", "ABAD Digital Platform"]};
+var S={"mat": ["الماتريال — معسكر الشبكات", "Material — Networking Camp"], "kick": ["📘 مواد المعسكر", "📘 Camp materials"], "lead": ["تُفتح لك الماتريال الخاصة بدوراتك بعد تسجيل الدخول. الماتريال غير المفتوحة لحسابك تظهر مقفلة.", "Your course materials open after you sign in. Materials not open for your account show locked."], "back": ["→ معسكر الشبكات", "← Networking Camp"], "soon": ["قريبًا", "Coming soon"], "pack": ["حزمة معسكر الشبكات كاملة", "Full Networking Camp pack"], "packd": ["كل ملفات المعسكر في ملف واحد (PDF)", "All camp files in one PDF"], "inst": ["معهد شبكة آباد للتدريب", "ABAD Network Training Institute"], "sec": ["منصة آباد الرقمية", "ABAD Digital Platform"]};
 function paint(){var i=L=="ar"?0:1;document.documentElement.lang=L;document.documentElement.dir=L=="ar"?"rtl":"ltr";document.getElementById("lang").textContent=L=="ar"?"English":"العربية";document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=S[e.dataset.t][i]});document.title=S.mat[i]+" — "+S.inst[i]}
 document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{localStorage.setItem("abad-lang",L)}catch(e){}paint()};paint();
 </script>
-<script src="js/abad-labs.js?v=abad-202610190050" defer></script>
+<script src="js/abad-labs.js?v=abad-202610201800" defer></script>
+<script src="js/abad-api.js?r=2026101821" defer></script><script src="js/exam-gate.js?v=abad-202610201800" defer></script>
 </body>
 </html>
