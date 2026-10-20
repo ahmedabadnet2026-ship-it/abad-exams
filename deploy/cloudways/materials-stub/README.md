@@ -1,4 +1,4 @@
-# private_html/abad-data/materials/ (stub)
+# private_html/abad-data/materials/ (stub) — or private_html/abad-config/materials/ (fallback, writable by the SSH master user)
 
 Course material files are served ONLY through `api/material.php?id=<id>` after an auth +
 entitlement check (abd_entitlements kind=material). Never place them under public_html.

@@ -24,7 +24,10 @@ const ABD_EXAMS = [
 function abd_exam_dir(): string {
   $pos = strpos(__DIR__, '/public_html');
   $root = $pos !== false ? substr(__DIR__, 0, $pos) : dirname(__DIR__, 2);
-  return (($e = getenv('ABAD_EXAM_DIR')) !== false && $e !== '') ? $e : $root . '/private_html/abad-data/exams';
+  if (($e = getenv('ABAD_EXAM_DIR')) !== false && $e !== '') return $e;
+  // abad-data/ (app user) first, else abad-config/ (SSH master user; same fallback as db.php / lab.php)
+  foreach (['abad-data', 'abad-config'] as $d) if (is_dir($f = $root . '/private_html/' . $d . '/exams')) return $f;
+  return $root . '/private_html/abad-data/exams';
 }
 function abd_exam_certs(): array { $c = []; foreach (ABD_EXAMS as $e) $c[$e['cert']] = $e; return $c; }
 

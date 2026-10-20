@@ -27,7 +27,10 @@ const ABD_ENT_KINDS = ['exam' => 'اختبار', 'material' => 'ماتريال',
 function abd_material_dir(): string {
   $pos = strpos(__DIR__, '/public_html');
   $root = $pos !== false ? substr(__DIR__, 0, $pos) : dirname(__DIR__, 2);
-  return (($e = getenv('ABAD_MATERIAL_DIR')) !== false && $e !== '') ? $e : $root . '/private_html/abad-data/materials';
+  if (($e = getenv('ABAD_MATERIAL_DIR')) !== false && $e !== '') return $e;
+  // abad-data/ (app user) first, else abad-config/ (SSH master user; same fallback as db.php / lab.php)
+  foreach (['abad-data', 'abad-config'] as $d) if (is_dir($f = $root . '/private_html/' . $d . '/materials')) return $f;
+  return $root . '/private_html/abad-data/materials';
 }
 
 /** Valid ref ids per kind (for admin grant validation). */
