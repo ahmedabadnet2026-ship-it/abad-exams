@@ -89,7 +89,11 @@ def collect(seat, lab_req, rubric, fixture=None):
     base = lambda p: re.sub(r'_\d{10,}$', '', p.rsplit('/', 1)[-1].replace('.unl', ''))
     if lab_req and base(lab_open) != base(lab_req): return {}, {'_lab': 'other', '_open': lab_open}
     errs['_open'] = lab_open
-    nodes = call('/api/labs/%s/nodes' % urllib.request.quote(lab_open)).get('data', {}) or {}
+    nodes = {}
+    for pth in ([lab_req, lab_open] if lab_req else [lab_open]):       # requested path first (open-lab pointer may be stale after a move)
+        try: nodes = call('/api/labs/%s/nodes' % urllib.request.quote(pth.lstrip('/'))).get('data', {}) or {}
+        except Exception: nodes = {}
+        if nodes: break
     byname = {v['name']: v for v in nodes.values()}
     out = {}
     for n, cmds in need.items():
