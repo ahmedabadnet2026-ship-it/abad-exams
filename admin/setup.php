@@ -26,7 +26,7 @@ if (!$exists && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       if (abd_admin_exists()) $err = 'تم إنشاء حساب المدير مسبقاً.';
       elseif (abd_q('SELECT 1 FROM abd_users WHERE email = ?', [$email])->fetchColumn()) $err = 'هذا البريد مسجّل مسبقاً كحساب متدرب. استخدم بريداً آخر.';
       else {
-        abd_q("INSERT INTO abd_users (full_name_ar, full_name_en, email, password_hash, role) VALUES (?, ?, ?, ?, 'admin')",
+        abd_q("INSERT INTO abd_users (full_name_ar, full_name_en, email, email_verified_at, password_hash, role) VALUES (?, ?, ?, NOW(), ?, 'admin')",
           [$v['full_name_ar'], $v['full_name_en'], $email, password_hash($p, PASSWORD_DEFAULT)]);
         $id = (int)$db->lastInsertId();
         $db->query("SELECT RELEASE_LOCK('abd_admin_setup')");

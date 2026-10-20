@@ -1,0 +1,8 @@
+<?php
+// Copy to ~/applications/gabascwgon/private_html/abad-config/eve-seats.php  (chmod 640). FAKE example values only.
+// Use one NON-admin EVE-NG user per seat (role "user", own lab folder only). The password is emailed with each lab code, never shown on the page.
+return [
+  1  => ['user' => 'seat01', 'pass' => 'CHANGE-ME-01'],
+  2  => ['user' => 'seat02', 'pass' => 'CHANGE-ME-02'],
+  // … up to 12
+];

@@ -178,9 +178,10 @@ function abd_user(): ?array {
   abd_session();
   $id = (int)($_SESSION['uid'] ?? 0);
   if ($id <= 0) return $u = null;
-  $row = abd_q('SELECT id, full_name_ar, full_name_en, email, phone, national_id, role, is_active, created_at
+  $row = abd_q('SELECT id, full_name_ar, full_name_en, email, email_verified_at, phone, national_id, role, is_active, created_at
                 FROM abd_users WHERE id = ?', [$id])->fetch();
-  if (!$row || !(int)$row['is_active']) { unset($_SESSION['uid']); return $u = null; }
+  // unverified accounts (migration 006) are never signed in; they sit in $_SESSION['pending_uid'] until the email code is entered
+  if (!$row || !(int)$row['is_active'] || $row['email_verified_at'] === null) { unset($_SESSION['uid']); return $u = null; }
   return $u = $row;
 }
 function abd_is_admin(): bool { $u = abd_user(); return $u !== null && $u['role'] === 'admin'; }

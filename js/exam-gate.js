@@ -51,7 +51,7 @@ function openLogin(){css();var m=document.getElementById("xg-md");
   document.body.appendChild(m);m.onclick=function(e){if(e.target===m)closeLogin()};m.querySelector(".x").onclick=closeLogin;
   document.addEventListener("keydown",function(e){if(e.key==="Escape")closeLogin()});
   var f=m.querySelector("form");f.onsubmit=function(e){e.preventDefault();var g=f.querySelector(".go"),er=f.querySelector(".er");er.textContent="";g.disabled=true;
-   ABAD_API.login(f.e.value.trim(),f.p.value).then(function(j){g.disabled=false;if(j&&j.ok){f.p.value="";closeLogin();refresh();return}
+   ABAD_API.login(f.e.value.trim(),f.p.value).then(function(j){g.disabled=false;if(j&&j.error==="unverified"){location.href="login.html?next="+encodeURIComponent(PG);return}if(j&&j.ok){f.p.value="";closeLogin();refresh();return}
     er.textContent=t(j&&j.error==="invalid_credentials"?"bad":j&&j.error==="rate_limited"?"rate":"net")})}}
  m.classList.add("on");setTimeout(function(){m.querySelector("input").focus()},30)}
 function closeLogin(){var m=document.getElementById("xg-md");if(m)m.classList.remove("on")}

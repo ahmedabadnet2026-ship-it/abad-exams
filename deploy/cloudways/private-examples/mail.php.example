@@ -1,0 +1,12 @@
+<?php
+// Copy to ~/applications/gabascwgon/private_html/abad-config/mail.php  (chmod 640). NEVER commit real values.
+return [
+  'SMTP_HOST'      => 'smtp.gmail.com',
+  'SMTP_PORT'      => 587,
+  'SMTP_SECURE'    => 'starttls',
+  'SMTP_USER'      => 'your-account@gmail.com',      // Gmail address (placeholder)
+  'SMTP_PASS'      => 'abcd efgh ijkl mnop',         // Gmail App Password (spaces are stripped automatically)
+  'SMTP_FROM'      => 'your-account@gmail.com',
+  'SMTP_FROM_NAME' => 'معهد شبكة آباد للتدريب',
+  'CODE_SECRET'    => 'generate-with-openssl-rand-hex-32',
+];

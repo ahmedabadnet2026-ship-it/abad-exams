@@ -136,6 +136,8 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 .mdb h3{margin:0 0 6px;font-size:19px}.mdb p{margin:0 0 12px;font-size:13.5px;opacity:.9;line-height:1.8}
 .mbtn{font:inherit;font-weight:800;font-size:14px;border:0;border-radius:10px;padding:9px 18px;cursor:pointer;background:var(--gold);color:var(--navy);text-decoration:none;display:inline-block;margin:3px}
 .mbtn.l{background:#ffffff1a;color:#fff;border:1px solid #ffffff33}.mbtn[disabled]{opacity:.5;cursor:wait}
+.otp{font:inherit;font-size:28px;font-weight:800;letter-spacing:10px;text-align:center;direction:ltr;width:100%;box-sizing:border-box;padding:8px 10px 8px 20px;border-radius:12px;border:2px solid var(--gold);background:#071622;color:#fff;margin-bottom:10px}
+.evu{direction:ltr;display:inline-block;font:800 16px Consolas,Menlo,monospace;background:#071622;border:1px solid #3f86b3;border-radius:8px;padding:3px 12px;color:var(--gold)}
 .merr{min-height:1.4em;color:#ffb4bb;font-size:13px;font-weight:700;margin-bottom:6px}
 @media (max-width:860px){.seats{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:560px){.room{padding:14px 8px 22px}.tv{border-width:5px}.tvt{top:2%}.st{width:18.5%}.card{border-radius:8px}.rocket{width:17%}.rlab{font-size:12px}.seats{grid-template-columns:repeat(2,1fr);gap:22px 12px}.desk{padding:10px 8px 8px}.scr{width:90%;border-width:4px}.chair .s{width:50px}.chair .bk{width:56px;height:22px}.steps li{font-size:12px}.steps .ar{display:none}}
@@ -167,6 +169,7 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 </section>
 </main>
 <div class="md" id="md" role="dialog" aria-modal="true" aria-labelledby="mdt"><div class="mdb"><h3 id="mdt"></h3><p id="mdp"></p>
+ <div id="mdf" hidden><input class="otp" id="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*" aria-label="code" dir="ltr"></div>
  <div class="merr" id="merr"></div><div id="mda"></div></div></div>
 <script>
 var L=(function(){try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";
@@ -177,7 +180,7 @@ camp:["معسكر الشبكات","Networking Bootcamp"],campsub:["حالة ال
 teacher:["مكتب المدرب","Instructor desk"],seat:["مقعد","Seat"],open:["افتح ←","Open →"],mine:["مقعدي","My seat"],pick:["هذا مقعدي","This is my seat"],
 gNoLogin:["سجّل الدخول إلى المنصة لاستخدام مقعدك في المعمل.","Log in to the platform to use your lab seat."],gLogin:["تسجيل الدخول","Log in"],gNoSeat:["لم يُعيَّن لك مقعد بعد — تواصل مع المدرّب.","No seat assigned yet — contact your instructor."],
 gMine:["مقعدك هو رقم","Your seat is number"],gStaff:["دخول المدرّب: يمكنك فتح أي مقعد.","Instructor access: any seat."],gNotMine:["هذا ليس مقعدك.","This is not your seat."],gHi:["مرحبًا","Hi"],gOut:["خروج","Log out"],
-oT:["دخول المعمل","Lab access"],oOpen:["جارٍ فتح مقعدك…","Opening your seat…"],oClose:["إغلاق","Close"],
+oT:["دخول المعمل","Lab access"],cSend:["جارٍ إرسال رمز التأكيد إلى بريدك…","Sending a confirmation code to your email…"],cSent:["أرسلنا رمز تأكيد من 6 أرقام مع بيانات دخول EVE-NG لمقعدك إلى","We emailed a 6-digit confirmation code and your seat's EVE-NG login to"],cGo:["تأكيد وفتح المقعد","Confirm & open seat"],cRe:["إعادة إرسال الرمز","Resend code"],cOk:["تم التأكيد ✓ سجّل الدخول إلى EVE-NG باسم المستخدم:","Confirmed ✓ Sign in to EVE-NG as:"],cPw:["كلمة المرور في رسالة البريد.","The password is in the email."],cOpen:["افتح المقعد ←","Open seat →"],eWrong:["الرمز غير صحيح. المحاولات المتبقية:","Wrong code. Attempts left:"],eExp:["انتهت صلاحية الرمز — أعد الإرسال.","Code expired — resend."],eMail:["تعذّر إرسال البريد الآن، حاول لاحقًا.","Could not send the email now, try later."],eCode:["أدخل الرمز المكوّن من 6 أرقام.","Enter the 6-digit code."],oOpen:["جارٍ فتح مقعدك…","Opening your seat…"],oClose:["إغلاق","Close"],
 eRate:["طلبات كثيرة، انتظر قليلًا ثم أعد المحاولة.","Too many requests, please wait and retry."],eNet:["تعذّر الاتصال، حاول مرة أخرى.","Connection failed, try again."],eSeat:["هذا المقعد غير مخصص لك.","This seat isn't assigned to you."],
 lgOk:["طالب يعمل","Student working"],lgIdle:["متصل — خامل","Online — idle"],lgBad:["غير متاح","Offline"],lab:["حمل المعمل","Lab load"],devs:["جهاز نشط","active devices"],online:["مقعد متصل من 12","seats online of 12"],na:["غير متاح","Unavailable"],low:["خفيف","Light"],mid:["متوسط","Moderate"],high:["مرتفع","High"],nodes:["أجهزة","nodes"],ld:["الحمل","Load"],lgMine:["مقعدي","My seat"],chk:["جارٍ الفحص…","Checking…"]};
 var MS='<svg viewBox="0 0 24 24"><rect width="11" height="11"/><rect x="13" width="11" height="11"/><rect y="13" width="11" height="11"/><rect x="13" y="13" width="11" height="11"/></svg>';
@@ -245,11 +248,26 @@ function mopen(t,p,btns){document.getElementById("mdt").textContent=t;document.g
  MD.classList.add("open")}
 function mclose(){MD.classList.remove("open")}
 MD.addEventListener("click",function(e){if(e.target===MD)mclose()});document.addEventListener("keydown",function(e){if(e.key==="Escape")mclose()});
-function gopen(n){mopen(tr("oT")+" — "+tr("seat")+" "+n,tr("oOpen"),[{t:tr("oClose"),f:mclose,l:1}]);
- gq("lab_seat.php",{method:"POST",body:{action:"open",seat:n}}).then(function(j){
-  if(j.ok&&j.url&&/^https:\/\/eve\d{1,2}\.abad-labs\.com\//.test(j.url)){setMine(n);location.href=j.url;return}
-  document.getElementById("merr").textContent=tr(j&&j.error==="rate_limited"?"eRate":j&&j.error==="not_your_seat"?"eSeat":"eNet")})
- .catch(function(){document.getElementById("merr").textContent=tr("eNet")})}
+/* open = emailed confirmation code (per open) → signed seat link; the platform session stays the only login */
+function merr(k,x){document.getElementById("merr").textContent=tr(k)+(x!=null?" "+x:"")}
+function gerr(j){var e=j&&j.error;merr(e==="rate_limited"?"eRate":e==="wrong_code"?"eWrong":e==="expired"?"eExp":e==="mail_failed"?"eMail":e==="not_your_seat"?"eSeat":"eNet",e==="wrong_code"?j.left:null)}
+function gopen(n){var F=document.getElementById("mdf"),O=document.getElementById("otp");F.hidden=true;
+ mopen(tr("oT")+" — "+tr("seat")+" "+n,tr("cSend"),[{t:tr("oClose"),f:mclose,l:1}]);
+ gq("lab_seat.php",{method:"POST",body:{action:"request",seat:n}}).then(function(j){
+  if(!j.ok){gerr(j);return}
+  mopen(tr("oT")+" — "+tr("seat")+" "+n,tr("cSent")+" "+j.sent_to,[{t:tr("cGo"),f:function(){gverify(n)}},{t:tr("cRe"),f:function(){gopen(n)},l:1},{t:tr("oClose"),f:mclose,l:1}]);
+  F.hidden=false;O.value="";O.onkeydown=function(e){if(e.key==="Enter")gverify(n)};setTimeout(function(){O.focus()},40)})
+ .catch(function(){merr("eNet")})}
+function gverify(n){var O=document.getElementById("otp"),c=O.value.replace(/\D/g,"");if(c.length!==6){merr("eCode");return}
+ document.querySelectorAll("#mda .mbtn").forEach(function(b){b.disabled=true});
+ gq("lab_seat.php",{method:"POST",body:{action:"open",seat:n,code:c}}).then(function(j){
+  document.querySelectorAll("#mda .mbtn").forEach(function(b){b.disabled=false});
+  if(j.ok&&j.url&&/^https:\/\/eve\d{1,2}\.abad-labs\.com\//.test(j.url)){setMine(n);document.getElementById("mdf").hidden=true;
+   mopen(tr("oT")+" — "+tr("seat")+" "+n,"",[{t:tr("cOpen"),href:j.url},{t:tr("oClose"),f:mclose,l:1}]);
+   var p=document.getElementById("mdp");p.innerHTML="";p.appendChild(document.createTextNode(tr("cOk")+" "));
+   if(j.eve_user){var s=document.createElement("span");s.className="evu";s.textContent=j.eve_user;p.appendChild(s)}
+   p.appendChild(document.createElement("br"));p.appendChild(document.createTextNode(tr("cPw")));return}
+  gerr(j)}).catch(function(){merr("eNet")})}
 /* returns true when the click was handled by the gate */
 function gclick(n){if(!G.on)return false;
  if(!G.user){mopen(tr("oT"),tr("gNoLogin"),[{t:tr("gLogin"),href:"login.html?next=eve-classroom.html"},{t:tr("oClose"),f:mclose,l:1}]);return true}

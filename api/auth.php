@@ -1,8 +1,27 @@
 <?php
-// Auth API: GET ?action=me | POST {action: register|login|logout}
+// Auth API: GET ?action=me | POST {action: register|login|logout|verify_email|resend_email}
+// Sign-up: register → 6-digit code emailed (10 min, hashed, 5 tries) → verify_email {code} activates the account and signs in.
+// An unverified account is never signed in: login answers {error:"unverified", sent_to} and emails a fresh code.
 declare(strict_types=1);
 require_once __DIR__ . '/_db.php';
 require_once __DIR__ . '/_crm.php';
+require_once __DIR__ . '/_mail.php';
+
+/** Email a fresh verification code to a pending account (rate limited). */
+function abd_send_verify(array $row): array {
+  $uid = (int)$row['id'];
+  if (!abd_rate('verify-send-u', (string)$uid, 4, 3600) || !abd_rate('verify-send-ip', abd_ip_hash(), 12, 3600)) return ['ok' => false, 'error' => 'rate_limited'];
+  $code = abd_code_issue($uid, 'verify');
+  try { abd_verify_mail((string)$row['email'], (string)($row['full_name_ar'] ?: $row['full_name_en']), $code); }
+  catch (Throwable $e) { error_log('[abad-auth] mail: ' . $e->getMessage()); return ['ok' => false, 'error' => 'mail_failed']; }
+  return ['ok' => true];
+}
+function abd_pending_row(): ?array {
+  $id = (int)($_SESSION['pending_uid'] ?? 0);
+  if ($id <= 0) return null;
+  $r = abd_q('SELECT id, email, full_name_ar, full_name_en, email_verified_at, is_active FROM abd_users WHERE id = ?', [$id])->fetch();
+  return ($r && (int)$r['is_active'] && $r['email_verified_at'] === null) ? $r : null;
+}
 
 abd_api(function () {
   $m = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -11,7 +30,9 @@ abd_api(function () {
   if ($m === 'GET') {
     if ($action !== 'me') abd_err('action', 400);
     $u = abd_user();
-    abd_out(['ok' => true, 'api' => 1, 'csrf' => abd_csrf(), 'user' => $u ? abd_public_user($u) : null]);
+    $p = $u ? null : abd_pending_row();
+    abd_out(['ok' => true, 'api' => 1, 'csrf' => abd_csrf(), 'user' => $u ? abd_public_user($u) : null]
+      + ($p ? ['pending' => ['sent_to' => abd_mask_email((string)$p['email'])]] : []));
   }
   if ($m !== 'POST') abd_err('method', 405);
   abd_require_csrf();
@@ -24,7 +45,7 @@ abd_api(function () {
     $email = abd_email(abd_str($b, 'email')) ?? '';
     $pw = is_string($b['password'] ?? null) ? $b['password'] : '';
     if (!abd_rate('login-ip', $ip, 30, 900) || !abd_rate('login', $ip . '|' . $email, 6, 900)) abd_err('rate_limited', 429);
-    $row = $email !== '' ? abd_q('SELECT id, password_hash, is_active FROM abd_users WHERE email = ?', [$email])->fetch() : false;
+    $row = $email !== '' ? abd_q('SELECT id, email, full_name_ar, full_name_en, email_verified_at, password_hash, is_active FROM abd_users WHERE email = ?', [$email])->fetch() : false;
     // constant-ish work even when the user does not exist
     $hash = $row['password_hash'] ?? '$2y$12$iK2U.0RuJYuxaZSAM5XOueqPKj0TjxVfd1FTFeZjnVcMTuhotxISq';
     $ok = password_verify($pw, $hash) && $row && (int)$row['is_active'];
@@ -32,6 +53,11 @@ abd_api(function () {
     if (password_needs_rehash($row['password_hash'], PASSWORD_DEFAULT))
       abd_q('UPDATE abd_users SET password_hash = ? WHERE id = ?', [password_hash($pw, PASSWORD_DEFAULT), $row['id']]);
     abd_rate_clear('login', $ip . '|' . $email);
+    if ($row['email_verified_at'] === null) {   // correct password but email not confirmed yet → (re)send code, no session
+      abd_session(); session_regenerate_id(true); $_SESSION['pending_uid'] = (int)$row['id'];
+      $r = abd_send_verify($row);
+      abd_err('unverified', 403, ['sent_to' => abd_mask_email((string)$row['email']), 'mail' => $r['ok'] ? 'sent' : $r['error'], 'csrf' => abd_csrf()]);
+    }
     abd_login_session((int)$row['id']);
     $u = abd_q('SELECT * FROM abd_users WHERE id = ?', [$row['id']])->fetch();
     abd_out(['ok' => true, 'user' => abd_public_user($u), 'csrf' => abd_csrf()]);
@@ -61,9 +87,30 @@ abd_api(function () {
     }
     $id = (int)abd_db()->lastInsertId();
     abd_crm_from_register($id, $nameAr !== '' ? $nameAr : $nameEn, $email, $phone);   // link CRM lead -> user
-    abd_login_session($id);
-    $u = abd_q('SELECT * FROM abd_users WHERE id = ?', [$id])->fetch();
-    abd_out(['ok' => true, 'user' => abd_public_user($u), 'csrf' => abd_csrf()], 201);
+    abd_session(); session_regenerate_id(true); $_SESSION['pending_uid'] = $id;   // not signed in until the email code is entered
+    $r = abd_send_verify(['id' => $id, 'email' => $email, 'full_name_ar' => $nameAr, 'full_name_en' => $nameEn]);
+    abd_out(['ok' => true, 'verify' => true, 'sent_to' => abd_mask_email($email), 'mail' => $r['ok'] ? 'sent' : $r['error'], 'ttl' => ABD_CODE_TTL, 'csrf' => abd_csrf()], 201);
+  }
+
+  if ($action === 'verify_email') {
+    $p = abd_pending_row();
+    if (!$p) abd_err('no_pending', 409);
+    if (!abd_rate('verify-try', (string)$p['id'], 15, 900)) abd_err('rate_limited', 429);
+    $r = abd_code_check((int)$p['id'], 'verify', abd_str($b, 'code', 12));
+    if (!$r['ok']) abd_err($r['error'], $r['error'] === 'expired' ? 410 : 401, isset($r['left']) ? ['left' => $r['left']] : []);
+    abd_q('UPDATE abd_users SET email_verified_at = NOW() WHERE id = ? AND email_verified_at IS NULL', [$p['id']]);
+    unset($_SESSION['pending_uid']);
+    abd_login_session((int)$p['id']);
+    $u = abd_q('SELECT * FROM abd_users WHERE id = ?', [$p['id']])->fetch();
+    abd_out(['ok' => true, 'user' => abd_public_user($u), 'csrf' => abd_csrf()]);
+  }
+
+  if ($action === 'resend_email') {
+    $p = abd_pending_row();
+    if (!$p) abd_err('no_pending', 409);
+    $r = abd_send_verify($p);
+    if (!$r['ok']) abd_err($r['error'], $r['error'] === 'rate_limited' ? 429 : 502);
+    abd_out(['ok' => true, 'sent_to' => abd_mask_email((string)$p['email']), 'ttl' => ABD_CODE_TTL]);
   }
   abd_err('action', 400);
 });

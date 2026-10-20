@@ -1,3 +1,9 @@
 private_html/
 abad-data/
 *.json.lock
+
+# private server config — never commit
+eve-seats.php
+mail.php
+lab.php
+db.php

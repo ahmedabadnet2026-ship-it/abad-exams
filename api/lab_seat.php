@@ -1,13 +1,16 @@
 <?php
 // EVE lab seat gate API.
 //   GET  ?action=mine                       logged-in user → {seat|null, staff}
-//   POST {action:"open", seat}              (X-CSRF-Token) assigned seat only (staff: any) → {url: https://eveN.abad-labs.com/?t=<signed 60s token>}
-//   No second sign-in: the platform session (wordpress_abadsid) is the credential. The old email-OTP request/verify actions were removed.
+//   POST {action:"request", seat}           (X-CSRF-Token) emails a fresh 6-digit code + the seat's EVE-NG user/password → {sent_to (masked), ttl}
+//   POST {action:"open"|"verify", seat, code} assigned seat only (staff: any) → {url: https://eveN.abad-labs.com/?t=<signed 60s token>, eve_user}
+//   Single login: the platform session (wordpress_abadsid) is the only login; the emailed code is a per-open confirmation step.
+//   The EVE password is only ever sent by email, never returned to the page or logged.
 // Staff (X-CSRF-Token):
 //   GET  ?action=list                       all assignments
 //   POST {action:"assign", seat, user_id|email, valid_from?, valid_to?, note?} / {action:"unassign", user_id}
 declare(strict_types=1);
 require_once __DIR__ . '/_lab_lib.php';
+require_once __DIR__ . '/_mail.php';
 
 abd_api(function () {
   $m = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -27,11 +30,26 @@ abd_api(function () {
   abd_require_csrf();
   $seat = (int)($b['seat'] ?? 0);
 
-  if ($action === 'open') {   // single login: the platform session is the only credential
+  if ($action === 'request') {
     if ($seat < 1 || $seat > ABD_LAB_SEATS) abd_err('seat', 422);
     if (!$staff && abd_lab_seat_of($uid) !== $seat) abd_err('not_your_seat', 403);
-    if (!abd_rate('lab-open-u', (string)$uid, 30, 600)) abd_err('rate_limited', 429);
-    abd_out(['ok' => true, 'url' => abd_lab_seat_url($seat) . '?t=' . abd_lab_token($seat, $uid, $staff)]);
+    if (!abd_rate('lab-code-u', (string)$uid, 5, 900) || !abd_rate('lab-code-ip', abd_ip_hash(), 15, 3600)) abd_err('rate_limited', 429);
+    $code = abd_code_issue($uid, 'lab', $seat);
+    try { abd_lab_code_mail((string)$u['email'], (string)($u['full_name_ar'] ?: $u['full_name_en']), $seat, $code, abd_eve_seat_cred($seat)); }
+    catch (Throwable $e) { error_log('[abad-lab] mail failed'); abd_err('mail_failed', 502); }
+    abd_out(['ok' => true, 'sent_to' => abd_mask_email((string)$u['email']), 'ttl' => ABD_CODE_TTL]);
+  }
+
+  if ($action === 'open' || $action === 'verify') {
+    if ($seat < 1 || $seat > ABD_LAB_SEATS) abd_err('seat', 422);
+    if (!$staff && abd_lab_seat_of($uid) !== $seat) abd_err('not_your_seat', 403);
+    if (!abd_rate('lab-open-u', (string)$uid, 30, 900)) abd_err('rate_limited', 429);
+    if (abd_str($b, 'code', 12) === '') abd_err('code_required', 428);
+    $url = abd_lab_seat_url($seat) . '?t=' . abd_lab_token($seat, $uid, $staff);   // before consuming the code (config errors must not burn it)
+    $r = abd_code_check($uid, 'lab', abd_str($b, 'code', 12), $seat);
+    if (!$r['ok']) abd_err($r['error'], $r['error'] === 'expired' ? 410 : 401, isset($r['left']) ? ['left' => $r['left']] : []);
+    $cred = abd_eve_seat_cred($seat);
+    abd_out(['ok' => true, 'url' => $url, 'eve_user' => $cred['user'] ?? null]);
   }
 
   if ($action === 'assign' || $action === 'unassign') {
