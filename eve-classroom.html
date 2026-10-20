@@ -167,6 +167,22 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
  <div class="seats" id="seats"></div>
  <div class="legend"><span><i style="background:var(--ok)"></i><span data-t="lgOk"></span></span><span><i style="background:#6fa8cf"></i><span data-t="lgIdle"></span></span><span><i style="background:var(--bad)"></i><span data-t="lgBad"></span></span><span><i style="background:var(--gold)"></i><span data-t="lgMine"></span></span></div>
 </section>
+<style>
+.gp{max-width:1100px;margin:22px auto;padding:20px;border-radius:18px;background:#ffffff0d;border:1px solid #ffffff22}
+.gp h2{margin:0 0 6px;font-size:20px}.gp .gr{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.gp select,.gp button{font:inherit;padding:9px 14px;border-radius:10px;border:1px solid #ffffff33;background:#10293b;color:#fff}
+.gp button.go{background:#F5BD2D;color:#10293b;font-weight:800;border:0;cursor:pointer}.gp button[disabled]{opacity:.55}
+.gs{display:flex;align-items:center;gap:16px;margin:14px 0}.gs b{font-size:34px}.gs .bar{flex:1;height:12px;border-radius:9px;background:#ffffff1a;overflow:hidden}.gs .bar i{display:block;height:100%;background:linear-gradient(90deg,#ff5d6c,#F5BD2D,#3ecf8e)}
+.gc{border-radius:12px;padding:11px 14px;margin:8px 0;background:#ffffff0a;border-inline-start:5px solid #3ecf8e}.gc.f{border-color:#ff5d6c;background:#ff5d6c12}
+.gc .h{display:flex;justify-content:space-between;gap:10px;font-weight:700}.gc .h small{opacity:.75;font-weight:400}
+.gc dl{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;margin:8px 0 0;font-size:14px}.gc dt{opacity:.7}.gc dd{margin:0}.gc code{direction:ltr;unicode-bidi:embed;background:#0008;padding:1px 6px;border-radius:6px}
+.gc .hint{margin-top:6px;color:#F5BD2D}.gm{opacity:.8;font-size:13px}.gerr{color:#ff9aa4}
+</style>
+<section class="gp" id="gp" hidden><h2>📝 تسليم اللاب والتصحيح الآلي</h2>
+<p class="gm">بعد إنهاء الإعداد على مقعدك اضغط «تسليم»: يقرأ المصحّح إعدادات الأجهزة (أوامر show و ping فقط، دون أي تعديل) ويعرض لك الخطأ بالتحديد وتلميحًا لإصلاحه.</p>
+<div class="gr"><label>اللاب: <select id="glab"><option value="CCNA/01-Static-Routing.unl">CCNA — 01 التوجيه الثابت (Static Routing)</option></select></label>
+<label>المقعد: <select id="gseat"></select></label><button class="go" id="gsub">تسليم</button><span class="gm" id="gst"></span></div>
+<div id="gres"></div><div class="gm" id="ghist"></div></section>
 </main>
 <div class="md" id="md" role="dialog" aria-modal="true" aria-labelledby="mdt"><div class="mdb"><h3 id="mdt"></h3><p id="mdp"></p>
  <div id="mdf" hidden><input class="otp" id="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*" aria-label="code" dir="ltr"></div>
@@ -281,5 +297,29 @@ document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{local
 </script>
 <script src="js/abad-api.js?r=2026101821" defer></script>
 <script src="js/abad-labs.js?v=abad-202610201400" defer></script>
+<script>
+/* Lab submit + auto-grading panel (api/lab_grade.php). Shown only when signed in with at least one seat (or staff). */
+(function(){
+var E=function(t){return String(t==null?"":t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+var ERR={rate_limited:"انتظر دقيقة ونصف بين كل تسليم والآخر.",rate_limited_day:"وصلت للحد اليومي للتسليم (20).",not_your_seat:"هذا المقعد غير مسجَّل لك.",lab_not_open:"لا يوجد لاب مفتوح على هذا المقعد — افتح اللاب في EVE أولًا.",other_lab_open:"اللاب المفتوح على المقعد ليس هذا اللاب.",busy:"يجري تصحيح تسليم آخر على هذا المقعد، أعد المحاولة بعد قليل.",grader_unreachable:"المصحّح غير متاح حاليًا، حاول لاحقًا.",grader_unconfigured:"المصحّح غير مُفعَّل بعد.",auth:"سجّل الدخول أولًا."};
+window.abdGradeRender=function(r,att){var h='<div class="gs"><b>'+r.score+' / '+r.max+'</b><div class="bar"><i style="width:'+r.pct+'%"></i></div><span>'+r.pct+'%'+(att?' — المحاولة '+att:'')+'</span></div>';
+ r.checks.forEach(function(c){h+='<div class="gc'+(c.ok?'':' f')+'"><div class="h"><span>'+(c.ok?'✅':'❌')+' '+E(c.title_ar)+' <small>('+E(c.node)+')</small></span><span>'+c.pts+'/'+c.max+'</span></div>'+
+  (c.ok?'<dl><dt>الموجود</dt><dd><code>'+E(c.found_ar)+'</code></dd></dl>':'<dl><dt>المتوقَّع</dt><dd><code>'+E(c.expected_ar)+'</code></dd><dt>الموجود على الجهاز</dt><dd>'+E(c.found_ar)+'</dd></dl>'+
+  (c.hint_ar?'<div class="hint">💡 '+E(c.hint_ar)+'</div>':'')+(c.solution_ar?'<div class="gm">الحل: <code>'+E(c.solution_ar)+'</code></div>':''))+'</div>'});
+ if(!r.solution_shown)h+='<p class="gm">يظهر الحل الكامل للبنود الخاطئة بعد المحاولة الثالثة.</p>';
+ document.getElementById("gres").innerHTML=h};
+function api(p,o){o=o||{};var h={"Accept":"application/json"};if(o.body){h["Content-Type"]="application/json";if(window.__abdCsrf)h["X-CSRF-Token"]=window.__abdCsrf}
+ return fetch("api/"+p,{method:o.method||"GET",headers:h,credentials:"same-origin",body:o.body?JSON.stringify(o.body):undefined}).then(function(r){return r.json().catch(function(){return{ok:false,error:"http"+r.status}})})}
+function hist(){var lab=document.getElementById("glab").value;api("lab_grade.php?action=attempts&lab="+encodeURIComponent(lab)).then(function(j){if(!j.ok||!j.attempts.length)return;
+ document.getElementById("ghist").innerHTML="محاولاتك السابقة: "+j.attempts.filter(function(a){return a.status==="graded"}).map(function(a){return a.score+"/"+a.max_score+" ("+E(a.created_at)+")"}).join(" · ")})}
+function init(){api("auth.php?action=me").then(function(me){if(!me.ok||!me.user)return;window.__abdCsrf=me.csrf;
+ api("lab_seat.php?action=mine").then(function(m){if(!m.ok)return;var seats=m.staff?Array.from({length:m.seats||12},function(_,i){return i+1}):(m.my_seats||[]);if(!seats.length)return;
+  var s=document.getElementById("gseat");s.innerHTML=seats.map(function(n){return'<option value="'+n+'">مقعد '+n+'</option>'}).join("");document.getElementById("gp").hidden=false;hist()})})}
+document.getElementById("gsub").addEventListener("click",function(){var b=this,st=document.getElementById("gst");b.disabled=true;st.textContent="⏳ جارٍ قراءة الأجهزة والتصحيح… (حتى دقيقتين)";
+ api("lab_grade.php",{method:"POST",body:{action:"submit",lab:document.getElementById("glab").value,seat:+document.getElementById("gseat").value}}).then(function(j){
+  b.disabled=false;if(!j.ok){st.innerHTML='<span class="gerr">'+E(ERR[j.error]||("تعذّر التصحيح ("+j.error+")"))+'</span>';return}st.textContent="";abdGradeRender(j.result,j.attempt);hist()}).catch(function(){b.disabled=false;st.textContent="تعذّر الاتصال."})});
+if(/^https?:$/.test(location.protocol))init();
+})();
+</script>
 </body>
 </html>

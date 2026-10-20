@@ -1,0 +1,2 @@
+{"secret": "<GRADER_HMAC_SECRET, 64 hex — same value in Cloudways abad-config/lab.php>",
+ "seats": {"1": {"ip": "192.168.200.201", "user": "trainee", "pass": "<seat EVE password>"}}}

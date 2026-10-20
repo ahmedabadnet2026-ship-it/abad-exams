@@ -1,0 +1,26 @@
+{
+ "lab": "CCNA/01-Static-Routing.unl",
+ "nodes": {
+  "R1": {
+   "show ip interface brief": "Interface              IP-Address      OK? Method Status                Protocol\nGigabitEthernet0/0     192.168.1.1     YES manual up                    up\nGigabitEthernet0/1     12.0.0.1        YES manual up                    up\nGigabitEthernet0/2     unassigned      YES unset  administratively down down\nR1>",
+   "show ip interface GigabitEthernet0/1 | include Internet address": "  Internet address is 12.0.0.1/30\nR>",
+   "show ip interface GigabitEthernet0/0 | include Internet address": "  Internet address is 192.168.1.1/24\nR>",
+   "show ip route static": "Codes: L - local, C - connected, S - static\nGateway of last resort is not set\n\nS     192.168.2.0/24 [1/0] via 12.0.0.2\nR1>",
+   "ping 192.168.2.20 source 192.168.1.1 repeat 3": "Type escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.168.2.20, timeout is 2 seconds:\nPacket sent with a source address of 192.168.1.1 \n!!!\nSuccess rate is 100 percent (3/3)\nR1>"
+  },
+  "R2": {
+   "show ip interface brief": "Interface              IP-Address      OK? Method Status                Protocol\nGigabitEthernet0/0     192.168.2.1     YES manual up                    up\nGigabitEthernet0/1     12.0.0.2        YES manual up                    up\nR2>",
+   "show ip interface GigabitEthernet0/1 | include Internet address": "  Internet address is 12.0.0.2/30\nR>",
+   "show ip interface GigabitEthernet0/0 | include Internet address": "  Internet address is 192.168.2.1/24\nR>",
+   "show ip route static": "Codes: L - local, C - connected, S - static\nGateway of last resort is not set\n\nS     192.168.1.0/24 [1/0] via 12.0.0.1\nR1>"
+  },
+  "PC1": {
+   "show ip": "NAME        : PC\nIP/MASK     : 192.168.1.10/24\nGATEWAY     : 192.168.1.1\nDNS         : \nMAC         : 00:50:79:66:68:00\nVPCS> ",
+   "ping 192.168.2.20 -c 3": "84 bytes from 192.168.2.20 icmp_seq=1 ttl=62 time=3.1 ms\n84 bytes from 192.168.2.20 icmp_seq=2 ttl=62 time=2.8 ms\nVPCS> "
+  },
+  "PC2": {
+   "show ip": "NAME        : PC\nIP/MASK     : 192.168.2.20/24\nGATEWAY     : 192.168.2.1\nDNS         : \nMAC         : 00:50:79:66:68:00\nVPCS> ",
+   "ping": ""
+  }
+ }
+}
