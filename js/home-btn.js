@@ -18,7 +18,8 @@
       if(who){var nm=(en?(who.full_name_en||who.full_name_ar):(who.full_name_ar||who.full_name_en))||who.email;acc.textContent="👤 "+nm.split(" ")[0];
         acc.href=who.role==="admin"||who.role==="staff"?"admin/index.php":"my-courses.html";acc.title=en?"My account":"حسابي"}
       else{acc.textContent=en?"👤 Sign in":"👤 دخول";acc.href="login.html?next="+encodeURIComponent(location.pathname.split("/").pop()+location.search);acc.title=en?"Sign in / Register":"تسجيل الدخول / إنشاء حساب"}}
-    function accMount(st){who=st&&st.user||null;if(!st){if(acc){acc.remove();acc=null}return}
+    function accMount(st){who=st&&st.user||null;/* pages with the single-login account button (exam-gate.js) keep only that one */
+      if(document.querySelector('script[src*="exam-gate.js"]'))st=null;if(!st){if(acc){acc.remove();acc=null}return}
       if(!acc){acc=document.createElement("a");acc.className="abad-acc";b.insertBefore(acc,t||null)}accPaint()}
     function apiReady(){if(window.ABAD_API)window.ABAD_API.me().then(accMount)}
     document.addEventListener("abad-auth",function(e){accMount(e.detail&&e.detail.available?e.detail:null)});
