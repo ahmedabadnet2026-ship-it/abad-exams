@@ -21,12 +21,13 @@ function ensure(){var m=document.getElementById('el-modal');if(m)return m;
  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});return m;}
 function open(){var m=ensure();m.classList.add('on');m.querySelector('.lk-x').focus();}
 function close(){var m=document.getElementById('el-modal');if(m)m.classList.remove('on');}
-function decorate(tiles){ensure();Array.prototype.forEach.call(tiles,function(t,k){if(t.dataset.el)return;t.dataset.el='1';var h=t.querySelector('h3');
+function decorate(tiles){if(window.ABAD_EXAM_ENTITLED)return;ensure();Array.prototype.forEach.call(tiles,function(t,k){if(t.dataset.el)return;t.dataset.el='1';var h=t.querySelector('h3');
  if(k===0){if(h)h.insertAdjacentHTML('beforeend','<span class="el-free">تجربة مجانية</span>');return;}
  t.classList.add('el-locked');if(h)h.insertAdjacentHTML('beforeend','<span class="el-lockb" aria-label="مقفل">🔒</span>');
  t.querySelectorAll('button').forEach(function(b){b.disabled=false;b.removeAttribute('onclick');b.textContent='🔒 '+b.textContent.trim();b.onclick=function(e){e.preventDefault();open();};});});}
 /* For the shared simulator template (S, EXAMS, begin, resumeRun, home, save, app as globals). */
 function runTemplate(){
+ if(window.ABAD_EXAM_ENTITLED)return; /* served by api/exam.php to an entitled trainee: every practice exam is open */
  if(typeof EXAMS==='undefined'||EXAMS.length<2)return;
  var cleared=false;if(S.run&&S.run.exam!==0){S.run=null;S.exam=0;save();cleared=true;}
  var ob=begin;begin=function(i){if(i!==0){open();return;}return ob(i);};

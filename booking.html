@@ -700,7 +700,7 @@ function msg(d){return["*"+T("طلب حجز اختبار — معهد شبكة �
 let SENDING=false;
 /* platform DB copy (Cloudways PHP API) — runs in parallel with the sheet; no-op on GitHub Pages. Cached per payload so retries don't duplicate. */
 let API_BK=null;function apiBooking(d){const k=JSON.stringify(d);if(API_BK&&API_BK.k===k)return API_BK.p;
- const p=window.ABAD_API?ABAD_API.booking({name:d.name,mobile:d.mobile,nid:d.nid,email:d.email,vendor:d.vendor,cert:d.cert,etype:d.etype,date:d.date,time:d.time,notes:d.notes,payment_method:d.payment_method,lang:window.LANG==="en"?"en":"ar"}).then(r=>{if(!r)API_BK=null;return r}):Promise.resolve(null);
+ const p=window.ABAD_API?ABAD_API.booking({name:d.name,mobile:d.mobile,nid:d.nid,email:d.email,vendor:d.vendor,cert:d.cert,cert_id:(!certSel.hidden&&certSel.value&&certSel.value!=="__other")?certSel.value:"",etype:d.etype,date:d.date,time:d.time,notes:d.notes,payment_method:d.payment_method,lang:window.LANG==="en"?"en":"ar"}).then(r=>{if(!r)API_BK=null;return r}):Promise.resolve(null);
  API_BK={k,p};return p}
 async function send(d){if(SENDING)return;SENDING=true;const st=$("sendSt"),btn=frm.querySelector("[type=submit]");btn.disabled=true;abadSendState(st,"busy");let j=null;const apiP=apiBooking(d);
  try{j=await abadPost(BOOKINGS_SHEET_URL,{type:"booking",timestamp:new Date().toISOString(),lang:window.LANG==="en"?"en":"ar",name:d.name,nid:d.nid,nidType:d.nidType,mobile:d.mobile,email:d.email,vendor:d.vendor,cert:d.cert,etype:d.etype,date:d.date,time:d.time,notes:d.notes+(d.payment_method?(d.notes?"\n":"")+"[طريقة الدفع / Payment: "+d.payment_method+"]":""),payment_method:d.payment_method,channel:"web",page:location.pathname,ua:navigator.userAgent.slice(0,300)});

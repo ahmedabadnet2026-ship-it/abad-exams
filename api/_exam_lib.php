@@ -1,0 +1,54 @@
+<?php
+// Exam entitlement layer. An exam (page) belongs to a certification id (the certSections id used by booking.html).
+// A logged-in user may open an exam when ANY entitlement source says so:
+//   (a) booking : abd_bookings row with status 'booked' for that cert, linked to the user (user_id, or same email if unlinked)
+//   (b) manual  : abd_exam_access grant by staff (optional expiry)
+//   (c) webhook : abd_exam_access rows written by api/hooks/booking.php (future official-site feed; disabled)
+// Staff/admin always pass. Question pages live OUTSIDE the web root: …/private_html/abad-data/exams/<file>.
+declare(strict_types=1);
+if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === basename(__FILE__)) { http_response_code(404); exit; }
+require_once __DIR__ . '/_db.php';
+
+/** exam id => [cert id, vendor id, file, title, legacy booking-text LIKE patterns] */
+const ABD_EXAMS = [
+  'aplus-core1'    => ['cert' => 'aplus',    'vendor' => 'comptia',    'file' => 'aplus-core1-exam.html',    'title' => 'CompTIA A+ Core 1',        'like' => ['CompTIA A+%']],
+  'aplus-core2'    => ['cert' => 'aplus',    'vendor' => 'comptia',    'file' => 'aplus-core2-exam.html',    'title' => 'CompTIA A+ Core 2',        'like' => ['CompTIA A+%']],
+  'network-plus'   => ['cert' => 'network',  'vendor' => 'comptia',    'file' => 'network-plus-exam.html',   'title' => 'CompTIA Network+',         'like' => ['CompTIA Network+%']],
+  'security-plus'  => ['cert' => 'security', 'vendor' => 'comptia',    'file' => 'security-plus-exam.html',  'title' => 'CompTIA Security+',        'like' => ['CompTIA Security+%']],
+  'linux-plus'     => ['cert' => 'linux',    'vendor' => 'comptia',    'file' => 'linux-plus-exam.html',     'title' => 'CompTIA Linux+',           'like' => ['CompTIA Linux+%']],
+  'pmp'            => ['cert' => 'pmp',      'vendor' => 'pmi',        'file' => 'pmp-exam.html',            'title' => 'PMP',                      'like' => ['Project Management Professional%', '%PMP%']],
+  'itil5'          => ['cert' => 'itil5',    'vendor' => 'peoplecert', 'file' => 'itil5-exam.html',          'title' => 'ITIL Foundation (V5)',     'like' => ['ITIL Foundation%']],
+  'ejpt-trial'     => ['cert' => 'ejpt',     'vendor' => 'ine',        'file' => 'ejpt-trial-exam.html',     'title' => 'INE eJPT',                 'like' => ['%eJPT%']],
+];
+
+function abd_exam_dir(): string {
+  $pos = strpos(__DIR__, '/public_html');
+  $root = $pos !== false ? substr(__DIR__, 0, $pos) : dirname(__DIR__, 2);
+  return (($e = getenv('ABAD_EXAM_DIR')) !== false && $e !== '') ? $e : $root . '/private_html/abad-data/exams';
+}
+function abd_exam_certs(): array { $c = []; foreach (ABD_EXAMS as $e) $c[$e['cert']] = $e; return $c; }
+
+/** Set of cert ids the user may open (staff: all). */
+function abd_exam_entitled_certs(array $u): array {
+  if (in_array($u['role'], ['admin', 'staff'], true)) return array_keys(abd_exam_certs());
+  $uid = (int)$u['id']; $email = mb_strtolower((string)$u['email']);
+  $ok = [];
+  // (b)+(c) explicit grants
+  foreach (abd_q('SELECT DISTINCT cert_id FROM abd_exam_access WHERE user_id = ? AND revoked_at IS NULL
+                  AND (expires_at IS NULL OR expires_at >= NOW())', [$uid])->fetchAll(PDO::FETCH_COLUMN) as $c) $ok[$c] = true;
+  // (a) booked bookings: by stable cert_id, else legacy text match on the cert label
+  $rows = abd_q("SELECT cert_id, cert FROM abd_bookings WHERE status = 'booked'
+                 AND (user_id = ? OR (user_id IS NULL AND email = ?))", [$uid, $email])->fetchAll();
+  foreach ($rows as $r) if ($c = abd_exam_cert_of_booking($r['cert_id'] ?? null, (string)$r['cert'])) $ok[$c] = true;
+  return array_keys($ok);
+}
+/** Map a booking to a cert id: stable cert_id first, else case-insensitive match of the legacy label (e.g. "CompTIA Network+ — N10-009"). */
+function abd_exam_cert_of_booking(?string $certId, string $label): ?string {
+  $certs = abd_exam_certs();
+  if ($certId !== null && $certId !== '') return isset($certs[$certId]) ? $certId : null;
+  foreach (ABD_EXAMS as $e) foreach ($e['like'] as $p) if (fnmatch(str_replace('%', '*', $p), trim($label), FNM_CASEFOLD)) return $e['cert'];
+  return null;
+}
+function abd_exam_allowed(array $u, string $examId): bool {
+  return isset(ABD_EXAMS[$examId]) && in_array(ABD_EXAMS[$examId]['cert'], abd_exam_entitled_certs($u), true);
+}

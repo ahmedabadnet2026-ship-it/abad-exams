@@ -22,6 +22,7 @@ function abd_booking_validate(array $b): array {
     'email' => abd_email(abd_str($b, 'email')),
     'vendor' => abd_str($b, 'vendor'),
     'cert' => abd_str($b, 'cert', 255),
+    'cert_id' => preg_match('/^[a-z0-9-]{1,40}$/', $cid = abd_str($b, 'cert_id', 40)) ? $cid : null,
     'exam_type' => abd_str($b, 'etype', 120),
     'preferred_date' => abd_date(abd_str($b, 'date', 10)),
     'preferred_time' => abd_str($b, 'time', 40),
@@ -79,9 +80,9 @@ abd_api(function () {
     $ref = abd_booking_ref();
     for ($i = 0; $i < 3; $i++) {
       try {
-        abd_q('INSERT INTO abd_bookings (ref, user_id, vendor, cert, exam_type, name_en, national_id, phone, email, preferred_date,
-               preferred_time, payment_method, notes, lang, ip_hash, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,\'new\')',
-          [$ref, $u ? (int)$u['id'] : null, $d['vendor'], $d['cert'], $d['exam_type'] ?: null, $d['name_en'], $d['national_id'], $d['phone'],
+        abd_q('INSERT INTO abd_bookings (ref, user_id, vendor, cert, cert_id, exam_type, name_en, national_id, phone, email, preferred_date,
+               preferred_time, payment_method, notes, lang, ip_hash, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,\'new\')',
+          [$ref, $u ? (int)$u['id'] : null, $d['vendor'], $d['cert'], $d['cert_id'], $d['exam_type'] ?: null, $d['name_en'], $d['national_id'], $d['phone'],
            $d['email'], $d['preferred_date'], $d['preferred_time'] ?: null, $d['payment_method'] ?: null, $d['notes'] ?: null, $d['lang'], abd_ip_hash()]);
         $bid = (int)abd_db()->lastInsertId();
         abd_crm_from_booking($bid, $d, $ref, $u ? (int)$u['id'] : null);   // auto-create / update CRM lead
