@@ -18,6 +18,7 @@ const ABD_EXAMS = [
   'linux-plus'     => ['cert' => 'linux',    'vendor' => 'comptia',    'file' => 'linux-plus-exam.html',     'title' => 'CompTIA Linux+',           'like' => ['CompTIA Linux+%']],
   'pmp'            => ['cert' => 'pmp',      'vendor' => 'pmi',        'file' => 'pmp-exam.html',            'title' => 'PMP',                      'like' => ['Project Management Professional%', '%PMP%']],
   'itil5'          => ['cert' => 'itil5',    'vendor' => 'peoplecert', 'file' => 'itil5-exam.html',          'title' => 'ITIL Foundation (V5)',     'like' => ['ITIL Foundation%']],
+  'ccna'           => ['cert' => 'ccna',     'vendor' => 'cisco',      'file' => 'ccna-exam.html',           'title' => 'Cisco CCNA',               'like' => ['%CCNA%']],
   'ejpt-trial'     => ['cert' => 'ejpt',     'vendor' => 'ine',        'file' => 'ejpt-trial-exam.html',     'title' => 'INE eJPT',                 'like' => ['%eJPT%']],
 ];
 
