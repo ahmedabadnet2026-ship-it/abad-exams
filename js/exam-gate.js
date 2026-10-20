@@ -20,7 +20,7 @@ var CSS=".xg-lock{position:relative;opacity:.8}.xg-lock::before{content:'🔒';m
 ".xg-note a,.xg-note button{font:inherit;cursor:pointer;border:0;color:#fff;background:#10293b;border-radius:8px;padding:2px 10px;text-decoration:none}.xg-note .l{background:#3f86b3}"+
 ".xg-ok{display:inline-block;margin-inline-start:6px;font:800 11px Cairo,system-ui,sans-serif;color:#10293b;background:#3ecf8e;border-radius:99px;padding:1px 9px;vertical-align:middle}"+
 ".xg-acct{display:inline-flex;align-items:center;gap:6px;font-family:Cairo,system-ui,sans-serif}.xg-acct .xg-in{font:800 14px Cairo,system-ui,sans-serif;cursor:pointer;border:0;border-radius:10px;padding:7px 14px;background:#F5BD2D;color:#10293b}"+
-".xg-acct .xg-u{font:800 13px Cairo,system-ui,sans-serif;color:#10293b;background:#eef4f9;border:1px solid #3f86b355;border-radius:99px;padding:5px 12px;white-space:nowrap;max-width:190px;overflow:hidden;text-overflow:ellipsis}"+
+".xg-acct .xg-u{text-decoration:none;font:800 13px Cairo,system-ui,sans-serif;color:#10293b;background:#eef4f9;border:1px solid #3f86b355;border-radius:99px;padding:5px 12px;white-space:nowrap;max-width:190px;overflow:hidden;text-overflow:ellipsis}"+
 ".xg-acct .xg-out{font:700 12px Cairo,system-ui,sans-serif;cursor:pointer;border:1px solid #3f86b3;background:none;color:#3f86b3;border-radius:10px;padding:5px 10px}"+
 "#xg-md{position:fixed;inset:0;z-index:400;display:none;place-items:center;background:rgba(16,41,59,.6);padding:16px;font-family:Cairo,system-ui,sans-serif}#xg-md.on{display:grid}"+
 "#xg-md .bx{width:min(400px,100%);background:#fff;border-radius:18px;border-top:6px solid #F5BD2D;padding:22px;color:#10293b;text-align:center;position:relative}"+
@@ -37,7 +37,7 @@ function header(){var nav=document.querySelector(".hdr .nav")||document.querySel
  var u=ST&&ST.user;
  if(!u){b.innerHTML='<button type="button" class="xg-in">👤 '+t("login")+"</button>";b.firstChild.onclick=openLogin;return}
  var n=(EN()?u.full_name_en||u.full_name_ar:u.full_name_ar||u.full_name_en)||u.email;
- b.innerHTML='<span class="xg-u" title="'+esc(u.email)+'">👤 '+esc(n)+'</span><button type="button" class="xg-out">'+t("logout")+"</button>";
+ b.innerHTML='<a class="xg-u" href="my-services.html" title="'+esc(u.email)+' — خدماتي">👤 '+esc(n)+' · خدماتي</a><button type="button" class="xg-out">'+t("logout")+"</button>";
  b.querySelector(".xg-out").onclick=function(){ABAD_API.logout().then(refresh)}}
 function openLogin(){css();var m=document.getElementById("xg-md");
  if(!m){m=document.createElement("div");m.id="xg-md";m.setAttribute("role","dialog");m.setAttribute("aria-modal","true");m.setAttribute("aria-labelledby","xg-t");

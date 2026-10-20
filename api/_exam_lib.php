@@ -36,6 +36,9 @@ function abd_exam_entitled_certs(array $u): array {
   // (b)+(c) explicit grants
   foreach (abd_q('SELECT DISTINCT cert_id FROM abd_exam_access WHERE user_id = ? AND revoked_at IS NULL
                   AND (expires_at IS NULL OR expires_at >= NOW())', [$uid])->fetchAll(PDO::FETCH_COLUMN) as $c) $ok[$c] = true;
+  // (d) unified services ledger (migration 005); tolerated if not migrated yet
+  try { foreach (abd_q("SELECT DISTINCT ref_id FROM abd_entitlements WHERE user_id = ? AND kind = 'exam' AND revoked_at IS NULL", [$uid])->fetchAll(PDO::FETCH_COLUMN) as $c) $ok[$c] = true; }
+  catch (PDOException $e) { if (($e->errorInfo[1] ?? 0) !== 1146) throw $e; }
   // (a) booked bookings: by stable cert_id, else legacy text match on the cert label
   $rows = abd_q("SELECT cert_id, cert FROM abd_bookings WHERE status = 'booked'
                  AND (user_id = ? OR (user_id IS NULL AND email = ?))", [$uid, $email])->fetchAll();

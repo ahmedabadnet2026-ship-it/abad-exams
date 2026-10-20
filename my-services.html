@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#10293b">
+<title>خدماتي — منصة آباد الرقمية</title>
+<link rel="icon" href="icons/icon-192.png"><link rel="manifest" href="manifest.webmanifest">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+:root{--n:#10293b;--b:#3f86b3;--g:#F5BD2D;--bg:#f3f6f9;--mut:#5d7183;--line:#e2eaf1}
+*{box-sizing:border-box}body{margin:0;font-family:Cairo,system-ui,sans-serif;background:var(--bg);color:var(--n)}
+.hdr{background:#fff;border-bottom:4px solid var(--g);box-shadow:0 2px 10px rgba(16,41,59,.06)}
+.hdr .in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;color:var(--n);text-decoration:none;flex:1}.brand img{height:44px}.brand b{font-size:17px}
+.nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.nav>a{color:var(--n);text-decoration:none;font-weight:700;font-size:14px}
+.hero{background:linear-gradient(120deg,#0a1c29,var(--n) 55%,#16405e);color:#fff;padding:34px 18px 60px}
+.hero .in{max-width:1180px;margin:0 auto}.hero h1{margin:0 0 6px;font-size:30px}.hero h1 span{color:var(--g)}.hero p{margin:0;opacity:.85}
+main{max-width:1180px;margin:-36px auto 40px;padding:0 18px}
+.sec{background:#fff;border-radius:18px;box-shadow:0 4px 18px rgba(16,41,59,.08);padding:20px 22px;margin-bottom:18px;border-top:5px solid var(--b)}
+.sec.mat{border-top-color:var(--g)}.sec.lab{border-top-color:var(--n)}
+.sec h2{margin:0 0 14px;font-size:20px;display:flex;align-items:center;gap:8px}.sec h2 .c{background:#eef4f9;border-radius:99px;font-size:13px;padding:1px 10px;color:var(--b)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.it{border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;background:#fafcfe}
+.it b{font-size:16px}.it small{color:var(--mut)}
+.it a.go{align-self:flex-start;background:var(--n);color:#fff;text-decoration:none;font-weight:800;border-radius:10px;padding:8px 16px;font-size:14px}
+.sec.mat a.go{background:var(--g);color:var(--n)}.sec.ex a.go{background:var(--b)}
+.empty{color:var(--mut);background:#f6f9fb;border:1px dashed #c9d6e2;border-radius:12px;padding:16px;text-align:center}
+.gate{background:#fff;border-radius:18px;padding:30px;text-align:center;box-shadow:0 4px 18px rgba(16,41,59,.08)}
+.gate button{font:800 15px Cairo,system-ui,sans-serif;border:0;border-radius:12px;padding:10px 22px;background:var(--g);color:var(--n);cursor:pointer}
+[hidden]{display:none!important}
+</style></head><body>
+<header class="hdr"><div class="in"><a class="brand" href="platform.html"><img src="assets/abad-logo.png" alt="شعار معهد شبكة آباد"><b>معهد شبكة آباد للتدريب</b></a>
+<nav class="nav"><a href="platform.html">المنصة</a><a href="booking.html">احجز اختبارك</a></nav></div></header>
+<section class="hero"><div class="in"><h1>خدماتي <span>•</span></h1><p id="hi">الخدمات المفتوحة لحسابك في منصة آباد: الاختبارات، الماتريال، واللابات.</p></div></section>
+<main>
+<div class="gate" id="gate" hidden><div style="font-size:40px">🔐</div><h2>سجّل الدخول لعرض خدماتك</h2><p class="empty" style="border:0">تظهر هنا الاختبارات والماتريال واللابات المفتوحة لحسابك.</p><button type="button" id="gin">👤 تسجيل الدخول</button></div>
+<div id="svc" hidden>
+<section class="sec ex"><h2>📝 الاختبارات <span class="c" data-n="exams">0</span></h2><div class="grid" data-k="exams"></div><div class="empty" data-e="exams">لا توجد اختبارات مفتوحة لحسابك حاليًا. بعد تأكيد حجزك يفتح الاختبار هنا تلقائيًا.</div></section>
+<section class="sec mat"><h2>📚 الماتريال <span class="c" data-n="materials">0</span></h2><div class="grid" data-k="materials"></div><div class="empty" data-e="materials">لا توجد ماتريال مفتوحة لحسابك حاليًا.</div></section>
+<section class="sec lab"><h2>🧪 اللابات <span class="c" data-n="labs">0</span></h2><div class="grid" data-k="labs"></div><div class="empty" data-e="labs">لا يوجد لاب مفتوح لحسابك حاليًا.</div></section>
+</div>
+</main>
+<script src="js/abad-api.js?r=2026101821" defer></script><script src="js/exam-gate.js?v=abad-202610201600" defer></script><script src="js/my-services.js?v=abad-202610201600" defer></script>
+</body></html>

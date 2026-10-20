@@ -29,7 +29,11 @@ function abd_lab_seat_url(int $seat): string { return 'https://eve' . $seat . '.
 function abd_lab_seat_of(int $uid): ?int {
   $s = abd_q('SELECT seat FROM abd_lab_seats WHERE user_id = ?
               AND (valid_from IS NULL OR valid_from <= NOW()) AND (valid_to IS NULL OR valid_to >= NOW())', [$uid])->fetchColumn();
-  return $s === false ? null : (int)$s;
+  if ($s !== false) return (int)$s;
+  // unified services ledger (migration 005): kind 'lab', ref_id = seat number
+  try { $s = abd_q("SELECT ref_id FROM abd_entitlements WHERE user_id = ? AND kind = 'lab' AND revoked_at IS NULL ORDER BY id DESC LIMIT 1", [$uid])->fetchColumn(); }
+  catch (PDOException $e) { if (($e->errorInfo[1] ?? 0) !== 1146) throw $e; $s = false; }
+  return ($s === false || (int)$s < 1 || (int)$s > ABD_LAB_SEATS) ? null : (int)$s;
 }
 
 // ---------------------------------------------------------------- signed tokens (shared secret with the gate on ubantu-server)
