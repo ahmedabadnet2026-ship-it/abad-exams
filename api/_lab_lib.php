@@ -36,6 +36,21 @@ function abd_lab_seat_of(int $uid): ?int {
   return ($s === false || (int)$s < 1 || (int)$s > ABD_LAB_SEATS) ? null : (int)$s;
 }
 
+/** All seats the user is currently entitled to (abd_lab_seats ∪ abd_entitlements kind=lab), ascending. */
+function abd_lab_seats_of(int $uid): array {
+  $s = array_map('intval', abd_q('SELECT seat FROM abd_lab_seats WHERE user_id = ?
+              AND (valid_from IS NULL OR valid_from <= NOW()) AND (valid_to IS NULL OR valid_to >= NOW())', [$uid])->fetchAll(PDO::FETCH_COLUMN));
+  try { $s = array_merge($s, array_map('intval', abd_q("SELECT ref_id FROM abd_entitlements WHERE user_id = ? AND kind = 'lab' AND revoked_at IS NULL", [$uid])->fetchAll(PDO::FETCH_COLUMN))); }
+  catch (PDOException $e) { if (($e->errorInfo[1] ?? 0) !== 1146) throw $e; }
+  $s = array_values(array_unique(array_filter($s, fn($n) => $n >= 1 && $n <= ABD_LAB_SEATS)));
+  sort($s);
+  return $s;
+}
+/** May this user open this exact seat? Staff/admin: any seat; trainee: only seats they are entitled to. */
+function abd_lab_can_open(int $uid, bool $staff, int $seat): bool {
+  return $seat >= 1 && $seat <= ABD_LAB_SEATS && ($staff || in_array($seat, abd_lab_seats_of($uid), true));
+}
+
 // ---------------------------------------------------------------- signed tokens (shared secret with the gate on ubantu-server)
 function abd_b64u(string $s): string { return rtrim(strtr(base64_encode($s), '+/', '-_'), '='); }
 function abd_lab_token(int $seat, int $uid, bool $staff): string {

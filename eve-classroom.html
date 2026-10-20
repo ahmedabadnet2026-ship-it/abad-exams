@@ -179,7 +179,7 @@ s1:["اختر مقعدك","Pick your seat"],s2:["افتح اللابتوب","Ope
 camp:["معسكر الشبكات","Networking Bootcamp"],campsub:["حالة المعمل الآن","Live lab status"],goal:["Project","Project"],
 teacher:["مكتب المدرب","Instructor desk"],seat:["مقعد","Seat"],open:["افتح ←","Open →"],mine:["مقعدي","My seat"],pick:["هذا مقعدي","This is my seat"],
 gNoLogin:["سجّل الدخول إلى المنصة لاستخدام مقعدك في المعمل.","Log in to the platform to use your lab seat."],gLogin:["تسجيل الدخول","Log in"],gNoSeat:["لم يُعيَّن لك مقعد بعد. احجز مقعدًا في المعمل وسيفتح لك هنا تلقائيًا.","No seat assigned yet. Book a lab seat and it will open for you here."],gBook:["احجز مقعدًا","Book a seat"],
-gMine:["مقعدك هو رقم","Your seat is number"],gStaff:["دخول المدرّب: يمكنك فتح أي مقعد.","Instructor access: any seat."],gNotMine:["هذا ليس مقعدك.","This is not your seat."],gHi:["مرحبًا","Hi"],gOut:["خروج","Log out"],
+gMine:["مقعدك هو رقم","Your seat is number"],gStaff:["دخول المدرّب: يمكنك فتح أي مقعد.","Instructor access: any seat."],gNotEnt:["أنت غير مسجَّل على المقعد رقم","You are not entitled to seat"],gMySeats:["مقاعدك المتاحة:","Your seats:"],eSender:["بريد حسابك هو بريد المرسِل الخاص بالمنصة؛ حدِّث بريد حسابك إلى بريدك الشخصي ثم أعد المحاولة.","Your account email is the platform sender mailbox; update it to your own email and retry."],eNoMail:["لا يوجد بريد إلكتروني صالح مسجَّل في حسابك.","No valid email on your account."],gNotMine:["هذا ليس مقعدك.","This is not your seat."],gHi:["مرحبًا","Hi"],gOut:["خروج","Log out"],
 oT:["دخول المعمل","Lab access"],cSend:["جارٍ إرسال رمز التأكيد إلى بريدك…","Sending a confirmation code to your email…"],cSent:["أرسلنا رمز تأكيد من 6 أرقام مع بيانات دخول EVE-NG لمقعدك إلى","We emailed a 6-digit confirmation code and your seat's EVE-NG login to"],cGo:["تأكيد وفتح المقعد","Confirm & open seat"],cRe:["إعادة إرسال الرمز","Resend code"],cOk:["تم التأكيد ✓ سجّل الدخول إلى EVE-NG باسم المستخدم:","Confirmed ✓ Sign in to EVE-NG as:"],cPw:["كلمة المرور في رسالة البريد.","The password is in the email."],cOpen:["افتح المقعد ←","Open seat →"],eWrong:["الرمز غير صحيح. المحاولات المتبقية:","Wrong code. Attempts left:"],eExp:["انتهت صلاحية الرمز — أعد الإرسال.","Code expired — resend."],eMail:["تعذّر إرسال البريد الآن، حاول لاحقًا.","Could not send the email now, try later."],eCode:["أدخل الرمز المكوّن من 6 أرقام.","Enter the 6-digit code."],oOpen:["جارٍ فتح مقعدك…","Opening your seat…"],oClose:["إغلاق","Close"],
 eRate:["طلبات كثيرة، انتظر قليلًا ثم أعد المحاولة.","Too many requests, please wait and retry."],eNet:["تعذّر الاتصال، حاول مرة أخرى.","Connection failed, try again."],eSeat:["هذا المقعد غير مخصص لك.","This seat isn't assigned to you."],
 lgOk:["طالب يعمل","Student working"],lgIdle:["متصل — خامل","Online — idle"],lgBad:["غير متاح","Offline"],lab:["حمل المعمل","Lab load"],devs:["جهاز نشط","active devices"],online:["مقعد متصل من 12","seats online of 12"],na:["غير متاح","Unavailable"],low:["خفيف","Light"],mid:["متوسط","Moderate"],high:["مرتفع","High"],nodes:["أجهزة","nodes"],ld:["الحمل","Load"],lgMine:["مقعدي","My seat"],chk:["جارٍ الفحص…","Checking…"]};
@@ -228,20 +228,20 @@ for(var n=1;n<=12;n++)setSeat(n,"",null);gauge(null);poll();setInterval(poll,500
    No second sign-in: the logged-in user's assigned seat opens directly. Seat comes from api/my_services.php (same source as خدماتي:
    abd_lab_seats + abd_entitlements kind=lab).
    Active only when the platform API (my_services.php / lab_seat.php) is reachable (Cloudways); elsewhere seats open directly as before. */
-var G={on:false,user:null,seat:null,staff:false};
+var G={on:false,user:null,seat:null,seats:[],staff:false};
 function gq(p,o){return window.ABAD_API?ABAD_API.req(p,o):Promise.reject(0)}
 function gname(){var u=G.user;return u?(L=="en"?u.full_name_en||u.full_name_ar:u.full_name_ar||u.full_name_en)||u.email:""}
 function gbar(){var b=document.getElementById("gbar");if(!G.on)return;
  if(!G.user){b.innerHTML=tr("gNoLogin")+' <a href="login.html?next=eve-classroom.html">'+tr("gLogin")+"</a>";return}
- b.textContent=tr("gHi")+" "+gname()+" — "+(G.staff?tr("gStaff"):G.seat?tr("gMine")+" "+G.seat:tr("gNoSeat"));
+ b.textContent=tr("gHi")+" "+gname()+" — "+(G.staff?tr("gStaff"):G.seat?tr("gMine")+" "+G.seats.join("، "):tr("gNoSeat"));
  if(!G.staff&&!G.seat){var k=document.createElement("a");k.href="eve-lab-booking.html";k.textContent=" · "+tr("gBook");b.appendChild(k)}
  var o=document.createElement("a");o.href="#";o.textContent=" · "+tr("gOut");o.onclick=function(e){e.preventDefault();ABAD_API.logout().then(function(){location.reload()})};b.appendChild(o)}
 function gapply(){document.body.classList.toggle("gate-on",G.on);if(!G.on)return;
- document.querySelectorAll(".seat").forEach(function(s){var n=+s.dataset.n;s.classList.toggle("locked",!G.staff&&n!==G.seat)});
+ document.querySelectorAll(".seat").forEach(function(s){var n=+s.dataset.n;s.classList.toggle("locked",!G.staff&&G.seats.indexOf(n)<0)});
  if(G.seat)setMine(G.seat);gbar()}
 function ginit(){if(!window.ABAD_API)return;ABAD_API.me().then(function(st){if(!st)return;
  if(!st.user){G.on=true;G.user=null;gapply();return}
- return gq("my_services.php").then(function(j){if(j.ok&&j.logged_in){var lb=(j.services&&j.services.labs)||[];G.on=true;G.user=st.user;G.seat=lb.length?+lb[0].seat:null;G.staff=!!j.staff}gapply()})}).catch(function(){})}
+ return gq("my_services.php").then(function(j){if(j.ok&&j.logged_in){var lb=(j.services&&j.services.labs)||[];G.on=true;G.user=st.user;G.seats=lb.map(function(x){return +x.seat}).filter(Boolean);G.seat=G.seats.length?G.seats[0]:null;G.staff=!!j.staff}gapply()})}).catch(function(){})}
 var MD=document.getElementById("md");
 function mopen(t,p,btns){document.getElementById("mdt").textContent=t;document.getElementById("mdp").textContent=p;document.getElementById("merr").textContent="";
  var a=document.getElementById("mda");a.innerHTML="";
@@ -251,7 +251,7 @@ function mclose(){MD.classList.remove("open")}
 MD.addEventListener("click",function(e){if(e.target===MD)mclose()});document.addEventListener("keydown",function(e){if(e.key==="Escape")mclose()});
 /* open = emailed confirmation code (per open) → signed seat link; the platform session stays the only login */
 function merr(k,x){document.getElementById("merr").textContent=tr(k)+(x!=null?" "+x:"")}
-function gerr(j){var e=j&&j.error;merr(e==="rate_limited"?"eRate":e==="wrong_code"?"eWrong":e==="expired"?"eExp":e==="mail_failed"?"eMail":e==="not_your_seat"?"eSeat":"eNet",e==="wrong_code"?j.left:null)}
+function gerr(j){var e=j&&j.error;merr(e==="rate_limited"?"eRate":e==="wrong_code"?"eWrong":e==="expired"?"eExp":e==="mail_failed"?"eMail":e==="not_your_seat"?"eSeat":e==="email_is_sender"?"eSender":e==="no_email"?"eNoMail":"eNet",e==="wrong_code"?j.left:null)}
 function gopen(n){var F=document.getElementById("mdf"),O=document.getElementById("otp");F.hidden=true;
  mopen(tr("oT")+" — "+tr("seat")+" "+n,tr("cSend"),[{t:tr("oClose"),f:mclose,l:1}]);
  gq("lab_seat.php",{method:"POST",body:{action:"request",seat:n}}).then(function(j){
@@ -272,7 +272,7 @@ function gverify(n){var O=document.getElementById("otp"),c=O.value.replace(/\D/g
 /* returns true when the click was handled by the gate */
 function gclick(n){if(!G.on)return false;
  if(!G.user){mopen(tr("oT"),tr("gNoLogin"),[{t:tr("gLogin"),href:"login.html?next=eve-classroom.html"},{t:tr("oClose"),f:mclose,l:1}]);return true}
- if(!G.staff&&n!==G.seat){mopen(tr("oT"),G.seat?tr("gNotMine")+" "+tr("gMine")+" "+G.seat:tr("gNoSeat"),(G.seat?[]:[{t:tr("gBook"),href:"eve-lab-booking.html"}]).concat([{t:tr("oClose"),f:mclose,l:1}]));return true}
+ if(!G.staff&&G.seats.indexOf(n)<0){mopen(tr("oT")+" — "+tr("seat")+" "+n,G.seats.length?tr("gNotEnt")+" "+n+". "+tr("gMySeats")+" "+G.seats.join("، ")+".":tr("gNoSeat"),(G.seat?[]:[{t:tr("gBook"),href:"eve-lab-booking.html"}]).concat([{t:tr("oClose"),f:mclose,l:1}]));return true}
  gopen(n);return true}
 document.addEventListener("DOMContentLoaded",ginit);
 function paint(){var i=L=="ar"?0:1;document.documentElement.lang=L;document.documentElement.dir=L=="ar"?"rtl":"ltr";document.getElementById("lang").textContent=L=="ar"?"English":"العربية";document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=S[e.dataset.t][i]});

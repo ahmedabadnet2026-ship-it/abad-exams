@@ -106,6 +106,14 @@ function abd_verify_mail(string $to, string $name, string $code): bool {
   $text = "معهد شبكة آباد للتدريب\nرمز تفعيل حسابك: $code\nينتهي خلال 10 دقائق ويُستخدم مرة واحدة. لا تشاركه مع أحد.";
   return abd_smtp_send($to, 'رمز تفعيل حسابك في منصة آباد: ' . $code, $html, $text);
 }
+/** True if $to is the platform's own sending mailbox (SMTP_FROM / SMTP_USER, ignoring +tags and Gmail dots). */
+function abd_mail_is_sender(string $to): bool {
+  $n = function (string $a): string { $a = strtolower(trim($a)); if (!str_contains($a, '@')) return $a; [$l, $d] = explode('@', $a, 2);
+    $l = explode('+', $l, 2)[0]; if ($d === 'gmail.com' || $d === 'googlemail.com') { $l = str_replace('.', '', $l); $d = 'gmail.com'; } return $l . '@' . $d; };
+  $t = $n($to);
+  foreach (['SMTP_FROM', 'SMTP_USER'] as $k) { $v = (string)abd_mail_cfg($k, ''); if ($v !== '' && $n($v) === $t) return true; }
+  return false;
+}
 function abd_lab_code_mail(string $to, string $name, int $seat, string $code, ?array $cred): bool {
   $rows = ['المقعد' => 'EVE ' . $seat . ' — eve' . $seat . '.abad-labs.com'];
   if ($cred) { $rows['اسم المستخدم في EVE-NG'] = $cred['user']; $rows['كلمة المرور في EVE-NG'] = $cred['pass']; }

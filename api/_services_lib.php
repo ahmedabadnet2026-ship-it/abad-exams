@@ -63,7 +63,7 @@ function abd_services_of(array $u): array {
   foreach (ABD_MATERIALS as $id => $m) if (in_array($id, $mid, true))
     $mats[] = ['id' => $id, 'title' => $m['title'], 'url' => 'api/material.php?id=' . rawurlencode($id)];
   $labs = [];
-  if (($s = abd_lab_seat_of((int)$u['id'])) !== null)
+  foreach (abd_lab_seats_of((int)$u['id']) as $s)
     $labs[] = ['id' => 'eve-' . $s, 'seat' => $s, 'title' => 'معمل EVE — المقعد ' . $s, 'url' => 'eve-classroom.html?seat=' . $s];
   return ['exams' => $exams, 'materials' => $mats, 'labs' => $labs];
 }
