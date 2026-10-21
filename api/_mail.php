@@ -8,6 +8,7 @@
 declare(strict_types=1);
 if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === basename(__FILE__)) { http_response_code(404); exit; }
 require_once __DIR__ . '/_db.php';
+require_once __DIR__ . '/_mail_tpl.php';
 
 const ABD_CODE_TTL = 600;     // 10 minutes
 const ABD_CODE_TRIES = 5;     // wrong attempts per code
@@ -80,31 +81,15 @@ function abd_smtp_send(string $to, string $subject, string $html, string $text):
   } finally { fclose($fp); }
 }
 
-/** Branded Arabic email with a big code box; $rows = extra [label => value] lines (shown LTR). */
-function abd_code_mail_html(string $name, string $title, string $intro, string $code, array $rows = []): string {
-  $n = h($name !== '' ? $name : 'متدربنا العزيز');
-  $extra = '';
-  if ($rows) {
-    $extra = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 16px;background:#eef4f9;border-radius:12px;border-right:4px solid #3f86b3">';
-    foreach ($rows as $k => $v) $extra .= '<tr><td style="padding:8px 14px;font-size:13px;color:#5d7183;width:40%">' . h($k) . '</td><td style="padding:8px 14px;font-size:15px;font-weight:800;color:#10293b;direction:ltr;text-align:left;font-family:Consolas,Menlo,monospace">' . h($v) . '</td></tr>';
-    $extra .= '</table>';
-  }
-  return '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"></head><body style="margin:0;background:#eef3f7;font-family:Cairo,Tahoma,Arial,sans-serif;color:#10293b">'
-    . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef3f7;padding:24px 0"><tr><td align="center">'
-    . '<table role="presentation" width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#fff;border-radius:16px;overflow:hidden;direction:rtl;text-align:right">'
-    . '<tr><td style="background:#10293b;padding:18px 24px;border-bottom:4px solid #F5BD2D;color:#fff"><b style="font-size:18px">معهد شبكة آباد للتدريب</b><br><span style="font-size:13px;color:#9cc7e3">منصة آباد الرقمية — ' . h($title) . '</span></td></tr>'
-    . '<tr><td style="padding:24px"><p style="margin:0 0 10px;font-size:15px">مرحبًا ' . $n . '،</p>'
-    . '<p style="margin:0 0 16px;font-size:15px;line-height:1.8">' . $intro . '</p>'
-    . '<div style="text-align:center;margin:0 0 16px"><span style="display:inline-block;direction:ltr;letter-spacing:10px;font-size:32px;font-weight:800;color:#10293b;background:#fff8e1;border:2px solid #F5BD2D;border-radius:12px;padding:10px 18px 10px 28px">' . h($code) . '</span></div>'
-    . $extra
-    . '<p style="margin:0 0 6px;font-size:13px;color:#3f86b3">ينتهي الرمز خلال 10 دقائق ويُستخدم مرة واحدة.</p>'
-    . '<p style="margin:0;font-size:13px;color:#5d7183">إذا لم تطلب هذا الرمز فتجاهل الرسالة، ولا تشاركه مع أي شخص.</p></td></tr>'
-    . '<tr><td style="background:#f6f9fb;padding:12px 24px;font-size:12px;color:#5d7183">© معهد شبكة آباد للتدريب — abad-labs.com</td></tr></table></td></tr></table></body></html>';
+/** Branded Arabic email with a big code box; $rows = extra [label => value] lines (shown LTR). Layout lives in _mail_tpl.php. */
+function abd_code_mail(string $name, string $title, string $pre, string $intro, string $code, array $rows = []): array {
+  return abd_mail_render(['title' => $title, 'preheader' => $pre, 'name' => $name, 'intro_html' => $intro, 'code' => $code,
+    'expiry_min' => intdiv(ABD_CODE_TTL, 60), 'rows' => $rows]);
 }
 function abd_verify_mail(string $to, string $name, string $code): bool {
-  $html = abd_code_mail_html($name, 'تأكيد البريد', 'شكرًا لتسجيلك في منصة آباد الرقمية. أدخل الرمز التالي لتفعيل حسابك:', $code);
-  $text = "معهد شبكة آباد للتدريب\nرمز تفعيل حسابك: $code\nينتهي خلال 10 دقائق ويُستخدم مرة واحدة. لا تشاركه مع أحد.";
-  return abd_smtp_send($to, 'رمز تفعيل حسابك في منصة آباد: ' . $code, $html, $text);
+  $m = abd_code_mail($name, 'تأكيد البريد الإلكتروني', 'كود التفعيل: ' . $code . ' — صالح ' . intdiv(ABD_CODE_TTL, 60) . ' دقائق',
+    'شكرًا لتسجيلك في منصة آباد الرقمية. أدخل الكود التالي لتفعيل حسابك:', $code);
+  return abd_smtp_send($to, 'رمز تفعيل حسابك في منصة آباد: ' . $code, $m['html'], $m['text']);
 }
 /** True if $to is the platform's own sending mailbox (SMTP_FROM / SMTP_USER, ignoring +tags and Gmail dots). */
 function abd_mail_is_sender(string $to): bool {
@@ -117,10 +102,9 @@ function abd_mail_is_sender(string $to): bool {
 function abd_lab_code_mail(string $to, string $name, int $seat, string $code, ?array $cred): bool {
   $rows = ['المقعد' => 'مقعد ' . $seat];
   if ($cred) { $rows['اسم المستخدم'] = $cred['user']; $rows['كلمة المرور'] = $cred['pass']; }
-  $html = abd_code_mail_html($name, 'المعمل', 'رمز تأكيد فتح <b>مقعد ' . $seat . '</b> في المعمل. أدخله في صفحة المعمل، ثم سجّل الدخول ببيانات مقعدك:', $code, $rows);
-  $text = "معهد شبكة آباد للتدريب — المعمل\nرمز فتح مقعد $seat: $code\n"
-    . ($cred ? "اسم المستخدم: {$cred['user']} / كلمة المرور: {$cred['pass']}\n" : '') . "ينتهي خلال 10 دقائق ويُستخدم مرة واحدة. لا تشاركه مع أحد.";
-  return abd_smtp_send($to, 'رمز فتح مقعد المعمل ' . $seat . ': ' . $code, $html, $text);
+  $m = abd_code_mail($name, 'تفاصيل مقعد المعمل', 'كود فتح مقعد ' . $seat . ': ' . $code,
+    'كود تأكيد فتح <b>مقعد ' . $seat . '</b> في المعمل. أدخله في صفحة المعمل، ثم سجّل الدخول ببيانات مقعدك:', $code, $rows);
+  return abd_smtp_send($to, 'رمز فتح مقعد المعمل ' . $seat . ': ' . $code, $m['html'], $m['text']);
 }
 
 // ---------------------------------------------------------------- one-time codes (hashed, 10 min, attempt-limited)
