@@ -222,6 +222,14 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 @media (max-width:1100px){.seats{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (max-width:860px){.seats{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}}
 @media (max-width:560px){.seats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.sc{padding:10px 9px 8px;border-radius:14px}.sno{font-size:18px!important}.pill{font-size:9.5px;padding:2px 7px}.mon{width:56%}.sc .bar{grid-template-columns:26px 1fr 30px;gap:4px}}
+
+/* glowing institute logo on the main screen */
+.tvlogo{display:block;width:clamp(92px,13vw,150px);margin:0 auto 4px;position:relative}
+.tvlogo::before{content:"";position:absolute;inset:-18% -12%;border-radius:50%;background:radial-gradient(ellipse,#3f86b355 0,#F5BD2D1f 45%,transparent 70%);filter:blur(10px);z-index:-1;animation:logoGlow 5s ease-in-out infinite}
+.tvlogo img{display:block;width:100%;height:auto;filter:drop-shadow(0 0 4px #ffffffaa) drop-shadow(0 0 10px #3f86b3cc) drop-shadow(0 0 18px #F5BD2D66);animation:logoPulse 5s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{filter:drop-shadow(0 0 3px #ffffff99) drop-shadow(0 0 8px #3f86b3aa) drop-shadow(0 0 14px #F5BD2D44)}50%{filter:drop-shadow(0 0 5px #ffffffcc) drop-shadow(0 0 14px #3f86b3ee) drop-shadow(0 0 24px #F5BD2D88)}}
+@keyframes logoGlow{0%,100%{opacity:.6}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.tvlogo img,.tvlogo::before{animation:none!important}}
 </style>
 <link rel="stylesheet" href="css/home-btn.css?v=abad-202610201400"><script src="js/home-btn.js?v=abad-202610201900" defer></script>
 </head>
@@ -235,7 +243,7 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
  <div class="front">
   <div class="tv" id="tv" role="img" aria-labelledby="tvt">
    <div class="grid"></div>
-   <div class="tvt"><b id="tvt" data-t="camp"></b><small data-t="campsub"></small></div>
+   <div class="tvt"><span class="tvlogo"><img src="assets/abad-logo.png" alt="شعار معهد شبكة آباد للتدريب" width="459" height="205" decoding="async"></span><b id="tvt" data-t="camp"></b><small data-t="campsub"></small></div>
    <div class="board" aria-live="polite">
     <div class="load"><div class="gauge"><svg viewBox="0 0 170 96" aria-hidden="true"><defs><linearGradient id="gg"><stop offset="0" stop-color="#3ecf8e"/><stop offset=".55" stop-color="#F5BD2D"/><stop offset="1" stop-color="#ff5d6c"/></linearGradient></defs><path d="M15 85 A70 70 0 0 1 155 85" fill="none" stroke="#ffffff1a" stroke-width="14" stroke-linecap="round"/><path d="M15 85 A70 70 0 0 1 155 85" fill="none" stroke="url(#gg)" stroke-width="14" stroke-linecap="round" opacity=".9"/><g class="nd" id="nd" style="transform:rotate(-90deg)"><path d="M85 85 L85 30" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="85" cy="85" r="7" fill="#F5BD2D"/></g></svg></div><b id="gv" class="gv">–</b>
      <div class="kpis"><div><span data-t="lab"></span>: <span id="ls" class="na"></span></div><div><b id="kd">–</b><span data-t="devs"></span></div><div><b id="ko">–</b><span data-t="online"></span></div></div></div>
