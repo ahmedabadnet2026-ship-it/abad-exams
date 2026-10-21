@@ -46,11 +46,20 @@ function abd_course_enrollments(int $cid): array {
                 FROM abd_enrollments e JOIN abd_users u ON u.id = e.user_id WHERE e.course_id = ? ORDER BY e.created_at DESC', [$cid])->fetchAll();
 }
 function abd_my_courses(int $uid): array {
-  return abd_q('SELECT c.id, c.slug, c.title_ar, c.title_en, c.description_ar, c.description_en, c.delivery, c.start_date, c.end_date,
+  return abd_q('SELECT c.id, c.slug, c.title_ar, c.title_en, c.description_ar, c.description_en, c.delivery,
+                COALESCE(e.start_date, c.start_date) AS start_date, COALESCE(e.end_date, c.end_date) AS end_date,
                 c.link_url, e.status AS enrollment_status, e.created_at AS enrolled_at
                 FROM abd_enrollments e JOIN abd_courses c ON c.id = e.course_id
                 WHERE e.user_id = ? AND c.is_active = 1 AND e.status <> \'cancelled\'
                 ORDER BY COALESCE(c.start_date, \'9999-12-31\'), c.id', [$uid])->fetchAll();
+}
+
+/** Optional per-enrollment dates from a payload (empty = inherit course). Returns [start|null, end|null, invalidFields]. */
+function abd_enr_dates(array $b): array {
+  $bad = []; $o = [];
+  foreach (['start_date', 'end_date'] as $k) { $v = abd_str($b, $k, 10); $o[$k] = $v === '' ? null : abd_date($v); if ($v !== '' && !$o[$k]) $bad[] = $k; }
+  if ($o['start_date'] && $o['end_date'] && $o['end_date'] < $o['start_date']) $bad[] = 'end_date';
+  return [$o['start_date'], $o['end_date'], $bad];
 }
 
 /** Admin actions shared by the API and admin/index.php. Returns [ok, errorCodeOrPayload]. */
@@ -83,8 +92,11 @@ function abd_course_action(string $action, array $b): array {
       $uid = (int)($b['user_id'] ?? 0);
       if ($uid <= 0 && ($em = abd_email(abd_str($b, 'email')))) $uid = (int)abd_q('SELECT id FROM abd_users WHERE email = ?', [$em])->fetchColumn();
       if ($uid <= 0 || !abd_q('SELECT 1 FROM abd_users WHERE id = ?', [$uid])->fetchColumn()) return [false, 'user_not_found'];
-      abd_q("INSERT INTO abd_enrollments (user_id, course_id, status) VALUES (?, ?, 'active')
-             ON DUPLICATE KEY UPDATE status = 'active'", [$uid, $id]);
+      [$sd, $ed, $bad] = abd_enr_dates($b);
+      if ($bad) return [false, 'invalid', $bad];
+      abd_q("INSERT INTO abd_enrollments (user_id, course_id, status, start_date, end_date) VALUES (?, ?, 'active', ?, ?)
+             ON DUPLICATE KEY UPDATE status = 'active', start_date = COALESCE(VALUES(start_date), start_date), end_date = COALESCE(VALUES(end_date), end_date)",
+        [$uid, $id, $sd, $ed]);
       abd_crm_on_enroll($uid, $id);
       return [true, ['course_id' => $id, 'user_id' => $uid]];
     case 'unenroll':

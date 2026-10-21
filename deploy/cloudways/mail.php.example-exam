@@ -1,0 +1,11 @@
+<?php
+// Add these keys to ~/applications/gabascwgon/private_html/abad-config/mail.php (keep the existing SMTP_* / CODE_SECRET keys).
+// chmod 600. Never commit the real key.
+return [
+  // … existing keys …
+  'EXAM_MAIL_DRIVER'    => 'log',                    // 'log' (no sending) → switch to 'brevo' once the key below is real
+  'BREVO_API_KEY'       => 'PUT_BREVO_API_KEY_HERE',   // Brevo → SMTP & API → API keys (xkeysib-…)
+  'EXAM_MAIL_FROM'      => 'noreply@abad-labs.com',  // must be a verified sender/domain in Brevo
+  'EXAM_MAIL_FROM_NAME' => 'معهد شبكة آباد للتدريب',
+  'EXAM_MAIL_BCC'       => '',                       // optional institute copy
+];
