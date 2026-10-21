@@ -5,7 +5,7 @@
 declare(strict_types=1);
 require_once __DIR__ . '/_lab_lib.php';
 header('Cache-Control: no-store');
-const ABD_GRADE_LABS = ['CCNA/01-Static-Routing.unl'];
+const ABD_GRADE_LABS = ['CCNA/01-Static-Routing.unl', 'CCNA/02-VLANs-Trunking.unl', 'CCNA/03-Inter-VLAN-Routing-ROAS.unl', 'CCNA/04-STP-RSTP.unl', 'CCNA/05-EtherChannel.unl', 'CCNA/06-OSPF-and-Floating-Static.unl', 'CCNA/07-DHCP-Telnet-SSH.unl', 'CCNA/08-NAT-PAT.unl', 'CCNA/10-Extended-ACL.unl', 'CCNA/11-IPv6-Addressing-and-Static.unl', 'CCNA/12-Port-Security.unl', 'CCNA/13-HSRP.unl'];
 
 $u = abd_require_user();
 $uid = (int)$u['id'];
