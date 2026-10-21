@@ -20,6 +20,7 @@ const ABD_EXAMS = [
   'itil5'          => ['cert' => 'itil5',    'vendor' => 'peoplecert', 'file' => 'itil5-exam.html',          'title' => 'ITIL Foundation (V5)',     'like' => ['ITIL Foundation%']],
   'ccna'           => ['cert' => 'ccna',     'vendor' => 'cisco',      'file' => 'ccna-exam.html',           'title' => 'Cisco CCNA',               'like' => ['%CCNA%']],
   'cobit'          => ['cert' => 'cobit',    'vendor' => 'isaca',      'file' => 'cobit-exam.html',          'title' => 'ISACA COBIT 2019 Foundation', 'like' => ['%COBIT%']],
+  'cysa'           => ['cert' => 'cysa',     'vendor' => 'comptia',    'file' => 'cysa-exam.html',           'title' => 'CompTIA CySA+',            'like' => ['%CySA%']],
   'ejpt-trial'     => ['cert' => 'ejpt',     'vendor' => 'ine',        'file' => 'ejpt-trial-exam.html',     'title' => 'INE eJPT',                 'like' => ['%eJPT%']],
 ];
 
