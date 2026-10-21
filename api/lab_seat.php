@@ -17,6 +17,7 @@
 declare(strict_types=1);
 require_once __DIR__ . '/_lab_lib.php';
 require_once __DIR__ . '/_mail.php';
+require_once __DIR__ . '/_booking_lib.php';
 
 abd_api(function () {
   $m = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -26,8 +27,10 @@ abd_api(function () {
   $b = $m === 'POST' ? abd_body() : [];
   $action = (string)($_GET['action'] ?? ($b['action'] ?? 'mine'));
 
-  if ($m === 'GET' && $action === 'mine') { $mine = abd_lab_seats_of($uid); abd_out(['ok' => true, 'seat' => $mine[0] ?? null, 'my_seats' => $mine, 'staff' => $staff, 'seats' => ABD_LAB_SEATS,
-    'available' => count(abd_lab_enabled_seats()), 'seat_list' => abd_lab_seat_list()]); }
+  if ($m === 'GET' && $action === 'mine') { $mine = abd_lab_seats_of($uid);
+    $bk = abd_book_required('eve') ? ['required' => true, 'now' => abd_book_current_seats($uid, 'eve'), 'next' => abd_book_next($uid, 'eve')] : ['required' => false];
+    if ($bk['required'] && !$staff) $mine = array_values(array_filter($bk['now'], 'abd_lab_seat_enabled')); abd_out(['ok' => true, 'seat' => $mine[0] ?? null, 'my_seats' => $mine, 'staff' => $staff, 'seats' => ABD_LAB_SEATS,
+    'available' => count(abd_lab_enabled_seats()), 'seat_list' => abd_lab_seat_list(), 'booking' => $bk]); }
   if ($m === 'GET' && $action === 'seats') { abd_out(['ok' => true, 'seats' => ABD_LAB_SEATS, 'available' => count(abd_lab_enabled_seats()), 'seat_list' => abd_lab_seat_list()]); }
   if ($m === 'GET' && $action === 'list') {
     abd_require_staff();
@@ -42,6 +45,7 @@ abd_api(function () {
     if (!abd_lab_seat_valid($seat)) abd_err('seat', 422);
     if (!abd_lab_seat_enabled($seat)) abd_err('seat_prep', 409);   // «قيد التجهيز»: not assignable/openable yet
     // the CLICKED seat is the one used (code, EVE creds, signed link) — never swapped for another assigned seat
+    abd_lab_booking_gate($u, $seat);   // SEAT_BOOKING on: only the trainee who booked this seat for the current slot (staff pass)
     if (!abd_lab_can_open($uid, $staff, $seat)) abd_err('not_your_seat', 403, ['my_seats' => abd_lab_seats_of($uid)]);
     // resend cooldown: one code per 60 s per user (the previous code stays valid until replaced)
     $last = abd_q("SELECT UNIX_TIMESTAMP(created_at) FROM abd_email_codes WHERE user_id = ? AND purpose = 'lab' ORDER BY id DESC LIMIT 1", [$uid])->fetchColumn();
@@ -61,6 +65,7 @@ abd_api(function () {
     if (!abd_lab_seat_valid($seat)) abd_err('seat', 422);
     if (!abd_lab_seat_enabled($seat)) abd_err('seat_prep', 409);   // «قيد التجهيز»: not assignable/openable yet
     // the CLICKED seat is the one used (code, EVE creds, signed link) — never swapped for another assigned seat
+    abd_lab_booking_gate($u, $seat);   // SEAT_BOOKING on: only the trainee who booked this seat for the current slot (staff pass)
     if (!abd_lab_can_open($uid, $staff, $seat)) abd_err('not_your_seat', 403, ['my_seats' => abd_lab_seats_of($uid)]);
     if (!abd_rate('lab-open-u', (string)$uid, 30, 900)) abd_err('rate_limited', 429);
     if (abd_str($b, 'code', 12) === '') abd_err('code_required', 428);
@@ -80,6 +85,7 @@ abd_api(function () {
   if ($action === 'link') {
     if (!abd_lab_seat_valid($seat)) abd_err('seat', 422);
     if (!abd_lab_seat_enabled($seat)) abd_err('seat_prep', 409);
+    abd_lab_booking_gate($u, $seat);   // SEAT_BOOKING on: only the trainee who booked this seat for the current slot (staff pass)
     if (!abd_lab_can_open($uid, $staff, $seat)) abd_err('not_your_seat', 403, ['my_seats' => abd_lab_seats_of($uid)]);
     if (!abd_rate('lab-link-u', (string)$uid, 60, 900)) abd_err('rate_limited', 429);
     abd_session(); $w = $_SESSION['lab_ok'][$seat] ?? null;

@@ -23,12 +23,13 @@ abd_api(function () {
   if ($m === 'GET' && $action === 'status') {
     if (!$cfg) abd_out(['ok' => true, 'available' => false]);
     abd_out(['ok' => true, 'available' => true, 'access' => $cfg['access'], 'allowed' => abd_rlab_allowed($u, $lab, $cfg),
-      'unlocked' => abd_rlab_window_ok($uid, $lab), 'email' => abd_mask_email((string)$u['email'])]);
+      'unlocked' => abd_rlab_window_ok($uid, $lab) && abd_rlab_allowed($u, $lab, $cfg), 'email' => abd_mask_email((string)$u['email'])]);
   }
   if ($m !== 'POST') abd_err('method', 405);
   abd_require_csrf();
   if (!$cfg) abd_err('unavailable', 503);
-  if (!abd_rlab_allowed($u, $lab, $cfg)) abd_err('not_entitled', 403);
+  if (!abd_rlab_allowed($u, $lab, $cfg)) abd_err($cfg['access'] === 'booked' ? 'not_booked' : 'not_entitled', 403,
+    $cfg['access'] === 'booked' ? ['next' => abd_book_next($uid, $lab)] : []);
   $slot = ABD_RLABS[$lab][0];
 
   if ($action === 'request') {
