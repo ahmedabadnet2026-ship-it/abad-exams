@@ -1,5 +1,5 @@
 <?php
-// Auth API: GET ?action=me | POST {action: register|login|logout|verify_email|resend_email}
+// Auth API: GET ?action=me | POST {action: register|login|logout|verify_email|resend_email|marketing}
 // Sign-up: register → 6-digit code emailed (10 min, hashed, 5 tries) → verify_email {code} activates the account and signs in.
 // An unverified account is never signed in: login answers {error:"unverified", sent_to} and emails a fresh code.
 declare(strict_types=1);
@@ -117,6 +117,22 @@ abd_api(function () {
     abd_session(); session_regenerate_id(true); $_SESSION['pending_uid'] = $id;   // not signed in until the email code is entered
     $r = abd_send_verify(['id' => $id, 'email' => $email, 'full_name_ar' => $nameAr, 'full_name_en' => $nameEn]);
     abd_out(['ok' => true, 'verify' => true, 'sent_to' => abd_mask_email($email), 'mail' => $r['ok'] ? 'sent' : $r['error'], 'ttl' => ABD_CODE_TTL, 'csrf' => abd_csrf()], 201);
+  }
+
+  // Account toggle «اشترك في العروض والخصومات الحصرية»: signed-in user only (CSRF checked above). The preference is saved
+  // first; Brevo is best effort — on failure it is queued (brevo_pending) for api/bin/brevo_sync.php and the user is told.
+  if ($action === 'marketing') {
+    $u = abd_require_user();
+    if (!abd_rate('mkt-toggle', (string)$u['id'], 20, 3600)) abd_err('rate_limited', 429);
+    $on = ($b['on'] ?? null) === true ? 1 : (($b['on'] ?? null) === false ? 0 : -1);
+    if ($on < 0) abd_err('invalid', 422);
+    abd_q('UPDATE abd_users SET marketing_opt_in = ?, marketing_opt_in_at = IF(? = 1, COALESCE(marketing_opt_in_at, NOW()), NULL) WHERE id = ?', [$on, $on, $u['id']]);
+    $r = abd_brevo_apply_pref((int)$u['id']);
+    if ($r === 'skipped_unsubscribed') {   // they used the unsubscribe link in a Brevo email: we never override that
+      abd_q('UPDATE abd_users SET marketing_opt_in = 0, marketing_opt_in_at = NULL WHERE id = ?', [$u['id']]); $on = 0;
+    }
+    $sync = $r === 'synced' || $r === 'removed' ? 'ok' : ($r === 'skipped_unsubscribed' ? 'unsubscribed' : 'queued');
+    abd_out(['ok' => true, 'marketing_opt_in' => (bool)$on, 'sync' => $sync]);
   }
 
   if ($action === 'verify_email') {

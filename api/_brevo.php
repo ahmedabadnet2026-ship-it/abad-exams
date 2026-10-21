@@ -35,6 +35,34 @@ function abd_brevo_req(string $method, string $path, ?array $body = null): array
   return [$code, is_array($j) ? $j : null];
 }
 
+/**
+ * Opt-out: remove the user's email from our Brevo list (contact itself kept; Brevo's own blacklist untouched).
+ * @return string 'removed' | 'disabled' | 'error'   (404 / "not in list" count as removed)
+ */
+function abd_brevo_unsub_user(int $uid): string {
+  try {
+    if (!abd_brevo_enabled()) return 'disabled';
+    $email = (string)abd_q('SELECT email FROM abd_users WHERE id = ?', [$uid])->fetchColumn();
+    if ($email === '') return 'removed';
+    $list = (int)abd_brevo_cfg()['LIST_ID'];
+    [$c, $j] = abd_brevo_req('POST', '/contacts/lists/' . $list . '/contacts/remove', ['emails' => [$email]]);
+    if ($c === 201 || $c === 200 || $c === 204 || $c === 404 || ($c === 400 && stripos((string)($j['message'] ?? ''), 'already removed') !== false)
+        || ($c === 400 && stripos((string)($j['message'] ?? ''), 'does not exist') !== false)) {
+      abd_q('UPDATE abd_users SET brevo_synced_at = NOW(), brevo_pending = 0 WHERE id = ?', [$uid]);
+      return 'removed';
+    }
+    return 'error';
+  } catch (Throwable $e) { error_log('[abad-brevo] unsub ' . $uid . ': ' . $e->getMessage()); return 'error'; }
+}
+/** Apply the user's current preference to Brevo; on failure flag brevo_pending = 1 so api/bin/brevo_sync.php retries it. */
+function abd_brevo_apply_pref(int $uid): string {
+  $on = (int)abd_q('SELECT marketing_opt_in FROM abd_users WHERE id = ?', [$uid])->fetchColumn();
+  $r = $on ? abd_brevo_sync_user($uid) : abd_brevo_unsub_user($uid);
+  try { abd_q('UPDATE abd_users SET brevo_pending = ? WHERE id = ?', [in_array($r, ['error', 'disabled'], true) ? 1 : 0, $uid]); }
+  catch (Throwable $e) { error_log('[abad-brevo] pending flag: ' . $e->getMessage()); }
+  return $r;
+}
+
 /** Split a name into FIRSTNAME / LASTNAME (first word / rest). */
 function abd_brevo_split(string $n): array { $p = preg_split('/\s+/u', trim($n)) ?: []; return [(string)array_shift($p), implode(' ', $p)]; }
 

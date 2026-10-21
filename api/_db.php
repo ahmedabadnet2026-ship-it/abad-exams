@@ -185,7 +185,7 @@ function abd_user(): ?array {
   abd_session();
   $id = (int)($_SESSION['uid'] ?? 0);
   if ($id <= 0) return $u = null;
-  $row = abd_q('SELECT id, full_name_ar, full_name_en, email, email_verified_at, phone, national_id, role, is_active, created_at
+  $row = abd_q('SELECT id, full_name_ar, full_name_en, email, email_verified_at, phone, national_id, marketing_opt_in, role, is_active, created_at
                 FROM abd_users WHERE id = ?', [$id])->fetch();
   // unverified accounts (migration 006) are never signed in; they sit in $_SESSION['pending_uid'] until the email code is entered
   if (!$row || !(int)$row['is_active'] || $row['email_verified_at'] === null) { unset($_SESSION['uid']); return $u = null; }
@@ -214,7 +214,8 @@ function abd_logout(): void {
 }
 function abd_public_user(array $u): array {
   return ['id' => (int)$u['id'], 'full_name_ar' => $u['full_name_ar'], 'full_name_en' => $u['full_name_en'],
-    'email' => $u['email'], 'phone' => $u['phone'], 'role' => $u['role']];
+    'email' => $u['email'], 'phone' => $u['phone'], 'role' => $u['role'],
+    'marketing_opt_in' => !empty($u['marketing_opt_in'])];
 }
 function abd_admin_exists(): bool {
   return (bool)abd_q("SELECT 1 FROM abd_users WHERE role = 'admin' AND is_active = 1 LIMIT 1")->fetchColumn();
