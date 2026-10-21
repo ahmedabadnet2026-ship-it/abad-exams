@@ -25,6 +25,7 @@ const ABD_EXAMS = [
   'mos-ppt'        => ['cert' => 'mos-ppt',   'vendor' => 'microsoft',  'file' => 'mos-ppt-exam.html',        'title' => 'MOS PowerPoint (MO-300)', 'like' => ['%MO-300%', '%PowerPoint%MOS%', 'MOS%PowerPoint%']],
   'ceh'            => ['cert' => 'ceh',      'vendor' => 'eccouncil',  'file' => 'ceh-exam.html',            'title' => 'EC-Council CEH v13',       'like' => ['%CEH%']],
   'cysa'           => ['cert' => 'cysa',     'vendor' => 'comptia',    'file' => 'cysa-exam.html',           'title' => 'CompTIA CySA+',            'like' => ['%CySA%']],
+  'server-plus'    => ['cert' => 'server',   'vendor' => 'comptia',    'file' => 'server-plus-exam.html',    'title' => 'CompTIA Server+',          'like' => ['%Server+%']],
   'ejpt-trial'     => ['cert' => 'ejpt',     'vendor' => 'ine',        'file' => 'ejpt-trial-exam.html',     'title' => 'INE eJPT',                 'like' => ['%eJPT%']],
 ];
 
