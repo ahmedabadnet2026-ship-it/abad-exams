@@ -66,6 +66,7 @@ abd_admin_top('تسجيل المتدربين في الدورات', $me);
   <p class="mut">حدّد دورة كل متدرب وتاريخي البداية والنهاية. في <b>تاريخ نهاية الدورة</b> (بتوقيت الرياض) يُرسَل للمتدرب تلقائيًا بريد «حجز الاختبار» مرة واحدة فقط، وفيه زر يفتح صفحة حجز الاختبار في المنصة. اترك التاريخ فارغًا لاعتماد تاريخ الدورة.</p>
   <div class="stats"><div><b><?= count($rows) ?></b>تسجيل</div><div><b><?= $due ?></b>بريد مستحق اليوم</div><div><b><?= count(array_filter($rows, fn($r) => (bool)$r['exam_mail_sent_at'])) ?></b>بريد مُرسل</div></div>
   <?php if ($flash): ?><div class="<?= $flash[1] ? 'err' : 'okm' ?>"><?=h($flash[0])?></div><?php endif; ?>
+  <p><a class="btn s" href="enrollments-import.php">📥 استيراد من Excel / CSV</a></p>
   <h2><?= $edit ? '✏️ تعديل تسجيل' : '➕ تسجيل متدرب في دورة' ?></h2>
   <form class="f" method="post"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="save">
     <?php if ($edit): ?><input type="hidden" name="id" value="<?= (int)$edit['id'] ?>">
