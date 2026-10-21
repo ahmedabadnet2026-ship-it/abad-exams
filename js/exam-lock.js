@@ -1,7 +1,7 @@
 /* ABAD exam lock (public copy): first exam free trial, others locked; sign-in uses the single platform login (login.html). */
 (function(){
 /* Prefill booking form with this exam's vendor/cert (booking.html reads #v=&c=). */
-var MAP={'aplus-core1-exam':'comptia&c=aplus','aplus-core2-exam':'comptia&c=aplus','linux-plus-exam':'comptia&c=linux','network-plus-exam':'comptia&c=network','security-plus-exam':'comptia&c=security','pmp-exam':'pmi&c=pmp','itil5-exam':'peoplecert&c=itil5','ccna-exam':'cisco&c=ccna','cobit-exam':'isaca&c=cobit','cysa-exam':'comptia&c=cysa','ceh-exam':'eccouncil&c=ceh'};
+var MAP={'aplus-core1-exam':'comptia&c=aplus','aplus-core2-exam':'comptia&c=aplus','linux-plus-exam':'comptia&c=linux','network-plus-exam':'comptia&c=network','security-plus-exam':'comptia&c=security','pmp-exam':'pmi&c=pmp','itil5-exam':'peoplecert&c=itil5','ccna-exam':'cisco&c=ccna','cobit-exam':'isaca&c=cobit','cysa-exam':'comptia&c=cysa','ceh-exam':'eccouncil&c=ceh','mos-word-exam':'microsoft&c=mos-word','mos-excel-exam':'microsoft&c=mos-excel','mos-ppt-exam':'microsoft&c=mos-ppt'};
 var pg=(location.pathname.split('/').pop()||'').replace(/\.html$/,'');var BK='booking.html'+(MAP[pg]?'#v='+MAP[pg]:'');
 var CSS='.el-free{display:inline-block;margin:4px 6px;font-size:12px;font-weight:800;border-radius:99px;padding:1px 10px;background:#F5BD2D;color:#10293b;vertical-align:middle}'+
 '.el-locked{opacity:.75;background:#f4f6f9!important;position:relative}.el-lockb{font-size:18px;margin-inline-start:6px}'+
