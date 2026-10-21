@@ -1,0 +1,132 @@
+{
+ "lab": "CCNA/13-HSRP.unl",
+ "title_ar": "بروتوكول التكرار HSRP (First Hop Redundancy)",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.10.2",
+   "len": 24,
+   "pts": 4,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.10.2 255.255.255.0",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.10.3",
+   "len": 24,
+   "pts": 4,
+   "title_ar": "R2 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.10.3 255.255.255.0",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "R3",
+   "intf": "Loopback0",
+   "ip": "3.3.3.3",
+   "len": 32,
+   "pts": 4,
+   "title_ar": "R3 Loopback0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 3.3.3.3 255.255.255.255",
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show standby brief",
+   "regex": "Gi0/0\\s+1\\s+110\\s+P\\s+Active\\s+local\\s+192\\.168\\.10\\.3\\s+192\\.168\\.10\\.1",
+   "pts": 20,
+   "title_ar": "R1 Active بأولوية 110 و preempt، والـ Standby هو R2",
+   "hint_ar": "standby 1 priority 110 و standby 1 preempt على R1.",
+   "solution_ar": "standby 1 ip 192.168.10.1 / standby 1 priority 110 / standby 1 preempt",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show standby brief",
+   "regex": "Gi0/0\\s+1\\s+100\\s+\\S*\\s*Standby\\s+192\\.168\\.10\\.2\\s+local\\s+192\\.168\\.10\\.1",
+   "pts": 15,
+   "title_ar": "R2 Standby في المجموعة 1",
+   "hint_ar": "standby 1 ip 192.168.10.1 على R2.",
+   "solution_ar": "standby 1 ip 192.168.10.1",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show standby",
+   "regex": "version 2",
+   "pts": 3,
+   "title_ar": "HSRP version 2 على R1",
+   "hint_ar": "standby version 2",
+   "solution_ar": "standby version 2",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R3",
+   "cmd": "show ip route ospf",
+   "regex": "O\\s+192\\.168\\.10\\.0/24",
+   "pts": 10,
+   "title_ar": "R3 يعرف شبكة LAN عبر OSPF",
+   "hint_ar": "أعلن 192.168.10.0 0.0.0.255 في OSPF على R1 و R2.",
+   "solution_ar": "network 192.168.10.0 0.0.0.255 area 0",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip route ospf",
+   "regex": "O\\s+3\\.3\\.3\\.3",
+   "pts": 10,
+   "title_ar": "R1 يعرف 3.3.3.3 عبر OSPF",
+   "hint_ar": "network 3.3.3.3 0.0.0.0 area 0 على R3.",
+   "solution_ar": "network 3.3.3.3 0.0.0.0 area 0",
+   "id": "c08"
+  },
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "192.168.10.11",
+   "len": 24,
+   "gw": "192.168.10.1",
+   "pts": 5,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.10.11/24 192.168.10.1",
+   "id": "c09"
+  },
+  {
+   "kind": "pc",
+   "node": "PC2",
+   "ip": "192.168.10.12",
+   "len": 24,
+   "gw": "192.168.10.1",
+   "pts": 5,
+   "title_ar": "إعداد PC2 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC2 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.10.12/24 192.168.10.1",
+   "id": "c10"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "3.3.3.3",
+   "pts": 10,
+   "title_ar": "PC1 ← 3.3.3.3 عبر البوابة الافتراضية",
+   "hint_ar": "راجع HSRP و OSPF.",
+   "id": "c11"
+  }
+ ]
+}

@@ -1,0 +1,210 @@
+{
+ "lab": "CCNA/10-Extended-ACL.unl",
+ "title_ar": "قوائم التحكم الموسّعة (Numbered Extended ACL) مع SSH و Telnet",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.1.1",
+   "len": 24,
+   "pts": 5,
+   "title_ar": "عنوان R1 على Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.1.1 255.255.255.0",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "12.0.0.1",
+   "len": 30,
+   "pts": 5,
+   "title_ar": "عنوان R1 على Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 12.0.0.1 255.255.255.252",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.2.1",
+   "len": 24,
+   "pts": 5,
+   "title_ar": "عنوان R2 على Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.2.1 255.255.255.0",
+   "id": "c03"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/1",
+   "ip": "12.0.0.2",
+   "len": 30,
+   "pts": 5,
+   "title_ar": "عنوان R2 على Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 12.0.0.2 255.255.255.252",
+   "id": "c04"
+  },
+  {
+   "kind": "iface",
+   "node": "PC1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.1.10",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "عنوان PC1 (مضيف vIOS)",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.1.10 255.255.255.0",
+   "id": "c05"
+  },
+  {
+   "kind": "iface",
+   "node": "PC2",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.2.20",
+   "len": 24,
+   "pts": 2,
+   "title_ar": "عنوان PC2 (مضيف vIOS)",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.2.20 255.255.255.0",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ip ssh",
+   "regex": "SSH Enabled - version 2\\.0",
+   "pts": 8,
+   "title_ar": "R2: SSH الإصدار 2",
+   "hint_ar": "ip domain-name ccna.com / crypto key generate rsa modulus 1024 / ip ssh version 2",
+   "solution_ar": "ip ssh version 2",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | section line vty",
+   "regex": "line vty 0 4\\s*\\n(?:.*\\n)*?\\s*login local",
+   "pts": 5,
+   "title_ar": "R1: line vty 0 4 مع login local",
+   "hint_ar": "بدون login local يرفض الخط الدخول (Password required, but none set).",
+   "solution_ar": "line vty 0 4 / login local",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show running-config | section line vty",
+   "regex": "line vty 0 4\\s*\\n(?:.*\\n)*?\\s*login local",
+   "pts": 5,
+   "title_ar": "R2: line vty 0 4 مع login local",
+   "hint_ar": "بدون login local يرفض الخط الدخول (Password required, but none set).",
+   "solution_ar": "line vty 0 4 / login local",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show access-lists 101",
+   "regex": "permit tcp host 192\\.168\\.1\\.10 host 12\\.0\\.0\\.2 eq 22(?:.*\\n)+.*deny icmp host 192\\.168\\.1\\.10 host 12\\.0\\.0\\.2(?:.*\\n)+.*permit ip any any",
+   "pts": 12,
+   "title_ar": "R1: ACL 101 بالترتيب الصحيح",
+   "hint_ar": "SSH (22) ثم deny icmp ثم permit ip any any.",
+   "solution_ar": "access-list 101 permit tcp host 192.168.1.10 host 12.0.0.2 eq 22 ...",
+   "id": "c10"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip interface GigabitEthernet0/1 | include access list",
+   "regex": "Outgoing access list is 101",
+   "pts": 6,
+   "title_ar": "R1: ACL 101 على g0/1 out",
+   "hint_ar": "ip access-group 101 out",
+   "solution_ar": "interface g0/1 / ip access-group 101 out",
+   "id": "c11"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show access-lists 101",
+   "regex": "eq 22 \\(\\d+ match",
+   "pts": 5,
+   "title_ar": "PC1 استخدم SSH فعلًا (عدّاد matches)",
+   "hint_ar": "نفّذ ssh -v 2 -l admin2 12.0.0.2 من PC1 ثم أعد التسليم.",
+   "solution_ar": "",
+   "id": "c12"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "12.0.0.2",
+   "pts": 5,
+   "title_ar": "PC1 ← 12.0.0.2 يجب أن يفشل",
+   "hint_ar": "deny icmp host 192.168.1.10 host 12.0.0.2",
+   "expect": "fail",
+   "id": "c13"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "192.168.2.20",
+   "pts": 5,
+   "title_ar": "PC1 ← PC2 ينجح",
+   "hint_ar": "permit ip any any في نهاية الـ ACL.",
+   "id": "c14"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show access-lists 101",
+   "regex": "permit tcp host 192\\.168\\.2\\.20 host 12\\.0\\.0\\.1 eq telnet(?:.*\\n)+.*deny icmp host 192\\.168\\.2\\.20 host 12\\.0\\.0\\.1(?:.*\\n)+.*permit ip any any",
+   "pts": 12,
+   "title_ar": "R2: ACL 101 بالترتيب الصحيح",
+   "hint_ar": "Telnet (23) ثم deny icmp ثم permit ip any any.",
+   "solution_ar": "access-list 101 permit tcp host 192.168.2.20 host 12.0.0.1 eq 23 ...",
+   "id": "c15"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ip interface GigabitEthernet0/1 | include access list",
+   "regex": "Outgoing access list is 101",
+   "pts": 6,
+   "title_ar": "R2: ACL 101 على g0/1 out",
+   "hint_ar": "ip access-group 101 out",
+   "solution_ar": "interface g0/1 / ip access-group 101 out",
+   "id": "c16"
+  },
+  {
+   "kind": "ping",
+   "node": "PC2",
+   "target": "12.0.0.1",
+   "pts": 3,
+   "title_ar": "PC2 ← 12.0.0.1 يجب أن يفشل",
+   "hint_ar": "deny icmp host 192.168.2.20 host 12.0.0.1",
+   "expect": "fail",
+   "id": "c17"
+  },
+  {
+   "kind": "ping",
+   "node": "PC2",
+   "target": "192.168.1.10",
+   "pts": 3,
+   "title_ar": "PC2 ← PC1 ينجح",
+   "hint_ar": "permit ip any any",
+   "id": "c18"
+  }
+ ],
+ "ios_hosts": [
+  "PC1",
+  "PC2"
+ ]
+}

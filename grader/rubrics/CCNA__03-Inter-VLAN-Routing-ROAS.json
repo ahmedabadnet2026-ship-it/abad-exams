@@ -1,0 +1,120 @@
+{
+ "lab": "CCNA/03-Inter-VLAN-Routing-ROAS.unl",
+ "title_ar": "التوجيه بين الـ VLANs بطريقة Router-on-a-Stick",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0.10",
+   "ip": "10.10.10.1",
+   "len": 24,
+   "pts": 12,
+   "title_ar": "R1 Gi0/0.10",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "interface g0/0.10 / encapsulation dot1Q 10 / ip address 10.10.10.1 255.255.255.0",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0.20",
+   "ip": "10.10.20.1",
+   "len": 24,
+   "pts": 12,
+   "title_ar": "R1 Gi0/0.20",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "interface g0/0.20 / encapsulation dot1Q 20 / ip address 10.10.20.1 255.255.255.0",
+   "id": "c02"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show interfaces GigabitEthernet0/0.10 | include 802.1Q",
+   "regex": "802\\.1Q Virtual LAN, Vlan ID\\s+10",
+   "pts": 8,
+   "title_ar": "Gi0/0.10 مربوطة بـ VLAN 10",
+   "hint_ar": "encapsulation dot1Q 10",
+   "solution_ar": "encapsulation dot1Q 10",
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show interfaces GigabitEthernet0/0.20 | include 802.1Q",
+   "regex": "802\\.1Q Virtual LAN, Vlan ID\\s+20",
+   "pts": 8,
+   "title_ar": "Gi0/0.20 مربوطة بـ VLAN 20",
+   "hint_ar": "encapsulation dot1Q 20",
+   "solution_ar": "encapsulation dot1Q 20",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show interfaces trunk",
+   "regex": "^Gi0/0\\s+on\\s+802\\.1q\\s+trunking",
+   "pts": 12,
+   "title_ar": "SW1: Gi0/0 trunk",
+   "hint_ar": "switchport trunk encapsulation dot1q ثم switchport mode trunk.",
+   "solution_ar": "switchport mode trunk",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show vlan brief",
+   "regex": "^10\\s+\\S+\\s+active\\s+.*Gi0/1",
+   "pts": 6,
+   "title_ar": "SW1: Gi0/1 في VLAN 10",
+   "hint_ar": "switchport access vlan 10",
+   "solution_ar": "",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show vlan brief",
+   "regex": "^20\\s+\\S+\\s+active\\s+.*Gi0/2",
+   "pts": 6,
+   "title_ar": "SW1: Gi0/2 في VLAN 20",
+   "hint_ar": "switchport access vlan 20",
+   "solution_ar": "",
+   "id": "c07"
+  },
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "10.10.10.11",
+   "len": 24,
+   "gw": "10.10.10.1",
+   "pts": 5,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 10.10.10.11/24 10.10.10.1",
+   "id": "c08"
+  },
+  {
+   "kind": "pc",
+   "node": "PC2",
+   "ip": "10.10.20.11",
+   "len": 24,
+   "gw": "10.10.20.1",
+   "pts": 5,
+   "title_ar": "إعداد PC2 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC2 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 10.10.20.11/24 10.10.20.1",
+   "id": "c09"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "10.10.20.11",
+   "pts": 26,
+   "title_ar": "PC1 ← PC2 عبر R1",
+   "hint_ar": "راجع البوابات والواجهات الفرعية والـ trunk.",
+   "id": "c10"
+  }
+ ]
+}

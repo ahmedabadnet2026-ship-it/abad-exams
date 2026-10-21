@@ -1,0 +1,105 @@
+{
+ "lab": "CCNA/11-IPv6-Addressing-and-Static.unl",
+ "title_ar": "عناوين IPv6 والتوجيه الثابت",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ipv6 interface brief",
+   "regex": "GigabitEthernet0/0\\s+\\[up/up\\]\\s*\\n\\s*FE80::\\S+\\s*\\n\\s*2001:DB8:1::1\\b",
+   "pts": 8,
+   "title_ar": "R1 Gi0/0 = 2001:db8:1::1",
+   "hint_ar": "ipv6 address 2001:db8:1::1/64",
+   "solution_ar": "ipv6 address 2001:db8:1::1/64",
+   "id": "c01"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ipv6 interface brief",
+   "regex": "GigabitEthernet0/1\\s+\\[up/up\\]\\s*\\n\\s*FE80::1\\s*\\n\\s*2001:DB8:12::1\\b",
+   "pts": 10,
+   "title_ar": "R1 Gi0/1 = 2001:db8:12::1 و FE80::1",
+   "hint_ar": "ipv6 address fe80::1 link-local",
+   "solution_ar": "ipv6 address fe80::1 link-local",
+   "id": "c02"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ipv6 interface brief",
+   "regex": "GigabitEthernet0/0\\s+\\[up/up\\]\\s*\\n\\s*FE80::\\S+\\s*\\n\\s*2001:DB8:2::1\\b",
+   "pts": 8,
+   "title_ar": "R2 Gi0/0 = 2001:db8:2::1",
+   "hint_ar": "ipv6 address 2001:db8:2::1/64",
+   "solution_ar": "ipv6 address 2001:db8:2::1/64",
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ipv6 interface brief",
+   "regex": "GigabitEthernet0/1\\s+\\[up/up\\]\\s*\\n\\s*FE80::2\\s*\\n\\s*2001:DB8:12::2\\b",
+   "pts": 10,
+   "title_ar": "R2 Gi0/1 = 2001:db8:12::2 و FE80::2",
+   "hint_ar": "ipv6 address fe80::2 link-local",
+   "solution_ar": "ipv6 address fe80::2 link-local",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ipv6 route static",
+   "regex": "S\\s+2001:DB8:2::/64 \\[1/0\\]\\s*\\n\\s*via 2001:DB8:12::2",
+   "pts": 15,
+   "title_ar": "R1: مسار ثابت لـ 2001:db8:2::/64",
+   "hint_ar": "ipv6 unicast-routing ثم ipv6 route.",
+   "solution_ar": "ipv6 route 2001:db8:2::/64 2001:db8:12::2",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ipv6 route static",
+   "regex": "S\\s+::/0 \\[1/0\\]\\s*\\n\\s*via FE80::1, GigabitEthernet0/1",
+   "pts": 15,
+   "title_ar": "R2: default route عبر FE80::1",
+   "hint_ar": "مع next-hop من نوع link-local يجب ذكر الواجهة.",
+   "solution_ar": "ipv6 route ::/0 g0/1 fe80::1",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "PC1",
+   "cmd": "show ipv6",
+   "regex": "2001:db8:1::10/64",
+   "pts": 7,
+   "title_ar": "PC1 = 2001:db8:1::10/64",
+   "hint_ar": "ip 2001:db8:1::10/64",
+   "solution_ar": "ip 2001:db8:1::10/64",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "PC2",
+   "cmd": "show ipv6",
+   "regex": "2001:db8:2::20/64",
+   "pts": 7,
+   "title_ar": "PC2 = 2001:db8:2::20/64",
+   "hint_ar": "ip 2001:db8:2::20/64",
+   "solution_ar": "ip 2001:db8:2::20/64",
+   "id": "c08"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "2001:db8:2::20",
+   "pts": 20,
+   "title_ar": "PC1 ← PC2 عبر IPv6",
+   "hint_ar": "راجع ipv6 unicast-routing (لازم للـ RA) والمسارين.",
+   "id": "c09"
+  }
+ ]
+}

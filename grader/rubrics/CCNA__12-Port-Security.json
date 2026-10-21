@@ -1,0 +1,106 @@
+{
+ "lab": "CCNA/12-Port-Security.unl",
+ "title_ar": "أمن المنافذ Port Security",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.10.1",
+   "len": 24,
+   "pts": 5,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.10.1 255.255.255.0",
+   "id": "c01"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show port-security interface GigabitEthernet0/1",
+   "regex": "Port Security\\s+:\\s+Enabled(?:.*\\n)+.*Violation Mode\\s+:\\s+Shutdown(?:.*\\n)+.*Maximum MAC Addresses\\s+:\\s+1(?:.*\\n)+.*Sticky MAC Addresses\\s+:\\s+1",
+   "pts": 20,
+   "title_ar": "Gi0/1: port-security max 1 sticky shutdown وعنوان PC1 متعلَّم",
+   "hint_ar": "فعّل sticky ثم أرسل حركة من PC1.",
+   "solution_ar": "switchport port-security / maximum 1 / mac-address sticky / violation shutdown",
+   "id": "c02"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show port-security interface GigabitEthernet0/2",
+   "regex": "Port Security\\s+:\\s+Enabled(?:.*\\n)+.*Violation Mode\\s+:\\s+Restrict",
+   "pts": 15,
+   "title_ar": "Gi0/2: violation restrict",
+   "hint_ar": "switchport port-security violation restrict",
+   "solution_ar": "switchport port-security violation restrict",
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show port-security interface GigabitEthernet0/3",
+   "regex": "Port Status\\s+:\\s+Secure-shutdown",
+   "pts": 20,
+   "title_ar": "Gi0/3 في حالة Secure-shutdown بعد مخالفة PC3",
+   "hint_ar": "اضبط العنوان الثابت 0050.7966.0001 ثم أرسل ping من PC3.",
+   "solution_ar": "switchport port-security mac-address 0050.7966.0001",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show vlan brief",
+   "regex": "^999\\s+PARKING\\s+active\\s+Gi1/0, Gi1/1, Gi1/2, Gi1/3",
+   "pts": 10,
+   "title_ar": "المنافذ غير المستخدمة في VLAN 999 PARKING",
+   "hint_ar": "interface range g1/0 - 3 / switchport access vlan 999",
+   "solution_ar": "",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show interfaces status",
+   "regex": "^Gi1/0\\s+.*disabled",
+   "pts": 5,
+   "title_ar": "Gi1/0 مطفأ",
+   "hint_ar": "shutdown على المنافذ غير المستخدمة",
+   "solution_ar": "shutdown",
+   "id": "c06"
+  },
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "192.168.10.11",
+   "len": 24,
+   "gw": "192.168.10.1",
+   "pts": 5,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.10.11/24 192.168.10.1",
+   "id": "c07"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "192.168.10.1",
+   "pts": 10,
+   "title_ar": "PC1 ← R1 (منفذ مسموح)",
+   "hint_ar": "العنوان sticky يجب أن يكون عنوان PC1.",
+   "id": "c08"
+  },
+  {
+   "kind": "ping",
+   "node": "PC3",
+   "target": "192.168.10.1",
+   "pts": 10,
+   "title_ar": "PC3 ← R1 يجب أن يفشل (جهاز غريب)",
+   "hint_ar": "Gi0/3 يجب أن يكون err-disabled.",
+   "expect": "fail",
+   "id": "c09"
+  }
+ ]
+}

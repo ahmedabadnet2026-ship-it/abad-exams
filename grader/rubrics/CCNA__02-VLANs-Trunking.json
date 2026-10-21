@@ -1,0 +1,113 @@
+{
+ "lab": "CCNA/02-VLANs-Trunking.unl",
+ "title_ar": "الشبكات الافتراضية VLAN والـ Trunk",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show vlan brief",
+   "regex": "^10\\s+STAFF\\s+active\\s+.*Gi0/1",
+   "pts": 8,
+   "title_ar": "SW1: VLAN 10 STAFF و Gi0/1 فيها",
+   "hint_ar": "أنشئ VLAN 10 وسمّها STAFF ثم ضع Gi0/1 فيها.",
+   "solution_ar": "vlan 10 / name STAFF / switchport access vlan 10",
+   "id": "c01"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show vlan brief",
+   "regex": "^10\\s+STAFF\\s+active\\s+.*Gi0/1",
+   "pts": 8,
+   "title_ar": "SW2: VLAN 10 STAFF و Gi0/1 فيها",
+   "hint_ar": "أنشئ VLAN 10 وسمّها STAFF ثم ضع Gi0/1 فيها.",
+   "solution_ar": "vlan 10 / name STAFF / switchport access vlan 10",
+   "id": "c02"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show vlan brief",
+   "regex": "^20\\s+GUEST\\s+active\\s+.*Gi0/2",
+   "pts": 8,
+   "title_ar": "SW1: VLAN 20 GUEST و Gi0/2 فيها",
+   "hint_ar": "أنشئ VLAN 20 وضع Gi0/2 فيها.",
+   "solution_ar": "vlan 20 / name GUEST / switchport access vlan 20",
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show vlan brief",
+   "regex": "^20\\s+GUEST\\s+active\\s+.*Gi0/2",
+   "pts": 8,
+   "title_ar": "SW2: VLAN 20 GUEST و Gi0/2 فيها",
+   "hint_ar": "أنشئ VLAN 20 وضع Gi0/2 فيها.",
+   "solution_ar": "vlan 20 / name GUEST / switchport access vlan 20",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show interfaces trunk",
+   "regex": "^Gi0/0\\s+on\\s+802\\.1q\\s+trunking\\s+99",
+   "pts": 10,
+   "title_ar": "SW1: Gi0/0 trunk بـ native 99",
+   "hint_ar": "تأكد من mode trunk والـ native VLAN 99 على الطرفين.",
+   "solution_ar": "switchport mode trunk / switchport trunk native vlan 99",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show interfaces trunk",
+   "regex": "^Gi0/0\\s+on\\s+802\\.1q\\s+trunking\\s+99",
+   "pts": 10,
+   "title_ar": "SW2: Gi0/0 trunk بـ native 99",
+   "hint_ar": "تأكد من mode trunk والـ native VLAN 99 على الطرفين.",
+   "solution_ar": "switchport mode trunk / switchport trunk native vlan 99",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show interfaces trunk",
+   "regex": "^Gi0/0\\s+10,20,99\\s*$",
+   "pts": 8,
+   "title_ar": "SW1: الـ VLANs المسموحة 10,20,99 فقط",
+   "hint_ar": "استخدم switchport trunk allowed vlan.",
+   "solution_ar": "switchport trunk allowed vlan 10,20,99",
+   "id": "c07"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "10.10.10.12",
+   "pts": 15,
+   "title_ar": "PC1 ← PC3 (نفس VLAN 10)",
+   "hint_ar": "راجع access VLAN على المنفذين والـ trunk.",
+   "id": "c08"
+  },
+  {
+   "kind": "ping",
+   "node": "PC2",
+   "target": "10.10.20.12",
+   "pts": 15,
+   "title_ar": "PC2 ← PC4 (نفس VLAN 20)",
+   "hint_ar": "راجع VLAN 20 والـ allowed list.",
+   "id": "c09"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "10.10.20.11",
+   "pts": 10,
+   "title_ar": "PC1 ← PC2 يجب أن يفشل (عزل VLAN)",
+   "hint_ar": "إن نجح فالمنفذان في نفس VLAN.",
+   "expect": "fail",
+   "id": "c10"
+  }
+ ]
+}

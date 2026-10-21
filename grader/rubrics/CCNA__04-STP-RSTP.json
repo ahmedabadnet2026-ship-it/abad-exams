@@ -1,0 +1,138 @@
+{
+ "lab": "CCNA/04-STP-RSTP.unl",
+ "title_ar": "بروتوكول الشجرة الممتدة STP / Rapid-PVST+",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show spanning-tree vlan 1",
+   "regex": "This bridge is the root",
+   "pts": 15,
+   "title_ar": "SW1 هو الـ Root",
+   "hint_ar": "خفّض أولوية SW1 لـ VLAN 1.",
+   "solution_ar": "spanning-tree vlan 1 priority 4096",
+   "id": "c01"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show spanning-tree vlan 1",
+   "regex": "Bridge ID\\s+Priority\\s+4097",
+   "pts": 10,
+   "title_ar": "أولوية SW1 = 4096",
+   "hint_ar": "4096 + sys-id-ext 1 = 4097",
+   "solution_ar": "spanning-tree vlan 1 priority 4096",
+   "id": "c02"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show spanning-tree vlan 1",
+   "regex": "Bridge ID\\s+Priority\\s+28673",
+   "pts": 10,
+   "title_ar": "SW2 root secondary",
+   "hint_ar": "spanning-tree vlan 1 root secondary",
+   "solution_ar": "spanning-tree vlan 1 root secondary",
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show spanning-tree summary",
+   "regex": "Switch is in rapid-pvst mode",
+   "pts": 5,
+   "title_ar": "SW1 في وضع rapid-pvst",
+   "hint_ar": "spanning-tree mode rapid-pvst",
+   "solution_ar": "spanning-tree mode rapid-pvst",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show spanning-tree summary",
+   "regex": "Switch is in rapid-pvst mode",
+   "pts": 5,
+   "title_ar": "SW2 في وضع rapid-pvst",
+   "hint_ar": "spanning-tree mode rapid-pvst",
+   "solution_ar": "spanning-tree mode rapid-pvst",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "SW3",
+   "cmd": "show spanning-tree summary",
+   "regex": "Switch is in rapid-pvst mode",
+   "pts": 5,
+   "title_ar": "SW3 في وضع rapid-pvst",
+   "hint_ar": "spanning-tree mode rapid-pvst",
+   "solution_ar": "spanning-tree mode rapid-pvst",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "SW3",
+   "cmd": "show spanning-tree vlan 1",
+   "regex": "^Gi0/1\\s+Altn\\s+BLK",
+   "pts": 15,
+   "title_ar": "SW3 Gi0/1 هو المنفذ البديل المحجوب",
+   "hint_ar": "الـ Root في SW1 و SW2 أولويته أقل من SW3، فـ SW3 يحجب منفذه نحو SW2.",
+   "solution_ar": "",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show spanning-tree interface GigabitEthernet0/2 detail",
+   "regex": "portfast mode|The port is in the portfast",
+   "pts": 5,
+   "title_ar": "SW2 Gi0/2 PortFast",
+   "hint_ar": "spanning-tree portfast على منفذ الحاسوب",
+   "solution_ar": "spanning-tree portfast",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "SW3",
+   "cmd": "show spanning-tree interface GigabitEthernet0/2 detail",
+   "regex": "portfast mode|The port is in the portfast",
+   "pts": 5,
+   "title_ar": "SW3 Gi0/2 PortFast",
+   "hint_ar": "spanning-tree portfast على منفذ الحاسوب",
+   "solution_ar": "spanning-tree portfast",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show spanning-tree interface GigabitEthernet0/2 detail",
+   "regex": "Bpdu guard is enabled",
+   "pts": 5,
+   "title_ar": "SW2 Gi0/2 BPDU Guard",
+   "hint_ar": "spanning-tree bpduguard enable",
+   "solution_ar": "spanning-tree bpduguard enable",
+   "id": "c10"
+  },
+  {
+   "kind": "match",
+   "node": "SW3",
+   "cmd": "show spanning-tree interface GigabitEthernet0/2 detail",
+   "regex": "Bpdu guard is enabled",
+   "pts": 5,
+   "title_ar": "SW3 Gi0/2 BPDU Guard",
+   "hint_ar": "spanning-tree bpduguard enable",
+   "solution_ar": "spanning-tree bpduguard enable",
+   "id": "c11"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "10.0.0.12",
+   "pts": 5,
+   "title_ar": "PC1 ← PC2",
+   "hint_ar": "راجع العناوين وحالة المنافذ.",
+   "id": "c12"
+  }
+ ]
+}

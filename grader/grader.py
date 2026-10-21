@@ -4,9 +4,10 @@ POST /grade  body JSON {seat,lab,uid,attempt,ts,nonce}  header X-Abad-Sig: hex H
 Reads node consoles via telnet on the seat's EVE VM; ONLY allowlisted commands are ever sent."""
 import json, os, re, hmac, hashlib, time, socket, threading, http.cookiejar, urllib.request, sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import grader_ext as GX   # CCNA 02-15 rubric kinds: match, ping expect=fail, IPv6 ping, IOS hosts, stages
 D = os.path.dirname(os.path.abspath(__file__))
 CFG = json.load(open(os.environ.get('GRADER_CFG', os.path.join(D, 'config.json'))))  # {secret, seats:{"1":{ip,user,pass}}}
-ALLOW = re.compile(r'^(show [\w ./|:-]+|ping [\d. a-z-]+|terminal length 0)$')
+ALLOW = re.compile(r'^(show [\w ./|:-]+|ping (ipv6 )?[\da-fA-F.: a-z-]+|terminal length 0)$')
 DENY = re.compile(r'\b(conf|configure|write|wr|reload|copy|erase|delete|debug|clear|set|save|clock|no|enable)\b', re.I)
 LOCKS, NONCES = {}, {}
 
@@ -38,6 +39,7 @@ class Console:
                     i += 2; continue
                 out.append(c[i]); i += 1
             buf += bytes(out)
+            buf = re.sub(rb'\x1b\][^\x07]*\x07|\x1b\[[0-9;?]*[A-Za-z]', b'', buf)   # vIOS OSC title / ANSI escapes break prompt detection
             if until.search(buf.rstrip(b' ') + b' ') or until.search(buf): break
         return buf.decode('utf-8', 'replace').replace('\r', '')
     def prompt(s):
@@ -63,10 +65,15 @@ def eve_nodes(seat):
     lab = me.get('lab') or ''
     return me, lab, call
 
+def is_ext(c, hosts=()):
+    return c['kind'] == 'match' or (c['kind'] == 'ping' and (c.get('expect') == 'fail' or ':' in c['target'] or c['node'] in hosts))
+
 def collect(seat, lab_req, rubric, fixture=None):
     """Gather raw outputs per (node, cmd). fixture = dict for mocked demos."""
-    need = {}
-    for c in rubric['checks']:
+    hosts = tuple(rubric.get('ios_hosts', ()))
+    need = GX.needs(rubric, None, hosts)                   # ext kinds (empty for base-only rubrics such as 01)
+    for c in GX.active(rubric):
+        if is_ext(c, hosts): continue
         n = c['node']; L = need.setdefault(n, [])
         if c['kind'] == 'iface':
             for x in ('show ip interface brief', 'show ip interface %s | include Internet address' % c['intf']):
@@ -107,7 +114,7 @@ def collect(seat, lab_req, rubric, fixture=None):
             p = con.prompt()
             if '(config' in p: errs[n] = 'configmode'; con.close(); continue
             if 'initial configuration dialog' in p: errs[n] = 'setup'; con.close(); continue
-            if not n.startswith('PC'): con.run('terminal length 0', 6)
+            if not n.startswith('PC') or n in hosts: con.run('terminal length 0', 6)
             for x in cmds: out[n][x] = con.run(x, 20 if x.startswith('ping') else 10)
             con.close()
         except Exception as e:
@@ -123,7 +130,8 @@ NODE_ERR_AR = {'stopped': 'الجهاز %s متوقف (غير مُشغَّل)', 
 def evaluate(rubric, out, errs, attempt):
     res, score, tot = [], 0, 0
     show_sol = attempt >= int(rubric.get('solution_after', 3))
-    for c in rubric['checks']:
+    hosts = tuple(rubric.get('ios_hosts', ()))
+    for c in GX.active(rubric):
         n = c['node']; o = out.get(n, {}); tot += c['pts']
         r = {'id': c['id'], 'node': n, 'title_ar': c['title_ar'], 'max': c['pts'], 'pts': 0, 'ok': False}
         ok, exp, found = False, '', ''
@@ -173,6 +181,11 @@ def evaluate(rubric, out, errs, attempt):
                 elif gw in ('0.0.0.0', ''): found = 'لا يوجد default gateway على %s' % n
                 elif gw != c['gw']: found = 'Gateway خاطئ: %s بدل %s' % (gw, c['gw'])
                 else: ok = True; found = '%s/%d gw %s' % (ip, l, gw)
+        elif is_ext(c, hosts):
+            if n not in errs:
+                ok, exp, found = GX.evaluate_check(c, o, hosts)
+                if not ok and re.search(r'% Invalid input', o.get(c.get('cmd', ''), '') or ''):
+                    found = 'الأمر يحتاج وضع privileged (#) — اكتب enable على %s ثم أعد التسليم' % n
         elif c['kind'] == 'ping':
             exp = 'ping ناجح إلى %s' % c['target']
             if n not in errs:

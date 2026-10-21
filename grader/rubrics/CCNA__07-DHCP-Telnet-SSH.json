@@ -1,0 +1,177 @@
+{
+ "lab": "CCNA/07-DHCP-Telnet-SSH.unl",
+ "title_ar": "خدمة DHCP والإدارة البعيدة Telnet و SSH",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.1.1",
+   "len": 24,
+   "pts": 5,
+   "title_ar": "عنوان R1 على Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.1.1 255.255.255.0",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "12.0.0.1",
+   "len": 30,
+   "pts": 5,
+   "title_ar": "عنوان R1 على Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 12.0.0.1 255.255.255.252",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.2.1",
+   "len": 24,
+   "pts": 5,
+   "title_ar": "عنوان R2 على Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.2.1 255.255.255.0",
+   "id": "c03"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/1",
+   "ip": "12.0.0.2",
+   "len": 30,
+   "pts": 5,
+   "title_ar": "عنوان R2 على Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 12.0.0.2 255.255.255.252",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip dhcp binding",
+   "regex": "192\\.168\\.1\\.\\d+\\s+0100\\.5079",
+   "pts": 10,
+   "title_ar": "R1 أعطى PC1 عنوانًا (binding)",
+   "hint_ar": "تأكد من الـ pool والـ excluded-address ثم ip dhcp على PC1.",
+   "solution_ar": "ip dhcp pool ccna1 / network 192.168.1.0 255.255.255.0",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ip dhcp binding",
+   "regex": "192\\.168\\.2\\.\\d+\\s+0100\\.5079",
+   "pts": 10,
+   "title_ar": "R2 أعطى PC2 عنوانًا (binding)",
+   "hint_ar": "ip dhcp pool على R2 للشبكة 192.168.2.0/24.",
+   "solution_ar": "ip dhcp pool ccna1 / network 192.168.2.0 255.255.255.0",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "PC1",
+   "cmd": "show ip",
+   "regex": "GATEWAY\\s*:\\s*192\\.168\\.1\\.1\\b",
+   "pts": 5,
+   "title_ar": "PC1 تعلّم البوابة 192.168.1.1 من DHCP",
+   "hint_ar": "default-router 192.168.1.1",
+   "solution_ar": "default-router 192.168.1.1",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "PC1",
+   "cmd": "show ip",
+   "regex": "DNS\\s*:\\s*8\\.8\\.8\\.8",
+   "pts": 5,
+   "title_ar": "PC1 تعلّم DNS 8.8.8.8",
+   "hint_ar": "dns-server 8.8.8.8",
+   "solution_ar": "dns-server 8.8.8.8",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "PC2",
+   "cmd": "show ip",
+   "regex": "GATEWAY\\s*:\\s*192\\.168\\.2\\.1\\b",
+   "pts": 5,
+   "title_ar": "PC2 تعلّم البوابة 192.168.2.1",
+   "hint_ar": "default-router 192.168.2.1",
+   "solution_ar": "default-router 192.168.2.1",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip ssh",
+   "regex": "SSH Enabled - version 2\\.0",
+   "pts": 10,
+   "title_ar": "R1: SSH الإصدار 2 مفعّل",
+   "hint_ar": "تحتاج hostname و ip domain-name ثم crypto key generate rsa ثم ip ssh version 2.",
+   "solution_ar": "ip domain-name abadnet.com / crypto key generate rsa modulus 1024 / ip ssh version 2",
+   "id": "c10"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ip ssh",
+   "regex": "SSH Enabled - version 2\\.0",
+   "pts": 10,
+   "title_ar": "R2: SSH الإصدار 2 مفعّل",
+   "hint_ar": "تحتاج hostname و ip domain-name ثم crypto key generate rsa ثم ip ssh version 2.",
+   "solution_ar": "ip domain-name abadnet.com / crypto key generate rsa modulus 1024 / ip ssh version 2",
+   "id": "c11"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | section line vty",
+   "regex": "line vty 0 4\\s*\\n(?:.*\\n)*?\\s*login local(?:.*\\n)*?\\s*transport input ssh",
+   "pts": 8,
+   "title_ar": "R1: line vty 0 4 بـ login local و transport input ssh",
+   "hint_ar": "استخدم line vty 0 4 (وليس 0 فقط) مع login local.",
+   "solution_ar": "line vty 0 4 / login local / transport input ssh",
+   "id": "c12"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show running-config | section line vty",
+   "regex": "line vty 0 4\\s*\\n(?:.*\\n)*?\\s*login local(?:.*\\n)*?\\s*transport input ssh",
+   "pts": 8,
+   "title_ar": "R2: line vty 0 4 بـ login local و transport input ssh",
+   "hint_ar": "استخدم line vty 0 4 (وليس 0 فقط) مع login local.",
+   "solution_ar": "line vty 0 4 / login local / transport input ssh",
+   "id": "c13"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | include username",
+   "regex": "username admin2 privilege 15",
+   "pts": 4,
+   "title_ar": "R1: المستخدم admin2 بصلاحية 15",
+   "hint_ar": "username admin2 privilege 15 password ccna123",
+   "solution_ar": "username admin2 privilege 15 password ccna123",
+   "id": "c14"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show running-config | include username",
+   "regex": "username admin2 privilege 15",
+   "pts": 4,
+   "title_ar": "R2: المستخدم admin2 بصلاحية 15",
+   "hint_ar": "username admin2 privilege 15 password ccna123",
+   "solution_ar": "username admin2 privilege 15 password ccna123",
+   "id": "c15"
+  }
+ ]
+}

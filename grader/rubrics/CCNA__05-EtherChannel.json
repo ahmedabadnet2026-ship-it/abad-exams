@@ -1,0 +1,94 @@
+{
+ "lab": "CCNA/05-EtherChannel.unl",
+ "title_ar": "تجميع الروابط EtherChannel باستخدام LACP",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show etherchannel summary",
+   "regex": "Po1\\(SU\\)\\s+LACP\\s+Gi0/0\\(P\\)\\s+Gi0/1\\(P\\)",
+   "pts": 20,
+   "title_ar": "SW1: Po1 (SU) بـ LACP والمنفذان (P)",
+   "hint_ar": "المنفذان في channel-group 1 mode active على الطرفين.",
+   "solution_ar": "interface range g0/0 - 1 / channel-group 1 mode active",
+   "id": "c01"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show etherchannel summary",
+   "regex": "Po1\\(SU\\)\\s+LACP\\s+Gi0/0\\(P\\)\\s+Gi0/1\\(P\\)",
+   "pts": 20,
+   "title_ar": "SW2: Po1 (SU) بـ LACP والمنفذان (P)",
+   "hint_ar": "المنفذان في channel-group 1 mode active على الطرفين.",
+   "solution_ar": "interface range g0/0 - 1 / channel-group 1 mode active",
+   "id": "c02"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show interfaces trunk",
+   "regex": "^Po1\\s+on\\s+802\\.1q\\s+trunking",
+   "pts": 15,
+   "title_ar": "SW1: Po1 trunk",
+   "hint_ar": "اضبط trunk على interface port-channel 1.",
+   "solution_ar": "interface port-channel 1 / switchport mode trunk",
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show interfaces trunk",
+   "regex": "^Po1\\s+on\\s+802\\.1q\\s+trunking",
+   "pts": 15,
+   "title_ar": "SW2: Po1 trunk",
+   "hint_ar": "اضبط trunk على interface port-channel 1.",
+   "solution_ar": "interface port-channel 1 / switchport mode trunk",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show spanning-tree vlan 1",
+   "regex": "^Po1\\s+Root\\s+FWD",
+   "pts": 10,
+   "title_ar": "STP يرى Po1 رابطًا واحدًا (Root FWD)",
+   "hint_ar": "لا يجب أن يظهر Gi0/0 أو Gi0/1 منفصلين.",
+   "solution_ar": "",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "PC1",
+   "cmd": "show ip",
+   "regex": "IP/MASK\\s*:\\s*10\\.0\\.0\\.11/24",
+   "pts": 5,
+   "title_ar": "عنوان PC1",
+   "hint_ar": "ip 10.0.0.11 255.255.255.0",
+   "solution_ar": "ip 10.0.0.11/24",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "PC2",
+   "cmd": "show ip",
+   "regex": "IP/MASK\\s*:\\s*10\\.0\\.0\\.12/24",
+   "pts": 5,
+   "title_ar": "عنوان PC2",
+   "hint_ar": "ip 10.0.0.12 255.255.255.0",
+   "solution_ar": "ip 10.0.0.12/24",
+   "id": "c07"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "10.0.0.12",
+   "pts": 10,
+   "title_ar": "PC1 ← PC2",
+   "hint_ar": "راجع الـ Port-channel.",
+   "id": "c08"
+  }
+ ]
+}
