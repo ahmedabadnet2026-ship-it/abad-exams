@@ -1,9 +1,9 @@
 <?php
 // Copy to ~/applications/gabascwgon/private_html/abad-config/eve-seats.php  (chmod 640). FAKE example values only.
 // One EVE-NG account per seat VM (EVE Community has only the admin role, so each account is admin on its own seat VM only — never reuse across seats).
-// Format: [seat => ["user" => …, "pass" => …]]. The password is emailed with each lab code for the assigned seat only, never shown on the page or logged.
+// Format: [seat => ["user" => …, "pass" => …]]. Shown on the lab page only after the trainee enters the emailed code (own seat only); never emailed, never logged.
 return [
   1  => ['user' => 'seat01', 'pass' => 'CHANGE-ME-01'],
   2  => ['user' => 'seat02', 'pass' => 'CHANGE-ME-02'],
-  // … up to 12
+  // … up to 20 (13-20 once enabled)
 ];

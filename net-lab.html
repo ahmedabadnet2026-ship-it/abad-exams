@@ -244,10 +244,9 @@ button,.btn,.hb,a.hb,#openTab,#btnNew{min-height:44px}
 </div>
 
 <script>
-const LAB_BASE = '';
-var FALLBACK_DEVICES = {R1:'https://metallica-fabrics-objects-importance.trycloudflare.com', R2:'https://combined-unified-mutual-progress.trycloudflare.com', R3:'https://calgary-modular-wheel-ottawa.trycloudflare.com', PC1:'https://andreas-jackie-inspection-bids.trycloudflare.com', PC2:'https://deaths-did-collar-cholesterol.trycloudflare.com'};
-const DEVICES = (function(){var b=LAB_BASE;try{var q=new URLSearchParams(location.search).get('base');if(q&&/^https?:\/\//i.test(q))b=q}catch(e){}
- if(!b)return FALLBACK_DEVICES;b=b.replace(/\/+$/,'');return {R1:b+'/r1/',R2:b+'/r2/',R3:b+'/r3/',PC1:b+'/pc1/',PC2:b+'/pc2/'}})();
+/* Console addresses are NOT in the page: filled from api/remote_lab.php after the trainee's email code (js/remote-lab-gate.js). */
+const DEVICES = {R1:'',R2:'',R3:'',PC1:'',PC2:''};
+var DEV_READY=false;
 (function(){
 var ROUTER='<svg viewBox="0 0 32 32"><ellipse cx="16" cy="19" rx="13" ry="6" fill="#3f86b3"/><rect x="3" y="13" width="26" height="6" fill="#3f86b3"/><ellipse cx="16" cy="13" rx="13" ry="6" fill="#5aa3d0" stroke="#10293b"/><path d="M10 11h5m-2-2 2 2-2 2M22 15h-5m2-2-2 2 2 2" stroke="#fff" stroke-width="1.6" fill="none"/></svg>';
 var PC='<svg viewBox="0 0 32 32"><rect x="4" y="5" width="24" height="16" rx="2" fill="#3f86b3"/><rect x="6" y="7" width="20" height="12" fill="#05111a"/><path d="M9 11l3 2-3 2M14 15h5" stroke="#3ecf8e" stroke-width="1.4" fill="none"/><rect x="13" y="21" width="6" height="4" fill="#5aa3d0"/><rect x="9" y="25" width="14" height="2" rx="1" fill="#5aa3d0"/></svg>';
@@ -269,8 +268,9 @@ function start(){if(started)return;started=true;mount();ph.style.display='none';
  tick=setInterval(function(){left--;paintT();if(left<=0){stop();setStatus('انتهى الوقت','stop')}},1000);show(cur)}
 function stop(){clearInterval(tick);tick=null;started=false;unmount();ph.style.display='';$('dot').classList.remove('on');setStatus('متوقف','stop');
  $('btnStart').disabled=false;$('btnStop').disabled=true;paintT();show(cur)}
-function reset(){clearInterval(tick);tick=null;started=false;unmount();left=3600;paintT();start()}
-$('btnStart').onclick=function(){if(left<=0)left=3600;start()};$('btnStop').onclick=stop;$('btnReset').onclick=reset;
+function reset(){clearInterval(tick);tick=null;started=false;unmount();left=3600;paintT();if(DEV_READY)start();else $('btnStart').onclick()}
+$('btnStart').onclick=function(){if(left<=0)left=3600;if(DEV_READY){start();return}if(!window.ABAD_RLAB)return;
+ ABAD_RLAB.get('net').then(function(it){it.forEach(function(x){if(x.name in DEVICES)DEVICES[x.name]=x.url});DEV_READY=true;start()}).catch(function(){})};$('btnStop').onclick=stop;$('btnReset').onclick=reset;
 $('btnFs').onclick=function(){if(document.fullscreenElement){document.exitFullscreen();return}if(stage.requestFullscreen)stage.requestFullscreen().catch(function(){stage.classList.toggle('fs')});else stage.classList.toggle('fs')};
 document.addEventListener('keydown',function(e){if(e.key=='Escape')stage.classList.remove('fs')});
 document.querySelectorAll('.tabs button').forEach(function(b){b.onclick=function(){document.querySelectorAll('.tabs button').forEach(function(x){x.classList.toggle('on',x==b)});document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('on',p.id=='tab-'+b.dataset.tab)})}});
@@ -284,6 +284,7 @@ document.querySelectorAll('.task').forEach(function(t,i){var inp=t.querySelector
 paintT();show(cur);
 })();
 </script>
+<script src="js/remote-lab-gate.js?v=abad-202610212340"></script>
 <script src="js/abad-labs.js?r=202610170001" defer></script>
 </body>
 </html>
