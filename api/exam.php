@@ -27,6 +27,8 @@ if ($ok) {
   exit;
 }
 
+// signed out: every page now requires login → straight to the sign-in page, back to this exam afterwards
+if (!$u && http_response_code() === 200) { header('Location: ' . $base . 'login.html?next=' . rawurlencode($e['file']), true, 302); exit; }
 if (http_response_code() === 200) http_response_code($u ? 403 : 401);
 header('Content-Type: text/html; charset=utf-8');
 $book = $base . 'booking.html#v=' . rawurlencode($e['vendor']) . '&c=' . rawurlencode($e['cert']);

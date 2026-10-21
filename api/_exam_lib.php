@@ -43,6 +43,7 @@ function abd_exam_certs(): array { $c = []; foreach (ABD_EXAMS as $e) $c[$e['cer
 /** Set of cert ids the user may open (staff: all). */
 function abd_exam_entitled_certs(array $u): array {
   if (in_array($u['role'], ['admin', 'staff'], true)) return array_keys(abd_exam_certs());
+  if (ABAD_OPEN_ALL_FOR_LOGGED_IN) return array_keys(abd_exam_certs());   // temporary: all exams for any signed-in user
   $uid = (int)$u['id']; $email = mb_strtolower((string)$u['email']);
   $ok = [];
   // (b)+(c) explicit grants

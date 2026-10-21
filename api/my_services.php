@@ -8,5 +8,5 @@ abd_api(function () {
   if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET') abd_err('method', 405);
   $u = abd_user();
   if (!$u) abd_out(['ok' => true, 'logged_in' => false, 'services' => ['exams' => [], 'materials' => [], 'labs' => []]]);
-  abd_out(['ok' => true, 'logged_in' => true, 'staff' => in_array($u['role'], ['admin', 'staff'], true), 'user' => abd_public_user($u), 'services' => abd_services_of($u)]);
+  abd_out(['ok' => true, 'logged_in' => true, 'staff' => in_array($u['role'], ['admin', 'staff'], true), 'open_all' => (bool)ABAD_OPEN_ALL_FOR_LOGGED_IN, 'user' => abd_public_user($u), 'services' => abd_services_of($u)]);
 });

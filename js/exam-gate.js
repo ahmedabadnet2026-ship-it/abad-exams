@@ -97,7 +97,7 @@ document.addEventListener("click",function(e){var a=e.target.closest&&e.target.c
  e.preventDefault();e.stopImmediatePropagation();if(!(ST&&ST.user))openLogin();else location.href=a.hasAttribute("data-abad-lab")?"eve-lab-booking.html":"booking.html"},true);
 /* ---------- single source: api/my_services.php ---------- */
 function toEnt(j){var e={exams:{},materials:{},labs:[],staff:!!(j&&j.staff)},sv=(j&&j.ok&&j.services)||{};
- (sv.exams||[]).forEach(function(x){e.exams[x.id]=true});(sv.materials||[]).forEach(function(x){e.materials[x.id]=x});e.labs=sv.labs||[];e.raw=j;return e}
+ (sv.exams||[]).forEach(function(x){e.exams[x.id]=true});e.openAll=!!(j&&j.open_all);if(e.openAll)Object.keys(MAP).forEach(function(k){e.exams[MAP[k][0]]=true});/* temporary ABAD_OPEN_ALL_FOR_LOGGED_IN mirror (api/_db.php) */(sv.materials||[]).forEach(function(x){e.materials[x.id]=x});e.labs=sv.labs||[];e.raw=j;return e}
 function refresh(){return ABAD_API.me(true).then(function(st){if(!st)return;ST=st;css();header();
   return (st.user?ABAD_API.req("my_services.php"):Promise.resolve({ok:true,services:{}})).then(function(j){ENT=toEnt(j);mark();markSvc();
    window.AbadGate.services=ENT;try{document.dispatchEvent(new CustomEvent("abad-services",{detail:ENT}))}catch(x){}})}).catch(function(){})}

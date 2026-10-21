@@ -3,6 +3,13 @@
 // Credentials live OUTSIDE the web root (…/private_html/abad-data/db.php or …/private_html/abad-config/db.php).
 declare(strict_types=1);
 date_default_timezone_set('Asia/Riyadh');
+
+// TEMPORARY ACCESS SWITCH (single source of truth; the client reads it via auth.php?action=me → open_all).
+// true  → every signed-in, email-verified user may open ALL exams (full, not just the free trial) and all course materials,
+//         until bookings are linked to accounts. Booking/entitlement gating stays in code untouched.
+// false → normal entitlement gating (booking / manual grant / ledger). Logged-out visitors get nothing either way.
+// EVE lab seats are NOT affected: a seat is a physical per-trainee machine and stays seat-assigned.
+if (!defined('ABAD_OPEN_ALL_FOR_LOGGED_IN')) define('ABAD_OPEN_ALL_FOR_LOGGED_IN', true);
 if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === basename(__FILE__)) { http_response_code(404); exit; }
 
 /** App root directory on disk (the folder that contains api/ and admin/). */

@@ -1,0 +1,18 @@
+# ABAD Digital — every page requires login (server side). See api/page.php.
+# Exempt: login.html (sign-in, register, email OTP verify), api/, admin/ (own auth), and all static assets
+# (js/ css/ assets/ icons/ course-files/, sw.js, manifest.webmanifest, images, fonts).
+Options -Indexes
+DirectoryIndex index.php index.html
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /abad-digital/
+RewriteRule ^login\.html$ - [L]
+RewriteRule ^$ api/page.php?f=index.html [L,QSA]
+RewriteRule ^index\.php$ api/page.php?f=index.html [L,QSA]
+RewriteRule ^([A-Za-z0-9][A-Za-z0-9._-]*\.html)$ api/page.php?f=$1 [L,QSA]
+</IfModule>
+<IfModule mod_headers.c>
+<FilesMatch "^(sw\.js|login\.html)$">
+Header set Cache-Control "no-cache, must-revalidate"
+</FilesMatch>
+</IfModule>

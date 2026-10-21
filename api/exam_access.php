@@ -15,7 +15,7 @@ abd_api(function () {
   if ($m === 'GET' && $action === 'mine') {
     $certs = $u ? abd_exam_entitled_certs($u) : [];
     $ex = []; foreach (ABD_EXAMS as $id => $e) $ex[$id] = in_array($e['cert'], $certs, true);
-    abd_out(['ok' => true, 'logged_in' => (bool)$u, 'staff' => $u && in_array($u['role'], ['admin', 'staff'], true), 'certs' => $certs, 'exams' => $ex]);
+    abd_out(['ok' => true, 'logged_in' => (bool)$u, 'staff' => $u && in_array($u['role'], ['admin', 'staff'], true), 'certs' => $certs, 'exams' => $ex, 'open_all' => (bool)ABAD_OPEN_ALL_FOR_LOGGED_IN]);
   }
   $me = abd_require_staff();
   if ($m === 'GET' && $action === 'list') {
