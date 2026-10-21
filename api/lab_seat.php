@@ -2,10 +2,13 @@
 // EVE lab seat gate API.
 //   GET  ?action=mine                       logged-in user → {seat|null, my_seats, staff, seats (total), available (enabled), seat_list}
 //   GET  ?action=seats                      seat pool for the lab screen → {seats, available, seat_list:[{seat,host,enabled,status:ready|prep}]}
-//   POST {action:"request", seat}           (X-CSRF-Token) emails a fresh 6-digit code + the seat's EVE-NG user/password → {sent_to (masked), ttl}
-//   POST {action:"open"|"verify", seat, code} assigned seat only (staff: any) → {url: https://eveN.abad-labs.com/?t=<signed 60s token>, eve_user}
+//   POST {action:"request", seat}           (X-CSRF-Token) emails a fresh 6-digit code (10 min, 5 tries, 60 s resend cooldown)
+//                                           to the user's registered email → {sent_to (masked), ttl, cooldown}
+//   POST {action:"open"|"verify", seat, code} assigned seat only (staff: any enabled seat) → after a correct code:
+//                                           {url: https://eveN.abad-labs.com/?t=<signed 60s token>, host, eve_user, eve_pass}
 //   Single login: the platform session (wordpress_abadsid) is the only login; the emailed code is a per-open confirmation step.
-//   The EVE password is only ever sent by email, never returned to the page or logged.
+//   The EVE credentials (private eve-seats.php) are returned ONLY in the response to a successful code check, for that seat,
+//   with Cache-Control: no-store — never in the page source, never emailed, never logged.
 // Staff (X-CSRF-Token):
 //   GET  ?action=list                       all assignments
 //   POST {action:"assign", seat, user_id|email, valid_from?, valid_to?, note?} / {action:"unassign", user_id}
@@ -38,15 +41,18 @@ abd_api(function () {
     if (!abd_lab_seat_enabled($seat)) abd_err('seat_prep', 409);   // «قيد التجهيز»: not assignable/openable yet
     // the CLICKED seat is the one used (code, EVE creds, signed link) — never swapped for another assigned seat
     if (!abd_lab_can_open($uid, $staff, $seat)) abd_err('not_your_seat', 403, ['my_seats' => abd_lab_seats_of($uid)]);
+    // resend cooldown: one code per 60 s per user (the previous code stays valid until replaced)
+    $last = abd_q("SELECT UNIX_TIMESTAMP(created_at) FROM abd_email_codes WHERE user_id = ? AND purpose = 'lab' ORDER BY id DESC LIMIT 1", [$uid])->fetchColumn();
+    if ($last !== false && ($wait = 60 - (time() - (int)$last)) > 0) abd_err('cooldown', 429, ['retry_after' => $wait]);
     if (!abd_rate('lab-code-u', (string)$uid, 5, 900) || !abd_rate('lab-code-ip', abd_ip_hash(), 15, 3600)) abd_err('rate_limited', 429);
     // recipient = the session user's registered email, re-read from abd_users (no fallback, never the SMTP sender)
     $to = (string)abd_q('SELECT email FROM abd_users WHERE id = ?', [$uid])->fetchColumn();
     if (!filter_var($to, FILTER_VALIDATE_EMAIL)) abd_err('no_email', 422);
     if (abd_mail_is_sender($to)) abd_err('email_is_sender', 409);
     $code = abd_code_issue($uid, 'lab', $seat);
-    try { abd_lab_code_mail($to, (string)($u['full_name_ar'] ?: $u['full_name_en']), $seat, $code, abd_eve_seat_cred($seat)); }
+    try { if (!abd_lab_code_mail($to, (string)($u['full_name_ar'] ?: $u['full_name_en']), $seat, $code)) throw new RuntimeException('smtp'); }
     catch (Throwable $e) { error_log('[abad-lab] mail failed'); abd_err('mail_failed', 502); }
-    abd_out(['ok' => true, 'seat' => $seat, 'sent_to' => abd_mask_email($to), 'ttl' => ABD_CODE_TTL]);
+    abd_out(['ok' => true, 'seat' => $seat, 'sent_to' => abd_mask_email($to), 'ttl' => ABD_CODE_TTL, 'tries' => ABD_CODE_TRIES, 'cooldown' => 60]);
   }
 
   if ($action === 'open' || $action === 'verify') {
@@ -60,7 +66,9 @@ abd_api(function () {
     $r = abd_code_check($uid, 'lab', abd_str($b, 'code', 12), $seat);
     if (!$r['ok']) abd_err($r['error'], $r['error'] === 'expired' ? 410 : 401, isset($r['left']) ? ['left' => $r['left']] : []);
     $cred = abd_eve_seat_cred($seat);
-    abd_out(['ok' => true, 'seat' => $seat, 'url' => $url, 'eve_user' => $cred['user'] ?? null]);
+    header('Cache-Control: no-store, max-age=0'); header('Pragma: no-cache');
+    abd_out(['ok' => true, 'seat' => $seat, 'url' => $url, 'host' => 'eve' . $seat . '.abad-labs.com',
+      'eve_user' => $cred['user'] ?? null, 'eve_pass' => $cred['pass'] ?? null]);   // null → "credentials not configured" on the page
   }
 
   if ($action === 'assign' || $action === 'unassign') {

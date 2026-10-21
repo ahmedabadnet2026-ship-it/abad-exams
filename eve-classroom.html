@@ -144,6 +144,13 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 .mbtn{font:inherit;font-weight:800;font-size:14px;border:0;border-radius:10px;padding:9px 18px;cursor:pointer;background:var(--gold);color:var(--navy);text-decoration:none;display:inline-block;margin:3px}
 .mbtn.l{background:#ffffff1a;color:#fff;border:1px solid #ffffff33}.mbtn[disabled]{opacity:.5;cursor:wait}
 .otp{font:inherit;font-size:28px;font-weight:800;letter-spacing:10px;text-align:center;direction:ltr;width:100%;box-sizing:border-box;padding:8px 10px 8px 20px;border-radius:12px;border:2px solid var(--gold);background:#071622;color:#fff;margin-bottom:10px}
+.kc{text-align:start;background:#071622;border:1px solid #3f86b366;border-radius:14px;padding:12px;margin:4px 0 10px}
+.kc .kr{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed #ffffff1f}.kc .kr:last-of-type{border:0}
+.kc .kl{flex:none;width:96px;font-size:12.5px;opacity:.8}.kc .kv{flex:1;min-width:0;direction:ltr;text-align:left;font:800 16px Consolas,Menlo,monospace;color:var(--gold);overflow-wrap:anywhere}
+.kc .kb{flex:none;font:inherit;font-size:12px;font-weight:800;border-radius:8px;padding:4px 10px;cursor:pointer;background:#ffffff14;color:#fff;border:1px solid #ffffff33}.kc .kb:hover,.kc .kb:focus-visible{border-color:var(--gold);outline:0}
+.kc .kb.ok{background:#3ecf8e33;border-color:#3ecf8e}.kn{font-size:12px;opacity:.75;margin:0 0 8px;line-height:1.7}.khost{direction:ltr;font-size:12.5px;opacity:.85;margin-bottom:8px}
+.ohint{font-size:12px;opacity:.75;margin:-4px 0 8px}
+@media(max-width:420px){.kc .kl{width:72px}.kc .kv{font-size:14.5px}.mbtn{width:100%;margin:4px 0}}
 .evu{direction:ltr;display:inline-block;font:800 16px Consolas,Menlo,monospace;background:#071622;border:1px solid #3f86b3;border-radius:8px;padding:3px 12px;color:var(--gold)}
 .merr{min-height:1.4em;color:#ffb4bb;font-size:13px;font-weight:700;margin-bottom:6px}
 @media (max-width:860px){.seats{grid-template-columns:repeat(3,1fr)}}
@@ -204,7 +211,7 @@ camp:["معسكر الشبكات","Networking Bootcamp"],campsub:["حالة ال
 teacher:["مكتب المدرب","Instructor desk"],seat:["مقعد","Seat"],open:["افتح ←","Open →"],mine:["مقعدي","My seat"],pick:["هذا مقعدي","This is my seat"],
 gNoLogin:["سجّل الدخول إلى المنصة لاستخدام مقعدك في المعمل.","Log in to the platform to use your lab seat."],gLogin:["تسجيل الدخول","Log in"],gNoSeat:["لم يُعيَّن لك مقعد بعد. احجز مقعدًا في المعمل وسيفتح لك هنا تلقائيًا.","No seat assigned yet. Book a lab seat and it will open for you here."],gBook:["احجز مقعدًا","Book a seat"],
 gMine:["مقعدك هو رقم","Your seat is number"],gStaff:["دخول المدرّب: يمكنك فتح أي مقعد.","Instructor access: any seat."],gNotEnt:["أنت غير مسجَّل على المقعد رقم","You are not entitled to seat"],gMySeats:["مقاعدك المتاحة:","Your seats:"],eSender:["بريد حسابك هو بريد المرسِل الخاص بالمنصة؛ حدِّث بريد حسابك إلى بريدك الشخصي ثم أعد المحاولة.","Your account email is the platform sender mailbox; update it to your own email and retry."],eNoMail:["لا يوجد بريد إلكتروني صالح مسجَّل في حسابك.","No valid email on your account."],gNotMine:["هذا ليس مقعدك.","This is not your seat."],gHi:["مرحبًا","Hi"],gOut:["خروج","Log out"],
-oT:["دخول المعمل","Lab access"],cSend:["جارٍ إرسال رمز التأكيد إلى بريدك…","Sending a confirmation code to your email…"],cSent:["أرسلنا رمز تأكيد من 6 أرقام مع بيانات دخول مقعدك إلى","We emailed a 6-digit confirmation code and your seat's login to"],cGo:["تأكيد وفتح المقعد","Confirm & open seat"],cRe:["إعادة إرسال الرمز","Resend code"],cOk:["تم التأكيد ✓ سجّل الدخول ببيانات مقعدك — اسم المستخدم:","Confirmed ✓ Sign in with your seat login — username:"],cPw:["كلمة المرور في رسالة البريد.","The password is in the email."],cOpen:["افتح المقعد ←","Open seat →"],eWrong:["الرمز غير صحيح. المحاولات المتبقية:","Wrong code. Attempts left:"],eExp:["انتهت صلاحية الرمز — أعد الإرسال.","Code expired — resend."],eMail:["تعذّر إرسال البريد الآن، حاول لاحقًا.","Could not send the email now, try later."],eCode:["أدخل الرمز المكوّن من 6 أرقام.","Enter the 6-digit code."],oOpen:["جارٍ فتح مقعدك…","Opening your seat…"],oClose:["إغلاق","Close"],
+oT:["دخول المعمل","Lab access"],cSend:["جارٍ إرسال رمز التأكيد إلى بريدك…","Sending a confirmation code to your email…"],cSent:["أرسلنا رمز تحقق من 6 أرقام إلى بريدك المسجّل","We emailed a 6-digit verification code to your registered email"],cHint:["صالح 10 دقائق · 5 محاولات كحد أقصى. أدخله لعرض بيانات دخول مقعدك.","Valid 10 minutes · max 5 tries. Enter it to see your seat login."],cWait:["إعادة الإرسال بعد","Resend in"],eCool:["انتظر قليلًا قبل طلب رمز جديد.","Please wait before requesting a new code."],kT:["بيانات دخول مقعدك","Your seat login"],kU:["اسم المستخدم","Username"],kP:["كلمة المرور","Password"],kH:["إظهار","Show"],kHi:["إخفاء","Hide"],kC:["نسخ","Copy"],kCd:["تم النسخ ✓","Copied ✓"],kNo:["بيانات هذا المقعد غير مُعدّة بعد — تواصل مع المدرب.","This seat's login isn't configured yet — contact your instructor."],kNote:["لا تشارك هذه البيانات. تُعرض لك فقط بعد التحقق، ولا تُحفظ في الصفحة.","Don't share these details. Shown only after verification and not stored in the page."],pT:["المقعد قيد التجهيز","Seat in preparation"],pP:["هذا المقعد قيد التجهيز حاليًا ولا يمكن فتحه أو حجزه بعد. سيُتاح قريبًا.","This seat is still being prepared and can't be opened or booked yet. Coming soon."],cGo:["تأكيد وفتح المقعد","Confirm & open seat"],cRe:["إعادة إرسال الرمز","Resend code"],cOk:["تم التأكيد ✓ سجّل الدخول ببيانات مقعدك — اسم المستخدم:","Confirmed ✓ Sign in with your seat login — username:"],cPw:["كلمة المرور في رسالة البريد.","The password is in the email."],cOpen:["فتح المعمل eve","Open lab eve"],eWrong:["الرمز غير صحيح. المحاولات المتبقية:","Wrong code. Attempts left:"],eExp:["انتهت صلاحية الرمز — أعد الإرسال.","Code expired — resend."],eMail:["تعذّر إرسال البريد الآن، حاول لاحقًا.","Could not send the email now, try later."],eCode:["أدخل الرمز المكوّن من 6 أرقام.","Enter the 6-digit code."],oOpen:["جارٍ فتح مقعدك…","Opening your seat…"],oClose:["إغلاق","Close"],
 eRate:["طلبات كثيرة، انتظر قليلًا ثم أعد المحاولة.","Too many requests, please wait and retry."],eNet:["تعذّر الاتصال، حاول مرة أخرى.","Connection failed, try again."],eSeat:["هذا المقعد غير مخصص لك.","This seat isn't assigned to you."],
 lgOk:["طالب يعمل","Student working"],lgIdle:["متصل — خامل","Online — idle"],lgBad:["غير متاح","Offline"],lab:["حمل المعمل","Lab load"],devs:["جهاز نشط","active devices"],online:["مقعد متصل من {n} متاح","seats online of {n} available"],prep:["قيد التجهيز","In preparation"],lgPrep:["قيد التجهيز (غير متاح للحجز بعد)","In preparation (not bookable yet)"],pool:["{t} مقعدًا · {a} متاح · {p} قيد التجهيز","{t} seats · {a} available · {p} in preparation"],ePrep:["هذا المقعد قيد التجهيز ولا يمكن فتحه بعد.","This seat is still being prepared and can't be opened yet."],na:["غير متاح","Unavailable"],low:["خفيف","Light"],mid:["متوسط","Moderate"],high:["مرتفع","High"],nodes:["أجهزة","nodes"],ld:["الحمل","Load"],lgMine:["مقعدي","My seat"],chk:["جارٍ الفحص…","Checking…"]};
 var MS='<svg viewBox="0 0 24 24"><rect width="11" height="11"/><rect x="13" width="11" height="11"/><rect y="13" width="11" height="11"/><rect x="13" y="13" width="11" height="11"/></svg>';
@@ -230,7 +237,7 @@ function applyPool(){var a=0;
  var i=L=="ar"?0:1,on=document.querySelector('[data-t="online"]');if(on)on.textContent=S.online[i].replace("{n}",a);
  var pl=document.getElementById("pool");if(pl)pl.innerHTML=S.pool[i].replace("{t}","<b>"+EVE.total+"</b>").replace("{a}","<b>"+a+"</b>").replace("{p}","<b>"+(EVE.total-a)+"</b>")}
 function setMine(n){if(!isOn(n))return;MY=n;try{localStorage.setItem("abad-eve-seat",n)}catch(e){}document.querySelectorAll(".seat").forEach(function(s){s.classList.toggle("mine",+s.dataset.n==n)})}
-box.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.scr");if(a&&!isOn(+a.dataset.seat)){e.preventDefault();return}if(a){if(gclick(+a.dataset.seat)){e.preventDefault();return}setMine(+a.dataset.seat);if(window.abadLabPing)window.abadLabPing("eve");return}
+box.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.scr");if(a&&!isOn(+a.dataset.seat)){e.preventDefault();gprep(+a.dataset.seat);return}if(a){if(gclick(+a.dataset.seat)){e.preventDefault();return}setMine(+a.dataset.seat);if(window.abadLabPing)window.abadLabPing("eve");return}
  var b=e.target.closest&&e.target.closest(".pick");if(b)setMine(+b.closest(".seat").dataset.n)});
 /* live status from status.abad-labs.com (fallback: favicon probe) */
 var API="https://status.abad-labs.com/",LAST=null,FAILS=0;
@@ -280,30 +287,46 @@ function ginit(){if(!window.ABAD_API)return;ABAD_API.me().then(function(st){if(!
 var MD=document.getElementById("md");
 function mopen(t,p,btns){document.getElementById("mdt").textContent=t;document.getElementById("mdp").textContent=p;document.getElementById("merr").textContent="";
  var a=document.getElementById("mda");a.innerHTML="";
- btns.forEach(function(b){var e=document.createElement(b.href?"a":"button");e.className="mbtn"+(b.l?" l":"");e.textContent=b.t;if(b.href)e.href=b.href;else{e.type="button";e.onclick=b.f}a.appendChild(e)});
+ btns.forEach(function(b){var e=document.createElement(b.href?"a":"button");e.className="mbtn"+(b.l?" l":"");e.textContent=b.t;if(b.k)e.dataset.k=b.k;if(b.href){e.href=b.href;if(b.nt){e.target="_blank";e.rel="noopener"}}else{e.type="button";e.onclick=b.f}a.appendChild(e)});
  MD.classList.add("open")}
-function mclose(){MD.classList.remove("open")}
+function mclose(){MD.classList.remove("open");clearInterval(CDT);document.getElementById("mdp").textContent="";document.getElementById("otp").value=""}
 MD.addEventListener("click",function(e){if(e.target===MD)mclose()});document.addEventListener("keydown",function(e){if(e.key==="Escape")mclose()});
 /* open = emailed confirmation code (per open) → signed seat link; the platform session stays the only login */
 function merr(k,x){document.getElementById("merr").textContent=tr(k)+(x!=null?" "+x:"")}
-function gerr(j){var e=j&&j.error;merr(e==="rate_limited"?"eRate":e==="wrong_code"?"eWrong":e==="expired"?"eExp":e==="mail_failed"?"eMail":e==="not_your_seat"?"eSeat":e==="seat_prep"?"ePrep":e==="email_is_sender"?"eSender":e==="no_email"?"eNoMail":"eNet",e==="wrong_code"?j.left:null)}
+function gerr(j){var e=j&&j.error;merr(e==="rate_limited"?"eRate":e==="wrong_code"?"eWrong":e==="expired"?"eExp":e==="mail_failed"?"eMail":e==="cooldown"?"eCool":e==="seat_prep"?"pP":e==="not_your_seat"?"eSeat":e==="seat_prep"?"ePrep":e==="email_is_sender"?"eSender":e==="no_email"?"eNoMail":"eNet",e==="wrong_code"?j.left:null)}
+var CDT=null;
+function cool(sec,n){var b=document.querySelector('#mda [data-k="re"]');clearInterval(CDT);if(!b)return;var left=sec;
+ function p(){if(left>0){b.disabled=true;b.textContent=tr("cWait")+" "+left+(L=="ar"?" ث":"s");left--}else{clearInterval(CDT);b.disabled=false;b.textContent=tr("cRe")}}p();CDT=setInterval(p,1000)}
 function gopen(n){var F=document.getElementById("mdf"),O=document.getElementById("otp");F.hidden=true;
  mopen(tr("oT")+" — "+tr("seat")+" "+n,tr("cSend"),[{t:tr("oClose"),f:mclose,l:1}]);
  gq("lab_seat.php",{method:"POST",body:{action:"request",seat:n}}).then(function(j){
-  if(!j.ok){gerr(j);return}
-  mopen(tr("oT")+" — "+tr("seat")+" "+n,tr("cSent")+" "+j.sent_to,[{t:tr("cGo"),f:function(){gverify(n)}},{t:tr("cRe"),f:function(){gopen(n)},l:1},{t:tr("oClose"),f:mclose,l:1}]);
+  if(!j.ok&&j.error!=="cooldown"){gerr(j);return}
+  mopen(tr("oT")+" — "+tr("seat")+" "+n,tr("cSent")+(j.sent_to?": \u2066"+j.sent_to+"\u2069":""),[{t:tr("cGo"),f:function(){gverify(n)}},{t:tr("cRe"),f:function(){gopen(n)},l:1,k:"re"},{t:tr("oClose"),f:mclose,l:1}]);
+  var h=document.createElement("div");h.className="ohint";h.textContent=tr("cHint");document.getElementById("mdp").appendChild(h);
+  if(!j.ok)merr("eCool");cool(j.ok?(j.cooldown||60):(j.retry_after||60),n);
   F.hidden=false;O.value="";O.onkeydown=function(e){if(e.key==="Enter")gverify(n)};setTimeout(function(){O.focus()},40)})
  .catch(function(){merr("eNet")})}
-function gverify(n){var O=document.getElementById("otp"),c=O.value.replace(/\D/g,"");if(c.length!==6){merr("eCode");return}
+function kRow(lbl,val,secret){var r=document.createElement("div");r.className="kr";var l=document.createElement("span");l.className="kl";l.textContent=lbl;
+ var v=document.createElement("span");v.className="kv";v.textContent=secret?"••••••••••":val;r.appendChild(l);r.appendChild(v);var shown=!secret;
+ if(secret){var sh=document.createElement("button");sh.type="button";sh.className="kb";sh.textContent=tr("kH");sh.setAttribute("aria-pressed","false");
+  sh.onclick=function(){shown=!shown;v.textContent=shown?val:"••••••••••";sh.textContent=tr(shown?"kHi":"kH");sh.setAttribute("aria-pressed",shown?"true":"false")};r.appendChild(sh)}
+ var cp=document.createElement("button");cp.type="button";cp.className="kb";cp.textContent=tr("kC");cp.setAttribute("aria-label",tr("kC")+" "+lbl);
+ cp.onclick=function(){var done=function(){cp.textContent=tr("kCd");cp.classList.add("ok");setTimeout(function(){cp.textContent=tr("kC");cp.classList.remove("ok")},1600)};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(val).then(done,function(){});else{var t=document.createElement("textarea");t.value=val;document.body.appendChild(t);t.select();try{document.execCommand("copy");done()}catch(e){}t.remove()}};
+ r.appendChild(cp);return r}
+function gcreds(n,j){clearInterval(CDT);setMine(n);document.getElementById("mdf").hidden=true;
+ mopen("🔐 "+tr("kT")+" — "+tr("seat")+" "+n,"",[{t:tr("cOpen")+n+" ↗",href:j.url,nt:1},{t:tr("oClose"),f:mclose,l:1}]);
+ var p=document.getElementById("mdp");p.innerHTML="";var hs=document.createElement("div");hs.className="khost";hs.textContent="https://"+(j.host||("eve"+n+".abad-labs.com"));p.appendChild(hs);
+ if(j.eve_user&&j.eve_pass){var c=document.createElement("div");c.className="kc";c.appendChild(kRow(tr("kU"),j.eve_user,false));c.appendChild(kRow(tr("kP"),j.eve_pass,true));p.appendChild(c)}
+ else{var w=document.createElement("div");w.className="kn";w.textContent=tr("kNo");p.appendChild(w)}
+ var no=document.createElement("div");no.className="kn";no.textContent=tr("kNote");p.appendChild(no);j.eve_pass=null}
+function gverify(n){var O=document.getElementById("otp"),c=O.value.replace(/[٠-٩]/g,function(d){return d.charCodeAt(0)-1632}).replace(/\D/g,"");if(c.length!==6){merr("eCode");return}
  document.querySelectorAll("#mda .mbtn").forEach(function(b){b.disabled=true});
  gq("lab_seat.php",{method:"POST",body:{action:"open",seat:n,code:c}}).then(function(j){
-  document.querySelectorAll("#mda .mbtn").forEach(function(b){b.disabled=false});
-  if(j.ok&&j.url&&/^https:\/\/eve\d{1,2}\.abad-labs\.com\//.test(j.url)){setMine(n);document.getElementById("mdf").hidden=true;
-   mopen(tr("oT")+" — "+tr("seat")+" "+n,"",[{t:tr("cOpen"),href:j.url},{t:tr("oClose"),f:mclose,l:1}]);
-   var p=document.getElementById("mdp");p.innerHTML="";p.appendChild(document.createTextNode(tr("cOk")+" "));
-   if(j.eve_user){var s=document.createElement("span");s.className="evu";s.textContent=j.eve_user;p.appendChild(s)}
-   p.appendChild(document.createElement("br"));p.appendChild(document.createTextNode(tr("cPw")));return}
-  gerr(j)}).catch(function(){merr("eNet")})}
+  document.querySelectorAll("#mda .mbtn").forEach(function(b){if(b.dataset.k!=="re")b.disabled=false});
+  if(j.ok&&j.url&&/^https:\/\/eve\d{1,2}\.abad-labs\.com\//.test(j.url)){gcreds(n,j);return}
+  gerr(j)}).catch(function(){document.querySelectorAll("#mda .mbtn").forEach(function(b){if(b.dataset.k!=="re")b.disabled=false});merr("eNet")})}
+function gprep(n){document.getElementById("mdf").hidden=true;mopen("🛠️ "+tr("pT")+" — "+tr("seat")+" "+n,tr("pP"),[{t:tr("oClose"),f:mclose,l:1}])}
 /* returns true when the click was handled by the gate */
 function gclick(n){if(!G.on)return false;
  if(!G.user){mopen(tr("oT"),tr("gNoLogin"),[{t:tr("gLogin"),href:"login.html?next=eve-classroom.html"},{t:tr("oClose"),f:mclose,l:1}]);return true}
