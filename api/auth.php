@@ -19,7 +19,7 @@ function abd_send_verify(array $row): array {
 function abd_pending_row(): ?array {
   $id = (int)($_SESSION['pending_uid'] ?? 0);
   if ($id <= 0) return null;
-  $r = abd_q('SELECT id, email, full_name_ar, full_name_en, email_verified_at, is_active FROM abd_users WHERE id = ?', [$id])->fetch();
+  $r = abd_q('SELECT id, email, full_name_ar, full_name_en, phone, national_id, email_verified_at, is_active FROM abd_users WHERE id = ?', [$id])->fetch();
   return ($r && (int)$r['is_active'] && $r['email_verified_at'] === null) ? $r : null;
 }
 
@@ -32,7 +32,10 @@ abd_api(function () {
     $u = abd_user();
     $p = $u ? null : abd_pending_row();
     abd_out(['ok' => true, 'api' => 1, 'csrf' => abd_csrf(), 'user' => $u ? abd_public_user($u) : null, 'open_all' => (bool)ABAD_OPEN_ALL_FOR_LOGGED_IN]
-      + ($p ? ['pending' => ['sent_to' => abd_mask_email((string)$p['email'])]] : []));
+      + ($p ? ['pending' => ['sent_to' => abd_mask_email((string)$p['email']),
+         // prefill for "edit details" — only ever the caller's own still-unverified sign-up (session-bound pending_uid)
+         'edit' => ['full_name_ar' => (string)$p['full_name_ar'], 'full_name_en' => (string)$p['full_name_en'], 'email' => (string)$p['email'],
+                    'phone' => (string)($p['phone'] ?? ''), 'national_id' => (string)($p['national_id'] ?? '')]]] : []));
   }
   if ($m !== 'POST') abd_err('method', 405);
   abd_require_csrf();
@@ -78,6 +81,27 @@ abd_api(function () {
     if ($nidRaw !== '' && !$nid) $fields[] = 'national_id';
     if (!abd_pw_ok($pw)) $fields[] = 'password';
     if ($fields) abd_err('invalid', 422, ['fields' => $fields]);
+    // Edit details: this session already holds an UNVERIFIED sign-up (pending_uid) → correct that row in place instead of
+    // creating a second one. Verified accounts are never touched (abd_pending_row() and the UPDATE both require
+    // email_verified_at IS NULL). The old code is invalidated and a fresh one goes to the (possibly corrected) email.
+    if ($p = abd_pending_row()) {
+      $pid = (int)$p['id'];
+      if (abd_q('SELECT id FROM abd_users WHERE email = ? AND id <> ?', [$email, $pid])->fetch()) abd_err('email_taken', 409);
+      try {
+        $st = abd_q('UPDATE abd_users SET full_name_ar = ?, full_name_en = ?, email = ?, phone = ?, national_id = ?, password_hash = ?
+                     WHERE id = ? AND email_verified_at IS NULL AND is_active = 1',
+          [$nameAr, $nameEn, $email, $phone, $nid, password_hash($pw, PASSWORD_DEFAULT), $pid]);
+      } catch (PDOException $e) {
+        if (($e->errorInfo[1] ?? 0) === 1062) abd_err('email_taken', 409);
+        throw $e;
+      }
+      if ($st->rowCount() !== 1) abd_err('no_pending', 409);
+      abd_q("UPDATE abd_email_codes SET used_at = NOW() WHERE user_id = ? AND purpose = 'verify' AND used_at IS NULL", [$pid]);
+      if (mb_strtolower((string)$p['email']) !== $email) abd_crm_from_register($pid, $nameAr !== '' ? $nameAr : $nameEn, $email, $phone);
+      session_regenerate_id(true);
+      $r = abd_send_verify(['id' => $pid, 'email' => $email, 'full_name_ar' => $nameAr, 'full_name_en' => $nameEn]);
+      abd_out(['ok' => true, 'verify' => true, 'edited' => true, 'sent_to' => abd_mask_email($email), 'mail' => $r['ok'] ? 'sent' : $r['error'], 'ttl' => ABD_CODE_TTL, 'csrf' => abd_csrf()]);
+    }
     try {
       abd_q("INSERT INTO abd_users (full_name_ar, full_name_en, email, phone, national_id, password_hash, role)
              VALUES (?, ?, ?, ?, ?, ?, 'trainee')", [$nameAr, $nameEn, $email, $phone, $nid, password_hash($pw, PASSWORD_DEFAULT)]);

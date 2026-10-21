@@ -134,6 +134,7 @@ footer{text-align:center;color:#9cc7e3;opacity:.8;font-size:12px;padding:8px 18p
     <p style="font-size:13px" data-ar="أدخل الرمز لتفعيل حسابك. ينتهي الرمز خلال 10 دقائق." data-en="Enter it to activate your account. The code expires in 10 minutes.">أدخل الرمز لتفعيل حسابك. ينتهي الرمز خلال 10 دقائق.</p>
     <input id="vc" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*" aria-label="code" dir="ltr" placeholder="••••••">
     <button class="btn" type="submit" data-ar="تفعيل الحساب" data-en="Activate account">تفعيل الحساب</button>
+    <button class="btn alt" type="button" id="vEdit" data-ar="✎ تعديل البيانات" data-en="✎ Edit details">✎ تعديل البيانات</button>
     <button class="lnk" type="button" id="vRe" data-ar="لم يصلك الرمز؟ إعادة الإرسال" data-en="No code? Resend">لم يصلك الرمز؟ إعادة الإرسال</button>
   </form>
   <div class="msg" id="msg" role="alert" aria-live="polite"></div>
@@ -190,6 +191,11 @@ document.addEventListener("input",function(e){if(e.target.getAttribute&&e.target
   $("fVer").onsubmit=function(e){e.preventDefault();clear();var f=this,c=$("vc").value.replace(/\D/g,"");if(c.length!==6){show(T("أدخل الرمز المكوّن من 6 أرقام.","Enter the 6-digit code."));return}
     busy(f,true);post({action:"verify_email",code:c}).then(function(j){if(!j.ok){show(vText(j));return}$("fVer").classList.add("hide");return ABAD_API.me(true).then(function(){done({ok:true})})}).finally(function(){busy(f,false)})};
   $("vRe").onclick=function(){clear();post({action:"resend_email"}).then(function(j){if(j.ok){show(T("أُرسل رمز جديد ✓","New code sent ✓"),true);cool(60)}else show(vText(j))})};
+  /* ---- edit details from the code step: back to the sign-up form, prefilled (server updates the pending, unverified sign-up) ---- */
+  function fillReg(d){if(!d)return;[["ra","full_name_ar"],["rn","full_name_en"],["re","email"],["rm","phone"],["ri","national_id"]].forEach(function(k){if(d[k[1]]!=null&&!$(k[0]).value)$(k[0]).value=d[k[1]]})}
+  $("vEdit").onclick=function(){clear();$("fVer").classList.add("hide");$("forms").classList.remove("hide");tab(true);$("rp").value="";$("rp2").value="";
+    var go=function(){show(T("صحّح بياناتك ثم اضغط «إنشاء الحساب» — سيصلك رمز جديد على البريد المُدخل. أعد كتابة كلمة المرور.","Fix your details, then press “Create account” — a new code goes to the email you enter. Re-enter your password."),true);$("ra").focus()};
+    if($("re").value){go();return}ABAD_API.req("auth.php?action=me").then(function(j){fillReg(j&&j.pending&&j.pending.edit)}).catch(function(){}).then(go)};
   $("out").onclick=function(){ABAD_API.logout().then(function(){view();tab(false)})};
   applyLang();ABAD_API.me().then(function(){view();if(!ABAD_API.state.user&&ABAD_API.state.available)
     ABAD_API.req("auth.php?action=me").then(function(j){if(j&&j.pending)verifyView(j.pending.sent_to,"sent")}).catch(function(){})});
