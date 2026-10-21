@@ -37,7 +37,7 @@ function abd_material_dir(): string {
 function abd_ent_refs(string $kind): array {
   if ($kind === 'exam') { $o = []; foreach (abd_exam_certs() as $id => $c) $o[$id] = $c['title']; return $o; }
   if ($kind === 'material') { $o = []; foreach (ABD_MATERIALS as $id => $m) $o[$id] = $m['title']; return $o; }
-  if ($kind === 'lab') { $o = []; for ($i = 1; $i <= ABD_LAB_SEATS; $i++) $o[(string)$i] = 'مقعد ' . $i; return $o; }
+  if ($kind === 'lab') { $o = []; foreach (abd_lab_enabled_seats() as $i) $o[(string)$i] = 'مقعد ' . $i; return $o; }   // seats «قيد التجهيز» cannot be granted
   return [];
 }
 

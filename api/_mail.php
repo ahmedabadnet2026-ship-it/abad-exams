@@ -99,11 +99,11 @@ function abd_mail_is_sender(string $to): bool {
   foreach (['SMTP_FROM', 'SMTP_USER'] as $k) { $v = (string)abd_mail_cfg($k, ''); if ($v !== '' && $n($v) === $t) return true; }
   return false;
 }
-function abd_lab_code_mail(string $to, string $name, int $seat, string $code, ?array $cred): bool {
-  $rows = ['المقعد' => 'مقعد ' . $seat];
-  if ($cred) { $rows['اسم المستخدم'] = $cred['user']; $rows['كلمة المرور'] = $cred['pass']; }
-  $m = abd_code_mail($name, 'تفاصيل مقعد المعمل', 'كود فتح مقعد ' . $seat . ': ' . $code,
-    'كود تأكيد فتح <b>مقعد ' . $seat . '</b> في المعمل. أدخله في صفحة المعمل، ثم سجّل الدخول ببيانات مقعدك:', $code, $rows);
+/** Lab seat OTP — same branded code mail as sign-up. Code only: the EVE username/password are NOT emailed any more;
+ *  they are shown on the lab page only after this code is verified (api/lab_seat.php action=open). */
+function abd_lab_code_mail(string $to, string $name, int $seat, string $code): bool {
+  $m = abd_code_mail($name, 'رمز دخول مقعد المعمل', 'رمز دخول مقعد ' . $seat . ': ' . $code . ' — صالح ' . intdiv(ABD_CODE_TTL, 60) . ' دقائق',
+    'أدخل الرمز التالي في صفحة المعمل لعرض بيانات دخول <b>مقعد ' . $seat . '</b>:', $code, ['المقعد' => 'مقعد ' . $seat . ' · eve' . $seat . '.abad-labs.com']);
   return abd_smtp_send($to, 'رمز فتح مقعد المعمل ' . $seat . ': ' . $code, $m['html'], $m['text']);
 }
 

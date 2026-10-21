@@ -23,7 +23,7 @@ if ($m === 'GET' && $action === 'attempts') {
 if ($m !== 'POST' || $action !== 'submit') abd_err('bad_request', 400);
 abd_require_csrf();
 $seat = (int)($b['seat'] ?? 0);
-if ($seat < 1 || $seat > ABD_LAB_SEATS) abd_err('bad_seat', 400);
+if (!abd_lab_seat_enabled($seat)) abd_err('bad_seat', 400);
 if (!abd_lab_can_open($uid, $staff, $seat)) abd_err('not_your_seat', 403);
 // rate limit: 1 submit / 90 s and 20 / day per user
 if (!abd_rate('lab_grade_burst', (string)$uid, 1, 90)) abd_err('rate_limited', 429);

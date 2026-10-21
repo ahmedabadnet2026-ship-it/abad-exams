@@ -1,10 +1,16 @@
 <?php
 // EVE lab seat gate API.
-//   GET  ?action=mine                       logged-in user → {seat|null, staff}
-//   POST {action:"request", seat}           (X-CSRF-Token) emails a fresh 6-digit code + the seat's EVE-NG user/password → {sent_to (masked), ttl}
-//   POST {action:"open"|"verify", seat, code} assigned seat only (staff: any) → {url: https://eveN.abad-labs.com/?t=<signed 60s token>, eve_user}
+//   GET  ?action=mine                       logged-in user → {seat|null, my_seats, staff, seats (total), available (enabled), seat_list}
+//   GET  ?action=seats                      seat pool for the lab screen → {seats, available, seat_list:[{seat,host,enabled,status:ready|prep}]}
+//   POST {action:"request", seat}           (X-CSRF-Token) emails a fresh 6-digit code (10 min, 5 tries, 60 s resend cooldown)
+//                                           to the user's registered email → {sent_to (masked), ttl, cooldown}
+//   POST {action:"link", seat}              fresh signed URL on «فتح المعمل» click; needs a code verified for this seat in this
+//                                           session within ABD_LAB_VERIFIED_TTL (30 min), else error "reverify"
+//   POST {action:"open"|"verify", seat, code} assigned seat only (staff: any enabled seat) → after a correct code:
+//                                           {url: https://eveN.abad-labs.com/?t=<signed 60s token>, host, eve_user, eve_pass}
 //   Single login: the platform session (wordpress_abadsid) is the only login; the emailed code is a per-open confirmation step.
-//   The EVE password is only ever sent by email, never returned to the page or logged.
+//   The EVE credentials (private eve-seats.php) are returned ONLY in the response to a successful code check, for that seat,
+//   with Cache-Control: no-store — never in the page source, never emailed, never logged.
 // Staff (X-CSRF-Token):
 //   GET  ?action=list                       all assignments
 //   POST {action:"assign", seat, user_id|email, valid_from?, valid_to?, note?} / {action:"unassign", user_id}
@@ -20,7 +26,9 @@ abd_api(function () {
   $b = $m === 'POST' ? abd_body() : [];
   $action = (string)($_GET['action'] ?? ($b['action'] ?? 'mine'));
 
-  if ($m === 'GET' && $action === 'mine') { $mine = abd_lab_seats_of($uid); abd_out(['ok' => true, 'seat' => $mine[0] ?? null, 'my_seats' => $mine, 'staff' => $staff, 'seats' => ABD_LAB_SEATS]); }
+  if ($m === 'GET' && $action === 'mine') { $mine = abd_lab_seats_of($uid); abd_out(['ok' => true, 'seat' => $mine[0] ?? null, 'my_seats' => $mine, 'staff' => $staff, 'seats' => ABD_LAB_SEATS,
+    'available' => count(abd_lab_enabled_seats()), 'seat_list' => abd_lab_seat_list()]); }
+  if ($m === 'GET' && $action === 'seats') { abd_out(['ok' => true, 'seats' => ABD_LAB_SEATS, 'available' => count(abd_lab_enabled_seats()), 'seat_list' => abd_lab_seat_list()]); }
   if ($m === 'GET' && $action === 'list') {
     abd_require_staff();
     abd_out(['ok' => true, 'items' => abd_q('SELECT s.seat, s.user_id, s.valid_from, s.valid_to, s.note, u.full_name_ar, u.full_name_en, u.email
@@ -31,22 +39,27 @@ abd_api(function () {
   $seat = (int)($b['seat'] ?? 0);
 
   if ($action === 'request') {
-    if ($seat < 1 || $seat > ABD_LAB_SEATS) abd_err('seat', 422);
+    if (!abd_lab_seat_valid($seat)) abd_err('seat', 422);
+    if (!abd_lab_seat_enabled($seat)) abd_err('seat_prep', 409);   // «قيد التجهيز»: not assignable/openable yet
     // the CLICKED seat is the one used (code, EVE creds, signed link) — never swapped for another assigned seat
     if (!abd_lab_can_open($uid, $staff, $seat)) abd_err('not_your_seat', 403, ['my_seats' => abd_lab_seats_of($uid)]);
+    // resend cooldown: one code per 60 s per user (the previous code stays valid until replaced)
+    $last = abd_q("SELECT UNIX_TIMESTAMP(created_at) FROM abd_email_codes WHERE user_id = ? AND purpose = 'lab' ORDER BY id DESC LIMIT 1", [$uid])->fetchColumn();
+    if ($last !== false && ($wait = 60 - (time() - (int)$last)) > 0) abd_err('cooldown', 429, ['retry_after' => $wait]);
     if (!abd_rate('lab-code-u', (string)$uid, 5, 900) || !abd_rate('lab-code-ip', abd_ip_hash(), 15, 3600)) abd_err('rate_limited', 429);
     // recipient = the session user's registered email, re-read from abd_users (no fallback, never the SMTP sender)
     $to = (string)abd_q('SELECT email FROM abd_users WHERE id = ?', [$uid])->fetchColumn();
     if (!filter_var($to, FILTER_VALIDATE_EMAIL)) abd_err('no_email', 422);
     if (abd_mail_is_sender($to)) abd_err('email_is_sender', 409);
     $code = abd_code_issue($uid, 'lab', $seat);
-    try { abd_lab_code_mail($to, (string)($u['full_name_ar'] ?: $u['full_name_en']), $seat, $code, abd_eve_seat_cred($seat)); }
+    try { if (!abd_lab_code_mail($to, (string)($u['full_name_ar'] ?: $u['full_name_en']), $seat, $code)) throw new RuntimeException('smtp'); }
     catch (Throwable $e) { error_log('[abad-lab] mail failed'); abd_err('mail_failed', 502); }
-    abd_out(['ok' => true, 'seat' => $seat, 'sent_to' => abd_mask_email($to), 'ttl' => ABD_CODE_TTL]);
+    abd_out(['ok' => true, 'seat' => $seat, 'sent_to' => abd_mask_email($to), 'ttl' => ABD_CODE_TTL, 'tries' => ABD_CODE_TRIES, 'cooldown' => 60]);
   }
 
   if ($action === 'open' || $action === 'verify') {
-    if ($seat < 1 || $seat > ABD_LAB_SEATS) abd_err('seat', 422);
+    if (!abd_lab_seat_valid($seat)) abd_err('seat', 422);
+    if (!abd_lab_seat_enabled($seat)) abd_err('seat_prep', 409);   // «قيد التجهيز»: not assignable/openable yet
     // the CLICKED seat is the one used (code, EVE creds, signed link) — never swapped for another assigned seat
     if (!abd_lab_can_open($uid, $staff, $seat)) abd_err('not_your_seat', 403, ['my_seats' => abd_lab_seats_of($uid)]);
     if (!abd_rate('lab-open-u', (string)$uid, 30, 900)) abd_err('rate_limited', 429);
@@ -54,8 +67,25 @@ abd_api(function () {
     $url = abd_lab_seat_url($seat) . '?t=' . abd_lab_token($seat, $uid, $staff);   // before consuming the code (config errors must not burn it)
     $r = abd_code_check($uid, 'lab', abd_str($b, 'code', 12), $seat);
     if (!$r['ok']) abd_err($r['error'], $r['error'] === 'expired' ? 410 : 401, isset($r['left']) ? ['left' => $r['left']] : []);
+    // verified window: this session may mint fresh signed links for this seat for 30 min without a new code (action=link)
+    abd_session(); $_SESSION['lab_ok'][$seat] = ['u' => $uid, 'exp' => time() + ABD_LAB_VERIFIED_TTL];
     $cred = abd_eve_seat_cred($seat);
-    abd_out(['ok' => true, 'seat' => $seat, 'url' => $url, 'eve_user' => $cred['user'] ?? null]);
+    header('Cache-Control: no-store, max-age=0'); header('Pragma: no-cache');
+    abd_out(['ok' => true, 'seat' => $seat, 'url' => $url, 'host' => 'eve' . $seat . '.abad-labs.com',
+      'eve_user' => $cred['user'] ?? null, 'eve_pass' => $cred['pass'] ?? null]);   // null → "credentials not configured" on the page
+  }
+
+  // Fresh signed link at the moment the trainee presses «فتح المعمل» (the ?t= token itself still lives 60 s; lab-server check unchanged).
+  // Needs a code verified for this seat in THIS session within the last 30 min; otherwise → reverify (page asks for a new code).
+  if ($action === 'link') {
+    if (!abd_lab_seat_valid($seat)) abd_err('seat', 422);
+    if (!abd_lab_seat_enabled($seat)) abd_err('seat_prep', 409);
+    if (!abd_lab_can_open($uid, $staff, $seat)) abd_err('not_your_seat', 403, ['my_seats' => abd_lab_seats_of($uid)]);
+    if (!abd_rate('lab-link-u', (string)$uid, 60, 900)) abd_err('rate_limited', 429);
+    abd_session(); $w = $_SESSION['lab_ok'][$seat] ?? null;
+    if (!is_array($w) || (int)($w['u'] ?? 0) !== $uid || (int)($w['exp'] ?? 0) < time()) { unset($_SESSION['lab_ok'][$seat]); abd_err('reverify', 401); }
+    header('Cache-Control: no-store, max-age=0');
+    abd_out(['ok' => true, 'seat' => $seat, 'url' => abd_lab_seat_url($seat) . '?t=' . abd_lab_token($seat, $uid, $staff), 'verified_until' => (int)$w['exp']]);
   }
 
   if ($action === 'assign' || $action === 'unassign') {
@@ -64,7 +94,8 @@ abd_api(function () {
     if ($target <= 0 && ($em = abd_email(abd_str($b, 'email')))) $target = (int)abd_q('SELECT id FROM abd_users WHERE email = ?', [$em])->fetchColumn();
     if ($target <= 0) abd_err('user', 404);
     if ($action === 'unassign') { abd_q('DELETE FROM abd_lab_seats WHERE user_id = ?', [$target]); abd_out(['ok' => true]); }
-    if ($seat < 1 || $seat > ABD_LAB_SEATS) abd_err('seat', 422);
+    if (!abd_lab_seat_valid($seat)) abd_err('seat', 422);
+    if (!abd_lab_seat_enabled($seat)) abd_err('seat_prep', 409);   // «قيد التجهيز»: not assignable/openable yet
     $vf = abd_str($b, 'valid_from', 19); $vt = abd_str($b, 'valid_to', 19);
     $dt = fn(string $s) => $s === '' ? null : (($d = date_create($s)) ? $d->format('Y-m-d H:i:s') : false);
     $vf = $dt($vf); $vt = $dt($vt);

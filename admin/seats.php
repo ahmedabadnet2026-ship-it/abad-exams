@@ -20,7 +20,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       $em = abd_email(abd_str($_POST, 'email'));
       $uid = $em ? (int)abd_q('SELECT id FROM abd_users WHERE email = ? AND is_active = 1', [$em])->fetchColumn() : 0;
       $vf = $dt(abd_str($_POST, 'valid_from', 19)); $vt = $dt(abd_str($_POST, 'valid_to', 19));
-      if ($seat < 1 || $seat > ABD_LAB_SEATS) seats_back('رقم المقعد غير صحيح.', true);
+      if (!abd_lab_seat_valid($seat)) seats_back('رقم المقعد غير صحيح.', true);
+      if (!abd_lab_seat_enabled($seat)) seats_back('المقعد ' . $seat . ' قيد التجهيز ولا يمكن تعيينه بعد.', true);
       if ($uid <= 0) seats_back('لا يوجد حساب نشط بهذا البريد. يجب أن يسجّل المتدرب في المنصة أولًا.', true);
       if ($vf === false || $vt === false || ($vf && $vt && $vt < $vf)) seats_back('تواريخ غير صحيحة.', true);
       abd_q('INSERT INTO abd_lab_seats (seat, user_id, valid_from, valid_to, note, created_by) VALUES (?, ?, ?, ?, ?, ?)
@@ -48,13 +49,13 @@ abd_admin_top('مقاعد المعمل', $me);
 ?>
 <style>.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}.sc{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fafcfe}
 .sc h3{margin:0 0 6px;font-size:15px;display:flex;justify-content:space-between}.sc h3 span{color:var(--g);background:var(--n);border-radius:8px;padding:0 8px}
-.sc li{margin-bottom:6px}.sc ul{list-style:none;margin:0;padding:0;font-size:13px}.off{opacity:.55}</style>
+.sc.prep{background:#fff8e6;border-style:dashed;border-color:#f5d77f}.sc .pp{font-size:12.5px;font-weight:700;color:#8a5a00;margin-bottom:4px}.sc li{margin-bottom:6px}.sc ul{list-style:none;margin:0;padding:0;font-size:13px}.off{opacity:.55}</style>
 <div class="card solo">
-  <h1>💺 مقاعد المعمل</h1>
+  <h1>💺 مقاعد المعمل <span class="mut" style="font-size:14px;font-weight:400"><?=ABD_LAB_SEATS?> مقعدًا · <?=count(abd_lab_enabled_seats())?> متاح</span></h1>
   <p class="mut">كل متدرب له مقعد واحد. بعد تسجيل دخوله إلى المنصة (نفس حساب الاختبارات) يفتح مقعده مباشرة من صفحة المعمل دون رمز إضافي. الأوقات بتوقيت الرياض.</p>
   <?php if ($flash): ?><div class="<?= $flash[1] ? 'err' : 'okm' ?>"><?=h($flash[0])?></div><?php endif; ?>
   <form class="f" method="post"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="assign">
-    <label>المقعد<select name="seat" required><?php for ($i = 1; $i <= ABD_LAB_SEATS; $i++): ?><option value="<?=$i?>"><?=$i?></option><?php endfor; ?></select></label>
+    <label>المقعد<select name="seat" required><?php foreach (abd_lab_enabled_seats() as $i): ?><option value="<?=$i?>"><?=$i?></option><?php endforeach; ?></select></label>
     <label>بريد المتدرب<input type="email" name="email" required dir="ltr" placeholder="trainee@example.com"></label>
     <label>من (اختياري)<input type="datetime-local" name="valid_from"></label>
     <label>إلى (اختياري)<input type="datetime-local" name="valid_to"></label>
@@ -63,7 +64,9 @@ abd_admin_top('مقاعد المعمل', $me);
   </form>
   <div class="sg">
   <?php for ($i = 1; $i <= ABD_LAB_SEATS; $i++): ?>
-    <div class="sc"><h3>مقعد <?=$i?> <span dir="ltr">eve<?=$i?></span></h3>
+    <?php $on = abd_lab_seat_enabled($i); ?>
+    <div class="sc<?= $on ? '' : ' prep' ?>"><h3>مقعد <?=$i?> <span dir="ltr">eve<?=$i?></span></h3>
+    <?php if (!$on): ?><div class="pp">🛠️ قيد التجهيز <span class="mut ltr"><?=h(ABD_LAB_SEAT_CFG[$i]['ip'])?> · ESXi <?= (int)ABD_LAB_SEAT_CFG[$i]['esxi'] ?></span></div><?php endif; ?>
     <?php if (empty($by[$i])): ?><div class="mut">غير معيّن</div><?php else: ?><ul>
       <?php foreach ($by[$i] as $r): ?><li class="<?= $r['live'] ? '' : 'off' ?>"><b><?=h($r['full_name_ar'] ?: $r['full_name_en'])?></b> <span class="ltr mut"><?=h($r['email'])?></span><br>
         <span class="mut"><?= $r['valid_from'] || $r['valid_to'] ? h(($r['valid_from'] ? substr($r['valid_from'], 0, 16) : '…') . ' → ' . ($r['valid_to'] ? substr($r['valid_to'], 0, 16) : '…')) : 'دائم' ?><?= $r['live'] ? '' : ' (غير فعّال الآن)' ?><?= $r['note'] ? ' · ' . h($r['note']) : '' ?></span>
