@@ -1,0 +1,166 @@
+{
+ "lab": "CCNA/14-CDP-LLDP-NTP-Syslog.unl",
+ "title_ar": "اكتشاف الجيران CDP/LLDP، مزامنة الوقت NTP، والسجلات Syslog",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "12.0.0.1",
+   "len": 30,
+   "pts": 4,
+   "title_ar": "R1 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 12.0.0.1 255.255.255.252",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/1",
+   "ip": "12.0.0.2",
+   "len": 30,
+   "pts": 4,
+   "title_ar": "R2 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 12.0.0.2 255.255.255.252",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "SW1",
+   "intf": "Vlan1",
+   "ip": "192.168.1.2",
+   "len": 24,
+   "pts": 4,
+   "title_ar": "SW1 Vlan1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "interface vlan 1 / ip address 192.168.1.2 255.255.255.0",
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show cdp neighbors",
+   "regex": "^SW1\\S*\\s+Gig 0/0",
+   "pts": 8,
+   "title_ar": "R1 يرى SW1 عبر CDP على Gi0/0",
+   "hint_ar": "CDP مفعّل افتراضيًا، لا تعطّله على Gi0/0.",
+   "solution_ar": "",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show cdp neighbors",
+   "regex": "^R2\\S*\\s+Gig 0/1",
+   "pts": 8,
+   "title_ar": "R1 لا يرى R2 عبر CDP (معطّل على Gi0/1)",
+   "hint_ar": "no cdp enable على Gi0/1 في R1 و R2.",
+   "solution_ar": "interface g0/1 / no cdp enable",
+   "negate": true,
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show lldp neighbors",
+   "regex": "^R2\\S*\\s+Gi0/1",
+   "pts": 12,
+   "title_ar": "R1 يرى R2 عبر LLDP على Gi0/1",
+   "hint_ar": "lldp run على R1 و R2.",
+   "solution_ar": "lldp run",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ntp associations",
+   "regex": "\\*~12\\.0\\.0\\.1\\s",
+   "pts": 12,
+   "title_ar": "R2 متزامن مع 12.0.0.1",
+   "hint_ar": "ntp server 12.0.0.1 ثم انتظر بضع دقائق.",
+   "solution_ar": "ntp server 12.0.0.1",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show ntp status",
+   "regex": "stratum 4, reference is 192\\.168\\.1\\.1\\b",
+   "pts": 12,
+   "title_ar": "SW1 يتبع R1 كمصدر NTP (stratum 4)",
+   "hint_ar": "ntp server 192.168.1.1. ملاحظة: vIOS-L2 قد يبقى 'unsynchronized' (loopfilter FREQ) لوقت طويل رغم اختيار المرجع الصحيح.",
+   "solution_ar": "ntp server 192.168.1.1",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ntp status",
+   "regex": "Clock is synchronized, stratum 3",
+   "pts": 6,
+   "title_ar": "R1 مصدر NTP بـ stratum 3",
+   "hint_ar": "ntp master 3",
+   "solution_ar": "ntp master 3",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show logging",
+   "regex": "Logging to 192\\.168\\.1\\.10",
+   "pts": 6,
+   "title_ar": "R1 يرسل Syslog إلى 192.168.1.10",
+   "hint_ar": "logging host 192.168.1.10",
+   "solution_ar": "logging host 192.168.1.10",
+   "id": "c10"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show logging",
+   "regex": "Logging to 192\\.168\\.1\\.10",
+   "pts": 6,
+   "title_ar": "R2 يرسل Syslog إلى 192.168.1.10",
+   "hint_ar": "logging host 192.168.1.10",
+   "solution_ar": "logging host 192.168.1.10",
+   "id": "c11"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show logging",
+   "regex": "Logging to 192\\.168\\.1\\.10",
+   "pts": 6,
+   "title_ar": "SW1 يرسل Syslog إلى 192.168.1.10",
+   "hint_ar": "logging host 192.168.1.10",
+   "solution_ar": "logging host 192.168.1.10",
+   "id": "c12"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show logging",
+   "regex": "Trap logging: level informational",
+   "pts": 3,
+   "title_ar": "R2: trap informational",
+   "hint_ar": "logging trap informational",
+   "solution_ar": "logging trap informational",
+   "id": "c13"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show running-config | include timestamps log",
+   "regex": "service timestamps log datetime msec",
+   "pts": 3,
+   "title_ar": "R2: طوابع زمنية بالـ msec",
+   "hint_ar": "service timestamps log datetime msec",
+   "solution_ar": "service timestamps log datetime msec",
+   "id": "c14"
+  }
+ ]
+}

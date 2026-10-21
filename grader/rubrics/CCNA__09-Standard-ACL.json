@@ -1,0 +1,200 @@
+{
+ "lab": "CCNA/09-Standard-ACL.unl",
+ "title_ar": "قوائم التحكم بالوصول القياسية (Numbered Standard ACL)",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.1.1",
+   "len": 24,
+   "pts": 5,
+   "title_ar": "عنوان R1 على Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.1.1 255.255.255.0",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "12.0.0.1",
+   "len": 30,
+   "pts": 5,
+   "title_ar": "عنوان R1 على Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 12.0.0.1 255.255.255.252",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.2.1",
+   "len": 24,
+   "pts": 5,
+   "title_ar": "عنوان R2 على Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.2.1 255.255.255.0",
+   "id": "c03"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/1",
+   "ip": "12.0.0.2",
+   "len": 30,
+   "pts": 5,
+   "title_ar": "عنوان R2 على Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 12.0.0.2 255.255.255.252",
+   "id": "c04"
+  },
+  {
+   "kind": "route",
+   "node": "R1",
+   "prefix": "192.168.2.0/24",
+   "via": "12.0.0.2",
+   "pts": 5,
+   "title_ar": "R1: route نحو LAN2",
+   "hint_ar": "ip route 192.168.2.0 255.255.255.0 12.0.0.2",
+   "solution_ar": "ip route 192.168.2.0 255.255.255.0 12.0.0.2",
+   "id": "c05"
+  },
+  {
+   "kind": "route",
+   "node": "R2",
+   "prefix": "192.168.1.0/24",
+   "via": "12.0.0.1",
+   "pts": 5,
+   "title_ar": "R2: route نحو LAN1",
+   "hint_ar": "ip route 192.168.1.0 255.255.255.0 12.0.0.1",
+   "solution_ar": "ip route 192.168.1.0 255.255.255.0 12.0.0.1",
+   "id": "c06"
+  },
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "192.168.1.10",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 5,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.10/24 192.168.1.1",
+   "id": "c07"
+  },
+  {
+   "kind": "pc",
+   "node": "PC2",
+   "ip": "192.168.2.20",
+   "len": 24,
+   "gw": "192.168.2.1",
+   "pts": 5,
+   "title_ar": "إعداد PC2 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC2 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.2.20/24 192.168.2.1",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show access-lists 25",
+   "regex": "(?s)(?=.*deny\\s+192\\.168\\.2\\.20\\b)(?=.*deny\\s+192\\.168\\.2\\.30\\b)(?=.*deny\\s+192\\.168\\.2\\.35\\b).*deny.*\\n\\s+\\d+ permit any",
+   "pts": 15,
+   "title_ar": "R1: ACL 25 (3 deny ثم permit any)",
+   "hint_ar": "الثلاثة deny (يعيد IOS ترتيب قواعد host في الـ ACL القياسية) ثم permit any في النهاية.",
+   "solution_ar": "access-list 25 deny host 192.168.2.20 ... access-list 25 permit any",
+   "stage": "r1",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip interface GigabitEthernet0/0 | include access list",
+   "regex": "Outgoing access list is 25",
+   "pts": 10,
+   "title_ar": "R1: ACL 25 على g0/0 out",
+   "hint_ar": "ip access-group 25 out تحت interface g0/0",
+   "solution_ar": "interface g0/0 / ip access-group 25 out",
+   "stage": "r1",
+   "id": "c10"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "192.168.2.20",
+   "pts": 10,
+   "title_ar": "PC1 ← PC2 يجب أن يفشل (ACL على R1)",
+   "hint_ar": "إن نجح فالـ ACL غير مطبقة أو الاتجاه خاطئ.",
+   "expect": "fail",
+   "stage": "r1",
+   "id": "c11"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show access-lists 25",
+   "regex": "permit\\s+192\\.168\\.1\\.10(?:.*\\n)+.*deny\\s+any",
+   "pts": 15,
+   "title_ar": "R2: ACL 25 (permit host .10 ثم deny any)",
+   "hint_ar": "access-list 25 permit host 192.168.1.10 ثم deny any",
+   "solution_ar": "access-list 25 permit host 192.168.1.10 / access-list 25 deny any",
+   "stage": "r2",
+   "id": "c12"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ip interface GigabitEthernet0/0 | include access list",
+   "regex": "Outgoing access list is 25",
+   "pts": 10,
+   "title_ar": "R2: ACL 25 على g0/0 out",
+   "hint_ar": "ip access-group 25 out",
+   "solution_ar": "interface g0/0 / ip access-group 25 out",
+   "stage": "r2",
+   "id": "c13"
+  },
+  {
+   "kind": "ping",
+   "node": "PC2",
+   "target": "192.168.1.10",
+   "pts": 5,
+   "title_ar": "PC2 ← PC1 ينجح (المضيف .10 مسموح)",
+   "hint_ar": "راجع ACL على R2.",
+   "stage": "r2",
+   "id": "c14"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip interface GigabitEthernet0/0 | include access list",
+   "regex": "Outgoing access list is not set",
+   "pts": 5,
+   "title_ar": "بعد الإزالة: لا ACL على R1 g0/0",
+   "hint_ar": "no ip access-group 25 out",
+   "solution_ar": "",
+   "stage": "final",
+   "id": "c15"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ip interface GigabitEthernet0/0 | include access list",
+   "regex": "Outgoing access list is not set",
+   "pts": 5,
+   "title_ar": "بعد الإزالة: لا ACL على R2 g0/0",
+   "hint_ar": "no ip access-group 25 out",
+   "solution_ar": "",
+   "stage": "final",
+   "id": "c16"
+  }
+ ],
+ "stages": {
+  "r1": "قيّم بعد تطبيق مهمة R1 وقبل إزالتها",
+  "r2": "قيّم بعد تطبيق مهمة R2 وقبل إزالتها",
+  "final": "قيّم بعد إزالة الـ ACLs"
+ }
+}

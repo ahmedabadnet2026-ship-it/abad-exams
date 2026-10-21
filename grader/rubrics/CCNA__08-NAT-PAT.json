@@ -1,0 +1,165 @@
+{
+ "lab": "CCNA/08-NAT-PAT.unl",
+ "title_ar": "ترجمة العناوين Static NAT و PAT",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.1.1",
+   "len": 24,
+   "pts": 5,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.1.1 255.255.255.0",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "203.0.113.1",
+   "len": 29,
+   "pts": 5,
+   "title_ar": "R1 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 203.0.113.1 255.255.255.248",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "ISP",
+   "intf": "GigabitEthernet0/1",
+   "ip": "203.0.113.6",
+   "len": 29,
+   "pts": 5,
+   "title_ar": "ISP Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 203.0.113.6 255.255.255.248",
+   "id": "c03"
+  },
+  {
+   "kind": "iface",
+   "node": "ISP",
+   "intf": "Loopback0",
+   "ip": "8.8.8.8",
+   "len": 32,
+   "pts": 5,
+   "title_ar": "ISP Loopback0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "interface loopback0 / ip address 8.8.8.8 255.255.255.255",
+   "id": "c04"
+  },
+  {
+   "kind": "route",
+   "node": "R1",
+   "prefix": "0.0.0.0/0",
+   "via": "203.0.113.6",
+   "pts": 10,
+   "title_ar": "R1: default route نحو ISP",
+   "hint_ar": "ip route 0.0.0.0 0.0.0.0 203.0.113.6",
+   "solution_ar": "ip route 0.0.0.0 0.0.0.0 203.0.113.6",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip nat statistics",
+   "regex": "Inside interfaces:\\s*\\n\\s*GigabitEthernet0/0",
+   "pts": 5,
+   "title_ar": "R1: Gi0/0 inside",
+   "hint_ar": "ip nat inside على Gi0/0",
+   "solution_ar": "ip nat inside",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip nat statistics",
+   "regex": "Outside interfaces:\\s*\\n\\s*GigabitEthernet0/1",
+   "pts": 5,
+   "title_ar": "R1: Gi0/1 outside",
+   "hint_ar": "ip nat outside على Gi0/1",
+   "solution_ar": "ip nat outside",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip nat translations",
+   "regex": "---\\s+203\\.0\\.113\\.3\\s+192\\.168\\.1\\.10\\s+---",
+   "pts": 15,
+   "title_ar": "Static NAT: 192.168.1.10 ↔ 203.0.113.3",
+   "hint_ar": "ip nat inside source static 192.168.1.10 203.0.113.3",
+   "solution_ar": "ip nat inside source static 192.168.1.10 203.0.113.3",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | include overload",
+   "regex": "ip nat inside source list 1 interface GigabitEthernet0/1 overload",
+   "pts": 15,
+   "title_ar": "PAT بـ overload على Gi0/1",
+   "hint_ar": "ACL 1 + ip nat inside source list 1 interface g0/1 overload",
+   "solution_ar": "ip nat inside source list 1 interface g0/1 overload",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "ISP",
+   "cmd": "show ip route",
+   "regex": "192\\.168\\.1\\.",
+   "pts": 0,
+   "title_ar": "ISP لا يعرف الشبكة الخاصة (لا يجب إضافة مسار)",
+   "hint_ar": "احذف أي مسار نحو 192.168.1.0 على ISP، فالهدف أن يعمل الاتصال بالـ NAT وحده.",
+   "solution_ar": "",
+   "negate": true,
+   "id": "c10"
+  },
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "192.168.1.10",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 5,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.10/24 192.168.1.1",
+   "id": "c11"
+  },
+  {
+   "kind": "pc",
+   "node": "PC2",
+   "ip": "192.168.1.20",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 5,
+   "title_ar": "إعداد PC2 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC2 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.20/24 192.168.1.1",
+   "id": "c12"
+  },
+  {
+   "kind": "ping",
+   "node": "PC2",
+   "target": "8.8.8.8",
+   "pts": 10,
+   "title_ar": "PC2 ← 8.8.8.8 عبر PAT",
+   "hint_ar": "راجع inside/outside والـ ACL 1 والـ default route.",
+   "id": "c13"
+  },
+  {
+   "kind": "ping",
+   "node": "ISP",
+   "target": "203.0.113.3",
+   "pts": 10,
+   "title_ar": "ISP ← 203.0.113.3 (PC1 عبر Static NAT)",
+   "hint_ar": "راجع ip nat inside source static.",
+   "id": "c14"
+  }
+ ]
+}
