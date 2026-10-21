@@ -185,8 +185,11 @@ function abd_user(): ?array {
   abd_session();
   $id = (int)($_SESSION['uid'] ?? 0);
   if ($id <= 0) return $u = null;
-  $row = abd_q('SELECT id, full_name_ar, full_name_en, email, email_verified_at, phone, national_id, marketing_opt_in, role, is_active, created_at
+  $row = abd_q('SELECT id, full_name_ar, full_name_en, email, email_verified_at, phone, national_id, marketing_opt_in, role, is_active, created_at, session_ver
                 FROM abd_users WHERE id = ?', [$id])->fetch();
+  // password reset bumps session_ver → sessions created before it are dropped (sessions without 'sv' predate migration 013 = version 0)
+  if ($row && (int)$row['session_ver'] !== (int)($_SESSION['sv'] ?? 0)) { $_SESSION = ['t' => time()]; session_regenerate_id(true); return $u = null; }
+  if ($row) unset($row['session_ver']);
   // unverified accounts (migration 006) are never signed in; they sit in $_SESSION['pending_uid'] until the email code is entered
   if (!$row || !(int)$row['is_active'] || $row['email_verified_at'] === null) { unset($_SESSION['uid']); return $u = null; }
   return $u = $row;
@@ -202,6 +205,7 @@ function abd_login_session(int $uid): void {
   abd_session();
   session_regenerate_id(true);
   $_SESSION['uid'] = $uid;
+  $_SESSION['sv'] = (int)abd_q('SELECT session_ver FROM abd_users WHERE id = ?', [$uid])->fetchColumn();
   $_SESSION['csrf'] = bin2hex(random_bytes(32));
   abd_q('UPDATE abd_users SET last_login_at = NOW() WHERE id = ?', [$uid]);
 }
@@ -251,4 +255,13 @@ function abd_date(string $d): ?string {
   return ($dt && $dt->format('Y-m-d') === $d) ? $d : null;
 }
 function abd_pw_ok(string $p): bool { $n = mb_strlen($p); return $n >= 8 && $n <= 200; }
+/** Stronger rule for password resets: 8–200 chars, at least one letter and one digit, not the email / its local part. Returns error code or null. */
+function abd_pw_strength(string $p, string $email = ''): ?string {
+  if (!abd_pw_ok($p)) return 'pw_length';
+  if (!preg_match('/\p{L}/u', $p) || !preg_match('/\d/', abd_latin_digits($p))) return 'pw_weak';
+  $l = mb_strtolower($p); $e = mb_strtolower($email);
+  if ($e !== '' && ($l === $e || $l === explode('@', $e)[0])) return 'pw_email';
+  if (preg_match('/^(.)\1+$/u', $p) || in_array($l, ['password1', 'password123', 'qwerty123', '12345678a', 'abc12345', 'a1234567'], true)) return 'pw_weak';
+  return null;
+}
 function h($s): string { return htmlspecialchars((string)$s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }

@@ -74,6 +74,7 @@ html[dir=ltr] .inp input{padding-left:42px;padding-right:12px}html[dir=ltr] .inp
 .vc input.code::placeholder{color:#c7d3de}
 .vc .lnk{background:none;border:0;color:var(--b);font:inherit;font-weight:700;cursor:pointer;margin-top:12px;min-height:44px;padding:4px 10px;border-radius:10px}.vc .lnk:hover{background:#eef3f8}.vc .lnk:disabled{color:var(--mut);cursor:default;background:none}
 .sec{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;font-size:12px;color:var(--mut)}.sec svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
+.fgt{text-align:end;margin-top:8px}.fgt a{color:var(--b);font-weight:700;font-size:13.5px;text-decoration:none;padding:6px 4px;border-radius:8px;display:inline-block}.fgt a:hover{text-decoration:underline}.fgt a:focus-visible{outline:3px solid #3f86b366;outline-offset:2px}
 footer{text-align:center;color:#9cc7e3;opacity:.8;font-size:12px;padding:8px 18px 20px}
 @media (min-width:600px){.card{padding:28px 30px 26px}.row2{grid-template-columns:1fr 1fr}}
 @media (min-width:960px){
@@ -125,6 +126,7 @@ footer{text-align:center;color:#9cc7e3;opacity:.8;font-size:12px;padding:8px 18p
     <div class="tabs" role="tablist"><button type="button" role="tab" id="tLogin" aria-selected="true" data-ar="تسجيل الدخول" data-en="Sign in">تسجيل الدخول</button><button type="button" role="tab" id="tReg" aria-selected="false" data-ar="حساب متدرب جديد" data-en="New trainee account">حساب متدرب جديد</button></div>
     <form id="fLogin" novalidate>
 <div class="fld"><label for="le"><span data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</span></label><div class="inp"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg><input id="le" type="email" dir="ltr" autocomplete="username" required placeholder="name@example.com"></div></div><div class="fld"><label for="lp"><span data-ar="كلمة المرور" data-en="Password">كلمة المرور</span></label><div class="inp pw"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><input id="lp" type="password" dir="ltr" autocomplete="current-password" required placeholder="••••••••"><button type="button" class="eye" aria-label="إظهار كلمة المرور" data-eye><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      <div class="fgt"><a href="forgot.html" id="fgt" data-ar="نسيت كلمة المرور؟" data-en="Forgot password?">نسيت كلمة المرور؟</a></div>
       <button class="btn" type="submit" data-ar="دخول" data-en="Sign in">دخول</button>
     </form>
     <form id="fReg" class="hide" novalidate>
@@ -205,6 +207,8 @@ document.addEventListener("input",function(e){if(e.target.getAttribute&&e.target
   $("vEdit").onclick=function(){clear();$("fVer").classList.add("hide");$("forms").classList.remove("hide");tab(true);$("rp").value="";$("rp2").value="";
     var go=function(){show(T("صحّح بياناتك ثم اضغط «إنشاء الحساب» — سيصلك رمز جديد على البريد المُدخل. أعد كتابة كلمة المرور.","Fix your details, then press “Create account” — a new code goes to the email you enter. Re-enter your password."),true);$("ra").focus()};
     if($("re").value){go();return}ABAD_API.req("auth.php?action=me").then(function(j){fillReg(j&&j.pending&&j.pending.edit)}).catch(function(){}).then(go)};
+  $("fgt").onclick=function(){var v=$("le").value.trim();this.href="forgot.html"+(v?"?e="+encodeURIComponent(v):"")};
+  if(/[?&]reset=1/.test(location.search))setTimeout(function(){show(T("تم تغيير كلمة المرور. سجّل الدخول بكلمة المرور الجديدة.","Password changed. Sign in with your new password."),true)},400);
   $("out").onclick=function(){ABAD_API.logout().then(function(){view();tab(false)})};
   applyLang();ABAD_API.me().then(function(){view();if(!ABAD_API.state.user&&ABAD_API.state.available)
     ABAD_API.req("auth.php?action=me").then(function(j){if(j&&j.pending)verifyView(j.pending.sent_to,"sent")}).catch(function(){})});
