@@ -76,7 +76,7 @@ footer{text-align:center;color:var(--mut);font-size:12px;padding:10px 0 30px}
 <header class="top"><img src="../assets/abad-logo.png" alt="ABAD"><div class="t"><b>لوحة إدارة منصة آباد الرقمية</b><small>معهد شبكة آباد للتدريب</small></div>
 <a class="btn o s" href="labs.php">🧪 التحكم في المختبر</a>
 <?php if ($user && in_array($user['role'], ['admin', 'staff'], true)): ?><a class="btn o s" href="seats.php">💺 مقاعد المعمل</a><a class="btn o s" href="services.php">🧾 خدمات المتدربين</a><a class="btn o s" href="exam-access.php">🎟️ صلاحيات الاختبارات</a><?php endif; ?>
-<?php if ($user && $user['role'] === 'admin'): ?><a class="btn o s" href="enrollments.php">🗓️ تسجيل الدورات</a><?php endif; ?>
+<?php if ($user && $user['role'] === 'admin'): ?><a class="btn o s" href="stats.php">📊 الإحصائيات</a><a class="btn o s" href="enrollments.php">🗓️ تسجيل الدورات</a><?php endif; ?>
 <a class="btn o s" href="../dashboard.html">لوحة المعلومات</a>
 <?php if ($user): ?><span class="who">👤 <?=h($user['full_name_ar'] ?: $user['full_name_en'] ?: $user['email'])?></span>
 <form class="i" method="post" action="index.php"><input type="hidden" name="csrf" value="<?=h(abd_csrf())?>"><button class="btn o s" name="do" value="logout">خروج</button></form><?php endif; ?>
