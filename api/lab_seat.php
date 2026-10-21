@@ -4,6 +4,8 @@
 //   GET  ?action=seats                      seat pool for the lab screen → {seats, available, seat_list:[{seat,host,enabled,status:ready|prep}]}
 //   POST {action:"request", seat}           (X-CSRF-Token) emails a fresh 6-digit code (10 min, 5 tries, 60 s resend cooldown)
 //                                           to the user's registered email → {sent_to (masked), ttl, cooldown}
+//   POST {action:"link", seat}              fresh signed URL on «فتح المعمل» click; needs a code verified for this seat in this
+//                                           session within ABD_LAB_VERIFIED_TTL (30 min), else error "reverify"
 //   POST {action:"open"|"verify", seat, code} assigned seat only (staff: any enabled seat) → after a correct code:
 //                                           {url: https://eveN.abad-labs.com/?t=<signed 60s token>, host, eve_user, eve_pass}
 //   Single login: the platform session (wordpress_abadsid) is the only login; the emailed code is a per-open confirmation step.
@@ -65,10 +67,25 @@ abd_api(function () {
     $url = abd_lab_seat_url($seat) . '?t=' . abd_lab_token($seat, $uid, $staff);   // before consuming the code (config errors must not burn it)
     $r = abd_code_check($uid, 'lab', abd_str($b, 'code', 12), $seat);
     if (!$r['ok']) abd_err($r['error'], $r['error'] === 'expired' ? 410 : 401, isset($r['left']) ? ['left' => $r['left']] : []);
+    // verified window: this session may mint fresh signed links for this seat for 30 min without a new code (action=link)
+    abd_session(); $_SESSION['lab_ok'][$seat] = ['u' => $uid, 'exp' => time() + ABD_LAB_VERIFIED_TTL];
     $cred = abd_eve_seat_cred($seat);
     header('Cache-Control: no-store, max-age=0'); header('Pragma: no-cache');
     abd_out(['ok' => true, 'seat' => $seat, 'url' => $url, 'host' => 'eve' . $seat . '.abad-labs.com',
       'eve_user' => $cred['user'] ?? null, 'eve_pass' => $cred['pass'] ?? null]);   // null → "credentials not configured" on the page
+  }
+
+  // Fresh signed link at the moment the trainee presses «فتح المعمل» (the ?t= token itself still lives 60 s; lab-server check unchanged).
+  // Needs a code verified for this seat in THIS session within the last 30 min; otherwise → reverify (page asks for a new code).
+  if ($action === 'link') {
+    if (!abd_lab_seat_valid($seat)) abd_err('seat', 422);
+    if (!abd_lab_seat_enabled($seat)) abd_err('seat_prep', 409);
+    if (!abd_lab_can_open($uid, $staff, $seat)) abd_err('not_your_seat', 403, ['my_seats' => abd_lab_seats_of($uid)]);
+    if (!abd_rate('lab-link-u', (string)$uid, 60, 900)) abd_err('rate_limited', 429);
+    abd_session(); $w = $_SESSION['lab_ok'][$seat] ?? null;
+    if (!is_array($w) || (int)($w['u'] ?? 0) !== $uid || (int)($w['exp'] ?? 0) < time()) { unset($_SESSION['lab_ok'][$seat]); abd_err('reverify', 401); }
+    header('Cache-Control: no-store, max-age=0');
+    abd_out(['ok' => true, 'seat' => $seat, 'url' => abd_lab_seat_url($seat) . '?t=' . abd_lab_token($seat, $uid, $staff), 'verified_until' => (int)$w['exp']]);
   }
 
   if ($action === 'assign' || $action === 'unassign') {

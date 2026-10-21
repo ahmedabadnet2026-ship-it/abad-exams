@@ -37,6 +37,7 @@ const ABD_LAB_SEAT_CFG = [
   19 => ['ip' => '192.168.200.219', 'esxi' => 2, 'enabled' => false],
   20 => ['ip' => '192.168.200.220', 'esxi' => 2, 'enabled' => false],
 ];
+const ABD_LAB_VERIFIED_TTL = 1800; // after a correct seat code, the session may request fresh signed links for 30 min
 const ABD_LAB_TOKEN_TTL = 60;      // signed redirect token valid 60 s
 
 function abd_lab_cfg(string $k, $def = null) {
