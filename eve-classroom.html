@@ -221,7 +221,7 @@ var RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
 /* course path + rocket removed from the instructor screen (see git history 51def48); replaced by live status board */
 /* seat pool — mirrors api/_lab_lib.php ABD_LAB_SEAT_CFG; refreshed from api/lab_seat.php?action=seats when the platform API is reachable.
    Seats not in EVE.on are «قيد التجهيز»: shown, never linked, not probed, not counted as available. */
-var EVE={total:20,on:[1,2,3,4,5,6,7,8,9,10,11,12]};
+var EVE={total:20,on:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]};
 function isOn(n){return EVE.on.indexOf(n)>=0}
 /* status board tiles */
 (function(){var t=document.getElementById("tiles");for(var n=1;n<=EVE.total;n++){var e=document.createElement("div");e.className="tile";e.dataset.n=n;e.innerHTML='<i class="dot"></i><b>'+n+'</b><div class="bar">CPU<u><i class="c"></i></u></div><div class="bar">RAM<u><i class="m"></i></u></div><span class="n">–</span>';t.appendChild(e)}})();
@@ -256,8 +256,10 @@ function setSeat(n,st,v){if(!isOn(n))return;var dot=document.querySelector('.dot
 function gauge(p){var nd=document.getElementById("nd"),gv=document.getElementById("gv"),ls=document.getElementById("ls");
  if(p==null){nd.style.transform="rotate(-90deg)";gv.textContent="–";ls.textContent=tr("na");ls.className="na";document.getElementById("kd").textContent="–";document.getElementById("ko").textContent="–";return}
  nd.style.transform="rotate("+(-90+1.8*Math.min(100,p))+"deg)";gv.textContent=Math.round(p)+"%";ls.className="";ls.textContent=tr(p<50?"low":p<80?"mid":"high");ls.style.color=p<50?"var(--ok)":p<80?"var(--gold)":"var(--bad)"}
-function render(d){LAST=d;var up=0,act=0,cpu=0;
- d.seats.forEach(function(v){if(!isOn(+v.seat))return;var st=!v.up?"bad":v.active>0?"ok":"idle";setSeat(v.seat,st,v);if(v.up){up++;cpu+=v.cpu}act+=v.active||0});
+var MISS=0;
+function render(d){LAST=d;var up=0,act=0,cpu=0,seen={};
+ d.seats.forEach(function(v){seen[+v.seat]=1;if(!isOn(+v.seat))return;var st=!v.up?"bad":v.active>0?"ok":"idle";setSeat(v.seat,st,v);if(v.up){up++;cpu+=v.cpu}act+=v.active||0});
+ if(MISS++%12==0)EVE.on.forEach(function(n){if(!seen[n])probe(n)});   /* seats the status service does not poll yet: reachability light only */
  gauge(up?Math.max(cpu/up,0):0);document.getElementById("kd").textContent=act;document.getElementById("ko").textContent=up}
 function probe(n){var im=new Image(),done=0,t=setTimeout(function(){fin(0)},8000);
  function fin(ok){if(done)return;done=1;clearTimeout(t);setSeat(n,ok?"idle":"bad",null)}
