@@ -47,7 +47,7 @@ function abd_material_ids_of(int $uid): array {
 }
 function abd_material_allowed(array $u, string $id): bool {
   if (!isset(ABD_MATERIALS[$id])) return false;
-  if (in_array($u['role'], ['admin', 'staff'], true)) return true;
+  if (in_array($u['role'], ['admin', 'staff'], true) || ABAD_OPEN_ALL_FOR_LOGGED_IN) return true;
   return in_array($id, abd_material_ids_of((int)$u['id']), true);
 }
 
@@ -59,7 +59,7 @@ function abd_services_of(array $u): array {
     $exams[] = ['id' => $id, 'title' => $e['title'], 'vendor' => $e['vendor'], 'url' => 'api/exam.php?id=' . rawurlencode($id)];
   $mats = [];
   $staff = in_array($u['role'], ['admin', 'staff'], true);
-  $mid = $staff ? array_keys(ABD_MATERIALS) : abd_material_ids_of((int)$u['id']);
+  $mid = ($staff || ABAD_OPEN_ALL_FOR_LOGGED_IN) ? array_keys(ABD_MATERIALS) : abd_material_ids_of((int)$u['id']);
   foreach (ABD_MATERIALS as $id => $m) if (in_array($id, $mid, true))
     $mats[] = ['id' => $id, 'title' => $m['title'], 'url' => 'api/material.php?id=' . rawurlencode($id)];
   $labs = [];

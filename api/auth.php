@@ -31,7 +31,7 @@ abd_api(function () {
     if ($action !== 'me') abd_err('action', 400);
     $u = abd_user();
     $p = $u ? null : abd_pending_row();
-    abd_out(['ok' => true, 'api' => 1, 'csrf' => abd_csrf(), 'user' => $u ? abd_public_user($u) : null]
+    abd_out(['ok' => true, 'api' => 1, 'csrf' => abd_csrf(), 'user' => $u ? abd_public_user($u) : null, 'open_all' => (bool)ABAD_OPEN_ALL_FOR_LOGGED_IN]
       + ($p ? ['pending' => ['sent_to' => abd_mask_email((string)$p['email'])]] : []));
   }
   if ($m !== 'POST') abd_err('method', 405);
