@@ -184,7 +184,8 @@ button,.btn,.hb,a.hb,#openTab,#btnNew{min-height:44px}
 
 <script>
 /* Educational discovery/identification quiz only — answer keys from trainee lab observation. */
-var KALI_URL="https://markers-cindy-jones-occurrence.trycloudflare.com/vnc.html?autoconnect=1&resize=scale";
+/* Kali address is NOT in the page: it comes from api/remote_lab.php after the trainee's email code (js/remote-lab-gate.js). */
+var KALI_URL="";
 var DURATION=60*60; /* seconds */
 var left=DURATION, tick=null, running=false, frame=null;
 
@@ -275,6 +276,7 @@ function stopLab(){
 }
 function startLab(){
  if(running) return;
+ if(!KALI_URL){ if(!window.ABAD_RLAB) return; ABAD_RLAB.get("ine").then(function(it){ KALI_URL=it[0].url; document.getElementById("openTab").href=KALI_URL; startLab(); }).catch(function(){}); return; }
  running=true;
  if(left<=0) left=DURATION;
  loadFrame();
@@ -310,7 +312,7 @@ function resetLab(){
 document.getElementById("btnStart").onclick=startLab;
 document.getElementById("btnStop").onclick=function(){ left=DURATION; stopLab(); setTimerUI(); };
 document.getElementById("btnReset").onclick=resetLab;
-document.getElementById("openTab").href=KALI_URL;
+document.getElementById("openTab").onclick=function(e){ if(!KALI_URL){ e.preventDefault(); startLab(); } };
 document.getElementById("btnFs").onclick=function(){
  var stage=document.getElementById("stage");
  if(!frame) return;
@@ -439,6 +441,6 @@ setStatus(false);
 setTimerUI();
 </script>
 <script src="js/abad-labs.js?r=202610170001" defer></script>
-<script src="js/abad-api.js?r=2026101821" defer></script><script src="js/exam-gate.js?v=abad-202610211400" defer></script>
+<script src="js/remote-lab-gate.js?v=abad-202610212340"></script><script src="js/abad-api.js?r=2026101821" defer></script><script src="js/exam-gate.js?v=abad-202610211400" defer></script>
 </body>
 </html>

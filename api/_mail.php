@@ -107,6 +107,13 @@ function abd_lab_code_mail(string $to, string $name, int $seat, string $code): b
   return abd_smtp_send($to, 'رمز فتح مقعد المعمل ' . $seat . ': ' . $code, $m['html'], $m['text']);
 }
 
+/** Remote lab (Kali / network consoles) OTP — same branded code mail; no addresses or credentials in the email. */
+function abd_rlab_code_mail(string $to, string $name, string $labTitle, string $code): bool {
+  $m = abd_code_mail($name, 'رمز دخول المعمل', 'رمز دخول ' . $labTitle . ': ' . $code . ' — صالح ' . intdiv(ABD_CODE_TTL, 60) . ' دقائق',
+    'أدخل الرمز التالي في صفحة المعمل لفتح <b>' . htmlspecialchars($labTitle, ENT_QUOTES, 'UTF-8') . '</b>:', $code);
+  return abd_smtp_send($to, 'رمز دخول المعمل: ' . $code, $m['html'], $m['text']);
+}
+
 // ---------------------------------------------------------------- one-time codes (hashed, 10 min, attempt-limited)
 function abd_code_secret(): string {
   $s = (string)abd_mail_cfg('CODE_SECRET', '');

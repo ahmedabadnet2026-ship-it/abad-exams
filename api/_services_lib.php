@@ -22,7 +22,7 @@ const ABD_MATERIALS = [
   'nse4'          => ['title' => 'Fortinet NSE4 — Course Material',      'file' => 'nse4.pdf',          'mime' => 'application/pdf'],
   'rhcsa'         => ['title' => 'Red Hat RHCSA — Course Material',      'file' => 'rhcsa.pdf',         'mime' => 'application/pdf'],
 ];
-const ABD_ENT_KINDS = ['exam' => 'اختبار', 'material' => 'ماتريال', 'lab' => 'لاب (مقعد)'];
+const ABD_ENT_KINDS = ['exam' => 'اختبار', 'material' => 'ماتريال', 'lab' => 'لاب (مقعد)', 'rlab' => 'معمل عن بُعد (Kali / الشبكات)'];
 
 function abd_material_dir(): string {
   $pos = strpos(__DIR__, '/public_html');
@@ -38,6 +38,7 @@ function abd_ent_refs(string $kind): array {
   if ($kind === 'exam') { $o = []; foreach (abd_exam_certs() as $id => $c) $o[$id] = $c['title']; return $o; }
   if ($kind === 'material') { $o = []; foreach (ABD_MATERIALS as $id => $m) $o[$id] = $m['title']; return $o; }
   if ($kind === 'lab') { $o = []; foreach (abd_lab_enabled_seats() as $i) $o[(string)$i] = 'مقعد ' . $i; return $o; }   // seats «قيد التجهيز» cannot be granted
+  if ($kind === 'rlab') { require_once __DIR__ . '/_remote_lab_lib.php'; $o = []; foreach (ABD_RLABS as $id => $x) $o[$id] = $x[1]; return $o; }   // used when a lab's access = 'entitled'
   return [];
 }
 

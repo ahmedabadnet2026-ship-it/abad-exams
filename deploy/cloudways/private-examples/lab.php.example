@@ -1,0 +1,22 @@
+<?php
+// Copy to ~/applications/<app>/private_html/abad-config/lab.php (or abad-data/lab.php), chmod 640. PLACEHOLDERS ONLY — never commit real values.
+return [
+  'LAB_HMAC_SECRET' => '<64 hex — same value as the EVE gate on ubantu-server>',
+  // Optional: switch EVE seats 13-20 on without a code change
+  // 'EVE_SEATS_ENABLED' => [13, 14],
+
+  // Remote labs (api/remote_lab.php). URLs are handed to the page only after the trainee's email code.
+  //   access: 'registered' = any signed-in trainee (current policy) | 'entitled' = only trainees granted «معمل عن بُعد» for this lab
+  'REMOTE_LABS' => [
+    'ine' => ['access' => 'registered', 'items' => [
+      ['name' => 'Kali', 'url' => 'https://<kali-tunnel-host>/vnc.html?autoconnect=1&resize=scale'],
+    ]],
+    'net' => ['access' => 'registered', 'items' => [
+      ['name' => 'R1',  'url' => 'https://<console-host>/r1/'],
+      ['name' => 'R2',  'url' => 'https://<console-host>/r2/'],
+      ['name' => 'R3',  'url' => 'https://<console-host>/r3/'],
+      ['name' => 'PC1', 'url' => 'https://<console-host>/pc1/'],
+      ['name' => 'PC2', 'url' => 'https://<console-host>/pc2/'],
+    ]],
+  ],
+];
