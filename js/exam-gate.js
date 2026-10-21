@@ -40,7 +40,7 @@ function header(){var nav=document.querySelector(".hdr .nav")||document.querySel
  var b=document.getElementById("xg-acct");if(!b){b=document.createElement("span");b.id="xg-acct";b.className="xg-acct";nav.appendChild(b)}
  var u=ST&&ST.user;
  if(!u){b.innerHTML='<button type="button" class="xg-in">👤 '+t("login")+"</button>";b.firstChild.onclick=openLogin;return}
- var n=(EN()?u.full_name_en||u.full_name_ar:u.full_name_ar||u.full_name_en)||u.email;
+ var n=String((u.full_name_ar||u.full_name_en||"").trim()||String(u.email||"").split("@")[0]).split(/\s+/).slice(0,2).join(" ");
  b.innerHTML='<a class="xg-u" href="my-services.html" title="'+esc(u.email)+' — خدماتي">👤 '+esc(n)+' · خدماتي</a><button type="button" class="xg-out">'+t("logout")+"</button>";
  b.querySelector(".xg-out").onclick=function(){ABAD_API.logout().then(refresh)}}
 function openLogin(){css();var m=document.getElementById("xg-md");
