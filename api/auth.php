@@ -6,6 +6,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/_db.php';
 require_once __DIR__ . '/_crm.php';
 require_once __DIR__ . '/_mail.php';
+require_once __DIR__ . '/_brevo.php';
 
 /** Email a fresh verification code to a pending account (rate limited). */
 function abd_send_verify(array $row): array {
@@ -19,7 +20,7 @@ function abd_send_verify(array $row): array {
 function abd_pending_row(): ?array {
   $id = (int)($_SESSION['pending_uid'] ?? 0);
   if ($id <= 0) return null;
-  $r = abd_q('SELECT id, email, full_name_ar, full_name_en, phone, national_id, email_verified_at, is_active FROM abd_users WHERE id = ?', [$id])->fetch();
+  $r = abd_q('SELECT id, email, full_name_ar, full_name_en, phone, national_id, marketing_opt_in, email_verified_at, is_active FROM abd_users WHERE id = ?', [$id])->fetch();
   return ($r && (int)$r['is_active'] && $r['email_verified_at'] === null) ? $r : null;
 }
 
@@ -35,7 +36,7 @@ abd_api(function () {
       + ($p ? ['pending' => ['sent_to' => abd_mask_email((string)$p['email']),
          // prefill for "edit details" — only ever the caller's own still-unverified sign-up (session-bound pending_uid)
          'edit' => ['full_name_ar' => (string)$p['full_name_ar'], 'full_name_en' => (string)$p['full_name_en'], 'email' => (string)$p['email'],
-                    'phone' => (string)($p['phone'] ?? ''), 'national_id' => (string)($p['national_id'] ?? '')]]] : []));
+                    'phone' => (string)($p['phone'] ?? ''), 'national_id' => (string)($p['national_id'] ?? ''), 'marketing_opt_in' => (bool)$p['marketing_opt_in']]]] : []));
   }
   if ($m !== 'POST') abd_err('method', 405);
   abd_require_csrf();
@@ -73,6 +74,7 @@ abd_api(function () {
     $phoneRaw = abd_str($b, 'phone', 32); $phone = $phoneRaw === '' ? null : abd_phone($phoneRaw);
     $nidRaw = abd_str($b, 'national_id', 16); $nid = $nidRaw === '' ? null : abd_nid($nidRaw);
     $pw = is_string($b['password'] ?? null) ? $b['password'] : '';
+    $mkt = ($b['marketing_opt_in'] ?? false) === true ? 1 : 0;   // explicit, unticked by default
     $fields = [];
     if ($nameAr === '' && $nameEn === '') $fields[] = 'full_name';
     if ($nameEn !== '' && !preg_match("/^[A-Za-z][A-Za-z' \\-]*$/", $nameEn)) $fields[] = 'full_name_en';
@@ -88,9 +90,10 @@ abd_api(function () {
       $pid = (int)$p['id'];
       if (abd_q('SELECT id FROM abd_users WHERE email = ? AND id <> ?', [$email, $pid])->fetch()) abd_err('email_taken', 409);
       try {
-        $st = abd_q('UPDATE abd_users SET full_name_ar = ?, full_name_en = ?, email = ?, phone = ?, national_id = ?, password_hash = ?
+        $st = abd_q('UPDATE abd_users SET full_name_ar = ?, full_name_en = ?, email = ?, phone = ?, national_id = ?, password_hash = ?,
+                       marketing_opt_in = ?, marketing_opt_in_at = IF(? = 1, COALESCE(marketing_opt_in_at, NOW()), NULL)
                      WHERE id = ? AND email_verified_at IS NULL AND is_active = 1',
-          [$nameAr, $nameEn, $email, $phone, $nid, password_hash($pw, PASSWORD_DEFAULT), $pid]);
+          [$nameAr, $nameEn, $email, $phone, $nid, password_hash($pw, PASSWORD_DEFAULT), $mkt, $mkt, $pid]);
       } catch (PDOException $e) {
         if (($e->errorInfo[1] ?? 0) === 1062) abd_err('email_taken', 409);
         throw $e;
@@ -103,8 +106,8 @@ abd_api(function () {
       abd_out(['ok' => true, 'verify' => true, 'edited' => true, 'sent_to' => abd_mask_email($email), 'mail' => $r['ok'] ? 'sent' : $r['error'], 'ttl' => ABD_CODE_TTL, 'csrf' => abd_csrf()]);
     }
     try {
-      abd_q("INSERT INTO abd_users (full_name_ar, full_name_en, email, phone, national_id, password_hash, role)
-             VALUES (?, ?, ?, ?, ?, ?, 'trainee')", [$nameAr, $nameEn, $email, $phone, $nid, password_hash($pw, PASSWORD_DEFAULT)]);
+      abd_q("INSERT INTO abd_users (full_name_ar, full_name_en, email, phone, national_id, password_hash, role, marketing_opt_in, marketing_opt_in_at)
+             VALUES (?, ?, ?, ?, ?, ?, 'trainee', ?, IF(? = 1, NOW(), NULL))", [$nameAr, $nameEn, $email, $phone, $nid, password_hash($pw, PASSWORD_DEFAULT), $mkt, $mkt]);
     } catch (PDOException $e) {
       if (($e->errorInfo[1] ?? 0) === 1062) abd_err('email_taken', 409);
       throw $e;
@@ -125,6 +128,7 @@ abd_api(function () {
     abd_q('UPDATE abd_users SET email_verified_at = NOW() WHERE id = ? AND email_verified_at IS NULL', [$p['id']]);
     unset($_SESSION['pending_uid']);
     abd_login_session((int)$p['id']);
+    if ((int)($p['marketing_opt_in'] ?? 0)) abd_brevo_sync_user((int)$p['id']);   // best effort, never fails verification
     $u = abd_q('SELECT * FROM abd_users WHERE id = ?', [$p['id']])->fetch();
     abd_out(['ok' => true, 'user' => abd_public_user($u), 'csrf' => abd_csrf()]);
   }
