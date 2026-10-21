@@ -277,12 +277,50 @@ svg.path{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 .gc .h{display:flex;justify-content:space-between;gap:10px;font-weight:700}.gc .h small{opacity:.75;font-weight:400}
 .gc dl{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;margin:8px 0 0;font-size:14px}.gc dt{opacity:.7}.gc dd{margin:0}.gc code{direction:ltr;unicode-bidi:embed;background:#0008;padding:1px 6px;border-radius:6px}
 .gc .hint{margin-top:6px;color:#F5BD2D}.gm{opacity:.8;font-size:13px}.gerr{color:#ff9aa4}
+/* lab dropdown (#glab): custom listbox over the hidden native select (value source for submit) */
+.gdd{position:relative;min-width:min(360px,100%);flex:1 1 320px;max-width:460px;font-family:Cairo,sans-serif}
+.gdd-b{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;cursor:pointer;direction:ltr;
+ background:linear-gradient(160deg,#173a52,#10293b);border:1px solid #3f86b3aa;color:#fff;font-weight:700;font-size:15px;line-height:1.4;box-shadow:0 4px 14px #0005}
+.gdd-b:hover,.gdd.open .gdd-b{border-color:#F5BD2D}.gdd-b:focus-visible{outline:2px solid #F5BD2D;outline-offset:2px}
+.gdd .n{flex:0 0 auto;min-width:34px;text-align:center;padding:2px 0;border-radius:8px;background:#F5BD2D;color:#10293b;font-weight:800;font-variant-numeric:tabular-nums}
+.gdd .t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gdd-b::after{content:"";width:9px;height:9px;border:solid #F5BD2D;border-width:0 2px 2px 0;transform:rotate(45deg) translateY(-3px);transition:transform .15s}
+.gdd.open .gdd-b::after{transform:rotate(-135deg) translateY(-2px)}
+.gdd-l{position:absolute;z-index:40;inset-inline:0;top:calc(100% + 6px);margin:0;padding:6px;list-style:none;direction:ltr;max-height:360px;overflow:auto;
+ background:#0d2232;border:1px solid #3f86b3aa;border-radius:12px;box-shadow:0 14px 34px #000a}
+.gdd-l[hidden]{display:none}.gdd-l:focus{outline:none}
+.gdd-l li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:14.5px;font-weight:600;line-height:1.4;color:#e6f0f7}
+.gdd-l li .n{background:#3f86b333;color:#9fd0ef;border:1px solid #3f86b388}
+.gdd-l li:hover,.gdd-l li.gdd-on{background:#3f86b333}
+.gdd-l li[aria-selected="true"]{background:#F5BD2D1f;color:#fff}.gdd-l li[aria-selected="true"] .n{background:#F5BD2D;color:#10293b;border-color:#F5BD2D}
+.gp .gr .glsel{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden}
+@media (max-width:600px){.gdd{flex-basis:100%;max-width:none}.gdd-l{max-height:60vh}}
 </style>
 <section class="gp" id="gp" hidden><h2>📝 تسليم اللاب والتصحيح الآلي</h2>
 <p class="gm">بعد إنهاء الإعداد على مقعدك اضغط «تسليم»: يقرأ المصحّح إعدادات الأجهزة (أوامر show و ping فقط، دون أي تعديل) ويعرض لك الخطأ بالتحديد وتلميحًا لإصلاحه.</p>
-<div class="gr"><label>اللاب: <select id="glab"><option value="CCNA/01-Static-Routing.unl">CCNA — 01 التوجيه الثابت (Static Routing)</option><option value="CCNA/02-VLANs-Trunking.unl">CCNA — 02 الشبكات الافتراضية والترنك (VLANs & Trunking)</option><option value="CCNA/03-Inter-VLAN-Routing-ROAS.unl">CCNA — 03 التوجيه بين الشبكات الافتراضية (Inter-VLAN Routing — ROAS)</option><option value="CCNA/04-STP-RSTP.unl">CCNA — 04 بروتوكول الشجرة الممتدة (STP & RSTP)</option><option value="CCNA/05-EtherChannel.unl">CCNA — 05 تجميع الروابط (EtherChannel)</option><option value="CCNA/06-OSPF-and-Floating-Static.unl">CCNA — 06 بروتوكول OSPF والمسار الاحتياطي (OSPF & Floating Static)</option><option value="CCNA/07-DHCP-Telnet-SSH.unl">CCNA — 07 توزيع العناوين والإدارة عن بُعد (DHCP, Telnet & SSH)</option><option value="CCNA/08-NAT-PAT.unl">CCNA — 08 ترجمة العناوين (NAT & PAT)</option><option value="CCNA/09-Standard-ACL.unl">CCNA — 09 قوائم التحكم القياسية (Standard ACL)</option><option value="CCNA/10-Extended-ACL.unl">CCNA — 10 قوائم التحكم الموسّعة (Extended ACL)</option><option value="CCNA/11-IPv6-Addressing-and-Static.unl">CCNA — 11 عناوين IPv6 والتوجيه الثابت (IPv6 Addressing & Static)</option><option value="CCNA/12-Port-Security.unl">CCNA — 12 أمن المنافذ (Port Security)</option><option value="CCNA/13-HSRP.unl">CCNA — 13 تكرار البوابة الافتراضية (HSRP)</option><option value="CCNA/14-CDP-LLDP-NTP-Syslog.unl">CCNA — 14 اكتشاف الجيران ومزامنة الوقت والسجلات (CDP, LLDP, NTP & Syslog)</option><option value="CCNA/15-Troubleshooting-Challenge.unl">CCNA — 15 تحدّي استكشاف الأعطال (Troubleshooting Challenge)</option></select></label>
+<div class="gr"><span class="gm" id="gddl">اللاب:</span><div class="gdd" id="gdd"><button type="button" class="gdd-b" id="gddb" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="gddl gddb"><span class="n"></span><span class="t"></span></button><ul class="gdd-l" id="gddo" role="listbox" tabindex="-1" aria-labelledby="gddl" hidden></ul></div><label class="glsel" aria-hidden="true">اللاب: <select id="glab" tabindex="-1"><option value="CCNA/01-Static-Routing.unl">01 · Static Routing</option><option value="CCNA/02-VLANs-Trunking.unl">02 · VLANs & Trunking</option><option value="CCNA/03-Inter-VLAN-Routing-ROAS.unl">03 · Inter-VLAN Routing — ROAS</option><option value="CCNA/04-STP-RSTP.unl">04 · STP & RSTP</option><option value="CCNA/05-EtherChannel.unl">05 · EtherChannel</option><option value="CCNA/06-OSPF-and-Floating-Static.unl">06 · OSPF & Floating Static</option><option value="CCNA/07-DHCP-Telnet-SSH.unl">07 · DHCP, Telnet & SSH</option><option value="CCNA/08-NAT-PAT.unl">08 · NAT & PAT</option><option value="CCNA/09-Standard-ACL.unl">09 · Standard ACL</option><option value="CCNA/10-Extended-ACL.unl">10 · Extended ACL</option><option value="CCNA/11-IPv6-Addressing-and-Static.unl">11 · IPv6 Addressing & Static</option><option value="CCNA/12-Port-Security.unl">12 · Port Security</option><option value="CCNA/13-HSRP.unl">13 · HSRP</option><option value="CCNA/14-CDP-LLDP-NTP-Syslog.unl">14 · CDP, LLDP, NTP & Syslog</option><option value="CCNA/15-Troubleshooting-Challenge.unl">15 · Troubleshooting Challenge</option></select></label>
 <label>المقعد: <select id="gseat"></select></label><button class="go" id="gsub">تسليم</button><span class="gm" id="gst"></span></div>
 <div id="gres"></div><div class="gm" id="ghist"></div></section>
+<script>
+(function(){var sel=document.getElementById("glab"),w=document.getElementById("gdd"),b=document.getElementById("gddb"),ul=document.getElementById("gddo");if(!sel||!w)return;var act=-1;
+ function parts(o){var m=o.textContent.match(/^(\d{2})\s*·\s*(.*)$/)||[0,"",o.textContent];return m}
+ function fill(el,o){var m=parts(o);el.querySelector(".n").textContent=m[1];el.querySelector(".t").textContent=m[2]}
+ [].forEach.call(sel.options,function(o,i){var li=document.createElement("li");li.setAttribute("role","option");li.id="gddo"+i;li.innerHTML='<span class="n"></span><span class="t"></span>';fill(li,o);
+  li.addEventListener("click",function(){pick(i)});ul.appendChild(li)});
+ function sync(){fill(b,sel.options[sel.selectedIndex]);[].forEach.call(ul.children,function(li,i){li.setAttribute("aria-selected",i===sel.selectedIndex)})}
+ function hi(i){act=i;[].forEach.call(ul.children,function(li,j){li.classList.toggle("gdd-on",j===i)});var li=ul.children[i];if(li){ul.setAttribute("aria-activedescendant",li.id);li.scrollIntoView({block:"nearest"})}}
+ function open(){ul.hidden=false;w.classList.add("open");b.setAttribute("aria-expanded","true");hi(sel.selectedIndex);ul.focus()}
+ function close(f){ul.hidden=true;w.classList.remove("open");b.setAttribute("aria-expanded","false");if(f)b.focus()}
+ function pick(i){sel.selectedIndex=i;sel.dispatchEvent(new Event("change",{bubbles:true}));sync();close(true)}
+ b.addEventListener("click",function(){ul.hidden?open():close()});
+ b.addEventListener("keydown",function(e){if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();open()}});
+ ul.addEventListener("keydown",function(e){var n=ul.children.length;
+  if(e.key==="ArrowDown"){e.preventDefault();hi(Math.min(n-1,act+1))}else if(e.key==="ArrowUp"){e.preventDefault();hi(Math.max(0,act-1))}
+  else if(e.key==="Home"){e.preventDefault();hi(0)}else if(e.key==="End"){e.preventDefault();hi(n-1)}
+  else if(e.key==="Enter"||e.key===" "){e.preventDefault();if(act>=0)pick(act)}else if(e.key==="Escape"||e.key==="Tab"){close(e.key==="Escape")}});
+ document.addEventListener("click",function(e){if(!w.contains(e.target))close()});sel.addEventListener("change",sync);sync()})();
+</script>
+
 </main>
 <div class="md" id="md" role="dialog" aria-modal="true" aria-labelledby="mdt"><div class="mdb"><h3 id="mdt"></h3><p id="mdp"></p>
  <div id="mdf" hidden><input class="otp" id="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*" aria-label="code" dir="ltr"></div>
