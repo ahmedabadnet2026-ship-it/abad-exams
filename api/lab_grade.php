@@ -45,7 +45,10 @@ if (!is_array($r) || $code !== 200 || empty($r['ok'])) {
   $err = is_array($r) ? (string)($r['error'] ?? 'grader') : 'grader_unreachable';
   abd_q('INSERT INTO abd_lab_attempts (user_id, seat, lab, status, results_json) VALUES (?,?,?,?,?)', [$uid, $seat, $lab, 'error', json_encode(['error' => $err, 'http' => $code])]);
   abd_rate_clear('lab_grade_burst', (string)$uid);   // a grader-side failure should not cost the trainee a submit
-  abd_err($err, 502);
+  // HTTP 200 on purpose: Cloudflare replaces origin 502 bodies with plain text ("error code: 502"), which hid the reason from the page
+  $extra = [];
+  if (is_array($r) && isset($r['open']) && is_string($r['open'])) $extra['open'] = basename($r['open'], '.unl');
+  abd_out(['ok' => false, 'error' => $err] + $extra);
 }
 abd_q('INSERT INTO abd_lab_attempts (user_id, seat, lab, score, max_score, status, results_json) VALUES (?,?,?,?,?,?,?)',
   [$uid, $seat, $lab, (int)$r['score'], (int)$r['max'], 'graded', json_encode($r, JSON_UNESCAPED_UNICODE)]);

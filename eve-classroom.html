@@ -475,7 +475,12 @@ document.getElementById("lang").onclick=function(){L=L=="ar"?"en":"ar";try{local
 /* Lab submit + auto-grading panel (api/lab_grade.php). Shown only when signed in with at least one seat (or staff). */
 (function(){
 var E=function(t){return String(t==null?"":t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
-var ERR={rate_limited:"انتظر دقيقة ونصف بين كل تسليم والآخر.",rate_limited_day:"وصلت للحد اليومي للتسليم (20).",not_your_seat:"هذا المقعد غير مسجَّل لك.",lab_not_open:"لا يوجد لاب مفتوح على هذا المقعد — افتح اللاب في EVE أولًا.",other_lab_open:"اللاب المفتوح على المقعد ليس هذا اللاب.",busy:"يجري تصحيح تسليم آخر على هذا المقعد، أعد المحاولة بعد قليل.",grader_unreachable:"المصحّح غير متاح حاليًا، حاول لاحقًا.",grader_unconfigured:"المصحّح غير مُفعَّل بعد.",auth:"سجّل الدخول أولًا."};
+var ERR={rate_limited:"انتظر دقيقة ونصف بين كل تسليم والآخر.",rate_limited_day:"وصلت للحد اليومي للتسليم (20).",not_your_seat:"هذا المقعد غير مسجَّل لك.",lab_not_open:"لا يوجد لاب مفتوح على هذا المقعد — افتح اللاب في EVE أولًا.",other_lab_open:"اللاب المفتوح على المقعد ليس هذا اللاب.",busy:"يجري تصحيح تسليم آخر على هذا المقعد، أعد المحاولة بعد قليل.",grader_unreachable:"المصحّح غير متاح حاليًا، حاول لاحقًا.",grader_unconfigured:"المصحّح غير مُفعَّل بعد.",auth:"سجّل الدخول أولًا.",csrf:"انتهت صلاحية الجلسة — حدّث الصفحة ثم أعد التسليم.",bad_lab:"هذا اللاب غير متاح للتصحيح.",bad_seat:"المقعد المختار غير متاح.",grader:"تعذّر التصحيح من جهة المصحّح، أعد المحاولة بعد قليل."};
+function gErrMsg(j){var e=j&&j.error;if(e==="other_lab_open"){var sel=document.getElementById("glab"),o=sel.options[sel.selectedIndex];
+ return "اللاب المفتوح على المقعد ليس اللاب الذي اخترته"+(o?" ("+o.textContent+")":"")+(j.open?" — المفتوح حاليًا: "+j.open:"")+". افتح اللاب الصحيح في EVE أو اختر اللاب المفتوح ثم أعد التسليم."}
+ if(e&&ERR[e])return ERR[e];if(e&&/^http5\d\d$/.test(e))return "المصحّح لا يستجيب حاليًا ("+e.slice(4)+")، أعد المحاولة بعد دقيقة.";
+ if(e&&/^http4\d\d$/.test(e))return "تعذّر إرسال التسليم ("+e.slice(4)+") — حدّث الصفحة وسجّل الدخول ثم أعد المحاولة.";
+ return "تعذّر التصحيح لسبب غير معروف، أعد المحاولة بعد دقيقة أو تواصل مع المدرّب."+(e?" ("+e+")":"")}
 window.abdGradeRender=function(r,att){var h='<div class="gs"><b>'+r.score+' / '+r.max+'</b><div class="bar"><i style="width:'+r.pct+'%"></i></div><span>'+r.pct+'%'+(att?' — المحاولة '+att:'')+'</span></div>';
  r.checks.forEach(function(c){h+='<div class="gc'+(c.ok?'':' f')+'"><div class="h"><span>'+(c.ok?'✅':'❌')+' '+E(c.title_ar)+' <small>('+E(c.node)+')</small></span><span>'+c.pts+'/'+c.max+'</span></div>'+
   (c.ok?'<dl><dt>الموجود</dt><dd><code>'+E(c.found_ar)+'</code></dd></dl>':'<dl><dt>المتوقَّع</dt><dd><code>'+E(c.expected_ar)+'</code></dd><dt>الموجود على الجهاز</dt><dd>'+E(c.found_ar)+'</dd></dl>'+
@@ -491,7 +496,7 @@ function init(){api("auth.php?action=me").then(function(me){if(!me.ok||!me.user)
   var s=document.getElementById("gseat");s.innerHTML=seats.map(function(n){return'<option value="'+n+'">مقعد '+n+'</option>'}).join("");document.getElementById("gp").hidden=false;hist()})})}
 document.getElementById("gsub").addEventListener("click",function(){var b=this,st=document.getElementById("gst");b.disabled=true;st.textContent="⏳ جارٍ قراءة الأجهزة والتصحيح… (حتى دقيقتين)";
  api("lab_grade.php",{method:"POST",body:{action:"submit",lab:document.getElementById("glab").value,seat:+document.getElementById("gseat").value}}).then(function(j){
-  b.disabled=false;if(!j.ok){st.innerHTML='<span class="gerr">'+E(ERR[j.error]||("تعذّر التصحيح ("+j.error+")"))+'</span>';return}st.textContent="";abdGradeRender(j.result,j.attempt);hist()}).catch(function(){b.disabled=false;st.textContent="تعذّر الاتصال."})});
+  b.disabled=false;if(!j.ok){st.innerHTML='<span class="gerr">'+E(gErrMsg(j))+'</span>';return}st.textContent="";abdGradeRender(j.result,j.attempt);hist()}).catch(function(){b.disabled=false;st.textContent="تعذّر الاتصال."})});
 if(/^https?:$/.test(location.protocol))init();
 })();
 </script>
