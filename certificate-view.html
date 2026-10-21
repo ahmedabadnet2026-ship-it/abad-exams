@@ -31,7 +31,7 @@ footer{margin-top:16px;font-size:12px;opacity:.6;text-align:center}footer a{colo
 <header><img src="assets/abad-logo.png" alt="ABAD"><div><b id="h-n">معهد شبكة آباد للتدريب</b><small id="h-s">ABAD Network Training Institute — Riyadh</small></div></header>
 <main class="card" id="app"><div class="pv" id="pv">…</div></main>
 <footer id="ft">© معهد شبكة آباد للتدريب · <a href="index.html">abad-exams</a></footer>
-<script src="js/cert-core.js?r=202610131507"></script>
+<script src="js/cert-core.js?r=202610212230"></script><script src="js/nid-gate.js?v=abad-202610212230"></script>
 <script>
 (async function(){
 const $=id=>document.getElementById(id),app=$("app"),C=window.ABADCERT;
@@ -45,7 +45,7 @@ const badge=!res.checked?"":res.ok?'<span class="badge ok">✓ '+t("بيانات
 app.innerHTML=badge+'<h1>'+t("مبارك عليك الإنجاز يا ","Congratulations, ")+esc(r.name)+' 🎉</h1><p class="sub">'+t("شهادة حضور دورة «"+esc(r.course||"")+"» — معهد شبكة آباد للتدريب","Attendance certificate — "+esc(r.course||"")+" — ABAD Network Training Institute")+'</p>'+
  '<div class="pv" id="pv">'+t("جارٍ تجهيز الشهادة…","Preparing your certificate…")+'</div><div class="ac"><button class="pri" id="dl" disabled>⬇ '+t("تحميل الشهادة PDF","Download certificate (PDF)")+'</button><button class="sec" id="pr" disabled>🖨 '+t("طباعة","Print")+'</button></div>';
 try{const o=await C.render(r);$("pv").innerHTML='<img alt="'+esc(t("شهادة حضور","Certificate of attendance"))+'" src="'+o.img+'">';
- $("dl").disabled=$("pr").disabled=false;$("dl").onclick=()=>C.save(o.blob,C.fname(r));$("pr").onclick=()=>print()}
+ $("dl").disabled=$("pr").disabled=false;$("dl").onclick=()=>(window.ABAD_NID?ABAD_NID.need():Promise.resolve("")).then(n=>{if(n!==null)C.save(o.blob,C.fname(r))});$("pr").onclick=()=>print()}
 catch(e){$("pv").textContent="⚠ "+t("تعذّر إنشاء الشهادة، حدّث الصفحة وحاول مجدداً.","Could not render the certificate — please reload.")}
 })();
 </script>

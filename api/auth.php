@@ -1,5 +1,6 @@
 <?php
-// Auth API: GET ?action=me | POST {action: register|login|logout|verify_email|resend_email}
+// Auth API: GET ?action=me | POST {action: register|login|logout|verify_email|resend_email|set_national_id}
+// national_id is required at sign-up (10 digits, starts 1/2, Saudi checksum) and is printed on attendance certificates.
 // Sign-up: register → 6-digit code emailed (10 min, hashed, 5 tries) → verify_email {code} activates the account and signs in.
 // An unverified account is never signed in: login answers {error:"unverified", sent_to} and emails a fresh code.
 declare(strict_types=1);
@@ -71,14 +72,14 @@ abd_api(function () {
     $nameAr = abd_str($b, 'full_name_ar'); $nameEn = abd_str($b, 'full_name_en');
     $email = abd_email(abd_str($b, 'email'));
     $phoneRaw = abd_str($b, 'phone', 32); $phone = $phoneRaw === '' ? null : abd_phone($phoneRaw);
-    $nidRaw = abd_str($b, 'national_id', 16); $nid = $nidRaw === '' ? null : abd_nid($nidRaw);
+    $nidRaw = abd_str($b, 'national_id', 16); $nid = abd_nid($nidRaw);   // REQUIRED (printed on certificates)
     $pw = is_string($b['password'] ?? null) ? $b['password'] : '';
     $fields = [];
     if ($nameAr === '' && $nameEn === '') $fields[] = 'full_name';
     if ($nameEn !== '' && !preg_match("/^[A-Za-z][A-Za-z' \\-]*$/", $nameEn)) $fields[] = 'full_name_en';
     if (!$email) $fields[] = 'email';
     if ($phoneRaw !== '' && !$phone) $fields[] = 'phone';
-    if ($nidRaw !== '' && !$nid) $fields[] = 'national_id';
+    if (!$nid) $fields[] = abd_nid_shape($nidRaw) ? 'national_id_check' : 'national_id';   // shape ok but checksum fails → distinct message
     if (!abd_pw_ok($pw)) $fields[] = 'password';
     if ($fields) abd_err('invalid', 422, ['fields' => $fields]);
     // Edit details: this session already holds an UNVERIFIED sign-up (pending_uid) → correct that row in place instead of
@@ -114,6 +115,19 @@ abd_api(function () {
     abd_session(); session_regenerate_id(true); $_SESSION['pending_uid'] = $id;   // not signed in until the email code is entered
     $r = abd_send_verify(['id' => $id, 'email' => $email, 'full_name_ar' => $nameAr, 'full_name_en' => $nameEn]);
     abd_out(['ok' => true, 'verify' => true, 'sent_to' => abd_mask_email($email), 'mail' => $r['ok'] ? 'sent' : $r['error'], 'ttl' => ABD_CODE_TTL, 'csrf' => abd_csrf()], 201);
+  }
+
+  // Existing accounts created before the ID was required: a signed-in user adds it once (never overwrites a stored ID —
+  // corrections go through staff in the admin panel, since the number is printed on issued certificates).
+  if ($action === 'set_national_id') {
+    $u = abd_require_user();
+    if (!abd_rate('set-nid', (string)$u['id'], 10, 3600)) abd_err('rate_limited', 429);
+    $raw = abd_str($b, 'national_id', 16); $nid = abd_nid($raw);
+    if (!$nid) abd_err('invalid', 422, ['fields' => [abd_nid_shape($raw) ? 'national_id_check' : 'national_id']]);
+    if ((string)($u['national_id'] ?? '') !== '') abd_err('national_id_set', 409);
+    abd_q("UPDATE abd_users SET national_id = ? WHERE id = ? AND (national_id IS NULL OR national_id = '')", [$nid, $u['id']]);
+    $row = abd_q('SELECT * FROM abd_users WHERE id = ?', [$u['id']])->fetch();
+    abd_out(['ok' => true, 'user' => abd_public_user($row)]);
   }
 
   if ($action === 'verify_email') {
