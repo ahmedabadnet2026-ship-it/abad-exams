@@ -29,7 +29,7 @@ a.cd:hover{transform:translateY(-4px);border-color:#F5BD2D}
 </head>
 <body>
 <header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b data-t="inst"></b><small data-t="sec"></small></div><button class="hb" id="lang" type="button"></button></header>
-<section class="hero"><small data-t="kick"></small><h1 data-t="sec"></h1><p data-t="lead"></p></section>
+<section class="hero"><img class="hico" src="assets/practical-lab-icon.svg?v=202610220044" alt="" width="64" height="64" style="display:block;margin:0 auto 8px;filter:drop-shadow(0 6px 14px #0006)"><small data-t="kick"></small><h1 data-t="sec"></h1><p data-t="lead"></p></section>
 <div class="grid">
  <a class="cd" data-lab="linux-real" href="linux-real-lab.html"><span class="tag" data-t="live"></span><span class="ic">🐧</span><b data-t="lx"></b><p data-t="lxd"></p><span class="go" data-t="start"></span></a>
  <a class="cd" data-lab="rhcsa" href="rhcsa-lab.html"><span class="tag" data-t="pbq"></span><span class="ic">🎩</span><b data-t="rh"></b><p data-t="rhd"></p><span class="go" data-t="open"></span></a>
@@ -38,7 +38,7 @@ a.cd:hover{transform:translateY(-4px);border-color:#F5BD2D}
 <script>
 var L=(function(){try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";
 var S={cls:["12 جهازًا · داخل المعهد","12 machines · on-site"],lab12:["المعمل","The Lab"],lab12d:["قاعة المعمل: اختر مقعدك من بين 12 جهازًا واضغط على الشاشة لفتح جهازك. يعمل حاليًا من داخل شبكة المعهد فقط.","The lab room: pick your seat among 12 machines and click the screen to open yours. Currently works from inside the institute network only."],net:["لاب الشبكات: OSPF","Networking Lab: OSPF"],netd:["ثلاثة موجّهات وحاسوبان بطرفيات حقيقية داخل المتصفح: أعدّ OSPF وراقب إعادة التقارب.","Three routers and two PCs with real in-browser terminals: configure OSPF and watch reconvergence."],inst:["معهد شبكة آباد للتدريب","ABAD Network Training Institute"],sec:["منصة المحاكاة العملية","Practical Simulation Platform"],home:["→ الرئيسية","← Home"],
-kick:["🧪 تدرّب على أنظمة حقيقية","🧪 Practice on real systems"],lead:["مختبرات عملية تعمل داخل المتصفح مباشرة — بدون تثبيت وبدون خادم.","Hands-on labs that run right in your browser — no install, no server."],
+kick:["تدرّب على أنظمة حقيقية","Practice on real systems"],lead:["مختبرات عملية تعمل داخل المتصفح مباشرة — بدون تثبيت وبدون خادم.","Hands-on labs that run right in your browser — no install, no server."],
 live:["مختبر حقيقي","Real VM"],pbq:["محاكاة تفاعلية","Interactive sim"],start:["ابدأ المختبر ←","Start lab →"],open:["افتح ←","Open →"],
 lx:["مختبر لينكس الحقيقي","Real Linux Lab"],lxd:["جهاز لينكس حقيقي (x86) يعمل في متصفحك مع طرفية كاملة و10 مهام بأسلوب Linux+ / RHCSA يتم التحقق منها داخل الجهاز.","A real x86 Linux machine in your browser with a full shell and 10 Linux+ / RHCSA-style tasks verified inside the VM."],
 rh:["مختبر RHCSA التفاعلي","RHCSA interactive lab"],rhd:["مهام عملية مُصحَّحة آليًا بأسلوب اختبار Red Hat.","Auto-graded practical tasks in Red Hat exam style."],

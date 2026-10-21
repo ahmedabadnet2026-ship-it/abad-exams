@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Practical lab">
+<rect x="4" y="8" width="38" height="30" rx="4" fill="#10293b" stroke="#3f86b3" stroke-width="2.5"/>
+<path d="M4 15h38" stroke="#3f86b3" stroke-width="2.5"/>
+<circle cx="9" cy="11.6" r="1.4" fill="#F5BD2D"/><circle cx="13.5" cy="11.6" r="1.4" fill="#3f86b3"/>
+<path d="M10 21l6 4.5-6 4.5" fill="none" stroke="#F5BD2D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M19 31h9" stroke="#F5BD2D" stroke-width="3" stroke-linecap="round"/>
+<g stroke="#F5BD2D" stroke-width="2.2">
+<rect x="34" y="26" width="26" height="10" rx="2.5" fill="#10293b"/>
+<rect x="34" y="38" width="26" height="10" rx="2.5" fill="#10293b"/>
+<rect x="34" y="50" width="26" height="10" rx="2.5" fill="#10293b"/>
+</g>
+<g fill="#3ecf8e"><circle cx="39" cy="31" r="1.8"/><circle cx="39" cy="43" r="1.8"/></g><circle cx="39" cy="55" r="1.8" fill="#F5BD2D"/>
+<g stroke="#3f86b3" stroke-width="2" stroke-linecap="round"><path d="M45 31h10M45 43h10M45 55h10"/></g>
+</svg>
