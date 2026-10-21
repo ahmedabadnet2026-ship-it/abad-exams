@@ -214,7 +214,8 @@ function abd_logout(): void {
 }
 function abd_public_user(array $u): array {
   return ['id' => (int)$u['id'], 'full_name_ar' => $u['full_name_ar'], 'full_name_en' => $u['full_name_en'],
-    'email' => $u['email'], 'phone' => $u['phone'], 'role' => $u['role']];
+    'email' => $u['email'], 'phone' => $u['phone'], 'role' => $u['role'],
+    'national_id' => ($u['national_id'] ?? '') !== '' ? (string)$u['national_id'] : null];
 }
 function abd_admin_exists(): bool {
   return (bool)abd_q("SELECT 1 FROM abd_users WHERE role = 'admin' AND is_active = 1 LIMIT 1")->fetchColumn();
@@ -238,6 +239,8 @@ function abd_nid(string $s): ?string {
   for ($i = 0; $i < 10; $i++) { $d = (int)$s[$i]; if ($i % 2 === 0) { $d *= 2; $d = intdiv($d, 10) + $d % 10; } $sum += $d; }
   return $sum % 10 === 0 ? $s : null;
 }
+/** True when the input is 10 digits starting 1/2 (before the checksum test) — used to pick the error message. */
+function abd_nid_shape(string $s): bool { return (bool)preg_match('/^[12]\d{9}$/', preg_replace('/\s/', '', abd_latin_digits($s)) ?? ''); }
 function abd_email(string $e): ?string {
   $e = mb_strtolower(trim($e));
   return (strlen($e) <= 190 && filter_var($e, FILTER_VALIDATE_EMAIL)) ? $e : null;

@@ -24,6 +24,7 @@ function html(r){const logo=(document.querySelector("header img[src^='data:']")|
  return '<div class="ct"><div class="c1"></div><div class="c2"></div><div class="o"></div><div class="i"></div>'+(logo?'<img class="wm" src="'+logo+'">':'')+'<div class="b">'+
   (logo?'<img class="lg" src="'+logo+'">':'')+'<h1>شهادة حضور</h1><div class="en">CERTIFICATE OF ATTENDANCE</div><div class="gl"></div>'+
   '<div class="p">يشهد معهد شبكة آباد للتدريب بأن المتدرب/ة</div><div class="nm">'+e(r.name)+'</div>'+
+  (r.national_id?'<div class="dt" style="margin-bottom:4px">رقم الهوية / الإقامة · ID: <b dir="ltr">'+e(r.national_id)+'</b></div>':'')+
   '<div class="p">قد أتمّ/ت حضور الدورة التدريبية</div><div class="cr">'+e(r.course)+'</div>'+
   '<div class="dt">خلال الفترة من <b>'+e(fd(r.start))+'</b> إلى <b>'+e(fd(r.end))+'</b>'+(r.training_type?' · نوع التدريب: <b>'+e(r.training_type)+'</b>':'')+'</div>'+
   '<div class="ft"><div class="k">رقم المرجع · Ref<br><b dir="ltr">'+e(r.id)+'</b><br>تاريخ الإصدار · Issued<br><b>'+e(now)+'</b></div>'+
@@ -45,7 +46,7 @@ const SALT="ABAD-CERT-v1|";
 const b64u={enc:s=>btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,""),
  dec:s=>new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0)))};
 async function sig(j){if(!(window.crypto&&crypto.subtle))return "";const h=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(SALT+j));return [...new Uint8Array(h)].slice(0,6).map(x=>x.toString(16).padStart(2,"0")).join("")}
-const KEYS={n:"name",c:"course",s:"start",e:"end",t:"training_type",r:"id",i:"issued",l:"lang"};
+const KEYS={n:"name",d:"national_id",c:"course",s:"start",e:"end",t:"training_type",r:"id",i:"issued",l:"lang"};
 function today(){return new Date().toLocaleDateString("en-CA",{timeZone:"Asia/Riyadh"})}
 async function link(r){const o={};for(const k in KEYS){const v=k==="i"?(r.issued||today()):r[KEYS[k]];if(v!=null&&v!=="")o[k]=String(v)}
  const j=JSON.stringify(o);return new URL(BASE+"certificate-view.html",location.href).href+"#"+b64u.enc(j)+"."+await sig(j)}
