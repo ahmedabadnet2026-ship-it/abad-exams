@@ -16,7 +16,7 @@ header img{height:42px;background:#fff;border-radius:9px;padding:3px 7px}header 
 .hb{font:inherit;font-weight:700;font-size:13px;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:9px;padding:6px 12px;cursor:pointer;text-decoration:none}
 .hero{text-align:center;padding:4px 18px}.hero small{color:#F5BD2D;font-weight:700}.hero h1{margin:2px 0;font-size:clamp(1.4rem,3.4vw,2.1rem);font-weight:800}.hero p{margin:0 auto;opacity:.8;max-width:720px;font-size:14px}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;max-width:1100px;margin:24px auto 40px;padding:0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,320px));justify-content:center;gap:18px;max-width:1040px;margin:24px auto 40px;padding:0 18px}
 .cd{position:relative;display:flex;flex-direction:column;gap:6px;padding:20px;border-radius:18px;text-decoration:none;color:#fff;background:linear-gradient(160deg,#ffffff1c,#ffffff08);border:1px solid #ffffff2e;box-shadow:0 14px 30px #0005;overflow:hidden;transition:transform .3s,border-color .3s}
 .cd::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#3f86b3,#F5BD2D)}
 a.cd:hover{transform:translateY(-4px);border-color:#F5BD2D}
@@ -33,11 +33,7 @@ a.cd:hover{transform:translateY(-4px);border-color:#F5BD2D}
 <div class="grid">
  <a class="cd" data-lab="linux-real" href="linux-real-lab.html"><span class="tag" data-t="live"></span><span class="ic">🐧</span><b data-t="lx"></b><p data-t="lxd"></p><span class="go" data-t="start"></span></a>
  <a class="cd" data-lab="rhcsa" href="rhcsa-lab.html"><span class="tag" data-t="pbq"></span><span class="ic">🎩</span><b data-t="rh"></b><p data-t="rhd"></p><span class="go" data-t="open"></span></a>
- <a class="cd" data-lab="ccna" href="ccna-lab.html"><span class="tag" data-t="grp"></span><span class="ic">🛜</span><b data-t="cg"></b><p data-t="cgd"></p><span class="go" data-t="open"></span></a>
  <a class="cd" data-lab="ine" href="ine-lab.html?v=202610152345"><span class="tag" data-t="trial"></span><span class="ic">🛡️</span><b data-t="ine"></b><p data-t="ined"></p><span class="go" data-t="open"></span></a>
- <a class="cd" data-lab="net" href="net-lab.html?v=202610160020"><span class="tag" data-t="live"></span><span class="ic">🛜</span><b data-t="net"></b><p data-t="netd"></p><span class="go" data-t="start"></span></a>
- <a class="cd" data-lab="eve" href="eve-lab-booking.html"><span class="tag" data-t="eve"></span><span class="ic">🖥️</span><b data-t="ev"></b><p data-t="evd"></p><span class="go" data-t="book"></span></a>
- <a class="cd" data-lab="eve" href="eve-classroom.html?v=abad-202610210040"><span class="tag" data-t="cls"></span><span class="ic">🏫</span><b data-t="lab12"></b><p data-t="lab12d"></p><span class="go" data-t="open"></span></a>
 </div>
 <script>
 var L=(function(){try{return localStorage.getItem("abad-lang")}catch(e){}})()||"ar";
