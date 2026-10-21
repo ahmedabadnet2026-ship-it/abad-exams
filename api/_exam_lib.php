@@ -26,6 +26,7 @@ const ABD_EXAMS = [
   'ceh'            => ['cert' => 'ceh',      'vendor' => 'eccouncil',  'file' => 'ceh-exam.html',            'title' => 'EC-Council CEH v13',       'like' => ['%CEH%']],
   'cysa'           => ['cert' => 'cysa',     'vendor' => 'comptia',    'file' => 'cysa-exam.html',           'title' => 'CompTIA CySA+',            'like' => ['%CySA%']],
   'server-plus'    => ['cert' => 'server',   'vendor' => 'comptia',    'file' => 'server-plus-exam.html',    'title' => 'CompTIA Server+',          'like' => ['%Server+%']],
+  'data-plus'      => ['cert' => 'data',     'vendor' => 'comptia',    'file' => 'data-plus-exam.html',      'title' => 'CompTIA Data+',            'like' => ['%Data+%']],
   'ejpt-trial'     => ['cert' => 'ejpt',     'vendor' => 'ine',        'file' => 'ejpt-trial-exam.html',     'title' => 'INE eJPT',                 'like' => ['%eJPT%']],
 ];
 
