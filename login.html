@@ -198,7 +198,7 @@ document.addEventListener("input",function(e){if(e.target.getAttribute&&e.target
     setTimeout(function(){$("vc").focus()},50);cool(60);if(mailState&&mailState!=="sent")show(vText({error:mailState}))}
   function post(b){return ABAD_API.req("auth.php",{method:"POST",body:b}).catch(function(){return {ok:false,error:"network"}})}
   $("fVer").onsubmit=function(e){e.preventDefault();clear();var f=this,c=$("vc").value.replace(/\D/g,"");if(c.length!==6){show(T("أدخل الرمز المكوّن من 6 أرقام.","Enter the 6-digit code."));return}
-    busy(f,true);post({action:"verify_email",code:c}).then(function(j){if(!j.ok){show(vText(j));return}$("fVer").classList.add("hide");return ABAD_API.me(true).then(function(){done({ok:true})})}).finally(function(){busy(f,false)})};
+    busy(f,true);post({action:"verify_email",code:c}).then(function(j){if(!j.ok){show(vText(j));return}$("fVer").classList.add("hide");return ABAD_API.me(true).then(function(){var u=ABAD_API.state.user;if(window.ABAD_WELCOME&&u){view();ABAD_WELCOME.show(u,function(){done({ok:true})})}else done({ok:true})})}).finally(function(){busy(f,false)})};
   $("vRe").onclick=function(){clear();post({action:"resend_email"}).then(function(j){if(j.ok){show(T("أُرسل رمز جديد ✓","New code sent ✓"),true);cool(60)}else show(vText(j))})};
   /* ---- edit details from the code step: back to the sign-up form, prefilled (server updates the pending, unverified sign-up) ---- */
   function fillReg(d){if(!d)return;[["ra","full_name_ar"],["rn","full_name_en"],["re","email"],["rm","phone"],["ri","national_id"]].forEach(function(k){if(d[k[1]]!=null&&!$(k[0]).value)$(k[0]).value=d[k[1]]});if(d.marketing_opt_in!=null)$("rmk").checked=!!d.marketing_opt_in}
@@ -210,6 +210,7 @@ document.addEventListener("input",function(e){if(e.target.getAttribute&&e.target
     ABAD_API.req("auth.php?action=me").then(function(j){if(j&&j.pending)verifyView(j.pending.sent_to,"sent")}).catch(function(){})});
 })();
 </script>
+<script src="js/welcome.js?v=abad-202610212340" defer></script>
 <script src="js/promo-toggle.js?v=abad-202610212330" defer></script>
 </body>
 </html>

@@ -7,6 +7,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/_db.php';
 require_once __DIR__ . '/_crm.php';
 require_once __DIR__ . '/_mail.php';
+require_once __DIR__ . '/_welcome_mail.php';
 require_once __DIR__ . '/_brevo.php';
 
 /** Email a fresh verification code to a pending account (rate limited). */
@@ -155,11 +156,12 @@ abd_api(function () {
     if (!abd_rate('verify-try', (string)$p['id'], 15, 900)) abd_err('rate_limited', 429);
     $r = abd_code_check((int)$p['id'], 'verify', abd_str($b, 'code', 12));
     if (!$r['ok']) abd_err($r['error'], $r['error'] === 'expired' ? 410 : 401, isset($r['left']) ? ['left' => $r['left']] : []);
-    abd_q('UPDATE abd_users SET email_verified_at = NOW() WHERE id = ? AND email_verified_at IS NULL', [$p['id']]);
+    $firstVerify = abd_q('UPDATE abd_users SET email_verified_at = NOW() WHERE id = ? AND email_verified_at IS NULL', [$p['id']])->rowCount() === 1;
     unset($_SESSION['pending_uid']);
     abd_login_session((int)$p['id']);
     if ((int)($p['marketing_opt_in'] ?? 0)) abd_brevo_sync_user((int)$p['id']);   // best effort, never fails verification
     $u = abd_q('SELECT * FROM abd_users WHERE id = ?', [$p['id']])->fetch();
+    if ($firstVerify) abd_welcome_mail((string)$u['email'], (string)($u['full_name_ar'] ?: $u['full_name_en']));   // once; best effort
     abd_out(['ok' => true, 'user' => abd_public_user($u), 'csrf' => abd_csrf()]);
   }
 
