@@ -100,6 +100,7 @@ if (!$me || !in_array($me['role'], ['admin', 'staff'], true)) {
   <input type="hidden" name="csrf" value="<?=h(abd_csrf())?>">
   <label>البريد الإلكتروني<input name="email" type="email" dir="ltr" required autocomplete="username"></label>
   <label>كلمة المرور<input name="password" type="password" required autocomplete="current-password"></label>
+  <div class="fgt" style="text-align:end;margin:-4px 0 10px"><a href="../forgot.html?v=abad-202610221600&amp;from=admin" style="color:var(--b);font-weight:700;font-size:13.5px;text-decoration:none;padding:6px 4px;border-radius:8px;display:inline-block">نسيت كلمة المرور؟</a></div>
   <button class="btn g" name="do" value="login">دخول</button>
 </form>
 <?php abd_admin_bottom(); exit; }

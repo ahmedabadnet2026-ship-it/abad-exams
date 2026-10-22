@@ -165,6 +165,9 @@ document.addEventListener("click",function(e){var b=e.target.closest&&e.target.c
     pw_length:T("كلمة المرور يجب أن تكون 8 أحرف على الأقل.","Password must be at least 8 characters."),pw_weak:T("كلمة المرور ضعيفة: استخدم حروفًا وأرقامًا معًا.","Weak password: use letters and digits together."),
     pw_email:T("لا تستخدم بريدك الإلكتروني ككلمة مرور.","Do not use your email as the password."),network:T("تعذّر الاتصال. تحقّق من الإنترنت وأعد المحاولة.","Connection failed. Check your internet and try again.")};
   function err(j){return E[j&&j.error]||T("حدث خطأ غير متوقع، أعد المحاولة.","Unexpected error, please try again.")}
+  var FK="abadResetFrom";try{if(/[?&]from=admin(&|$)/.test(location.search))localStorage.setItem(FK,"admin:"+Date.now())}catch(e){}
+  function backUrl(){try{var m=/^admin:(\d+)$/.exec(localStorage.getItem(FK)||"");if(m&&Date.now()-m[1]<36e5)return "admin/"}catch(e){}return "login.html"}
+  if(backUrl()==="admin/")document.querySelectorAll('a.btn.alt[href="login.html"]').forEach(function(a){a.href="admin/"});
   var tok=(location.search.match(/[?&]t=([a-f0-9]{64})/)||[])[1],em=(location.search.match(/[?&]e=([^&]+)/)||[])[1];
   if(tok&&history.replaceState)history.replaceState(null,"",location.pathname+"?t="+tok);
   var acc="";
@@ -181,7 +184,7 @@ document.addEventListener("click",function(e){var b=e.target.closest&&e.target.c
   $("fNew").onsubmit=function(e){e.preventDefault();clear();var f=this;
     if(!rules()){show(E.pw_weak);return}if($("np").value!==$("np2").value){$("np2").setAttribute("aria-invalid","true");show(T("كلمتا المرور غير متطابقتين.","Passwords do not match."));return}
     $("np2").removeAttribute("aria-invalid");busy(f,true);
-    post({action:"reset",token:tok,password:$("np").value}).then(function(j){if(j.ok){location.replace("login.html?reset=1");return}if(j.error==="invalid_link"){only("bad");return}show(err(j))}).finally(function(){busy(f,false)})};
+    post({action:"reset",token:tok,password:$("np").value}).then(function(j){if(j.ok){var bu=backUrl();try{localStorage.removeItem(FK)}catch(e){}location.replace(bu==="admin/"?"admin/":"login.html?reset=1");return}if(j.error==="invalid_link"){only("bad");return}show(err(j))}).finally(function(){busy(f,false)})};
 })();
 </script>
 </body>
