@@ -75,7 +75,7 @@ foreach ($roles as $role) {
   $pg = req($jar, $base . 'admin/lectures.php?course=' . $c1);
   $canPage = $pg['code'] === 200 && str_contains($pg['body'], 'لوحة <span>مسؤول الزوم');
   chk('open Zoom staff dashboard (lectures.php)', $role, in_array($role, $exp['open Zoom staff dashboard (lectures.php)'], true), $canPage);
-  chk('host start button on staff page', $role, false, $canPage && str_contains($pg['body'], 'ابدأ المحاضرة'));
+  chk('host start button on staff page', $role, false, $canPage && (str_contains($pg['body'], 'value="start"') || str_contains($pg['body'], '>ابدأ المحاضرة')));
   $d = substr((string)$row($s1)['starts_at'], 0, 10);
   req($jar, $base . 'admin/lectures.php', ['csrf' => $csrf, 'do' => 'save_all', 'course' => $c1, 'date' => [$s1 => $d], 'st' => [$s1 => '10:00'], 'et' => [$s1 => '12:00'],
     'url' => [$s1 => 'https://zoom.us/j/999'], 'pass' => [$s1 => 'P9'], 'title' => [$s1 => 'HACK'], 'rec' => [$s1 => 'https://zoom.us/rec/share/x'], 'recpass' => [$s1 => ''], 'recuntil' => [$s1 => '']]);
@@ -109,11 +109,39 @@ foreach ($roles as $role) {
   abd_q("UPDATE abd_users SET role = 'trainee' WHERE id = ?", [$U['trainee']]);
   $reach = 0; foreach (['admin/index.php?tab=crm', 'admin/seats.php', 'admin/services.php', 'admin/exam-access.php'] as $p) { $x = req($jar, $base . $p); $reach += $x['code'] === 200 && !str_contains($x['body'], 'name="password"') ? 1 : 0; }
   chk('reach other admin pages (CRM, seats, services, exam access)', $role, in_array($role, $exp['reach other admin pages (CRM, seats, services, exam access)'], true), $reach > 0);
+  // ---- step 2-4 actions
+  $live = function (int $c, string $st, string $en) { abd_q("INSERT INTO abd_course_sessions (course_id, session_no, starts_at, ends_at, zoom_url, host_url) VALUES (?, 9, NOW() + INTERVAL $st, NOW() + INTERVAL $en, 'https://zoom.us/j/555', 'https://zoom.us/s/555?zak=HOSTSECRET')", [$c]); return (int)abd_db()->lastInsertId(); };
+  $s3 = $live($c1, '-5 MINUTE', '1 HOUR'); $s4 = $live($c2, '-5 MINUTE', '1 HOUR'); $s5 = $live($c1, '2 HOUR', '3 HOUR');
+  $r = req($jar, $base . 'admin/trainer.php', ['csrf' => $csrf, 'do' => 'start', 'id' => $s3]);
+  $ok = $row($s3)['started_at'] !== null && (int)$row($s3)['started_by'] === $U['trainer'];
+  chk('start own lecture (in window) → logs started_at, opens host link', $role, $role === 'trainer', $ok && $r['loc'] === 'https://zoom.us/s/555?zak=HOSTSECRET');
+  if ($ok) { abd_q('UPDATE abd_course_sessions SET started_at = NOW() - INTERVAL 1 MINUTE WHERE id = ?', [$s3]); $t0 = $row($s3)['started_at'];
+    req($jar, $base . 'admin/trainer.php', ['csrf' => $csrf, 'do' => 'start', 'id' => $s3]);
+    chk('second click keeps first started_at', $role, true, $row($s3)['started_at'] === $t0); }
+  else chk('second click keeps first started_at', $role, true, true);
+  req($jar, $base . 'admin/trainer.php', ['csrf' => $csrf, 'do' => 'start', 'id' => $s4]);
+  chk('start another trainer\'s lecture', $role, false, $row($s4)['started_at'] !== null);
+  req($jar, $base . 'admin/trainer.php', ['csrf' => $csrf, 'do' => 'start', 'id' => $s5]);
+  chk('start lecture >15 min before start', $role, false, $row($s5)['started_at'] !== null);
+  abd_q("UPDATE abd_course_sessions SET zoom_url = 'https://zoom.us/j/100', host_url = NULL, rec_url = NULL WHERE id = ?", [$s1]);
+  req($jar, $base . 'admin/trainer.php', ['csrf' => $csrf, 'do' => 'save', 'course' => $c1, 'title' => [$s1 => 'T2', $s5 => 'FUTURE'], 'url' => [$s1 => 'https://zoom.us/j/666'], 'host' => [$s1 => 'https://zoom.us/s/666'], 'rec' => [$s1 => 'https://youtu.be/AAAAAAAAAAA']]);
+  $a = $row($s1);
+  chk('change join/host/recording link via trainer.php', $role, false, $a['zoom_url'] !== 'https://zoom.us/j/100' || $a['host_url'] !== null || $a['rec_url'] !== null);
+  chk('edit title before lecture ends', $role, false, $row($s5)['title'] === 'FUTURE');
+  // host start link via the staff dashboard (single-session course c2 so save_all has only this row)
+  abd_q('DELETE FROM abd_course_sessions WHERE course_id = ? AND id <> ?', [$c2, $s2]); $d2 = substr((string)$row($s2)['starts_at'], 0, 10);
+  req($jar, $base . 'admin/lectures.php', ['csrf' => $csrf, 'do' => 'save_all', 'course' => $c2, 'date' => [$s2 => $d2], 'st' => [$s2 => '10:00'], 'et' => [$s2 => '12:00'], 'url' => [$s2 => 'https://zoom.us/j/100'], 'pass' => [$s2 => ''], 'host' => [$s2 => 'https://zoom.us/s/777'], 'rec' => [$s2 => ''], 'recpass' => [$s2 => ''], 'recuntil' => [$s2 => '']]);
+  chk('enter host start link (lectures.php)', $role, in_array($role, ['admin', 'zoom_staff'], true), $row($s2)['host_url'] === 'https://zoom.us/s/777');
+  $x = req($jar, $base . 'admin/trainer-performance.php');
+  chk('open trainer performance page', $role, $role === 'admin', $x['code'] === 200 && str_contains($x['body'], 'أداء <span>المدربين'));
+  $x = req($jar, $base . 'admin/trainer.php');
+  chk('open trainer dashboard', $role, in_array($role, ['trainer', 'admin'], true), $x['code'] === 200 && str_contains($x['body'], 'لوحة المدرب'));
+  chk('host start link visible in API / trainer page HTML', $role, false, str_contains(req($jar, $base . 'api/lectures.php')['body'], 'HOSTSECRET') || str_contains($x['body'], 'HOSTSECRET') || str_contains(req($jar, $base . 'my-courses.html')['body'], 'HOSTSECRET'));
   $api = json_decode(req($jar, $base . 'api/lectures.php')['body'], true);
   $other = false; foreach ($api['courses'] ?? [] as $c) if ((int)$c['id'] === $c2) foreach ($c['sessions'] as $s) if ($s['join_url']) $other = true;
   chk('API: join URLs of courses not enrolled in', $role, in_array($role, $exp['API: join URLs of courses not enrolled in'], true), $other);
 }
 // ---- matrix
-$w = 52; printf("%-{$w}s", 'action'); foreach ($roles as $r) printf("| %-14s", $r); echo "\n", str_repeat('-', $w + 16 * count($roles)), "\n";
+$w = 66; printf("%-{$w}s", 'action'); foreach ($roles as $r) printf("| %-14s", $r); echo "\n", str_repeat('-', $w + 16 * count($roles)), "\n";
 foreach ($M as $act => $row) { echo str_pad($act, $w + strlen($act) - mb_strlen($act)); foreach ($roles as $r) printf("| %-14s", $row[$r] ?? ''); echo "\n"; }
 echo "\n$pass checks passed, $fail failed\n"; exit($fail ? 1 : 0);
