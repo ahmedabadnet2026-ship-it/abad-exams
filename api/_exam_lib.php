@@ -20,6 +20,7 @@ const ABD_EXAMS = [
   'itil5'          => ['cert' => 'itil5',    'vendor' => 'peoplecert', 'file' => 'itil5-exam.html',          'title' => 'ITIL Foundation (V5)',     'like' => ['ITIL Foundation%']],
   'ccna'           => ['cert' => 'ccna',     'vendor' => 'cisco',      'file' => 'ccna-exam.html',           'title' => 'Cisco CCNA',               'like' => ['%CCNA%']],
   'cyberops'       => ['cert' => 'cyberops', 'vendor' => 'cisco',      'file' => 'cyberops-exam.html',       'title' => 'Cisco CyberOps Associate (200-201)', 'like' => ['%CyberOps%', '%200-201%', '%CBROPS%']],
+  'clcor'          => ['cert' => 'clcor',    'vendor' => 'cisco',      'file' => 'clcor-exam.html',          'title' => 'Cisco CCNP Collaboration Core (350-801 CLCOR)', 'like' => ['%CLCOR%', '%350-801%', '%Collaboration Core%']],
   'cobit'          => ['cert' => 'cobit',    'vendor' => 'isaca',      'file' => 'cobit-exam.html',          'title' => 'ISACA COBIT 2019 Foundation', 'like' => ['%COBIT%']],
   'mos-word'       => ['cert' => 'mos-word',  'vendor' => 'microsoft',  'file' => 'mos-word-exam.html',       'title' => 'MOS Word (MO-100)',       'like' => ['%MO-100%', '%Word%MOS%', 'MOS%Word%']],
   'mos-excel'      => ['cert' => 'mos-excel', 'vendor' => 'microsoft',  'file' => 'mos-excel-exam.html',      'title' => 'MOS Excel (MO-200)',      'like' => ['%MO-200%', '%Excel%MOS%', 'MOS%Excel%']],
