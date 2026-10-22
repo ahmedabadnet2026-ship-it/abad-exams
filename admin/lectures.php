@@ -55,8 +55,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       if (($c['delivery'] ?? '') !== 'online') lec_back($cid, 'يمكن تعديل أو حذف الدورات الأونلاين فقط من هنا.', true);
       if (abd_lec_held($cid)) lec_back($cid, 'لا يمكن تعديل أو حذف دورة بدأت محاضراتها أو مرّ موعد إحداها.', true);
       if ($do === 'delete_course') {
-        if ((int)abd_q("SELECT COUNT(*) FROM abd_enrollments WHERE course_id = ? AND status <> 'cancelled'", [$cid])->fetchColumn())
-          lec_back($cid, 'لا يمكن حذف دورة مسجّل بها متدربون. ألغِ تسجيلهم أولًا من لوحة الإدارة.', true);
+        // enrolled trainees lose the course from «دوراتي» (enrollments cascade) — allowed only with explicit confirmation of the count shown on the form
+        $ne = (int)abd_q("SELECT COUNT(*) FROM abd_enrollments WHERE course_id = ? AND status <> 'cancelled'", [$cid])->fetchColumn();
+        if ($ne && (int)($_POST['confirm_ne'] ?? -1) !== $ne)
+          lec_back($cid, "الدورة بها $ne متدرب مسجّل. أكّد أنك تريد إزالتهم مع حذف الدورة.", true, '&edit=1');
         abd_q('DELETE FROM abd_courses WHERE id = ?', [$cid]);   // sessions cascade (FK)
         lec_back(0, "تم حذف الدورة «{$c['title_ar']}» وجدول محاضراتها.");
       }
@@ -65,6 +67,32 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       abd_q('UPDATE abd_courses SET title_ar = ?, trainer_id = ?, start_date = ?, end_date = ? WHERE id = ?', [$d['title'], $d['trainer_id'], $d['from'], $d['to'], $cid]);
       $n = abd_lec_generate($cid, $d['from'], $d['to'], $d['days'], $d['st'], $d['et'], (int)$me['id'], true);
       lec_back($cid, "تم حفظ الدورة وإعادة توليد $n محاضرة. (أعد إضافة روابط الزوم إن كانت مضافة سابقًا)");
+    }
+    if ($do === 'enroll_ids' || $do === 'enroll_emails') {
+      $uids = []; $rep = ['added' => [], 'already' => [], 'missing' => [], 'notrainee' => [], 'invalid' => []];
+      if ($do === 'enroll_ids') $uids = array_slice(array_values(array_unique(array_filter(array_map('intval', (array)($_POST['uid'] ?? []))))), 0, 200);
+      else {
+        $raw = preg_split('/[\s,;،]+/u', mb_substr((string)($_POST['emails'] ?? ''), 0, 20000), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        foreach (array_slice(array_unique(array_map('mb_strtolower', $raw)), 0, 300) as $e) {
+          $em = abd_email($e); if (!$em) { $rep['invalid'][] = $e; continue; }
+          $u = abd_q('SELECT id, role FROM abd_users WHERE email = ?', [$em])->fetch();
+          if (!$u) $rep['missing'][] = $em; elseif ($u['role'] !== 'trainee') $rep['notrainee'][] = $em; else $uids[] = (int)$u['id'];
+        }
+      }
+      if (!$uids && !array_filter($rep)) lec_back($cid, 'لم يتم اختيار أي متدرب.', true, '', '#trainees');
+      foreach ($uids as $uid) {
+        $u = abd_q("SELECT u.email, u.role, e.status FROM abd_users u LEFT JOIN abd_enrollments e ON e.user_id = u.id AND e.course_id = ? WHERE u.id = ?", [$cid, $uid])->fetch();
+        if (!$u || $u['role'] !== 'trainee') continue;
+        if (in_array($u['status'], ['active', 'completed'], true)) { $rep['already'][] = $u['email']; continue; }
+        [$ok] = abd_course_action('enroll', ['id' => $cid, 'user_id' => $uid]);   // same path as admin «تسجيل في الدورة» (+ CRM stage update, no email)
+        if ($ok) $rep['added'][] = $u['email'];
+      }
+      $_SESSION['lec_enr'] = ['cid' => $cid, 'rep' => $rep];
+      lec_back($cid, 'تمت إضافة ' . count($rep['added']) . ' متدرب إلى الدورة.', !$rep['added'], '', '#trainees');
+    }
+    if ($do === 'unenroll') {
+      [$ok] = abd_course_action('unenroll', ['id' => $cid, 'user_id' => (int)($_POST['uid'] ?? 0)]);
+      lec_back($cid, $ok ? 'تمت إزالة المتدرب من الدورة.' : 'المتدرب غير مسجّل في هذه الدورة.', !$ok, '', '#trainees');
     }
     if ($do === 'set_trainer') {
       if ($me['role'] !== 'admin') lec_back($cid, 'تعيين المدرّب للمدير فقط.', true);
@@ -181,6 +209,15 @@ try {
 $flash = $_SESSION['flash'] ?? null; unset($_SESSION['flash']);
 $cc = $_SESSION['lec_cc'] ?? []; unset($_SESSION['lec_cc']);   // re-fill the create form after a validation error
 $held = $course ? abd_lec_held($cid) : 0;
+$enr = $course ? array_values(array_filter(abd_course_enrollments($cid), fn($e) => $e['status'] !== 'cancelled')) : [];
+$enrRep = ($_SESSION['lec_enr']['cid'] ?? 0) === $cid ? ($_SESSION['lec_enr']['rep'] ?? null) : null; unset($_SESSION['lec_enr']);
+$eq = trim(mb_substr((string)($_GET['q'] ?? ''), 0, 100)); $found = [];
+if ($course && mb_strlen($eq) >= 2) {
+  $like = '%' . strtr($eq, ['\\' => '\\\\', '%' => '\\%', '_' => '\\_']) . '%'; $dig = preg_replace('/\D+/', '', abd_latin_digits($eq));
+  $found = abd_q("SELECT u.id, u.full_name_ar, u.full_name_en, u.email, u.phone, e.status FROM abd_users u LEFT JOIN abd_enrollments e ON e.user_id = u.id AND e.course_id = ?
+    WHERE u.role = 'trainee' AND u.is_active = 1 AND (u.full_name_ar LIKE ? OR u.full_name_en LIKE ? OR u.email LIKE ?" . (strlen($dig) >= 4 ? ' OR u.phone LIKE ?' : '') . ") ORDER BY u.full_name_ar LIMIT 30",
+    array_merge([$cid, $like, $like, $like], strlen($dig) >= 4 ? ['%' . $dig . '%'] : []))->fetchAll();
+}
 // Website course catalog (online/remote courses only), grouped by category for the searchable «اسم الدورة» picker.
 $site = []; foreach ((json_decode((string)@file_get_contents(lec_site_file()), true) ?: []) as $sc) {
   $nm = trim((string)($sc['name_ar'] ?: $sc['name_en'] ?? '')); if ($nm === '') continue;   // the file holds remote-capable courses only
@@ -248,6 +285,12 @@ main{max-width:1240px}
 .seg input:checked+span{background:var(--g);border-color:var(--g);color:var(--n)}
 .cc:has(input[value=count]:checked) .bye,.cc:has(input[value=end]:checked) .byc{display:none}
 @media (max-width:760px){.ccg{grid-template-columns:1fr 1fr}.ccg .w2{grid-column:1/-1}}
+#trainees .cnt{background:var(--g);color:var(--n);border-radius:99px;padding:0 12px;font-size:15px}
+.enrg{display:grid;grid-template-columns:1fr 1fr;gap:14px}.enrg textarea{width:100%;font:14px/1.6 monospace}
+.srch{display:flex;gap:8px}.srch input{flex:1}.res{list-style:none;margin:10px 0;padding:0;max-height:300px;overflow:auto}
+.res li label{display:flex;align-items:center;gap:10px;padding:8px;border-bottom:1px solid var(--line);cursor:pointer}.res li label span:first-of-type{flex:1}.res small{display:block;color:var(--mut)}
+.rep div{margin:4px 0}.rep .em{font-size:12px;color:var(--mut);overflow-wrap:anywhere}.enl{margin-top:6px}
+@media (max-width:760px){.enrg{grid-template-columns:1fr}}
 @media (max-width:980px){.gen{grid-template-columns:1fr 1fr}.gen .wide{grid-column:1/-1}}
 .zt td:nth-child(2){min-width:150px}
 @media (max-width:760px){
@@ -322,7 +365,8 @@ function lec_course_form(array $v, array $trainers, string $tok, string $do, int
   <?php if ($held): ?><p class="mut" style="margin:10px 0 0">🔒 بدأت محاضرات هذه الدورة، لذا لا يمكن تعديل بياناتها أو حذفها من هنا.</p>
   <?php else: ?><details class="drawer" style="margin:12px 0 0" <?= isset($_GET['edit']) ? 'open' : '' ?>><summary><b>✏️ تعديل الدورة أو حذفها</b> <span class="mut">(متاح قبل بدء أول محاضرة)</span></summary>
     <?php lec_course_form($edit ?? ['title' => $course['title_ar'], 'trainer_id' => (int)$course['trainer_id'], 'from' => $course['start_date']], $trainers, $tok, 'update_course', $cid, 'حفظ وإعادة توليد الجدول', $site); ?>
-    <form method="post" style="margin-top:10px" onsubmit="return confirm('حذف الدورة وجميع محاضراتها نهائيًا؟')"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="delete_course"><input type="hidden" name="course" value="<?= $cid ?>"><button class="del">🗑️ حذف الدورة</button></form></details><?php endif; ?>
+    <form method="post" style="margin-top:10px" onsubmit="return confirm('حذف الدورة وجميع محاضراتها نهائيًا؟')"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="delete_course"><input type="hidden" name="course" value="<?= $cid ?>">
+      <?php if ((int)$course['ne']): ?><label class="mut" style="display:block;margin-bottom:6px"><input type="checkbox" name="confirm_ne" value="<?= (int)$course['ne'] ?>" required> أفهم أن <?= (int)$course['ne'] ?> متدرب مسجّل سيفقدون الدورة من «دوراتي»</label><?php endif; ?><button class="del">🗑️ حذف الدورة</button></form></details><?php endif; ?>
   <?php endif; ?>
 </div>
 
@@ -375,6 +419,33 @@ function lec_course_form(array $v, array $trainers, string $tok, string $do, int
   <?php foreach ($sess as $s): ?><form id="del<?= (int)$s['id'] ?>" method="post" hidden><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="delete"><input type="hidden" name="course" value="<?= $cid ?>"><input type="hidden" name="id" value="<?= (int)$s['id'] ?>"></form><?php endforeach; ?>
   <form method="post" style="margin-top:12px" onsubmit="return confirm('حذف جميع محاضرات هذه الدورة وروابطها؟')"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="delete_all"><input type="hidden" name="course" value="<?= $cid ?>"><button class="del">🗑️ حذف جميع محاضرات الدورة</button></form>
   <?php else: ?><p class="mut">لا توجد محاضرات لهذه الدورة بعد. استخدم «توليد جدول المحاضرات» أعلاه أو أضف محاضرة.</p><?php endif; ?>
+</div>
+<div class="zc" id="trainees">
+  <div class="hd"><h2>👥 متدربو الدورة <span class="cnt"><?= count($enr) ?></span></h2><span class="mut">المتدربون المسجّلون يرون الدورة وجدولها في «دوراتي» وصفحة المحاضرات.</span></div>
+  <?php if ($enrRep): $lbl = ['added' => ['أُضيفوا', 'p-ok'], 'already' => ['مسجّلون مسبقًا', 'p-up'], 'missing' => ['لا يوجد حساب بهذا البريد (لم يُنشأ حساب — اطلب منهم التسجيل في المنصة ثم أضفهم)', 'p-live'], 'notrainee' => ['ليس حساب متدرب', 'p-wait'], 'invalid' => ['بريد غير صحيح', 'p-exp']]; ?>
+  <div class="drawer rep"><?php foreach ($lbl as $k => [$t, $c]): if (!$enrRep[$k]) continue; ?><div><span class="pill <?= $c ?>"><?= count($enrRep[$k]) ?> · <?= $t ?></span> <span class="ltr em"><?=h(implode('، ', $enrRep[$k]))?></span></div><?php endforeach; ?></div><?php endif; ?>
+  <div class="enrg">
+    <div class="drawer"><h3>🔍 إضافة متدربين من الحسابات</h3>
+      <form method="get" action="#trainees" class="srch"><input type="hidden" name="course" value="<?= $cid ?>"><input type="search" name="q" value="<?=h($eq)?>" minlength="2" placeholder="الاسم أو البريد أو الجوال" aria-label="بحث عن متدرب"><button class="btn n">بحث</button></form>
+      <?php if ($eq !== '' && mb_strlen($eq) >= 2): ?>
+        <?php if ($found): ?><form method="post"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="enroll_ids"><input type="hidden" name="course" value="<?= $cid ?>">
+        <ul class="res"><?php foreach ($found as $u): $in = in_array($u['status'], ['active', 'completed'], true); ?><li><label><input type="checkbox" name="uid[]" value="<?= (int)$u['id'] ?>" <?= $in ? 'disabled checked' : '' ?>>
+          <span><b><?=h($u['full_name_ar'] ?: $u['full_name_en'])?></b><small class="ltr"><?=h($u['email'])?><?= $u['phone'] ? ' · ' . h($u['phone']) : '' ?></small></span><?= $in ? '<span class="pill p-ok">مسجّل</span>' : '' ?></label></li><?php endforeach; ?></ul>
+        <button class="btn g">➕ إضافة المحدَّدين</button></form>
+        <?php else: ?><p class="mut">لا توجد حسابات متدربين مطابقة لـ «<?=h($eq)?>».</p><?php endif; ?>
+      <?php endif; ?></div>
+    <div class="drawer"><h3>📋 لصق قائمة بريد إلكتروني</h3>
+      <form method="post"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="enroll_emails"><input type="hidden" name="course" value="<?= $cid ?>">
+        <textarea name="emails" rows="5" dir="ltr" placeholder="trainee1@example.com&#10;trainee2@example.com" required></textarea>
+        <p class="mut" style="margin:6px 0">بريد في كل سطر أو مفصول بفاصلة. البريد غير المسجّل في المنصة يظهر «غير موجود» ولا يُنشأ له حساب.</p><button class="btn g">➕ إضافة القائمة</button></form></div>
+  </div>
+  <?php if ($enr): ?>
+  <table class="zt enl"><thead><tr><th>#</th><th>المتدرب</th><th>البريد / الجوال</th><th>تاريخ الإضافة</th><th></th></tr></thead><tbody>
+  <?php foreach ($enr as $i => $e): ?><tr><td class="top"><span class="nm"><?= $i + 1 ?></span></td><td data-l="المتدرب"><b><?=h($e['full_name_ar'] ?: $e['full_name_en'])?></b><?= $e['status'] === 'completed' ? ' <span class="pill p-done">مكتمل</span>' : '' ?></td>
+    <td data-l="البريد / الجوال" class="ltr" style="text-align:right"><?=h($e['email'])?><?= $e['phone'] ? '<br><small class="mut">' . h($e['phone']) . '</small>' : '' ?></td><td data-l="تاريخ الإضافة"><?=h(substr((string)$e['created_at'], 0, 10))?></td>
+    <td><form method="post" onsubmit="return confirm('إزالة <?=h(addslashes((string)($e['full_name_ar'] ?: $e['email'])))?> من الدورة؟ ستختفي من «دوراتي» لديه.')"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="unenroll"><input type="hidden" name="course" value="<?= $cid ?>"><input type="hidden" name="uid" value="<?= (int)$e['user_id'] ?>"><button class="del">✕ إزالة</button></form></td></tr><?php endforeach; ?>
+  </tbody></table>
+  <?php else: ?><p class="mut" style="margin:12px 0 0">لا يوجد متدربون مسجّلون في هذه الدورة بعد.</p><?php endif; ?>
 </div>
 <?php endif; ?>
 <script>
