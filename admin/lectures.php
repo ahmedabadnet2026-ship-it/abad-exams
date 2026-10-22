@@ -147,13 +147,16 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     }
     if ($do === 'save_all') {
       $titles = abd_q('SELECT id, title FROM abd_course_sessions WHERE course_id = ?', [$cid])->fetchAll(PDO::FETCH_KEY_PAIR); $rows = array_keys($titles);
+      $topicT = array_column(abd_topics($cid), 'title', 'id');   // admin title dropdown: tsel[id] = topic id | '' | 'other' (→ title[id])
       $bad = []; $upd = [];
       foreach ($rows as $id) {
         $f = fn($k, $max = 500) => mb_substr(trim((string)(($_POST[$k] ?? [])[$id] ?? '')), 0, $max);
         $d = $f('date', 10); $s = lec_dt($d, $f('st', 5)); $e = lec_dt($d, $f('et', 5)); $url = $f('url'); $z = $url === '' ? null : abd_zoom_url($url);
         $hu = $f('host'); $hz = $hu === '' ? null : abd_zoom_url($hu); $ru = $f('rec'); $rv = $ru === '' ? null : abd_rec_url($ru); $until = $f('recuntil', 10);
         if (!$s || !$e || $e <= $s || ($url !== '' && !$z) || ($hu !== '' && !$hz) || ($ru !== '' && !$rv) || ($until !== '' && !abd_date($until))) { $bad[] = $id; continue; }
-        $upd[] = [$isAdmin ? ($f('title', 190) ?: null) : $titles[$id], $s, $e, $z, $f('pass', 64) ?: null, $hz, $rv['url'] ?? null, $f('recpass', 64) ?: null, $until ?: null, $id, $cid];
+        $sel = ($_POST['tsel'] ?? [])[$id] ?? null; $sel = is_string($sel) ? $sel : null;
+        $nt = $sel === null || $sel === 'other' ? ($f('title', 190) ?: null) : ($sel === '' ? null : ($topicT[(int)$sel] ?? $titles[$id]));
+        $upd[] = [$isAdmin ? $nt : $titles[$id], $s, $e, $z, $f('pass', 64) ?: null, $hz, $rv['url'] ?? null, $f('recpass', 64) ?: null, $until ?: null, $id, $cid];
       }
       if ($bad) lec_back($cid, 'لم يُحفظ شيء: توجد ' . count($bad) . ' محاضرة بتاريخ/وقت غير صحيح أو رابط غير مقبول (المحاضرة: https على zoom.us فقط؛ التسجيل: zoom.us أو YouTube أو Google Drive).', true);
       $pdo = abd_db(); $pdo->beginTransaction();
@@ -308,6 +311,7 @@ main{max-width:1240px}
 @media (max-width:760px){.enrg{grid-template-columns:1fr}}
 @media (max-width:980px){.gen{grid-template-columns:1fr 1fr}.gen .wide{grid-column:1/-1}}
 .zt td:nth-child(2){min-width:150px}
+.zt td.ttl{min-width:230px}.zt select.tsel{width:100%;min-width:170px}.zt .tother{margin-top:6px}.zt .tother[hidden]{display:none}
 #topics{border-top:5px solid var(--n)}#topics .cnt{background:var(--n);color:var(--g);border-radius:99px;padding:0 12px;font-size:15px}
 .tpg{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:start}.tpg textarea{width:100%;font:15px/1.8 Cairo,sans-serif;resize:vertical}
 .tpl{list-style:none;margin:0;padding:0;counter-reset:tp}.tpl li{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:#fff}
@@ -447,7 +451,10 @@ function lec_course_form(array $v, array $trainers, string $tok, string $do, int
         <button class="del" form="del<?= $id ?>" onclick="return confirm('حذف المحاضرة <?= (int)$s['session_no'] ?>؟ سيُعاد ترقيم الباقي.')">🗑 حذف المحاضرة</button></details></td>
       <td data-l="رابط الزوم"><input type="url" class="lk<?= $s['zoom_url'] ? '' : ' miss' ?>" name="url[<?= $id ?>]" value="<?=h($s['zoom_url'] ?? '')?>" placeholder="⚠ أضف رابط الزوم" pattern="https://([A-Za-z0-9-]+\.)*zoom\.us(/.*)?" aria-label="رابط الزوم">
         <div class="sub"><input class="lk" name="pass[<?= $id ?>]" value="<?=h($s['zoom_passcode'] ?? '')?>" maxlength="64" placeholder="رمز الدخول" aria-label="رمز الدخول"><input class="lk" type="url" name="host[<?= $id ?>]" value="<?=h($s['host_url'] ?? '')?>" placeholder="رابط بدء المضيف (اختياري)" title="رابط Start للمضيف — يُفتح للمدرّب فقط عند «ابدأ المحاضرة»" pattern="https://([A-Za-z0-9-]+\.)*zoom\.us(/.*)?"></div><?php if ($s['started_at']): ?><span class="mut" style="font-size:11px">▶ بدأها المدرّب <?=h(lec_t((string)$s['started_at']))?></span><?php endif; ?></td>
-      <td data-l="عنوان المحاضرة" class="ttl"><?php if ($isAdmin): ?><input name="title[<?= $id ?>]" value="<?=h($s['title'] ?? '')?>" maxlength="190"><?php elseif ($hasT): ?><b><?=h($s['title'])?></b><?php elseif ($past): ?><i>لم يُكتب بعد</i><?php else: ?><span class="mut">—</span><?php endif; ?>
+      <td data-l="عنوان المحاضرة" class="ttl"><?php if ($isAdmin && $topics): $cur = (string)($s['title'] ?? ''); $hit = null; foreach ($topics as $tp) if ($tp['title'] === $cur) { $hit = (int)$tp['id']; break; } $oth = $cur !== '' && $hit === null; ?>
+        <select class="tsel" name="tsel[<?= $id ?>]" aria-label="موضوع المحاضرة <?= (int)$s['session_no'] ?>"><option value="">— اختر موضوع المحاضرة —</option><?php foreach ($topics as $i => $tp): ?><option value="<?= (int)$tp['id'] ?>" <?= $hit === (int)$tp['id'] ? 'selected' : '' ?>><?= $i + 1 ?>. <?=h($tp['title'])?></option><?php endforeach; ?><option value="other" <?= $oth ? 'selected' : '' ?>>عنوان آخر…</option></select>
+        <input class="tother" name="title[<?= $id ?>]" value="<?=h($oth ? $cur : '')?>" maxlength="190" placeholder="اكتب عنوان المحاضرة…" <?= $oth ? '' : 'hidden' ?>>
+        <?php elseif ($isAdmin): ?><input name="title[<?= $id ?>]" value="<?=h($s['title'] ?? '')?>" maxlength="190"><?php elseif ($hasT): ?><b><?=h($s['title'])?></b><?php elseif ($past): ?><i>لم يُكتب بعد</i><?php else: ?><span class="mut">—</span><?php endif; ?>
         <?php if ($hasT): ?><span class="pill p-done" style="font-size:11px;margin-top:3px">من المدرب<?= $s['title_by_name'] ? ' · ' . h($s['title_by_name']) : '' ?></span><?php endif; ?></td>
       <td data-l="رابط التسجيل"><input type="url" class="lk" name="rec[<?= $id ?>]" value="<?=h($s['rec_url'] ?? '')?>" placeholder="<?= $past ? 'الصق رابط التسجيل…' : 'بعد انتهاء المحاضرة' ?>" <?= $past || $s['rec_url'] ? '' : 'readonly' ?> aria-label="رابط التسجيل">
         <?php if ($past || $s['rec_url']): ?><div class="sub"><input class="lk" name="recpass[<?= $id ?>]" value="<?=h($s['rec_passcode'] ?? '')?>" maxlength="64" placeholder="رمز التسجيل"><input type="date" name="recuntil[<?= $id ?>]" value="<?=h($s['rec_until'] ?? '')?>" title="متاح حتى (اختياري)"></div><?php endif; ?></td>
@@ -488,6 +495,7 @@ function lec_course_form(array $v, array $trainers, string $tok, string $do, int
 </div>
 <?php endif; ?>
 <script>
+document.querySelectorAll('select.tsel').forEach(function(s){var i=s.parentNode.querySelector('.tother');function u(){var o=s.value==='other';i.hidden=!o;i.disabled=!o;if(o&&!i.value)i.focus()}s.addEventListener('change',u);i.hidden=s.value!=='other';i.disabled=s.value!=='other'});
 document.querySelectorAll('form.cc').forEach(function(f){
   var q=f.querySelector('.psearch'),l=f.querySelector('.plist'),t=f.elements.title,hr=f.querySelector('.phours'),du=f.querySelector('.pdur'),cn=f.querySelector('.pcount'),sg=f.querySelector('.psug');
   if(!l)return; var norm=function(s){return (s||'').toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي')};

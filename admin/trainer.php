@@ -2,8 +2,8 @@
 // ABAD Digital Platform — «لوحة المدرب»: only the courses assigned to the signed-in trainer (abd_courses.trainer_id).
 // - «ابدأ المحاضرة»: own sessions only, from ABD_LEC_EARLY_MIN minutes before start until the end; first click stores started_at/started_by,
 //   then redirects to the host start URL (host_url, entered by zoom_staff/admin) or else the join link.
-// - Title/topic: editable only after the session ended, own courses only. If the course has «مواضيع الدورة» (abd_course_topics) the trainer
-//   picks one from a dropdown or «عنوان آخر…» for free text; the chosen text is saved in abd_course_sessions.title. Recording state is read-only.
+// - Title/topic: own courses only. Without «مواضيع الدورة»: free text, after the session ended. With topics (abd_course_topics) the trainer
+//   picks one per row (upcoming and past) from a dropdown or «عنوان آخر…» for free text; the chosen text is saved in abd_course_sessions.title. Recording state is read-only.
 // - Trainers can never add or edit join/host/recording links (zoom_staff + admin only, admin/lectures.php).
 // Admins may preview a trainer's view with ?as=<trainer id> (read-only, cannot start).
 declare(strict_types=1);
@@ -44,9 +44,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     }
     if ($do === 'save') {
       if (!abd_q('SELECT 1 FROM abd_courses WHERE id = ? AND trainer_id = ?', [$cid, $tid])->fetchColumn()) tr_back(0, 'هذه الدورة غير مسندة إليك.', true);
-      // titles only, ended sessions only; any link fields in the request are ignored
-      $rows = abd_q('SELECT id, title FROM abd_course_sessions WHERE course_id = ? AND ends_at <= NOW()', [$cid])->fetchAll();
+      // titles only; any link fields in the request are ignored
       $topicT = array_column(abd_topics($cid), 'title', 'id');
+      // with «مواضيع الدورة» every session (upcoming too) gets its topic picked; without topics: ended sessions only (free text)
+      $rows = abd_q('SELECT id, title FROM abd_course_sessions WHERE course_id = ?' . ($topicT ? '' : ' AND ends_at <= NOW()'), [$cid])->fetchAll();
       $n = 0;
       foreach ($rows as $r) {
         $id = (int)$r['id'];
@@ -174,7 +175,7 @@ main{max-width:1180px}
     <tr><td data-l="رقم"><span class="nm"><?= (int)$s['session_no'] ?></span></td>
       <td data-l="التاريخ" style="white-space:nowrap"><?=h(tr_ar((string)$s['starts_at']))?><br><span class="mut"><?=h(tr_t((string)$s['starts_at']))?><?= $s['started_at'] ? ' · بدأت ' . h(tr_t((string)$s['started_at'])) : '' ?></span></td>
       <td data-l="الحالة"><?= $ended ? '<span class="pill p-done">منتهية</span>' : ($live ? '<span class="pill p-live">● مباشر الآن</span>' : ($isT ? '<span class="pill p-up">اليوم ' . h(tr_t((string)$s['starts_at'])) . '</span>' : '<span class="pill p-up">قادمة</span>')) ?></td>
-      <td data-l="عنوان المحاضرة"><?php if ($ended && !$ro && $topics): $cur = (string)($s['title'] ?? ''); $hit = null; foreach ($topics as $tp) if ($tp['title'] === $cur) { $hit = (int)$tp['id']; break; } $oth = $cur !== '' && $hit === null; ?>
+      <td data-l="عنوان المحاضرة"><?php if (!$ro && $topics): $cur = (string)($s['title'] ?? ''); $hit = null; foreach ($topics as $tp) if ($tp['title'] === $cur) { $hit = (int)$tp['id']; break; } $oth = $cur !== '' && $hit === null; ?>
         <select class="tsel" name="tsel[<?= $id ?>]" aria-label="موضوع المحاضرة <?= (int)$s['session_no'] ?>"><option value="">— اختر موضوع المحاضرة —</option><?php foreach ($topics as $i => $tp): ?><option value="<?= (int)$tp['id'] ?>" <?= $hit === (int)$tp['id'] ? 'selected' : '' ?>><?= $i + 1 ?>. <?=h($tp['title'])?></option><?php endforeach; ?><option value="other" <?= $oth ? 'selected' : '' ?>>عنوان آخر…</option></select>
         <input class="tother" name="title[<?= $id ?>]" value="<?=h($oth ? $cur : '')?>" maxlength="190" placeholder="اكتب عنوان المحاضرة…" <?= $oth ? '' : 'hidden' ?>>
       <?php elseif ($ended && !$ro): ?><input name="title[<?= $id ?>]" value="<?=h($s['title'] ?? '')?>" maxlength="190" placeholder="أضف عنوان المحاضرة…"><?php else: ?><input value="<?=h($s['title'] ?? '')?>" disabled placeholder="<?= $ended ? '—' : 'يتاح بعد انتهاء المحاضرة' ?>"><?php endif; ?></td>
