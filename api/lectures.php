@@ -10,5 +10,5 @@ abd_api(function () {
   if (!$u) abd_out(['ok' => true, 'logged_in' => false, 'courses' => []], 401);
   if (!abd_rate('lectures', (string)$u['id'], 240, 3600)) abd_err('rate', 429);
   abd_out(['ok' => true, 'logged_in' => true, 'now' => (int)round(microtime(true) * 1000), 'early_min' => ABD_LEC_EARLY_MIN,
-    'staff' => in_array($u['role'], ['admin', 'staff'], true), 'courses' => abd_lec_for_user($u)]);
+    'staff' => in_array($u['role'], ['admin', 'staff', 'zoom_staff'], true), 'courses' => abd_lec_for_user($u)]);
 });

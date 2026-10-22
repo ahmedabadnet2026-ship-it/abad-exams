@@ -21,9 +21,10 @@ CREATE TABLE IF NOT EXISTS abd_course_sessions (
   CONSTRAINT fk_abd_cs_course FOREIGN KEY (course_id) REFERENCES abd_courses (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Trainer role: admins assign it; a course has one assigned trainer who may set lecture titles (and, optionally, a recording link) after a session ends.
+-- Roles: 'trainer' (assigned per course; sets lecture titles only, never links) and 'zoom_staff' (manages Zoom join links, passcodes,
+-- recording links and schedules for all courses; titles are read-only for them). Admins assign both.
 ALTER TABLE abd_users
-  MODIFY role ENUM('trainee','staff','admin','trainer') NOT NULL DEFAULT 'trainee',
+  MODIFY role ENUM('trainee','staff','admin','trainer','zoom_staff') NOT NULL DEFAULT 'trainee',
   ADD COLUMN zoom_email VARCHAR(190) NULL AFTER role,
   ADD COLUMN zoom_meeting_id VARCHAR(32) NULL AFTER zoom_email;
 

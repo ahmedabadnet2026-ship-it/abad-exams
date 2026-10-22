@@ -39,6 +39,14 @@ function abd_rec_url(string $u): ?array {
   return null;
 }
 
+/** Zoom links, passcodes, recording links and schedules: zoom_staff and admin only. */
+function abd_lec_can_links(?array $u): bool { return $u !== null && in_array($u['role'], ['admin', 'zoom_staff'], true); }
+/** Lecture titles: admin, or the trainer assigned to the course. zoom_staff: read-only. */
+function abd_lec_can_title(?array $u, int $courseId): bool {
+  if (!$u) return false; if ($u['role'] === 'admin') return true;
+  return $u['role'] === 'trainer' && (bool)abd_q('SELECT 1 FROM abd_courses WHERE id = ? AND trainer_id = ?', [$courseId, (int)$u['id']])->fetchColumn();
+}
+
 function abd_lec_time(string $t): ?string { return preg_match('/^([01]\d|2[0-3]):([0-5]\d)$/', $t) ? $t : null; }
 
 /** Renumber a course's sessions 1..n by start time. */
@@ -56,7 +64,7 @@ function abd_lec_dates(string $from, string $to, array $days): array {
 
 /** Courses the user is enrolled in (active/completed) or all courses for staff, with sessions. Zoom URL only inside the join window (staff: always). */
 function abd_lec_for_user(array $u): array {
-  $staff = in_array($u['role'], ['admin', 'staff'], true);
+  $staff = in_array($u['role'], ['admin', 'staff', 'zoom_staff'], true);
   $now = time();
   $courses = $u['role'] === 'trainer'
     ? abd_q('SELECT c.id, c.title_ar, c.title_en FROM abd_courses c WHERE c.trainer_id = ? ORDER BY c.id', [(int)$u['id']])->fetchAll()

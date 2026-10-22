@@ -43,10 +43,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     elseif (!abd_rate('login-ip', $ip, 30, 900) || !abd_rate('login', $ip . '|' . $email, 6, 900)) $loginErr = 'محاولات كثيرة، انتظر 15 دقيقة ثم أعد المحاولة.';
     else {
       $row = $email !== '' ? abd_q("SELECT id, password_hash, role, is_active FROM abd_users WHERE email = ?", [$email])->fetch() : false;
-      if ($row && (int)$row['is_active'] && in_array($row['role'], ['admin', 'staff', 'trainer'], true) && password_verify($pw, $row['password_hash'])) {
+      if ($row && (int)$row['is_active'] && in_array($row['role'], ['admin', 'staff', 'trainer', 'zoom_staff'], true) && password_verify($pw, $row['password_hash'])) {
         abd_rate_clear('login', $ip . '|' . $email);
         abd_login_session((int)$row['id']);
-        header('Location: ' . ($row['role'] === 'trainer' ? 'trainer.php' : 'index.php'), true, 303); exit;
+        header('Location: ' . (['trainer' => 'trainer.php', 'zoom_staff' => 'lectures.php'][$row['role']] ?? 'index.php'), true, 303); exit;
       }
       usleep(300000); $loginErr = 'بيانات الدخول غير صحيحة أو الحساب ليس حساب إدارة.';
     }
@@ -61,7 +61,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       case 'user_role':
         if ($me['role'] !== 'admin') back('home', 'هذه العملية للمدير فقط.', true);
         $uid = (int)($_POST['id'] ?? 0); $role = (string)($_POST['role'] ?? '');
-        if ($uid === (int)$me['id'] || !in_array($role, ['trainee', 'staff', 'trainer'], true)) back('users', 'لا يمكن تنفيذ هذا التغيير.', true);
+        if ($uid === (int)$me['id'] || !in_array($role, ['trainee', 'staff', 'trainer', 'zoom_staff'], true)) back('users', 'لا يمكن تنفيذ هذا التغيير.', true);
         abd_q("UPDATE abd_users SET role = ? WHERE id = ? AND role <> 'admin'", [$role, $uid]);
         back('users', 'تم تحديث الدور.');
       case 'user_active':
@@ -90,6 +90,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 
 $me = abd_user();
 if ($me && $me['role'] === 'trainer') { header('Location: trainer.php', true, 303); exit; }
+if ($me && $me['role'] === 'zoom_staff') { header('Location: lectures.php', true, 303); exit; }
 if (!$me || !in_array($me['role'], ['admin', 'staff'], true)) {
   abd_admin_top('دخول الإدارة'); ?>
 <form class="card solo lg" method="post" action="index.php">
@@ -162,7 +163,7 @@ elseif ($tab === 'users'):
   $q = abd_str($_GET, 'q'); $role = (string)($_GET['role'] ?? '');
   $w = []; $p = [];
   if ($q !== '') { $like = '%' . addcslashes($q, '%_\\') . '%'; $w[] = '(u.full_name_ar LIKE ? OR u.full_name_en LIKE ? OR u.email LIKE ? OR u.phone LIKE ? OR u.national_id LIKE ?)'; array_push($p, $like, $like, $like, $like, $like); }
-  if (in_array($role, ['trainee', 'staff', 'trainer', 'admin'], true)) { $w[] = 'u.role = ?'; $p[] = $role; }
+  if (in_array($role, ['trainee', 'staff', 'trainer', 'zoom_staff', 'admin'], true)) { $w[] = 'u.role = ?'; $p[] = $role; }
   $where = $w ? 'WHERE ' . implode(' AND ', $w) : '';
   $total = (int)abd_q("SELECT COUNT(*) FROM abd_users u $where", $p)->fetchColumn(); $off = ($page - 1) * 50;
   $users = abd_q("SELECT u.id, u.full_name_ar, u.full_name_en, u.email, u.phone, u.national_id, u.role, u.is_active, u.created_at, u.last_login_at,
@@ -171,7 +172,7 @@ elseif ($tab === 'users'):
   <h1>👥 المستخدمون</h1>
   <form class="f" method="get"><input type="hidden" name="tab" value="users">
     <label>بحث<input name="q" value="<?=h($q)?>"></label>
-    <label>الدور<select name="role"><option value="">الكل</option><option value="trainee" <?= $role === 'trainee' ? 'selected' : '' ?>>متدرب</option><option value="staff" <?= $role === 'staff' ? 'selected' : '' ?>>موظف</option><option value="trainer" <?= $role === 'trainer' ? 'selected' : '' ?>>مدرّب</option><option value="admin" <?= $role === 'admin' ? 'selected' : '' ?>>مدير</option></select></label>
+    <label>الدور<select name="role"><option value="">الكل</option><option value="trainee" <?= $role === 'trainee' ? 'selected' : '' ?>>متدرب</option><option value="staff" <?= $role === 'staff' ? 'selected' : '' ?>>موظف</option><option value="trainer" <?= $role === 'trainer' ? 'selected' : '' ?>>مدرّب</option><option value="zoom_staff" <?= $role === 'zoom_staff' ? 'selected' : '' ?>>مسؤول الزوم</option><option value="admin" <?= $role === 'admin' ? 'selected' : '' ?>>مدير</option></select></label>
     <button class="btn">تصفية</button><a class="btn l" href="?tab=users">مسح</a></form>
   <p class="mut"><?= $total ?> مستخدم</p>
   <table><thead><tr><th>#</th><th>الاسم</th><th>البريد / الجوال</th><th>الهوية</th><th>الدور</th><th>التسجيل / آخر دخول</th><th>دورات</th><th>نتائج</th><th>الحالة</th></tr></thead><tbody>
@@ -179,9 +180,9 @@ elseif ($tab === 'users'):
     <tr><td><?= (int)$u['id'] ?></td><td><?=h($u['full_name_ar'])?><br><span class="mut ltr"><?=h($u['full_name_en'])?></span></td>
       <td><span class="ltr"><?=h($u['email'])?></span><br><?php if ($u['phone']): ?><a class="ltr" href="<?=h(wa((string)$u['phone']))?>" target="_blank" rel="noopener"><?=h($u['phone'])?></a><?php endif; ?></td>
       <td class="ltr"><?=h($u['national_id'] ?? '—')?></td>
-      <td><span class="st st-<?=h($u['role'])?>"><?= ['admin' => 'مدير', 'staff' => 'موظف', 'trainer' => 'مدرّب', 'trainee' => 'متدرب'][$u['role']] ?? h($u['role']) ?></span>
+      <td><span class="st st-<?=h($u['role'])?>"><?= ['admin' => 'مدير', 'staff' => 'موظف', 'trainer' => 'مدرّب', 'zoom_staff' => 'مسؤول الزوم', 'trainee' => 'متدرب'][$u['role']] ?? h($u['role']) ?></span>
         <?php if ($u['role'] !== 'admin'): ?><form class="i" method="post" style="margin-top:4px"><?=$tok?><input type="hidden" name="do" value="user_role"><input type="hidden" name="id" value="<?= (int)$u['id'] ?>">
-        <select name="role" style="font-size:12px;padding:2px 6px"><?php foreach (['trainee' => 'متدرب', 'staff' => 'موظف', 'trainer' => 'مدرّب'] as $rk => $rv): ?><option value="<?= $rk ?>" <?= $u['role'] === $rk ? 'selected' : '' ?>><?= $rv ?></option><?php endforeach; ?></select><button class="btn l s">تغيير الدور</button></form><?php endif; ?></td>
+        <select name="role" style="font-size:12px;padding:2px 6px"><?php foreach (['trainee' => 'متدرب', 'staff' => 'موظف', 'trainer' => 'مدرّب', 'zoom_staff' => 'مسؤول الزوم'] as $rk => $rv): ?><option value="<?= $rk ?>" <?= $u['role'] === $rk ? 'selected' : '' ?>><?= $rv ?></option><?php endforeach; ?></select><button class="btn l s">تغيير الدور</button></form><?php endif; ?></td>
       <td><span class="mut ltr"><?=h(substr((string)$u['created_at'], 0, 16))?></span><br><span class="mut ltr"><?=h($u['last_login_at'] ? substr((string)$u['last_login_at'], 0, 16) : '—')?></span></td>
       <td><?= (int)$u['enr'] ?></td><td><?php if ($u['res']): ?><a href="?tab=results&user_id=<?= (int)$u['id'] ?>"><?= (int)$u['res'] ?></a><?php else: ?>0<?php endif; ?></td>
       <td><?php if ((int)$u['id'] === (int)$me['id']): ?><span class="mut">أنت</span><?php else: ?>

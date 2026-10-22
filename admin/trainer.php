@@ -1,6 +1,6 @@
 <?php
 // ABAD Digital Platform — trainer view: only the courses assigned to the signed-in trainer (abd_courses.trainer_id).
-// After a session ends the trainer sets its title/topic; optionally adds a recording link if none was entered by Zoom staff.
+// After a session ends the trainer sets its title/topic. Trainers can never add or edit join/recording links (zoom_staff + admin only).
 // Admins may preview a trainer's view with ?as=<trainer id> (read-only).
 declare(strict_types=1);
 require __DIR__ . '/_layout.php';
@@ -28,18 +28,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     }
     if ($do === 'save') {
       if (!abd_q('SELECT 1 FROM abd_courses WHERE id = ? AND trainer_id = ?', [$cid, $tid])->fetchColumn()) tr_back(0, 'هذه الدورة غير مسندة إليك.', true);
-      $rows = abd_q('SELECT id, title, ends_at, rec_url FROM abd_course_sessions WHERE course_id = ? AND ends_at <= NOW()', [$cid])->fetchAll();
+      $rows = abd_q('SELECT id, title, ends_at FROM abd_course_sessions WHERE course_id = ? AND ends_at <= NOW()', [$cid])->fetchAll();
       $n = 0; $bad = 0;
       foreach ($rows as $r) {
         $id = (int)$r['id'];
         $t = mb_substr(trim(preg_replace('/[\x00-\x1F\x7F]/u', '', (string)(($_POST['title'] ?? [])[$id] ?? $r['title'] ?? '')) ?? ''), 0, 190);
-        $ru = trim((string)(($_POST['rec'] ?? [])[$id] ?? ''));
-        $rv = null;
-        if ($ru !== '' && !$r['rec_url']) { $rv = abd_rec_url($ru); if (!$rv) { $bad++; continue; } }
         if ($t !== (string)$r['title']) { abd_q('UPDATE abd_course_sessions SET title = ?, title_by = ?, title_at = NOW() WHERE id = ?', [$t ?: null, $tid, $id]); $n++; }
-        if ($rv) { abd_q('UPDATE abd_course_sessions SET rec_url = ? WHERE id = ? AND rec_url IS NULL', [$rv['url'], $id]); $n++; }
       }
-      tr_back($cid, $bad ? "حُفظت التعديلات، وتم تجاهل $bad رابط تسجيل غير مقبول (zoom.us أو YouTube أو Google Drive فقط)." : 'تم الحفظ.', $bad > 0);
+      tr_back($cid, 'تم الحفظ.');
     }
   } catch (Throwable $e) { error_log('[abad-trainer] ' . $e->getMessage()); tr_back($cid, 'تعذّر الحفظ.', true); }
   tr_back($cid, 'إجراء غير معروف.', true);
@@ -67,7 +63,7 @@ abd_admin_top('صفحة المدرّب', $me);
 .sx tr.up td{opacity:.65}.sx tr.need td{background:#fffbea}.sx tr.live td{background:#fff3f3}</style>
 <div class="card solo">
   <h1>🎓 صفحة المدرّب<?= $prof ? ' — ' . h($prof['full_name_ar']) : '' ?></h1>
-  <p class="mut">تظهر هنا دوراتك فقط. بعد انتهاء كل محاضرة اكتب عنوانها أو موضوعها، فيظهر للمتدربين على المحاضرة وتسجيلها. يضيف موظف الزوم رابط التسجيل عادةً؛ ويمكنك إضافته إن لم يُضَف بعد. جميع الأوقات بتوقيت الرياض.</p>
+  <p class="mut">تظهر هنا دوراتك فقط. بعد انتهاء كل محاضرة اكتب عنوانها أو موضوعها، فيظهر للمتدربين على المحاضرة وتسجيلها. يضيف مسؤول الزوم روابط المحاضرات والتسجيلات. جميع الأوقات بتوقيت الرياض.</p>
   <?php if ($ro): ?><div class="err">معاينة المدير (للقراءة فقط).</div><?php endif; ?>
   <?php if ($flash): ?><div class="<?= $flash[1] ? 'err' : 'okm' ?>"><?=h($flash[0])?></div><?php endif; ?>
   <?php if (!$courses): ?><p class="mut">لا توجد دورات مسندة إليك بعد. يُسند المدير الدورة إليك من صفحة «محاضرات الزوم».</p><?php else: ?>
@@ -80,7 +76,7 @@ abd_admin_top('صفحة المدرّب', $me);
       <td style="white-space:nowrap"><?=h(tr_ar((string)$s['starts_at']))?></td><td style="white-space:nowrap"><?=h(tr_t((string)$s['starts_at']) . ' – ' . tr_t((string)$s['ends_at']))?></td>
       <td><?= $ended ? ($need ? '<span class="st st-new">اكتب العنوان</span>' : '<span class="st st-booked">✓ منتهية</span>') : ($live ? '<span class="st st-cancelled">● مباشر الآن</span>' : '<span class="st st-contacted">قادمة</span>') ?></td>
       <td><?php if ($ended): ?><input class="t" name="title[<?= $id ?>]" value="<?=h($s['title'] ?? '')?>" maxlength="190" placeholder="مثال: إعداد VLAN و Trunking" <?= $ro ? 'disabled' : '' ?>><?php else: ?><span class="mut">يُتاح بعد انتهاء المحاضرة</span><?php endif; ?></td>
-      <td><?php if ($s['rec_url']): ?><span class="st st-booked">✓ أُضيف التسجيل</span><?php elseif ($ended): ?><input type="url" name="rec[<?= $id ?>]" placeholder="اختياري — يضيفه موظف الزوم عادةً" <?= $ro ? 'disabled' : '' ?>><?php else: ?><span class="mut">—</span><?php endif; ?></td></tr>
+      <td><?php if ($s['rec_url']): ?><span class="st st-booked">✓ أُضيف التسجيل</span><?php elseif ($ended): ?><span class="mut">يضيفه مسؤول الزوم</span><?php else: ?><span class="mut">—</span><?php endif; ?></td></tr>
   <?php endforeach; ?></tbody></table>
   <?php if (!$ro): ?><p><button class="btn g">💾 حفظ العناوين</button></p><?php endif; ?></form>
   <?php else: ?><p class="mut">لم تُنشأ محاضرات لهذه الدورة بعد.</p><?php endif; endif; ?>

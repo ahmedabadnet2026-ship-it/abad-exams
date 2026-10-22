@@ -1,5 +1,6 @@
 <?php
-// ABAD Digital Platform — Zoom lecture links per course (staff + admin).
+// ABAD Digital Platform — «لوحة مسؤول الزوم»: Zoom lecture links per course (zoom_staff + admin only).
+// zoom_staff: schedules, join links, passcodes, recording links. Titles are read-only for them (written by the trainer); no host start.
 // Generate numbered sessions from a date range + weekdays + time (Asia/Riyadh), edit/add/delete single sessions,
 // paste a Zoom join URL (+ optional passcode) per session, or import links from .xlsx / .csv (preview → confirm).
 declare(strict_types=1);
@@ -9,7 +10,8 @@ require_once dirname(__DIR__) . '/api/_enroll_import.php';   // abd_imp_read / a
 
 abd_session();
 $me = abd_user();
-if (!$me || !in_array($me['role'], ['admin', 'staff'], true)) { header('Location: index.php', true, 303); exit; }
+if (!$me || !abd_lec_can_links($me)) { header('Location: ' . ($me && $me['role'] === 'trainer' ? 'trainer.php' : 'index.php'), true, 303); exit; }
+$isAdmin = $me['role'] === 'admin';   // only admins may edit titles here (trainers edit their own in trainer.php)
 
 const LEC_DAYS = [0 => 'الأحد', 1 => 'الاثنين', 2 => 'الثلاثاء', 3 => 'الأربعاء', 4 => 'الخميس', 5 => 'الجمعة', 6 => 'السبت'];
 const LEC_HDR = ['no' => ['no', 'number', 'session', 'lecture', '#', 'رقم', 'رقم المحاضره', 'المحاضره', 'رقم الجلسه', 'الجلسه'],
@@ -53,7 +55,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       $url = abd_str($_POST, 'url', 500); $z = $url === '' ? null : abd_zoom_url($url);
       if ($url !== '' && !$z) lec_back($cid, 'رابط الزوم غير مقبول: يجب أن يبدأ بـ https:// وعلى نطاق zoom.us.', true);
       abd_q('INSERT INTO abd_course_sessions (course_id, session_no, title, starts_at, ends_at, zoom_url, zoom_passcode, created_by) VALUES (?, 0, ?, ?, ?, ?, ?, ?)',
-        [$cid, abd_str($_POST, 'title') ?: null, $s, $e, $z, abd_str($_POST, 'pass', 64) ?: null, (int)$me['id']]);
+        [$cid, $isAdmin ? (abd_str($_POST, 'title') ?: null) : null, $s, $e, $z, abd_str($_POST, 'pass', 64) ?: null, (int)$me['id']]);
       abd_lec_renumber($cid);
       lec_back($cid, 'تمت إضافة المحاضرة وإعادة الترقيم.');
     }
@@ -67,14 +69,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       lec_back($cid, 'تم حذف جميع محاضرات الدورة.');
     }
     if ($do === 'save_all') {
-      $rows = abd_q('SELECT id FROM abd_course_sessions WHERE course_id = ?', [$cid])->fetchAll(PDO::FETCH_COLUMN);
+      $titles = abd_q('SELECT id, title FROM abd_course_sessions WHERE course_id = ?', [$cid])->fetchAll(PDO::FETCH_KEY_PAIR); $rows = array_keys($titles);
       $bad = []; $upd = [];
       foreach ($rows as $id) {
         $f = fn($k, $max = 500) => mb_substr(trim((string)(($_POST[$k] ?? [])[$id] ?? '')), 0, $max);
         $d = $f('date', 10); $s = lec_dt($d, $f('st', 5)); $e = lec_dt($d, $f('et', 5)); $url = $f('url'); $z = $url === '' ? null : abd_zoom_url($url);
         $ru = $f('rec'); $rv = $ru === '' ? null : abd_rec_url($ru); $until = $f('recuntil', 10);
         if (!$s || !$e || $e <= $s || ($url !== '' && !$z) || ($ru !== '' && !$rv) || ($until !== '' && !abd_date($until))) { $bad[] = $id; continue; }
-        $upd[] = [$f('title', 190) ?: null, $s, $e, $z, $f('pass', 64) ?: null, $rv['url'] ?? null, $f('recpass', 64) ?: null, $until ?: null, $id, $cid];
+        $upd[] = [$isAdmin ? ($f('title', 190) ?: null) : $titles[$id], $s, $e, $z, $f('pass', 64) ?: null, $rv['url'] ?? null, $f('recpass', 64) ?: null, $until ?: null, $id, $cid];
       }
       if ($bad) lec_back($cid, 'لم يُحفظ شيء: توجد ' . count($bad) . ' محاضرة بتاريخ/وقت غير صحيح أو رابط غير مقبول (المحاضرة: https على zoom.us فقط؛ التسجيل: zoom.us أو YouTube أو Google Drive).', true);
       $pdo = abd_db(); $pdo->beginTransaction();
@@ -147,81 +149,142 @@ $imp = ($_GET['step'] ?? '') === 'preview' && ($_SESSION['lec_imp']['cid'] ?? 0)
 const LEC_MON = ['', 'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
 function lec_ar(string $dt): string { $t = strtotime($dt); return LEC_DAYS[(int)date('w', $t)] . ' ' . (int)date('j', $t) . ' ' . LEC_MON[(int)date('n', $t)]; }
 $now = date('Y-m-d H:i:s');
-abd_admin_top('روابط محاضرات الزوم', $me);
+$cnt = abd_q("SELECT SUM(zoom_url IS NULL AND ends_at > NOW()) nolink, SUM(rec_url IS NULL AND ends_at <= NOW()) norec, SUM(DATE(starts_at) = CURDATE()) today FROM abd_course_sessions")->fetch() ?: [];
+function lec_t(string $dt): string { $t = strtotime($dt); $h = (int)date('G', $t); return ($h % 12 ?: 12) . ':' . date('i', $t) . ($h < 12 ? ' ص' : ' م'); }
+$today = date('Y-m-d');
+$ic = fn(string $p) => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' . $p . '</svg>';
+$icCam = '<rect x="2" y="6" width="14" height="12" rx="3"/><path d="M16 10l6-3v10l-6-3z"/>';
+abd_admin_top('لوحة مسؤول الزوم', $me);
 ?>
-<style>main{max-width:1640px}.days{display:flex;gap:6px;flex-wrap:wrap}.days label{flex-direction:row!important;align-items:center;gap:4px;background:#eef4f9;border-radius:9px;padding:6px 10px;color:var(--n)!important;cursor:pointer}
-.sx td{vertical-align:middle}.sx input[type=url]{width:100%;min-width:190px;direction:ltr}.sx input.p{width:110px;direction:ltr}.sx input.t{width:180px}
-.sx tr.past td{opacity:.6}.sx tr.nx td{background:#fffbea}.no{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--n);color:var(--g);font-weight:800}
-.sx tr.nolink .no{background:#c0392b;color:#fff}.sx td.rc input[type=url]{min-width:200px}.sx td.rc span{display:flex;gap:4px;margin-top:4px}.sx td.rc input[type=date]{width:130px}.sx input.p{width:90px!important}.sx tr.rec-yes td.rc input[type=url]{border-color:#17803d}
-.sx tr.await td{background:#fff6e0}.sx tr.await td.rc input[type=url]{border:2px solid #F5BD2D}.st-aw{background:#F5BD2D;color:#10293b}
-.box{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px}</style>
-<div class="card solo">
-  <h1>🎥 روابط محاضرات الزوم</h1>
-  <p class="mut">اختر الدورة، ولّد محاضراتها تلقائيًا من التاريخ وأيام الأسبوع والوقت (بتوقيت الرياض)، ثم الصق رابط الزوم لكل محاضرة. يرى كل متدرب مسجّل في الدورة محاضراتها في صفحة «محاضرات الزوم» بحسابه، ويُفتح زر الدخول قبل الموعد بـ 15 دقيقة حتى نهاية المحاضرة. تُقبل روابط <span class="ltr">https://…zoom.us</span> فقط للمحاضرة، وللتسجيل: Zoom أو YouTube (غير مُدرج) أو Google Drive، ويظهر للمتدرب بعد انتهاء المحاضرة.</p>
-  <?php if ($flash): ?><div class="<?= $flash[1] ? 'err' : 'okm' ?>"><?=h($flash[0])?></div><?php endif; ?>
-  <form class="f" method="get"><label>الدورة<select name="course" onchange="this.form.submit()"><option value="">— اختر الدورة —</option>
-    <?php foreach ($courses as $c): ?><option value="<?= (int)$c['id'] ?>" <?= (int)$c['id'] === $cid ? 'selected' : '' ?>><?=h($c['title_ar'] . ' — ' . $c['n'] . ' محاضرة' . ($c['n'] ? ' (' . $c['nl'] . ' برابط)' : ''))?></option><?php endforeach; ?></select></label>
-    <noscript><button class="btn">عرض</button></noscript></form>
+<style>
+main{max-width:1240px}
+.zh{background:linear-gradient(120deg,#0a1c29,var(--n) 55%,#16405e);color:#fff;border-radius:18px;padding:24px 26px 64px;margin-top:16px}
+.zh h1{margin:0;font-size:26px}.zh h1 span{color:var(--g)}.zh p{margin:4px 0 0;opacity:.8}
+.zs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:-44px 14px 18px}
+.zs>div{background:#fff;border-radius:16px;padding:16px 18px;box-shadow:0 4px 18px rgba(16,41,59,.08);border-right:5px solid var(--b);display:flex;align-items:center;gap:14px}
+.zs .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:#eef4f9;color:var(--b);flex:none}
+.zs .r{border-color:#e07a3f}.zs .r .ic{background:#fdeee4;color:#e07a3f}.zs .g{border-color:var(--g)}.zs .g .ic{background:#fff4d6;color:#9a6a00}
+.zs b{display:block;font-size:28px;line-height:1.2}.zs small{color:var(--mut);font-weight:700}
+.zc{background:#fff;border-radius:18px;box-shadow:0 4px 18px rgba(16,41,59,.08);padding:20px 22px;margin-bottom:18px}
+.zc.gt{border-top:5px solid var(--g)}
+.zc h2{display:flex;align-items:center;gap:8px;font-size:19px;margin:0 0 14px}
+.gen{display:grid;grid-template-columns:1fr 1fr 2.6fr .8fr .8fr 1.1fr;gap:12px;align-items:end}.gen .crs{grid-column:1/-1;max-width:560px}
+.gen label,.zl{font-size:12px;font-weight:800;color:var(--mut);display:block;margin-bottom:4px}
+.gen input,.gen select{width:100%}
+.days{display:flex;gap:5px}.days label{flex:1;margin:0;position:relative}.days input{position:absolute;opacity:0;pointer-events:none}
+.days span{display:block;text-align:center;border:1px solid #cfdbe6;border-radius:8px;padding:7px 0;font-size:12px;font-weight:800;color:var(--n);cursor:pointer;background:#fff}
+.days input:checked+span{background:var(--n);color:#fff;border-color:var(--n)}.days input:focus-visible+span{outline:2px solid var(--b)}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.hd h2{margin:0}.hd .acts{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border-radius:11px;padding:9px 18px;display:inline-flex;align-items:center;gap:8px}
+.btn.n{background:var(--n)}.btn.ol{background:#fff;color:var(--n);border:1.5px solid #cfdbe6}
+.zt{width:100%;border-collapse:collapse;font-size:14px}.zt th{background:#f3f7fb;color:var(--mut);padding:10px;font-weight:800;border:0}
+.zt td{padding:10px;vertical-align:middle}.zt input{width:100%}.zt .lk{direction:ltr;text-align:left}
+.zt .sub{display:flex;gap:6px;margin-top:6px}.zt .sub input{font-size:12px;padding:5px 8px}
+.zt input.miss{border-color:#e07a3f;background:#fff8f3}.zt input.miss::placeholder{color:#b75d27}
+.zt input[readonly]{background:#f6f8fa;color:var(--mut)}
+.zt tr.hl td{background:#fffaeb}.zt tr.hl td:first-child{box-shadow:inset -4px 0 var(--g)}
+.zt tr.past td{color:#3c5366}.nm{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--n);color:var(--g);font-weight:800}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:2px 11px;font-size:12px;font-weight:800;white-space:nowrap}
+.p-ok{background:#e4f5ea;color:#1d7a43}.p-wait{background:#fff4d6;color:#9a6a00}.p-done{background:#e8f0f7;color:var(--b)}.p-up{background:#eef1f4;color:var(--mut)}.p-live{background:#fde4e4;color:#c0392b}.p-exp{background:#f4e4e4;color:#922}
+.ttl b{display:block}.ttl i{color:var(--mut)}
+.zt details summary{font-size:12px;color:var(--b);font-weight:700;margin-top:4px}.zt details .sub input{width:auto}
+.del{background:none;border:0;color:#c0392b;cursor:pointer;font:700 12px Cairo;padding:2px 0}
+.drawer{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 14px}
+.drawer h3{margin:0 0 8px;font-size:15px}
+@media (max-width:980px){.gen{grid-template-columns:1fr 1fr}.gen .wide{grid-column:1/-1}}
+.zt td:nth-child(2){min-width:150px}
+@media (max-width:760px){
+ .zh{padding:18px 16px 56px;border-radius:14px}.zh h1{font-size:21px}
+ .zs{grid-template-columns:1fr;margin:-40px 6px 14px;gap:10px}.zs>div{padding:12px 14px}.zs b{font-size:22px}
+ .zc{padding:14px;border-radius:14px}.gen{grid-template-columns:1fr 1fr}.days span{font-size:11px;padding:6px 0}
+ .zt thead{display:none}.zt,.zt tbody,.zt tr,.zt td{display:block;width:100%}
+ .zt tr{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;padding:8px 10px;background:#fff}
+ .zt td{border:0;padding:6px 0}.zt td[data-l]::before{content:attr(data-l);display:block;font-size:11px;font-weight:800;color:var(--mut);margin-bottom:2px}
+ .zt tr.hl td:first-child{box-shadow:none}.zt tr.hl{border-color:var(--g);box-shadow:inset -4px 0 var(--g)}
+ .zt td.top{display:flex;justify-content:space-between;align-items:center}
+}
+</style>
+<div class="zh"><h1>لوحة <span>مسؤول الزوم</span></h1><p>إدارة روابط المحاضرات والتسجيلات والجداول لجميع الدورات — جميع الأوقات بتوقيت الرياض</p></div>
+<div class="zs">
+  <div class="r"><div class="ic"><?= $ic($icCam) ?></div><div><b><?= (int)($cnt['nolink'] ?? 0) ?></b><small>محاضرات بدون رابط زوم</small></div></div>
+  <div class="g"><div class="ic"><?= $ic('<path d="M6 2h12M6 22h12M7 2v4l5 6-5 6v4M17 2v4l-5 6 5 6v4"/>') ?></div><div><b><?= (int)($cnt['norec'] ?? 0) ?></b><small>تسجيلات بانتظار الرفع</small></div></div>
+  <div><div class="ic"><?= $ic('<rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>') ?></div><div><b><?= (int)($cnt['today'] ?? 0) ?></b><small>محاضرات اليوم</small></div></div>
+</div>
+<?php if ($flash): ?><div class="<?= $flash[1] ? 'err' : 'okm' ?>"><?=h($flash[0])?></div><?php endif; ?>
+
+<div class="zc gt"><h2>توليد جدول المحاضرات</h2>
+  <form id="pick" method="get"></form>
+  <form method="post" onsubmit="return this.mode.value!=='replace'||confirm('سيتم حذف كل محاضرات الدورة الحالية وروابطها وإنشاؤها من جديد. متابعة؟')">
+  <input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="generate"><input type="hidden" name="course" value="<?= $cid ?>">
+  <div class="gen">
+    <div class="crs"><label for="cpick">الدورة</label><select id="cpick" name="course" form="pick" onchange="this.form.submit()"><option value="">— اختر الدورة —</option>
+      <?php foreach ($courses as $c): $tn = array_values(array_filter($trainers, fn($t) => (int)$t['id'] === (int)$c['trainer_id'])); ?><option value="<?= (int)$c['id'] ?>" <?= (int)$c['id'] === $cid ? 'selected' : '' ?>><?=h($c['title_ar'] . ($tn ? ' — ' . $tn[0]['full_name_ar'] : '') . ' (' . $c['n'] . ')')?></option><?php endforeach; ?></select></div>
+    <?php if ($course): ?>
+    <div><label>تاريخ البداية</label><input type="date" name="from" required value="<?=h($course['start_date'] ?? '')?>"></div>
+    <div><label>تاريخ النهاية</label><input type="date" name="to" required value="<?=h($course['end_date'] ?? '')?>"></div>
+    <div class="wide"><span class="zl">أيام الأسبوع</span><div class="days"><?php foreach (['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'] as $k => $v): ?><label><input type="checkbox" name="days[]" value="<?= $k ?>" <?= in_array($k, [0, 4], true) ? 'checked' : '' ?>><span><?= $v ?></span></label><?php endforeach; ?></div></div>
+    <div><label>من</label><input type="time" name="st" value="19:00" required></div>
+    <div><label>إلى</label><input type="time" name="et" value="21:00" required></div>
+    <div><label>الطريقة</label><select name="mode"><option value="add">إضافة الناقص</option><option value="replace">إعادة التوليد</option></select><button class="btn g" style="margin-top:8px;width:100%;justify-content:center">توليد المحاضرات</button></div>
+    <?php endif; ?>
+  </div></form>
+  <noscript><button class="btn" form="pick">عرض</button></noscript>
+  <?php if ($course): $tn = array_values(array_filter($trainers, fn($t) => (int)$t['id'] === (int)$course['trainer_id'])); ?>
+  <p class="mut" style="margin:12px 0 0">🎓 مدرّب الدورة: <b><?= $tn ? h($tn[0]['full_name_ar']) : 'لم يُعيَّن' ?></b> · <?= (int)$course['ne'] ?> متدرب مسجّل · يكتب المدرّب عنوان كل محاضرة من صفحته، ويظهر هنا للقراءة فقط.</p>
+  <?php if ($isAdmin): ?><form class="f" method="post" style="margin:10px 0 0"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="set_trainer"><input type="hidden" name="course" value="<?= $cid ?>">
+    <label>تعيين المدرّب (للمدير)<select name="trainer_id"><option value="0">— بدون مدرّب —</option><?php foreach ($trainers as $t): ?><option value="<?= (int)$t['id'] ?>" <?= (int)$course['trainer_id'] === (int)$t['id'] ? 'selected' : '' ?>><?=h(($t['full_name_ar'] ?: $t['full_name_en']) . ' — ' . $t['email'])?></option><?php endforeach; ?></select></label><button class="btn l">حفظ</button></form><?php endif; ?>
+  <?php endif; ?>
+</div>
+
 <?php if ($course): ?>
-  <div class="stats"><div><b><?= count($sess) ?></b>محاضرة</div><div><b><?= (int)$course['nl'] ?></b>برابط زوم</div><div><b><?= count($sess) - (int)$course['nl'] ?></b>بلا رابط</div><div><b><?= (int)$course['ne'] ?></b>متدرب مسجّل</div></div>
-  <?php $await = count(array_filter($sess, fn($s) => $s['ends_at'] < $now && trim((string)$s['title']) !== '' && !$s['rec_url'])); ?>
-  <div class="box"><h2>🎓 مدرّب الدورة</h2>
-  <?php if ($me['role'] === 'admin'): ?><form class="f" method="post"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="set_trainer"><input type="hidden" name="course" value="<?= $cid ?>">
-    <label>المدرّب<select name="trainer_id"><option value="0">— بدون مدرّب —</option><?php foreach ($trainers as $t): ?><option value="<?= (int)$t['id'] ?>" <?= (int)$course['trainer_id'] === (int)$t['id'] ? 'selected' : '' ?>><?=h(($t['full_name_ar'] ?: $t['full_name_en']) . ' — ' . $t['email'])?></option><?php endforeach; ?></select></label>
-    <button class="btn">حفظ</button></form><?php else: $tn = array_values(array_filter($trainers, fn($t) => (int)$t['id'] === (int)$course['trainer_id'])); ?><p><?= $tn ? h($tn[0]['full_name_ar']) : '<span class="mut">لم يُعيَّن مدرّب.</span>' ?></p><?php endif; ?>
-  <p class="mut">يكتب المدرّب عنوان/موضوع كل محاضرة بعد انتهائها من صفحته (<span class="ltr">admin/trainer.php</span>)، ثم يضيف موظف الزوم رابط التسجيل بجانبه. لإضافة مدرّب: غيّر دور المستخدم إلى «مدرّب» من تبويب المستخدمين.<?= $await ? ' <span class="st st-new">' . $await . ' بانتظار التسجيل</span>' : '' ?></p></div>
-  <div class="box"><h2>⚙️ توليد المحاضرات تلقائيًا</h2>
-  <form class="f" method="post" onsubmit="return this.mode.value!=='replace'||confirm('سيتم حذف كل محاضرات الدورة الحالية وروابطها وإنشاؤها من جديد. متابعة؟')">
-    <input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="generate"><input type="hidden" name="course" value="<?= $cid ?>">
-    <label>من تاريخ<input type="date" name="from" required value="<?=h($course['start_date'] ?? '')?>"></label>
-    <label>إلى تاريخ<input type="date" name="to" required value="<?=h($course['end_date'] ?? '')?>"></label>
-    <label>أيام المحاضرات<span class="days"><?php foreach (LEC_DAYS as $k => $v): ?><label><input type="checkbox" name="days[]" value="<?= $k ?>" <?= in_array($k, [0, 1, 2, 3], true) ? 'checked' : '' ?>><?=h($v)?></label><?php endforeach; ?></span></label>
-    <label>من الساعة<input type="time" name="st" value="16:00" required></label><label>إلى الساعة<input type="time" name="et" value="18:00" required></label>
-    <label>الطريقة<select name="mode"><option value="add">إضافة الأيام الناقصة فقط</option><option value="replace">حذف الحالية وإعادة التوليد</option></select></label>
-    <button class="btn g">توليد المحاضرات</button></form></div>
+<div class="zc">
+  <div class="hd"><h2><?= $ic($icCam) ?> جلسات: <?=h($course['title_ar'])?></h2>
+    <div class="acts"><button type="button" class="btn ol" onclick="var d=document.getElementById('imp');d.hidden=!d.hidden">⬆ استيراد من Excel</button><button type="button" class="btn ol" onclick="var d=document.getElementById('one');d.hidden=!d.hidden">＋ محاضرة</button><?php if ($sess): ?><button class="btn" form="saveall">حفظ التغييرات</button><?php endif; ?></div></div>
 
-  <h2>📋 المحاضرات بالترتيب</h2>
-  <?php if ($sess): ?>
-  <form method="post" id="saveall"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="save_all"><input type="hidden" name="course" value="<?= $cid ?>">
-  <table class="sx"><thead><tr><th>#</th><th>اليوم</th><th>التاريخ</th><th>من</th><th>إلى</th><th>رابط الزوم</th><th>رمز الدخول</th><th>العنوان / الموضوع</th><th>التسجيل (بعد انتهاء المحاضرة)</th><th></th></tr></thead><tbody>
-  <?php $nextDone = false; foreach ($sess as $s): $id = (int)$s['id']; $past = $s['ends_at'] < $now; $isNext = !$past && !$nextDone; if ($isNext) $nextDone = true; ?>
-    <tr class="<?= $past ? 'past' : ($isNext ? 'nx' : '') ?> <?= $s['zoom_url'] ? '' : 'nolink' ?> <?= $s['rec_url'] ? 'rec-yes' : '' ?> <?= ($aw = $past && trim((string)$s['title']) !== '' && !$s['rec_url']) ? 'await' : '' ?>"><td><span class="no"><?= (int)$s['session_no'] ?></span></td>
-      <td style="white-space:nowrap"><?=h(lec_ar((string)$s['starts_at']))?><?= $isNext ? '<br><span class="st st-new">التالية</span>' : '' ?><?= $aw ? '<br><span class="st st-aw">⏳ بانتظار التسجيل</span>' : '' ?></td>
-      <td><input type="date" name="date[<?= $id ?>]" value="<?=h(substr((string)$s['starts_at'], 0, 10))?>" required></td>
-      <td><input type="time" name="st[<?= $id ?>]" value="<?=h(substr((string)$s['starts_at'], 11, 5))?>" required></td>
-      <td><input type="time" name="et[<?= $id ?>]" value="<?=h(substr((string)$s['ends_at'], 11, 5))?>" required></td>
-      <td><input type="url" name="url[<?= $id ?>]" value="<?=h($s['zoom_url'] ?? '')?>" placeholder="https://us06web.zoom.us/j/…" pattern="https://([A-Za-z0-9-]+\.)*zoom\.us(/.*)?"></td>
-      <td><input class="p" name="pass[<?= $id ?>]" value="<?=h($s['zoom_passcode'] ?? '')?>" maxlength="64"></td>
-      <td><input class="t" name="title[<?= $id ?>]" value="<?=h($s['title'] ?? '')?>" maxlength="190"><?= $s['title_by_name'] ? '<br><span class="mut">✍️ ' . h($s['title_by_name']) . '</span>' : '' ?></td>
-      <td class="rc"><input type="url" name="rec[<?= $id ?>]" value="<?=h($s['rec_url'] ?? '')?>" placeholder="zoom.us/rec/… · youtu.be/… · drive.google.com/…">
-        <span><input class="p" name="recpass[<?= $id ?>]" value="<?=h($s['rec_passcode'] ?? '')?>" maxlength="64" placeholder="رمز التسجيل"><input type="date" name="recuntil[<?= $id ?>]" value="<?=h($s['rec_until'] ?? '')?>" title="متاح حتى (اختياري)"></span></td>
-      <td><button class="btn s r" form="del<?= $id ?>" onclick="return confirm('حذف المحاضرة <?= (int)$s['session_no'] ?>؟ سيُعاد ترقيم الباقي.')">حذف</button></td></tr>
-  <?php endforeach; ?>
-  </tbody></table>
-  <p><button class="btn g">💾 حفظ جميع التعديلات والروابط</button></p></form>
-  <?php foreach ($sess as $s): ?><form id="del<?= (int)$s['id'] ?>" method="post" hidden><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="delete"><input type="hidden" name="course" value="<?= $cid ?>"><input type="hidden" name="id" value="<?= (int)$s['id'] ?>"></form><?php endforeach; ?>
-  <?php else: ?><p class="mut">لا توجد محاضرات لهذه الدورة بعد. استخدم «توليد المحاضرات» أعلاه أو أضف محاضرة يدويًا.</p><?php endif; ?>
-
-  <div class="cols">
-  <div class="box"><h2>➕ إضافة محاضرة واحدة</h2>
-  <form class="f" method="post"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="add"><input type="hidden" name="course" value="<?= $cid ?>">
-    <label>التاريخ<input type="date" name="date" required></label><label>من<input type="time" name="st" value="16:00" required></label><label>إلى<input type="time" name="et" value="18:00" required></label>
-    <label>رابط الزوم<input type="url" name="url" placeholder="https://zoom.us/j/…" style="direction:ltr"></label><label>رمز الدخول<input name="pass" maxlength="64" style="width:110px"></label>
-    <button class="btn">إضافة</button></form><p class="mut">تُرقَّم المحاضرات تلقائيًا حسب التاريخ والوقت.</p></div>
-  <div class="box"><h2>📥 استيراد الروابط من Excel / CSV</h2>
+  <div class="drawer" id="imp" <?= $imp ? '' : 'hidden' ?>><h3>📥 استيراد الروابط من Excel / CSV</h3>
   <form class="f" method="post" enctype="multipart/form-data"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="import_upload"><input type="hidden" name="course" value="<?= $cid ?>">
     <label>الملف (.xlsx أو .csv)<input type="file" name="file" accept=".xlsx,.csv,.txt" required></label><button class="btn">رفع ومعاينة</button></form>
-  <p class="mut">الأعمدة: «رقم المحاضرة» (أو «التاريخ») + «رابط الزوم» و/أو «رابط التسجيل» + «رمز الدخول» / «رمز التسجيل» اختياريًا. <a href="?template=csv">تحميل نموذج CSV</a>. لا يُحفظ شيء قبل التأكيد.</p></div>
-  </div>
+  <p class="mut">الأعمدة: «رقم المحاضرة» (أو «التاريخ») + «رابط الزوم» و/أو «رابط التسجيل» + «رمز الدخول» / «رمز التسجيل» اختياريًا. <a href="?template=csv">تحميل نموذج CSV</a>. لا يُحفظ شيء قبل التأكيد.</p>
   <?php if ($imp): $okn = count(array_filter($imp['rows'], fn($r) => !$r['err'])); ?>
-  <div class="box"><h2>👀 معاينة الاستيراد</h2><p><b><?= $okn ?></b> سطر صالح من <?= count($imp['rows']) ?>. الأسطر التي بها خطأ ستُتجاهل.</p>
-  <table><thead><tr><th>السطر</th><th>رقم المحاضرة</th><th>التاريخ</th><th>الرابط</th><th>الرمز</th><th>التسجيل</th><th>الحالة</th></tr></thead><tbody>
-  <?php foreach ($imp['rows'] as $r): ?><tr><td><?= (int)$r['line'] ?></td><td><?= $r['no'] ?: '—' ?></td><td class="ltr"><?=h($r['date'] ?? '—')?></td><td class="ltr" style="max-width:360px;overflow-wrap:anywhere"><?=h($r['url'])?></td><td class="ltr"><?=h($r['pass'])?></td><td class="ltr" style="max-width:300px;overflow-wrap:anywhere"><?=h($r['rec'] ?? '')?><?= ($r['recpass'] ?? '') !== '' ? ' · ' . h($r['recpass']) : '' ?></td>
-    <td><?= $r['err'] ? '<span class="st st-cancelled">' . h($r['err']) . '</span>' : '<span class="st st-booked">جاهز</span>' ?></td></tr><?php endforeach; ?></tbody></table>
+  <p><b><?= $okn ?></b> سطر صالح من <?= count($imp['rows']) ?>. الأسطر التي بها خطأ ستُتجاهل.</p>
+  <div style="overflow-x:auto"><table><thead><tr><th>السطر</th><th>رقم المحاضرة</th><th>التاريخ</th><th>الرابط</th><th>الرمز</th><th>التسجيل</th><th>الحالة</th></tr></thead><tbody>
+  <?php foreach ($imp['rows'] as $r): ?><tr><td><?= (int)$r['line'] ?></td><td><?= $r['no'] ?: '—' ?></td><td class="ltr"><?=h($r['date'] ?? '—')?></td><td class="ltr" style="max-width:320px;overflow-wrap:anywhere"><?=h($r['url'])?></td><td class="ltr"><?=h($r['pass'])?></td><td class="ltr" style="max-width:280px;overflow-wrap:anywhere"><?=h($r['rec'] ?? '')?><?= ($r['recpass'] ?? '') !== '' ? ' · ' . h($r['recpass']) : '' ?></td>
+    <td><?= $r['err'] ? '<span class="pill p-live">' . h($r['err']) . '</span>' : '<span class="pill p-ok">جاهز</span>' ?></td></tr><?php endforeach; ?></tbody></table></div>
   <form class="f" method="post" style="margin-top:10px"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="course" value="<?= $cid ?>"><input type="hidden" name="nonce" value="<?=h($imp['nonce'])?>">
-    <button class="btn g" name="do" value="import_confirm" <?= $okn ? '' : 'disabled' ?>>تأكيد الاستيراد</button><button class="btn l" name="do" value="import_cancel">إلغاء</button></form></div>
-  <?php endif; ?>
-  <?php if ($sess): ?><form method="post" onsubmit="return confirm('حذف جميع محاضرات هذه الدورة وروابطها؟')"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="delete_all"><input type="hidden" name="course" value="<?= $cid ?>"><button class="btn s r">🗑️ حذف جميع محاضرات الدورة</button></form><?php endif; ?>
-<?php endif; ?>
+    <button class="btn g" name="do" value="import_confirm" <?= $okn ? '' : 'disabled' ?>>تأكيد الاستيراد</button><button class="btn l" name="do" value="import_cancel">إلغاء</button></form>
+  <?php endif; ?></div>
+
+  <div class="drawer" id="one" hidden><h3>➕ إضافة محاضرة واحدة</h3>
+  <form class="f" method="post"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="add"><input type="hidden" name="course" value="<?= $cid ?>">
+    <label>التاريخ<input type="date" name="date" required></label><label>من<input type="time" name="st" value="19:00" required></label><label>إلى<input type="time" name="et" value="21:00" required></label>
+    <label>رابط الزوم<input type="url" name="url" placeholder="https://zoom.us/j/…" style="direction:ltr"></label><label>رمز الدخول<input name="pass" maxlength="64" style="width:110px"></label>
+    <button class="btn">إضافة</button></form><p class="mut">تُرقَّم المحاضرات تلقائيًا حسب التاريخ والوقت.</p></div>
+
+  <?php if ($sess): ?>
+  <form method="post" id="saveall"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="save_all"><input type="hidden" name="course" value="<?= $cid ?>">
+  <table class="zt"><thead><tr><th>#</th><th>التاريخ والوقت</th><th style="width:25%">رابط الزوم</th><th>عنوان المحاضرة <?= $isAdmin ? '' : '(للقراءة فقط)' ?></th><th style="width:25%">رابط التسجيل</th><th>الحالة</th></tr></thead><tbody>
+  <?php foreach ($sess as $s): $id = (int)$s['id']; $past = $s['ends_at'] <= $now; $live = !$past && $s['starts_at'] <= $now; $isToday = substr((string)$s['starts_at'], 0, 10) === $today;
+    $exp = $s['rec_until'] && $today > $s['rec_until']; $await = $past && !$s['rec_url']; $hasT = trim((string)$s['title']) !== '';
+    $pill = $past ? ($s['rec_url'] ? ($exp ? '<span class="pill p-exp">منتهي الإتاحة</span>' : '<span class="pill p-ok">● متاح</span>') : '<span class="pill p-wait">⏳ بانتظار التسجيل</span>')
+      : ($live ? '<span class="pill p-live">● مباشر الآن</span>' : ($isToday ? '<span class="pill p-up">اليوم</span>' : '<span class="pill p-up">قادمة</span>')); ?>
+    <tr class="<?= $await ? 'hl' : ($past ? 'past' : '') ?>">
+      <td class="top"><span class="nm"><?= (int)$s['session_no'] ?></span><span class="m-only"></span></td>
+      <td data-l="التاريخ والوقت"><span style="white-space:nowrap"><?=h(lec_ar((string)$s['starts_at']) . ' · ' . lec_t((string)$s['starts_at']))?></span>
+        <details><summary>تعديل الموعد</summary><div class="sub"><input type="date" name="date[<?= $id ?>]" value="<?=h(substr((string)$s['starts_at'], 0, 10))?>" required><input type="time" name="st[<?= $id ?>]" value="<?=h(substr((string)$s['starts_at'], 11, 5))?>" required><input type="time" name="et[<?= $id ?>]" value="<?=h(substr((string)$s['ends_at'], 11, 5))?>" required></div>
+        <button class="del" form="del<?= $id ?>" onclick="return confirm('حذف المحاضرة <?= (int)$s['session_no'] ?>؟ سيُعاد ترقيم الباقي.')">🗑 حذف المحاضرة</button></details></td>
+      <td data-l="رابط الزوم"><input type="url" class="lk<?= $s['zoom_url'] ? '' : ' miss' ?>" name="url[<?= $id ?>]" value="<?=h($s['zoom_url'] ?? '')?>" placeholder="⚠ أضف رابط الزوم" pattern="https://([A-Za-z0-9-]+\.)*zoom\.us(/.*)?" aria-label="رابط الزوم">
+        <div class="sub"><input class="lk" name="pass[<?= $id ?>]" value="<?=h($s['zoom_passcode'] ?? '')?>" maxlength="64" placeholder="رمز الدخول" aria-label="رمز الدخول"></div></td>
+      <td data-l="عنوان المحاضرة" class="ttl"><?php if ($isAdmin): ?><input name="title[<?= $id ?>]" value="<?=h($s['title'] ?? '')?>" maxlength="190"><?php elseif ($hasT): ?><b><?=h($s['title'])?></b><?php elseif ($past): ?><i>لم يُكتب بعد</i><?php else: ?><span class="mut">—</span><?php endif; ?>
+        <?php if ($hasT): ?><span class="pill p-done" style="font-size:11px;margin-top:3px">من المدرب<?= $s['title_by_name'] ? ' · ' . h($s['title_by_name']) : '' ?></span><?php endif; ?></td>
+      <td data-l="رابط التسجيل"><input type="url" class="lk" name="rec[<?= $id ?>]" value="<?=h($s['rec_url'] ?? '')?>" placeholder="<?= $past ? 'الصق رابط التسجيل…' : 'بعد انتهاء المحاضرة' ?>" <?= $past || $s['rec_url'] ? '' : 'readonly' ?> aria-label="رابط التسجيل">
+        <?php if ($past || $s['rec_url']): ?><div class="sub"><input class="lk" name="recpass[<?= $id ?>]" value="<?=h($s['rec_passcode'] ?? '')?>" maxlength="64" placeholder="رمز التسجيل"><input type="date" name="recuntil[<?= $id ?>]" value="<?=h($s['rec_until'] ?? '')?>" title="متاح حتى (اختياري)"></div><?php endif; ?></td>
+      <td data-l="الحالة"><?= $pill ?></td></tr>
+  <?php endforeach; ?>
+  </tbody></table>
+  <p style="margin:14px 0 0"><button class="btn">💾 حفظ التغييرات</button></p></form>
+  <?php foreach ($sess as $s): ?><form id="del<?= (int)$s['id'] ?>" method="post" hidden><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="delete"><input type="hidden" name="course" value="<?= $cid ?>"><input type="hidden" name="id" value="<?= (int)$s['id'] ?>"></form><?php endforeach; ?>
+  <form method="post" style="margin-top:12px" onsubmit="return confirm('حذف جميع محاضرات هذه الدورة وروابطها؟')"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="delete_all"><input type="hidden" name="course" value="<?= $cid ?>"><button class="del">🗑️ حذف جميع محاضرات الدورة</button></form>
+  <?php else: ?><p class="mut">لا توجد محاضرات لهذه الدورة بعد. استخدم «توليد جدول المحاضرات» أعلاه أو أضف محاضرة.</p><?php endif; ?>
 </div>
+<?php endif; ?>
 <?php abd_admin_bottom();
