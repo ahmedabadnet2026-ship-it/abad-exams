@@ -22,15 +22,50 @@ const LEC_HDR = ['no' => ['no', 'number', 'session', 'lecture', '#', 'رقم', '
   'date' => ['date', 'التاريخ', 'تاريخ', 'تاريخ المحاضره']];
 
 $cid = (int)($_GET['course'] ?? $_POST['course'] ?? 0);
-function lec_back(int $cid, string $msg, bool $err = false, string $q = ''): void {
-  $_SESSION['flash'] = [$msg, $err]; header('Location: lectures.php' . ($cid ? '?course=' . $cid . $q : ''), true, 303); exit; }
+function lec_back(int $cid, string $msg, bool $err = false, string $q = '', string $hash = ''): void {
+  $_SESSION['flash'] = [$msg, $err]; header('Location: lectures.php' . ($cid ? '?course=' . $cid . $q : '') . $hash, true, 303); exit; }
+/** Site catalog: private copy outside the web root (…/private_html/abad-config/site-courses.json) wins, because the host's nginx serves .json
+ *  statically and ignores data/.htaccess; data/site-courses.json in the repo is the source/fallback for local testing. */
+function lec_site_file(): string {
+  $pos = strpos(__DIR__, '/public_html'); $root = $pos !== false ? substr(__DIR__, 0, $pos) : dirname(__DIR__, 2);
+  foreach (['abad-config', 'abad-data'] as $d) if (is_readable($f = "$root/private_html/$d/site-courses.json")) return $f;
+  return dirname(__DIR__) . '/data/site-courses.json';
+}
 function lec_dt(string $d, string $t): ?string { return abd_date($d) && abd_lec_time($t) ? "$d $t:00" : null; }
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
   if (!abd_csrf_ok((string)($_POST['csrf'] ?? ''))) lec_back($cid, 'انتهت صلاحية النموذج، أعد المحاولة.', true);
   $do = (string)($_POST['do'] ?? '');
   try {
-    if ($cid <= 0 || !abd_q('SELECT 1 FROM abd_courses WHERE id = ?', [$cid])->fetchColumn()) lec_back(0, 'اختر دورة أولًا.', true);
+    if ($do === 'create_course') {
+      [$d, $err] = abd_lec_course_input($_POST);
+      if ($err) { $_SESSION['lec_cc'] = $_POST; unset($_SESSION['lec_cc']['csrf']); lec_back(0, $err, true, '', '#newcourse'); }
+      $slug = substr('online-' . str_replace('-', '', $d['from']) . '-' . bin2hex(random_bytes(3)), 0, 80);
+      abd_q("INSERT INTO abd_courses (slug, title_ar, title_en, delivery, start_date, end_date, trainer_id, is_active) VALUES (?, ?, '', 'online', ?, ?, ?, 1)",
+        [$slug, $d['title'], $d['from'], $d['to'], $d['trainer_id']]);
+      $new = (int)abd_db()->lastInsertId();
+      try { $n = abd_lec_generate($new, $d['from'], $d['to'], $d['days'], $d['st'], $d['et'], (int)$me['id'], true); }
+      catch (Throwable $e) { abd_q('DELETE FROM abd_courses WHERE id = ?', [$new]); throw $e; }
+      unset($_SESSION['lec_cc']);
+      lec_back($new, "تم إنشاء الدورة «{$d['title']}» وتوليد $n محاضرة مرتّبة حسب التاريخ. أضف روابط الزوم أدناه.");
+    }
+    if ($cid <= 0 || !abd_q("SELECT 1 FROM abd_courses WHERE id = ? AND delivery = 'online'", [$cid])->fetchColumn()) lec_back(0, 'اختر دورة أولًا.', true);
+    if ($do === 'update_course' || $do === 'delete_course') {
+      $c = abd_q('SELECT delivery, title_ar FROM abd_courses WHERE id = ?', [$cid])->fetch();
+      if (($c['delivery'] ?? '') !== 'online') lec_back($cid, 'يمكن تعديل أو حذف الدورات الأونلاين فقط من هنا.', true);
+      if (abd_lec_held($cid)) lec_back($cid, 'لا يمكن تعديل أو حذف دورة بدأت محاضراتها أو مرّ موعد إحداها.', true);
+      if ($do === 'delete_course') {
+        if ((int)abd_q("SELECT COUNT(*) FROM abd_enrollments WHERE course_id = ? AND status <> 'cancelled'", [$cid])->fetchColumn())
+          lec_back($cid, 'لا يمكن حذف دورة مسجّل بها متدربون. ألغِ تسجيلهم أولًا من لوحة الإدارة.', true);
+        abd_q('DELETE FROM abd_courses WHERE id = ?', [$cid]);   // sessions cascade (FK)
+        lec_back(0, "تم حذف الدورة «{$c['title_ar']}» وجدول محاضراتها.");
+      }
+      [$d, $err] = abd_lec_course_input($_POST);
+      if ($err) lec_back($cid, $err, true, '&edit=1');
+      abd_q('UPDATE abd_courses SET title_ar = ?, trainer_id = ?, start_date = ?, end_date = ? WHERE id = ?', [$d['title'], $d['trainer_id'], $d['from'], $d['to'], $cid]);
+      $n = abd_lec_generate($cid, $d['from'], $d['to'], $d['days'], $d['st'], $d['et'], (int)$me['id'], true);
+      lec_back($cid, "تم حفظ الدورة وإعادة توليد $n محاضرة. (أعد إضافة روابط الزوم إن كانت مضافة سابقًا)");
+    }
     if ($do === 'set_trainer') {
       if ($me['role'] !== 'admin') lec_back($cid, 'تعيين المدرّب للمدير فقط.', true);
       $tid = (int)($_POST['trainer_id'] ?? 0);
@@ -136,14 +171,27 @@ if (($t = (string)($_GET['template'] ?? '')) === 'csv') {
 
 try {
   $trainers = abd_q("SELECT id, full_name_ar, full_name_en, email FROM abd_users WHERE role = 'trainer' AND is_active = 1 ORDER BY full_name_ar")->fetchAll();
-  $courses = abd_q("SELECT c.id, c.title_ar, c.start_date, c.end_date, c.trainer_id, (SELECT COUNT(*) FROM abd_course_sessions s WHERE s.course_id = c.id) n,
+  $courses = abd_q("SELECT c.id, c.title_ar, c.start_date, c.end_date, c.trainer_id, c.delivery, (SELECT COUNT(*) FROM abd_course_sessions s WHERE s.course_id = c.id) n,
       (SELECT COUNT(*) FROM abd_course_sessions s WHERE s.course_id = c.id AND s.zoom_url IS NOT NULL) nl,
       (SELECT COUNT(*) FROM abd_enrollments e WHERE e.course_id = c.id AND e.status = 'active') ne
-    FROM abd_courses c ORDER BY c.is_active DESC, COALESCE(c.start_date, '9999-12-31') DESC")->fetchAll();
+    FROM abd_courses c WHERE c.delivery = 'online' ORDER BY c.is_active DESC, COALESCE(c.start_date, '9999-12-31') DESC")->fetchAll();
   $course = null; foreach ($courses as $c) if ((int)$c['id'] === $cid) $course = $c;
   $sess = $course ? abd_q('SELECT s.*, u.full_name_ar AS title_by_name FROM abd_course_sessions s LEFT JOIN abd_users u ON u.id = s.title_by WHERE s.course_id = ? ORDER BY s.starts_at, s.id', [$cid])->fetchAll() : [];
 } catch (Throwable $e) { error_log('[abad-lec] ' . $e->getMessage()); abd_admin_fatal('جدول المحاضرات غير موجود بعد. شغّل ترحيل قاعدة البيانات (api/bin/migrate.php).'); }
 $flash = $_SESSION['flash'] ?? null; unset($_SESSION['flash']);
+$cc = $_SESSION['lec_cc'] ?? []; unset($_SESSION['lec_cc']);   // re-fill the create form after a validation error
+$held = $course ? abd_lec_held($cid) : 0;
+// Website course catalog (online/remote courses only), grouped by category for the searchable «اسم الدورة» picker.
+$site = []; foreach ((json_decode((string)@file_get_contents(lec_site_file()), true) ?: []) as $sc) {
+  $nm = trim((string)($sc['name_ar'] ?: $sc['name_en'] ?? '')); if ($nm === '') continue;   // the file holds remote-capable courses only
+  $site[trim((string)($sc['category'] ?? '')) ?: 'أخرى'][] = ['n' => $nm, 'h' => (int)abd_latin_digits((string)($sc['hours'] ?? ''))]; }
+ksort($site);
+$edit = null;   // current values of the course for the edit form (derived from its sessions)
+if ($course && $sess && !$held) {
+  $f0 = $sess[0]; $wd = array_values(array_unique(array_map(fn($s) => (int)date('w', strtotime((string)$s['starts_at'])), $sess))); sort($wd);
+  $edit = ['title' => $course['title_ar'], 'trainer_id' => (int)$course['trainer_id'], 'from' => substr((string)$f0['starts_at'], 0, 10), 'days' => $wd,
+    'st' => substr((string)$f0['starts_at'], 11, 5), 'dur' => (int)round((strtotime((string)$f0['ends_at']) - strtotime((string)$f0['starts_at'])) / 60), 'count' => count($sess), 'by' => 'count'];
+}
 $tok = abd_csrf();
 $imp = ($_GET['step'] ?? '') === 'preview' && ($_SESSION['lec_imp']['cid'] ?? 0) === $cid ? $_SESSION['lec_imp'] : null;
 const LEC_MON = ['', 'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
@@ -191,6 +239,15 @@ main{max-width:1240px}
 .del{background:none;border:0;color:#c0392b;cursor:pointer;font:700 12px Cairo;padding:2px 0}
 .drawer{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 14px}
 .drawer h3{margin:0 0 8px;font-size:15px}
+#newcourse summary{cursor:pointer;list-style:none}#newcourse summary::-webkit-details-marker{display:none}#newcourse summary h2{margin:0}#newcourse details[open] summary h2{margin-bottom:14px}
+#newcourse{border-top:5px solid var(--b)}
+.ccg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:end}.ccg .w2{grid-column:span 2}.ccg .w4{grid-column:1/-1}.pick .plist{margin-top:6px;height:auto;min-height:130px;font-size:13px}.pick optgroup{color:var(--b);font-weight:800}.pick option{color:var(--n);font-weight:600;padding:3px 6px}.psug{display:block;color:#9a6a00;font-weight:700;margin-top:3px}
+.ccg label{font-size:12px;font-weight:800;color:var(--mut);display:block;margin-bottom:4px}.ccg input,.ccg select{width:100%}
+.seg{display:flex;gap:6px}.seg label{flex:1;margin:0;position:relative}.seg input{position:absolute;opacity:0}
+.seg span{display:block;text-align:center;border:1px solid #cfdbe6;border-radius:8px;padding:8px 0;font-size:12px;font-weight:800;color:var(--n);cursor:pointer}
+.seg input:checked+span{background:var(--g);border-color:var(--g);color:var(--n)}
+.cc:has(input[value=count]:checked) .bye,.cc:has(input[value=end]:checked) .byc{display:none}
+@media (max-width:760px){.ccg{grid-template-columns:1fr 1fr}.ccg .w2{grid-column:1/-1}}
 @media (max-width:980px){.gen{grid-template-columns:1fr 1fr}.gen .wide{grid-column:1/-1}}
 .zt td:nth-child(2){min-width:150px}
 @media (max-width:760px){
@@ -211,6 +268,35 @@ main{max-width:1240px}
   <div><div class="ic"><?= $ic('<rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>') ?></div><div><b><?= (int)($cnt['today'] ?? 0) ?></b><small>محاضرات اليوم</small></div></div>
 </div>
 <?php if ($flash): ?><div class="<?= $flash[1] ? 'err' : 'okm' ?>"><?=h($flash[0])?></div><?php endif; ?>
+
+<?php
+/** «إنشاء دورة أونلاين» / edit form. $v = current values. */
+function lec_course_form(array $v, array $trainers, string $tok, string $do, int $cid, string $btn, array $site = []): void {
+  $days = array_map('intval', (array)($v['days'] ?? [0, 1, 2, 3])); $by = ($v['by'] ?? 'count') === 'end' ? 'end' : 'count'; $fid = $do . $cid; ?>
+  <form method="post" class="cc" <?= $do === 'update_course' ? 'onsubmit="return confirm(\'سيُعاد توليد جدول المحاضرات بالكامل وتُحذف روابط الزوم المضافة لهذه الدورة. متابعة؟\')"' : '' ?>>
+  <input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="<?=h($do)?>"><input type="hidden" name="course" value="<?= $cid ?>">
+  <div class="ccg">
+    <div class="w2 pick"><label for="q<?= $fid ?>">الدورة من موقع أبعاد (عن بُعد)</label><input id="q<?= $fid ?>" class="psearch" type="search" placeholder="🔍 ابحث باسم الدورة أو التصنيف…" autocomplete="off">
+      <select class="plist" size="6" aria-label="دورات الموقع"><?php foreach ($site as $cat => $list): ?><optgroup label="<?=h($cat)?>"><?php foreach ($list as $sc): ?><option value="<?=h($sc['n'])?>" data-h="<?= $sc['h'] ?>"><?=h($sc['n'])?><?= $sc['h'] ? ' · ' . $sc['h'] . ' ساعة' : '' ?></option><?php endforeach; ?></optgroup><?php endforeach; ?></select></div>
+    <div class="w2"><label for="t<?= $fid ?>">اسم الدورة</label><input id="t<?= $fid ?>" name="title" required minlength="3" maxlength="190" value="<?=h((string)($v['title'] ?? ''))?>" placeholder="اختر من القائمة أو اكتب اسمًا">
+      <label style="margin-top:8px">عدد ساعات الدورة</label><input type="number" name="hours" class="phours" min="1" max="999" value="<?=h((string)($v['hours'] ?? ''))?>" placeholder="مثال: 40"><small class="mut psug"></small></div>
+    <div class="w2"><label for="r<?= $fid ?>">المدرّب</label><select id="r<?= $fid ?>" name="trainer_id" required><option value="">— اختر المدرّب —</option>
+      <?php foreach ($trainers as $t): ?><option value="<?= (int)$t['id'] ?>" <?= (int)($v['trainer_id'] ?? 0) === (int)$t['id'] ? 'selected' : '' ?>><?=h(($t['full_name_ar'] ?: $t['full_name_en']) . ' — ' . $t['email'])?></option><?php endforeach; ?></select>
+      <?php if (!$trainers): ?><small class="mut">لا يوجد مستخدمون بدور «مدرّب». يضيفهم المدير من لوحة الإدارة.</small><?php endif; ?></div>
+    <div><label>تاريخ البداية</label><input type="date" name="from" required value="<?=h((string)($v['from'] ?? ''))?>" min="<?= date('Y-m-d') ?>"></div>
+    <div><label>وقت البداية (بتوقيت الرياض)</label><input type="time" name="st" required value="<?=h((string)($v['st'] ?? '19:00'))?>"></div>
+    <div><label>مدة المحاضرة</label><select name="dur" class="pdur"><?php foreach ([60 => 'ساعة', 90 => 'ساعة ونصف', 120 => 'ساعتان', 150 => 'ساعتان ونصف', 180 => '3 ساعات', 240 => '4 ساعات'] as $m => $l): ?><option value="<?= $m ?>" <?= (int)($v['dur'] ?? 120) === $m ? 'selected' : '' ?>><?= $l ?></option><?php endforeach; ?></select></div>
+    <div class="w4"><span class="zl">أيام الأسبوع</span><div class="days"><?php foreach (['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'] as $k => $d): ?><label><input type="checkbox" name="days[]" value="<?= $k ?>" <?= in_array($k, $days, true) ? 'checked' : '' ?>><span><?= $d ?></span></label><?php endforeach; ?></div></div>
+    <div class="w2"><span class="zl">نهاية الدورة</span><div class="seg"><label><input type="radio" name="by" value="count" <?= $by === 'count' ? 'checked' : '' ?>><span>بعدد المحاضرات</span></label><label><input type="radio" name="by" value="end" <?= $by === 'end' ? 'checked' : '' ?>><span>بتاريخ النهاية</span></label></div></div>
+    <div class="byc"><label>عدد المحاضرات</label><input type="number" name="count" class="pcount" min="1" max="200" value="<?= (int)($v['count'] ?? 12) ?>"></div>
+    <div class="bye"><label>تاريخ النهاية</label><input type="date" name="to" value="<?=h((string)($v['to'] ?? ''))?>"></div>
+  </div>
+  <p class="mut" style="margin:10px 0 0">تُولَّد المحاضرات مرتّبة حسب التاريخ. المدرّب يبدأ المحاضرات ويكتب عناوينها، ومسؤول الزوم يضيف روابط الدخول والتسجيل.</p>
+  <button class="btn g" style="margin-top:10px"><?= $btn ?></button></form>
+<?php }
+?>
+<div class="zc" id="newcourse"><details <?= $cc || !$courses ? 'open' : '' ?>><summary><h2>➕ إنشاء دورة أونلاين</h2></summary>
+  <?php lec_course_form($cc, $trainers, $tok, 'create_course', 0, 'إنشاء الدورة وتوليد الجدول', $site); ?></details></div>
 
 <div class="zc gt"><h2>توليد جدول المحاضرات</h2>
   <form id="pick" method="get"></form>
@@ -233,6 +319,10 @@ main{max-width:1240px}
   <p class="mut" style="margin:12px 0 0">🎓 مدرّب الدورة: <b><?= $tn ? h($tn[0]['full_name_ar']) : 'لم يُعيَّن' ?></b> · <?= (int)$course['ne'] ?> متدرب مسجّل · يكتب المدرّب عنوان كل محاضرة من صفحته، ويظهر هنا للقراءة فقط.</p>
   <?php if ($isAdmin): ?><form class="f" method="post" style="margin:10px 0 0"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="set_trainer"><input type="hidden" name="course" value="<?= $cid ?>">
     <label>تعيين المدرّب (للمدير)<select name="trainer_id"><option value="0">— بدون مدرّب —</option><?php foreach ($trainers as $t): ?><option value="<?= (int)$t['id'] ?>" <?= (int)$course['trainer_id'] === (int)$t['id'] ? 'selected' : '' ?>><?=h(($t['full_name_ar'] ?: $t['full_name_en']) . ' — ' . $t['email'])?></option><?php endforeach; ?></select></label><button class="btn l">حفظ</button></form><?php endif; ?>
+  <?php if ($held): ?><p class="mut" style="margin:10px 0 0">🔒 بدأت محاضرات هذه الدورة، لذا لا يمكن تعديل بياناتها أو حذفها من هنا.</p>
+  <?php else: ?><details class="drawer" style="margin:12px 0 0" <?= isset($_GET['edit']) ? 'open' : '' ?>><summary><b>✏️ تعديل الدورة أو حذفها</b> <span class="mut">(متاح قبل بدء أول محاضرة)</span></summary>
+    <?php lec_course_form($edit ?? ['title' => $course['title_ar'], 'trainer_id' => (int)$course['trainer_id'], 'from' => $course['start_date']], $trainers, $tok, 'update_course', $cid, 'حفظ وإعادة توليد الجدول', $site); ?>
+    <form method="post" style="margin-top:10px" onsubmit="return confirm('حذف الدورة وجميع محاضراتها نهائيًا؟')"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="delete_course"><input type="hidden" name="course" value="<?= $cid ?>"><button class="del">🗑️ حذف الدورة</button></form></details><?php endif; ?>
   <?php endif; ?>
 </div>
 
@@ -287,4 +377,16 @@ main{max-width:1240px}
   <?php else: ?><p class="mut">لا توجد محاضرات لهذه الدورة بعد. استخدم «توليد جدول المحاضرات» أعلاه أو أضف محاضرة.</p><?php endif; ?>
 </div>
 <?php endif; ?>
+<script>
+document.querySelectorAll('form.cc').forEach(function(f){
+  var q=f.querySelector('.psearch'),l=f.querySelector('.plist'),t=f.elements.title,hr=f.querySelector('.phours'),du=f.querySelector('.pdur'),cn=f.querySelector('.pcount'),sg=f.querySelector('.psug');
+  if(!l)return; var norm=function(s){return (s||'').toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي')};
+  q.addEventListener('input',function(){var v=norm(q.value);l.querySelectorAll('optgroup').forEach(function(g){var c=norm(g.label).indexOf(v)>=0,any=false;
+    g.querySelectorAll('option').forEach(function(o){var ok=c||norm(o.text).indexOf(v)>=0;o.hidden=!ok;o.disabled=!ok;any=any||ok});g.hidden=!any})});
+  function sug(){var h=+hr.value,d=+du.value/60;if(h>0&&d>0){var n=Math.ceil(h/d);sg.textContent='المقترح: '+n+' محاضرة ('+h+' ساعة ÷ '+(+du.value/60)+' ساعة)';return n}sg.textContent='';return 0}
+  function apply(){var n=sug();if(n&&cn){cn.value=Math.min(200,n);var r=f.querySelector('input[name=by][value=count]');if(r)r.checked=true}}
+  l.addEventListener('change',function(){var o=l.options[l.selectedIndex];if(!o)return;t.value=o.value;if(+o.dataset.h)hr.value=o.dataset.h;apply()});
+  du.addEventListener('change',apply);hr.addEventListener('input',apply);sug();
+});
+</script>
 <?php abd_admin_bottom();

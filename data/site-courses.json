@@ -1,0 +1,1334 @@
+[
+ {
+  "name_ar": null,
+  "name_en": "IRMP™ — Integrated Risk Management Professional (OCEG)",
+  "url": "https://abad-labs.com/courses/irmptm-integrated-risk-management-professional-oceg/",
+  "hours": "16 ساعة",
+  "category": "الإدارة / حوكمة الامتثال",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Microsoft Word Specialist (MOS Word)",
+  "url": "https://abad-labs.com/courses/mos-word-2024-2/",
+  "hours": "40 ساعة",
+  "category": "برامج مايكروسوفت أوفيس",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Microsoft Office Master (MOS Master)",
+  "url": "https://abad-labs.com/courses/mos-master-2024/",
+  "hours": "96 ساعة",
+  "category": "برامج مايكروسوفت أوفيس",
+  "duration": "12 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Microsoft Excel Specialist (MOS Excel)",
+  "url": "https://abad-labs.com/courses/mos-excel-2024/",
+  "hours": "48 ساعة",
+  "category": "برامج مايكروسوفت أوفيس",
+  "duration": "6 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Microsoft Word Specialist (MOS Word)",
+  "url": "https://abad-labs.com/courses/mos-word-2024/",
+  "hours": "40 ساعة",
+  "category": "برامج مايكروسوفت أوفيس",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Enterprise Core (ENCOR 350-401) (Cisco Certified Network Professional – Enterprise) Core",
+  "url": "https://abad-labs.com/courses/ccnp-enterprise-core-encor-350-401-cisco-certified-network-professional-enterprise-core/",
+  "hours": "40 ساعة",
+  "category": "الشبكات / شبكات المؤسسات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CompTIA Network+",
+  "url": "https://abad-labs.com/courses/comptia-network/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات المؤسسات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNA (Cisco Certified Network Associate)",
+  "url": "https://abad-labs.com/courses/ccna-cisco-certified-network-associate/",
+  "hours": "48 ساعة",
+  "category": "شبكات المؤسسات / الشبكات",
+  "duration": "6 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Microsoft Office Specialist (MOS)",
+  "url": "https://abad-labs.com/courses/microsoft-office-specialist-mos/",
+  "hours": "40 ساعة",
+  "category": "برامج مايكروسوفت أوفيس",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Microsoft Azure Fundamentals (AZ-900)",
+  "url": "https://abad-labs.com/courses/microsoft-azure-fundamentals-az-900/",
+  "hours": "16 ساعة",
+  "category": "الحوسبة السحابية",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Microsoft Certified: Azure Database Administrator Associate (DP-300)",
+  "url": "https://abad-labs.com/courses/new-course-26/",
+  "hours": "32 ساعة",
+  "category": "إدارة قواعد البيانات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "GRCP™ — GRC Professional (OCEG)",
+  "url": "https://abad-labs.com/courses/grcptm-grc-professional-oceg/",
+  "hours": "16 ساعة",
+  "category": "الإدارة / التحول الرقمي",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Microsoft Azure Administrator (AZ-104)",
+  "url": "https://abad-labs.com/courses/new-coursemicrosoft-azure-administrator-az-104/",
+  "hours": "32 ساعة",
+  "category": "الحوسبة السحابية",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CompTIA PenTest+",
+  "url": "https://abad-labs.com/courses/comptia-pentest/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الهجومي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CRISC — Certified in Risk and Information Systems Control",
+  "url": "https://abad-labs.com/courses/crisc-certified-in-risk-and-information-systems-control/",
+  "hours": "40 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "PMP — Project Management Professional",
+  "url": "https://abad-labs.com/courses/pmp-project-management-professional/",
+  "hours": "35 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Red Hat OpenShift Administration II (DO280)",
+  "url": "https://abad-labs.com/courses/red-hat-openshift-administration-ii-do280/",
+  "hours": "40 ساعة",
+  "category": "الحوسبة السحابية",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Red Hat Certified System Administrator (RHCSA)",
+  "url": "https://abad-labs.com/courses/new-course-13/",
+  "hours": "40 ساعة",
+  "category": "إدارة الانظمة",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Red Hat Certified Engineer (RHCE)",
+  "url": "https://abad-labs.com/courses/new-course-14/",
+  "hours": "40 ساعة",
+  "category": "إدارة الانظمة",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Red Hat OpenShift Administration I (DO180) – Operating a Production Cluster",
+  "url": "https://abad-labs.com/courses/new-course-17/",
+  "hours": "40 ساعة",
+  "category": "الحوسبة السحابية",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CGRC — Certified in Governance, Risk and Compliance",
+  "url": "https://abad-labs.com/courses/cgrc-certified-in-governance-risk-and-compliance/",
+  "hours": "32 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "eJPT — eLearnSecurity Junior Penetration Tester",
+  "url": "https://abad-labs.com/courses/ejpt-elearnsecurity-junior-penetration-tester/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الهجومي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CompTIA Data+",
+  "url": "https://abad-labs.com/courses/comptia-data/",
+  "hours": "32 ساعة",
+  "category": "تحليل بيانات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CompTIA Cloud+",
+  "url": "https://abad-labs.com/courses/new-course-15/",
+  "hours": "32 ساعة",
+  "category": "الحوسبة السحابية",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "AWS Certified Solutions Architect – Associate (SAA-C03)",
+  "url": "https://abad-labs.com/courses/new-course-18/",
+  "hours": "32 ساعة",
+  "category": "الحوسبة السحابية",
+  "duration": "4 أسابيع",
+  "mode": "عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "F5 Advanced WAF (AWAF) على BIG-IP",
+  "url": "https://abad-labs.com/courses/f5-advanced-waf-awaf-%d8%b9%d9%84%d9%89-big-ip/",
+  "hours": "48 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "6 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "FortiAnalyzer – NSE 5",
+  "url": "https://abad-labs.com/courses/fortianalyzer-nse-5/",
+  "hours": "32 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Enterprise – ENSDWI (300-415) Implementing Cisco SD-WAN Solutions",
+  "url": "https://abad-labs.com/courses/ccnp-enterprise-ensdwi-300-415-implementing-cisco-sd-wan-solutions/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات المؤسسات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Service Provider Core — SPCOR (350-501)",
+  "url": "https://abad-labs.com/courses/new-course-8/",
+  "hours": "40 ساعة",
+  "category": "الشبكات / شبكات مزودي خدمات الاتصالات والإنترنت",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Tableau",
+  "url": "https://abad-labs.com/courses/tableau/",
+  "hours": "32 ساعة",
+  "category": "تحليل بيانات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "ICEP™ — Integrated Compliance & Ethics Professional (OCEG)",
+  "url": "https://abad-labs.com/courses/iceptm-integrated-compliance-ethics-professional-oceg/",
+  "hours": "16 ساعة",
+  "category": "الإدارة / حوكمة الامتثال",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "ECBA — Entry Certificate in Business Analysis (ECBA™) — IIBA",
+  "url": "https://abad-labs.com/courses/ecba-entry-certificate-in-business-analysis-ecbatm-iiba/",
+  "hours": "16 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "IASSC Certified Lean Six Sigma Yellow Belt",
+  "url": "https://abad-labs.com/courses/iassc-certified-lean-six-sigma-yellow-belt/",
+  "hours": "16 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "PRINCE2 Agile® Practitioner — PRINCE2 Agile Practitioner",
+  "url": "https://abad-labs.com/courses/prince2-agile-practitioner-prince2-agile-practitioner/",
+  "hours": "16 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "PRINCE2 Agile® Foundation — PRINCE2 Agile Foundation",
+  "url": "https://abad-labs.com/courses/new-courseprince2-agile-foundation-prince2-agile-foundation/",
+  "hours": "16 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "TOGAF® Enterprise Architecture Practitioner — TOGAF EA Practitioner",
+  "url": "https://abad-labs.com/courses/new-course-30/",
+  "hours": "24 ساعة",
+  "category": "الإدارة / هندسة العمارة المؤسسية",
+  "duration": "3 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "TOGAF® Enterprise Architecture Foundation — TOGAF EA Foundation",
+  "url": "https://abad-labs.com/courses/new-course-29/",
+  "hours": "16 ساعة",
+  "category": "الإدارة / هندسة العمارة المؤسسية",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "IDPP™ — Integrated Data Privacy Professional (OCEG)",
+  "url": "https://abad-labs.com/courses/new-course-28/",
+  "hours": "16 ساعة",
+  "category": "الإدارة / حوكمة الامتثال",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "PRINCE2® Practitioner — PRINCE2 Project Management Practitioner",
+  "url": "https://abad-labs.com/courses/prince2-practitioner-prince2-project-management-practitioner/",
+  "hours": "24 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "3 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "PMI-RMP — PMI Risk Management Professional",
+  "url": "https://abad-labs.com/courses/pmi-rmp-pmi-risk-management-professional/",
+  "hours": "32 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "PMI-PBA — PMI Professional in Business Analysis",
+  "url": "https://abad-labs.com/courses/pmi-pba-pmi-professional-in-business-analysis/",
+  "hours": "35 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "PMI-ACP — PMI Agile Certified Practitioner",
+  "url": "https://abad-labs.com/courses/pmi-acp-pmi-agile-certified-practitioner/",
+  "hours": "24 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "3 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Service Provider – SPVI (300-515)",
+  "url": "https://abad-labs.com/courses/new-courseccnp-service-provider-spvi-300-515/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات مزودي خدمات الاتصالات والإنترنت",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Service Provider – SPRI (300-510)",
+  "url": "https://abad-labs.com/courses/new-courseccnp-service-provider-spri-300-510/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات مزودي خدمات الاتصالات والإنترنت",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Wireless Core — WLCOR (350-101)",
+  "url": "https://abad-labs.com/courses/new-courseccnp-wireless-core-wlcor-350-101/",
+  "hours": "40 ساعة",
+  "category": "الشبكات / الشبكات اللاسلكية",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Collaboration – CLCEI (300-820)",
+  "url": "https://abad-labs.com/courses/new-courseccnp-collaboration-clcei-300-820/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات التعاون والاتصالات الموحدة",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Collaboration – CLAUTO (300-835)",
+  "url": "https://abad-labs.com/courses/new-courseccnp-collaboration-clauto-300-835/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات التعاون والاتصالات الموحدة",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Data Center – DCACI (300-620)",
+  "url": "https://abad-labs.com/courses/new-courseccnp-data-center-dcaci-300-620/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / مراكز البيانات والبنية التحتية للخوادم",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Data Center – DCIT (300-615)",
+  "url": "https://abad-labs.com/courses/new-courseccnp-data-center-dcit-300-615/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / مراكز البيانات والبنية التحتية للخوادم",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CompTIA A+ Core 1 — CompTIA A+ (220-1201)",
+  "url": "https://abad-labs.com/courses/comptia-a-core-1-comptia-a-220-1201/",
+  "hours": "32 ساعة",
+  "category": "صيانة الحاسب",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CAPM — Certified Associate in Project Management",
+  "url": "https://abad-labs.com/courses/capm-certified-associate-in-project-management/",
+  "hours": "24 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "3 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "PgMP — Program Management Professional",
+  "url": "https://abad-labs.com/courses/pgmp-program-management-professional/",
+  "hours": "40 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "ISO 31000 LRM — ISO 31000 Lead Risk Manager",
+  "url": "https://abad-labs.com/courses/iso-31000-lrm-iso-31000-lead-risk-manager/",
+  "hours": "24 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "3 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "IAAP™ — Integrated Audit & Assurance Professional (OCEG)",
+  "url": "https://abad-labs.com/courses/iaaptm-integrated-audit-assurance-professional-oceg/",
+  "hours": "16 ساعة",
+  "category": "الإدارة / حوكمة الامتثال",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "GRCA™ — GRC Auditor (OCEG)",
+  "url": "https://abad-labs.com/courses/grcatm-grc-auditor-oceg/",
+  "hours": "16 ساعة",
+  "category": "الإدارة / حوكمة الامتثال",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "ISO 31000 RM — ISO 31000 Risk Manager",
+  "url": "https://abad-labs.com/courses/iso-31000-rm-iso-31000-risk-manager/",
+  "hours": "24 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "3 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "DPBoK™ Foundation — Digital Practitioner Certification: DPBoK™ Foundation",
+  "url": "https://abad-labs.com/courses/dpboktm-foundation-digital-practitioner-certification-dpboktm-foundation/",
+  "hours": "24 ساعة",
+  "category": "الإدارة / التحول الرقمي",
+  "duration": "3 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Associate CCISO",
+  "url": "https://abad-labs.com/courses/associate-cciso/",
+  "hours": "32 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "IASSC Certified Lean Six Sigma Green Belt",
+  "url": "https://abad-labs.com/courses/iassc-certified-lean-six-sigma-green-belt/",
+  "hours": "32 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "COBIT® Foundation",
+  "url": "https://abad-labs.com/courses/cobit-foundation/",
+  "hours": "16 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CDPSE — Certified Data Privacy Solutions Engineer",
+  "url": "https://abad-labs.com/courses/cdpse-certified-data-privacy-solutions-engineer/",
+  "hours": "32 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CGEIT — Certified in the Governance of Enterprise IT",
+  "url": "https://abad-labs.com/courses/cgeit-certified-in-the-governance-of-enterprise-it/",
+  "hours": "32 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "PRINCE2® Foundation — PRINCE2 Project Management Foundation",
+  "url": "https://abad-labs.com/courses/prince2-foundation-prince2-project-management-foundation/",
+  "hours": "16 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "أسبوعين",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "PfMP — Portfolio Management Professional",
+  "url": "https://abad-labs.com/courses/pfmp-portfolio-management-professional/",
+  "hours": "40 ساعة",
+  "category": "الإدارة / الإدارة المهنية",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "ISO/IEC 27001 LI — ISO/IEC 27001 Lead Implementer",
+  "url": "https://abad-labs.com/courses/isoiec-27001-li-isoiec-27001-lead-implementer/",
+  "hours": "40 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "ISO/IEC 27001 LA — ISO/IEC 27001 Lead Auditor",
+  "url": "https://abad-labs.com/courses/isoiec-27001-la-isoiec-27001-lead-auditor/",
+  "hours": "40 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "EDRP — EC-Council Disaster Recovery Professional",
+  "url": "https://abad-labs.com/courses/edrp-ec-council-disaster-recovery-professional/",
+  "hours": "24 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "3 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCISO — Certified Chief Information Security Officer",
+  "url": "https://abad-labs.com/courses/cciso-certified-chief-information-security-officer/",
+  "hours": "40 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CISSP — Certified Information Systems Security Professional",
+  "url": "https://abad-labs.com/courses/cissp-certified-information-systems-security-professional/",
+  "hours": "48 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "6 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCOA — Certified Cybersecurity Operations Analyst",
+  "url": "https://abad-labs.com/courses/ccoa-certified-cybersecurity-operations-analyst/",
+  "hours": "32 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "LPT (Master) — Licensed Penetration Tester (Master)",
+  "url": "https://abad-labs.com/courses/new-courselpt-master-licensed-penetration-tester-master/",
+  "hours": "64 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الهجومي",
+  "duration": "8 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "eWPTX — eLearnSecurity Web Application Penetration Tester eXtreme",
+  "url": "https://abad-labs.com/courses/ewptx-elearnsecurity-web-application-penetration-tester-extreme/",
+  "hours": "48 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الهجومي",
+  "duration": "6 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "eWPT — eLearnSecurity Web Application Penetration Tester",
+  "url": "https://abad-labs.com/courses/ewpt-elearnsecurity-web-application-penetration-tester/",
+  "hours": "40 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الهجومي",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Splunk Core Certified Advanced Power User",
+  "url": "https://abad-labs.com/courses/splunk-core-certified-advanced-power-user/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CTIA — Certified Threat Intelligence Analyst",
+  "url": "https://abad-labs.com/courses/ctia-certified-threat-intelligence-analyst/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CISM — Certified Information Security Manager",
+  "url": "https://abad-labs.com/courses/cism-certified-information-security-manager/",
+  "hours": "40 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CISA — Certified Information Systems Auditor",
+  "url": "https://abad-labs.com/courses/new-course-27/",
+  "hours": "40 ساعة",
+  "category": "حوكمة أمن المعلومات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "MCSA: SQL Server Database Administration",
+  "url": "https://abad-labs.com/courses/mcsa-sql-server-database-administration/",
+  "hours": "40 ساعة",
+  "category": "إدارة قواعد البيانات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Oracle Database Administration II (1Z0-083)",
+  "url": "https://abad-labs.com/courses/oracle-database-administration-ii-1z0-083/",
+  "hours": "40 ساعة",
+  "category": "إدارة قواعد البيانات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Oracle Database Administration I (1Z0-082)",
+  "url": "https://abad-labs.com/courses/oracle-database-administration-i-1z0-082/",
+  "hours": "32 ساعة",
+  "category": "إدارة قواعد البيانات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CompTIA DataSys+",
+  "url": "https://abad-labs.com/courses/comptia-datasys/",
+  "hours": "32 ساعة",
+  "category": "إدارة قواعد البيانات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "ECSA — EC-Council Certified Security Analyst",
+  "url": "https://abad-labs.com/courses/ecsa-ec-council-certified-security-analyst/",
+  "hours": "40 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الهجومي",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CPENT — Certified Penetration Testing Professional",
+  "url": "https://abad-labs.com/courses/cpent-certified-penetration-testing-professional/",
+  "hours": "48 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الهجومي",
+  "duration": "6 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CEH — Certified Ethical Hacker",
+  "url": "https://abad-labs.com/courses/ceh-certified-ethical-hacker/",
+  "hours": "40 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الهجومي",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "eMAPT — eLearnSecurity Mobile Application Penetration Tester",
+  "url": "https://abad-labs.com/courses/emapt-elearnsecurity-mobile-application-penetration-tester/",
+  "hours": "48 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الهجومي",
+  "duration": "6 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "eCPPT — eLearnSecurity Certified Professional Penetration Tester",
+  "url": "https://abad-labs.com/courses/ecppt-elearnsecurity-certified-professional-penetration-tester/",
+  "hours": "48 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الهجومي",
+  "duration": "6 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Splunk Core Certified Power User",
+  "url": "https://abad-labs.com/courses/splunk-core-certified-power-user/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Splunk Core Certified User",
+  "url": "https://abad-labs.com/courses/splunk-core-certified-user/",
+  "hours": "24 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "3 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "SecurityX (CASP+) — CompTIA SecurityX",
+  "url": "https://abad-labs.com/courses/securityx-casp-comptia-securityx/",
+  "hours": "40 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CompTIA Cybersecurity Analyst (CySA+)",
+  "url": "https://abad-labs.com/courses/comptia-cybersecurity-analyst-cysa/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CHFI – Computer Hacking Forensic Investigator",
+  "url": "https://abad-labs.com/courses/chfi-computer-hacking-forensic-investigator/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "ECIH – EC-Council Certified Incident Handler",
+  "url": "https://abad-labs.com/courses/new-course-25/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CSA – Certified SOC Analyst",
+  "url": "https://abad-labs.com/courses/csa-certified-soc-analyst/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "eCIR – eLearnSecurity Certified Incident Responder",
+  "url": "https://abad-labs.com/courses/new-course-24/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "eCTHP – eLearnSecurity Certified Threat Hunting Professional",
+  "url": "https://abad-labs.com/courses/new-course-23/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "eCDFP – eLearnSecurity Certified Digital Forensics Professional",
+  "url": "https://abad-labs.com/courses/ecdfp-elearnsecurity-certified-digital-forensics-professional/",
+  "hours": "40 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CompTIA Security+",
+  "url": "https://abad-labs.com/courses/new-course-22/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Data Analysis Using Excel",
+  "url": "https://abad-labs.com/courses/new-coursedata-analysis-using-excel/",
+  "hours": "32 ساعة",
+  "category": "تحليل بيانات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Power BI Data Analyst Associate (PL-300)",
+  "url": "https://abad-labs.com/courses/new-coursepower-bi-data-analyst-associate-pl-300/",
+  "hours": "40 ساعة",
+  "category": "تحليل بيانات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "eEDA – Enterprise Defense Administrator",
+  "url": "https://abad-labs.com/courses/eeda-enterprise-defense-administrator/",
+  "hours": "32 ساعة",
+  "category": "الأمن السيبراني / الأمن السيبراني الدفاعي",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Database SQL for Data Analysis",
+  "url": "https://abad-labs.com/courses/database-sql-for-data-analysis/",
+  "hours": "32 ساعة",
+  "category": "تحليل بيانات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Data Analysis Using Python",
+  "url": "https://abad-labs.com/courses/new-course-21/",
+  "hours": "32 ساعة",
+  "category": "تحليل بيانات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Flutter",
+  "url": "https://abad-labs.com/courses/flutter/",
+  "hours": "32 ساعة",
+  "category": "البرمجة",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Oracle Database SQL",
+  "url": "https://abad-labs.com/courses/oracle-database-sql/",
+  "hours": "32 ساعة",
+  "category": "البرمجة",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Certified Entry-Level Python Programmer (PCEP)",
+  "url": "https://abad-labs.com/courses/new-course-19/",
+  "hours": "32 ساعة",
+  "category": "البرمجة",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Google Associate Cloud Engineer",
+  "url": "https://abad-labs.com/courses/new-coursegoogle-associate-cloud-engineer/",
+  "hours": "32 ساعة",
+  "category": "الحوسبة السحابية",
+  "duration": "4 أسابيع",
+  "mode": "عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Oracle Cloud Infrastructure (OCI)",
+  "url": "https://abad-labs.com/courses/oracle-cloud-infrastructure-oci/",
+  "hours": "32 ساعة",
+  "category": "الحوسبة السحابية",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "ASP.NET Core MVC",
+  "url": "https://abad-labs.com/courses/aspnet-core-mvc/",
+  "hours": "40 ساعة",
+  "category": "البرمجة",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "HTML + CSS + JavaScript",
+  "url": "https://abad-labs.com/courses/new-course-20/",
+  "hours": "32 ساعة",
+  "category": "البرمجة",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "C#",
+  "url": "https://abad-labs.com/courses/c/",
+  "hours": "32 ساعة",
+  "category": "البرمجة",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "VMware Certified Professional – Data Center Virtualization (VCP-DCV)",
+  "url": "https://abad-labs.com/courses/new-course-16/",
+  "hours": "40 ساعة",
+  "category": "الحوسبة السحابية",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "MCSA: Windows Server 2022 Administration + Windows Server Hybrid Administrator Associate (AZ-800)",
+  "url": "https://abad-labs.com/courses/mcsa-windows-server-2022-administration-windows-server-hybrid-administrator-associate-az-800/",
+  "hours": "48 ساعة",
+  "category": "إدارة الانظمة",
+  "duration": "6 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Fortinet NSE 7 – Public Cloud Security Architect",
+  "url": "https://abad-labs.com/courses/new-course-12/",
+  "hours": "32 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Security – SCAZT (300-740)",
+  "url": "https://abad-labs.com/courses/ccnp-security-scazt-300-740/",
+  "hours": "32 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Security – SAUTO (300-735)",
+  "url": "https://abad-labs.com/courses/ccnp-security-sauto-300-735/",
+  "hours": "32 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CompTIA Linux+",
+  "url": "https://abad-labs.com/courses/comptia-linux/",
+  "hours": "32 ساعة",
+  "category": "إدارة الانظمة",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCIE Service Provider (Cisco Certified Internetwork Expert – Service Provider)",
+  "url": "https://abad-labs.com/courses/new-course-9/",
+  "hours": "96 ساعة",
+  "category": "الشبكات / شبكات مزودي خدمات الاتصالات والإنترنت",
+  "duration": "12 أسبوع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Service Provider – SPCNI (300-540)",
+  "url": "https://abad-labs.com/courses/ccnp-service-provider-spcni-300-540/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات مزودي خدمات الاتصالات والإنترنت",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CND – Certified Network Defender",
+  "url": "https://abad-labs.com/courses/cnd-certified-network-defender/",
+  "hours": "32 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "New F5 BIG-IP LTM (Local Traffic Manager)",
+  "url": "https://abad-labs.com/courses/new-f5-big-ip-ltm-local-traffic-manager/",
+  "hours": "40 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Fortinet NSE 6 – FortiMail Administrator",
+  "url": "https://abad-labs.com/courses/fortinet-nse-6-fortimail-administrator/",
+  "hours": "32 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "FortiManager Administrator – NSE 5",
+  "url": "https://abad-labs.com/courses/fortimanager-administrator-nse-5/",
+  "hours": "32 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "FortiGate Administrator (FortiOS) – NSE 4",
+  "url": "https://abad-labs.com/courses/new-course-11/",
+  "hours": "32 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Palo Alto Networks Certified Network Security Engineer (PCNSE)",
+  "url": "https://abad-labs.com/courses/palo-alto-networks-certified-network-security-engineer-pcnse/",
+  "hours": "40 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "Palo Alto Networks Certified Network Security Administrator (PCNSA)",
+  "url": "https://abad-labs.com/courses/palo-alto-networks-certified-network-security-administrator-pcnsa/",
+  "hours": "40 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCIE Security (Cisco Certified Internetwork Expert – Security)",
+  "url": "https://abad-labs.com/courses/ccie-security-cisco-certified-internetwork-expert-security/",
+  "hours": "96 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "12 أسبوع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Security – SDSI (300-745)",
+  "url": "https://abad-labs.com/courses/new-course-10/",
+  "hours": "32 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Security – SISE (300-715)",
+  "url": "https://abad-labs.com/courses/ccnp-security-sise-300-715/",
+  "hours": "32 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Security – SNCF (300-710)",
+  "url": "https://abad-labs.com/courses/ccnp-security-sncf-300-710/",
+  "hours": "32 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Security Core — SCOR (350-701)",
+  "url": "https://abad-labs.com/courses/ccnp-security-core-scor-350-701/",
+  "hours": "40 ساعة",
+  "category": "أمن الشبكات / الشبكات",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Service Provider – SPAUTO (300-535)",
+  "url": "https://abad-labs.com/courses/ccnp-service-provider-spauto-300-535/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات مزودي خدمات الاتصالات والإنترنت",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCIE Wireless (Cisco Certified Internetwork Expert – Wireless)",
+  "url": "https://abad-labs.com/courses/new-course-7/",
+  "hours": "96 ساعة",
+  "category": "الشبكات / الشبكات اللاسلكية",
+  "duration": "12 أسبوع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Wireless – WLSI (300-120)",
+  "url": "https://abad-labs.com/courses/new-course-6/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / الشبكات اللاسلكية",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Wireless – WLSD (300-110)",
+  "url": "https://abad-labs.com/courses/new-course-5/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / الشبكات اللاسلكية",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Collaboration – CLCCE (300-830)",
+  "url": "https://abad-labs.com/courses/ccnp-collaboration-clcce-300-830/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات التعاون والاتصالات الموحدة",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Collaboration – CLACCM (300-815)",
+  "url": "https://abad-labs.com/courses/new-course-4/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات التعاون والاتصالات الموحدة",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Data Center – DCAUTO (300-635)",
+  "url": "https://abad-labs.com/courses/ccnp-data-center-dcauto-300-635/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / مراكز البيانات والبنية التحتية للخوادم",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Collaboration – CLICA (300-810)",
+  "url": "https://abad-labs.com/courses/ccnp-collaboration-clica-300-810/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات التعاون والاتصالات الموحدة",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Data Center – DCAI (300-640)",
+  "url": "https://abad-labs.com/courses/new-course-2/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / مراكز البيانات والبنية التحتية للخوادم",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Data Center – DCID (300-610) Designing Cisco Data Center Infrastructure",
+  "url": "https://abad-labs.com/courses/new-courseccnp-data-center-dcid-300-610-designing-cisco-data-center-infrastructure/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / مراكز البيانات والبنية التحتية للخوادم",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Data Center Core — DCCOR (350-601) Implementing and Operating Cisco Data Center Core Technologies",
+  "url": "https://abad-labs.com/courses/new-courseccnp-data-center-core-dccor-350-601-implementing-and-operating-cisco-data-center-core-technologies/",
+  "hours": "40 ساعة",
+  "category": "الشبكات / مراكز البيانات والبنية التحتية للخوادم",
+  "duration": "5 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CompTIA A+ Core 2 — CompTIA A+ (220-1202)",
+  "url": "https://abad-labs.com/courses/new-coursecomptia-a-core-2-comptia-a-220-1202/",
+  "hours": "32 ساعة",
+  "category": "صيانة الحاسب",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Enterprise – ENSLD (300-420) Designing Cisco Enterprise Networks",
+  "url": "https://abad-labs.com/courses/new-courseccnp-enterprise-ensld-300-420-designing-cisco-enterprise-networks/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات المؤسسات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Enterprise – ENAUTO (300-435) Automating and Programming Cisco Enterprise Solutions",
+  "url": "https://abad-labs.com/courses/new-courseccnp-enterprise-enauto-300-435-automating-and-programming-cisco-enterprise-solutions/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات المؤسسات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Enterprise – ENCC (300-440) Implementing and Operating Cisco Enterprise Network Core Technologies",
+  "url": "https://abad-labs.com/courses/new-courseccnp-enterprise-encc-300-440-implementing-and-operating-cisco-enterprise-network-core-technologies/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات المؤسسات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Enterprise – ENNA (300-445) Designing and Implementing Enterprise Network Assurance",
+  "url": "https://abad-labs.com/courses/new-courseccnp-enterprise-enna-300-445-designing-and-implementing-enterprise-network-assurance/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات المؤسسات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CCNP Enterprise – ENARSI (300-410) Implementing Cisco Enterprise Advanced Routing and Services",
+  "url": "https://abad-labs.com/courses/new-courseccnp-enterprise-enarsi-300-410-implementing-cisco-enterprise-advanced-routing-and-services/",
+  "hours": "32 ساعة",
+  "category": "الشبكات / شبكات المؤسسات",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ },
+ {
+  "name_ar": null,
+  "name_en": "CompTIA Server+",
+  "url": "https://abad-labs.com/courses/comptia-server/",
+  "hours": "32 ساعة",
+  "category": "مراكز البيانات والبنية التحتية للخوادم",
+  "duration": "4 أسابيع",
+  "mode": "حضوري / عن بُعد"
+ }
+]

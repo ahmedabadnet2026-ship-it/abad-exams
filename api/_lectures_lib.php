@@ -112,3 +112,46 @@ function abd_lec_generate(int $cid, string $from, string $to, array $days, strin
     return $n;
   } catch (Throwable $e) { $pdo->rollBack(); throw $e; }
 }
+
+/** First $n dates from $from (inclusive) whose weekday is in $days, in day order (max 200, within ~2 years). */
+function abd_lec_dates_n(string $from, array $days, int $n): array {
+  $out = []; $d = new DateTimeImmutable($from); $n = max(1, min(200, $n));
+  for ($i = 0; $i < 800 && count($out) < $n; $i++, $d = $d->modify('+1 day')) if (in_array((int)$d->format('w'), $days, true)) $out[] = $d->format('Y-m-d');
+  return $out;
+}
+
+/** A course is "held" once any session was started by the trainer or has already begun. Held courses can no longer be edited/deleted from the create card. */
+function abd_lec_held(int $cid): int {
+  return (int)abd_q('SELECT COUNT(*) FROM abd_course_sessions WHERE course_id = ? AND (started_at IS NOT NULL OR starts_at <= NOW())', [$cid])->fetchColumn();
+}
+
+/**
+ * Validate the «إنشاء دورة أونلاين» form. Returns [data, null] or [null, error message].
+ * data: title, trainer_id, from, to, days, st, et, n (requested count or 0).
+ */
+function abd_lec_course_input(array $p): array {
+  $title = abd_str($p, 'title', 190); $tid = (int)($p['trainer_id'] ?? 0);
+  $from = abd_str($p, 'from', 10); $st = abd_lec_time(abd_str($p, 'st', 5)); $dur = (int)($p['dur'] ?? 0);
+  $days = array_values(array_unique(array_filter(array_map('intval', (array)($p['days'] ?? [])), fn($d) => $d >= 0 && $d <= 6))); sort($days);
+  $by = ($p['by'] ?? 'count') === 'end' ? 'end' : 'count'; $n = (int)($p['count'] ?? 0); $to = abd_str($p, 'to', 10);
+  if (mb_strlen($title) < 3) return [null, 'اكتب اسم الدورة (3 أحرف على الأقل).'];
+  if (!$tid || !abd_q("SELECT 1 FROM abd_users WHERE id = ? AND role = 'trainer' AND is_active = 1", [$tid])->fetchColumn()) return [null, 'اختر مدرّب الدورة.'];
+  if (!abd_date($from)) return [null, 'تاريخ البداية غير صحيح.'];
+  if (!$days) return [null, 'اختر يومًا واحدًا على الأقل من أيام الأسبوع.'];
+  if (!$st) return [null, 'وقت البداية غير صحيح.'];
+  if ($dur < 30 || $dur > 480) return [null, 'مدة المحاضرة بين 30 و480 دقيقة.'];
+  $endMin = (int)substr($st, 0, 2) * 60 + (int)substr($st, 3, 2) + $dur;
+  if ($endMin >= 24 * 60) return [null, 'يجب أن تنتهي المحاضرة قبل منتصف الليل.'];
+  $et = sprintf('%02d:%02d', intdiv($endMin, 60), $endMin % 60);
+  if ($by === 'count') {
+    if ($n < 1 || $n > 200) return [null, 'عدد المحاضرات بين 1 و200.'];
+    $dates = abd_lec_dates_n($from, $days, $n);
+  } else {
+    if (!abd_date($to) || $to < $from) return [null, 'تاريخ النهاية يجب أن يكون بعد تاريخ البداية.'];
+    if ((strtotime($to) - strtotime($from)) > 400 * 86400) return [null, 'المدة طويلة جدًا (الحد سنة واحدة).'];
+    $dates = abd_lec_dates($from, $to, $days); $n = 0;
+  }
+  if (!$dates) return [null, 'لا توجد أيام مطابقة بين التاريخين.'];
+  if ($dates[0] . " $st:00" <= date('Y-m-d H:i:s')) return [null, 'أول محاضرة يجب أن تكون في المستقبل.'];
+  return [['title' => $title, 'trainer_id' => $tid, 'from' => $dates[0], 'to' => end($dates), 'days' => $days, 'st' => $st, 'et' => $et, 'n' => count($dates)], null];
+}
