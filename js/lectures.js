@@ -20,10 +20,12 @@ var PLAY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0
  KIND={youtube:"YouTube",drive:"Google Drive",zoom:"Zoom"};
 function okEmbed(u){try{var x=new URL(u);return x.protocol==="https:"&&(x.hostname==="www.youtube-nocookie.com"||x.hostname==="drive.google.com")}catch(e){return false}}
 function recOk(r){return r&&((r.kind==="zoom"&&r.url&&okUrl(r.url))||(r.kind!=="zoom"&&r.embed&&okEmbed(r.embed)))}
+/* recording label: «<course> — المحاضرة N: <topic>» (no title → «<course> — المحاضرة N»); always passed through esc()/textContent */
+function recLbl(c,s){var I=function(t){return "\u2068"+t+"\u2069"};return I(c.title_ar)+" — المحاضرة "+s.no+(s.title?": "+I(s.title):"")}   // FSI/PDI isolates keep mixed Arabic/Latin in order
 function pcHtml(p){return p?'<div class="pc">رمز التسجيل: <code>'+esc(p)+'</code><button type="button" data-copy="'+esc(p)+'">نسخ</button></div>':""}
 function recBtn(c,s,big){var r=s.rec;if(!recOk(r))return "";
- if(r.kind==="zoom")return '<a class="rb z" href="'+esc(r.url)+'" target="_blank" rel="noopener noreferrer">'+PLAY+'مشاهدة التسجيل ↗</a>';
- return '<button type="button" class="rb" data-rec="'+c.id+':'+s.id+'">'+PLAY+'مشاهدة التسجيل</button>'}
+ if(r.kind==="zoom")return '<a class="rb z" href="'+esc(r.url)+'" target="_blank" rel="noopener noreferrer" title="'+esc(recLbl(c,s))+'" aria-label="مشاهدة تسجيل '+esc(recLbl(c,s))+'">'+PLAY+'مشاهدة التسجيل ↗</a>';
+ return '<button type="button" class="rb" data-rec="'+c.id+':'+s.id+'" title="'+esc(recLbl(c,s))+'" aria-label="مشاهدة تسجيل '+esc(recLbl(c,s))+'">'+PLAY+'مشاهدة التسجيل</button>'}
 function recAct(c,s){if(s.rec_status==="available"&&recOk(s.rec))return recBtn(c,s)+pcHtml(s.rec.passcode);
  if(s.rec_status==="expired")return '<span class="soon x">انتهت إتاحة التسجيل</span>';return '<span class="soon">⏳ التسجيل قريباً</span>'}
 var ICON='<span class="zi" aria-hidden="true"></span>';
@@ -64,16 +66,16 @@ function recList(){var a=all().filter(function(x){return x.s.rec_status==="avail
 function recs(){var a=recList(),el=$("#recs");$("#rc").textContent=a.length;
  el.innerHTML='<div class="tlh"><h3>▶ تسجيلات المحاضرات</h3><span class="mut">'+a.length+' تسجيل متاح</span></div><p class="mut" style="margin:4px 0 14px">تظهر تسجيلات المحاضرات هنا بعد انتهائها، مرتبة حسب ترتيب المحاضرات.</p>'
   +(a.length?'<div class="rg">'+a.map(function(x){var c=x.c,s=x.s,r=s.rec,z=r.kind==="zoom",
-   th=z?'<a class="th" href="'+esc(r.url)+'" target="_blank" rel="noopener noreferrer" aria-label="مشاهدة التسجيل">':'<button type="button" class="th" data-rec="'+c.id+':'+s.id+'" aria-label="مشاهدة التسجيل">';
+   th=z?'<a class="th" href="'+esc(r.url)+'" target="_blank" rel="noopener noreferrer" aria-label="مشاهدة تسجيل '+esc(recLbl(c,s))+'">':'<button type="button" class="th" data-rec="'+c.id+':'+s.id+'" aria-label="مشاهدة تسجيل '+esc(recLbl(c,s))+'">';
    return '<div class="rcard">'+th+'<span class="n">المحاضرة '+s.no+'</span><span class="pl" style="color:#10293b">'+PLAY+'</span><span class="k">'+KIND[r.kind]+(z?' ↗':'')+'</span>'+(z?'</a>':'</button>')
-    +'<div class="bd"><b>'+esc(s.title||("المحاضرة "+s.no))+'</b><small>'+esc(c.title_ar)+'</small><small>'+esc(fD.format(s.start))+'</small>'
+    +'<div class="bd"><b>'+esc(recLbl(c,s))+'</b><small>'+esc(fD.format(s.start))+'</small>'
     +(r.until?'<small>متاح حتى '+esc(r.until)+'</small>':"")+pcHtml(r.passcode)+'</div></div>'}).join("")+'</div>'
    :'<div class="empty" style="text-align:center;color:var(--mut);padding:24px">لا توجد تسجيلات متاحة بعد. يُضاف تسجيل كل محاضرة بعد انتهائها.</div>')}
 function setView(v){view=v;document.querySelectorAll("[data-v]").forEach(function(b){b.setAttribute("aria-selected",String(b.getAttribute("data-v")===v))});
  $("#tl").hidden=v!=="lec";$("#recs").hidden=v!=="rec";$("#tabs").hidden=v!=="lec"||(data&&data.courses.length<2)}
 function openRec(key){var p=key.split(":"),x=all().filter(function(y){return String(y.c.id)===p[0]&&String(y.s.id)===p[1]})[0];if(!x||!recOk(x.s.rec)||x.s.rec.kind==="zoom")return;
- lastFocus=document.activeElement;$("#mdt").textContent=x.c.title_ar+" — المحاضرة "+x.s.no+(x.s.title?": "+x.s.title:"");
- var f=document.createElement("iframe");f.src=x.s.rec.embed;f.title="تسجيل المحاضرة "+x.s.no;f.setAttribute("allow","fullscreen; encrypted-media; picture-in-picture");f.setAttribute("allowfullscreen","");
+ lastFocus=document.activeElement;$("#mdt").textContent=recLbl(x.c,x.s);
+ var f=document.createElement("iframe");f.src=x.s.rec.embed;f.title="تسجيل "+recLbl(x.c,x.s);f.setAttribute("allow","fullscreen; encrypted-media; picture-in-picture");f.setAttribute("allowfullscreen","");
  f.setAttribute("referrerpolicy","strict-origin-when-cross-origin");$("#vw").innerHTML="";$("#vw").appendChild(f);
  $("#mdf").innerHTML='<span>'+KIND[x.s.rec.kind]+" · "+esc(fD.format(x.s.start))+'</span>'+pcHtml(x.s.rec.passcode);$("#md").hidden=false;document.body.style.overflow="hidden";$("#md .x").focus()}
 function closeRec(){if($("#md").hidden)return;$("#md").hidden=true;$("#vw").innerHTML="";document.body.style.overflow="";if(lastFocus)lastFocus.focus()}
