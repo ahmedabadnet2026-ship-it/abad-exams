@@ -1,0 +1,147 @@
+{
+ "lab": "CCNP ENCOR/04-EIGRP.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 04 · EIGRP (Authentication & Passive)",
+ "title_ar": "بروتوكول EIGRP مع المصادقة والواجهات الخاملة",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "pc",
+   "node": "PC5",
+   "ip": "192.168.1.5",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 2,
+   "title_ar": "إعداد PC5 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC5 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.5/24 192.168.1.1",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.1.1",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.1.1 255.255.255.0",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "12.0.0.1",
+   "len": 8,
+   "pts": 3,
+   "title_ar": "R1 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 12.0.0.1 255.0.0.0",
+   "id": "c03"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.2.1",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R2 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.2.1 255.255.255.0",
+   "id": "c04"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/1",
+   "ip": "12.0.0.2",
+   "len": 8,
+   "pts": 3,
+   "title_ar": "R2 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 12.0.0.2 255.0.0.0",
+   "id": "c05"
+  },
+  {
+   "kind": "pc",
+   "node": "PC6",
+   "ip": "192.168.2.6",
+   "len": 24,
+   "gw": "192.168.2.1",
+   "pts": 2,
+   "title_ar": "إعداد PC6 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC6 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.2.6/24 192.168.2.1",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip eigrp neighbors",
+   "regex": "12\\.0\\.0\\.2\\s+Gi0/1",
+   "pts": 15,
+   "title_ar": "R1 جار R2 على Gi0/1",
+   "hint_ar": "network 12.0.0.0",
+   "solution_ar": "network 12.0.0.0",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip route eigrp",
+   "regex": "D\\s+192\\.168\\.2\\.0/24 \\[90/",
+   "pts": 13,
+   "title_ar": "R1 يتعلم 192.168.2.0/24",
+   "hint_ar": "network 192.168.2.0 على R2",
+   "solution_ar": "network 192.168.2.0 على R2",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ip eigrp interfaces detail Gi0/1",
+   "regex": "Authentication mode is md5,\\s+key-chain is \"ccie1\"",
+   "pts": 17,
+   "title_ar": "مصادقة MD5 بالـ key-chain ccie1",
+   "hint_ar": "ip authentication mode eigrp 100 md5",
+   "solution_ar": "ip authentication mode eigrp 100 md5",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip protocols",
+   "regex": "Passive Interface\\(s\\):\\s*\\n\\s*GigabitEthernet0/0",
+   "pts": 13,
+   "title_ar": "Gi0/0 خاملة على R1",
+   "hint_ar": "passive-interface Gi0/0",
+   "solution_ar": "passive-interface Gi0/0",
+   "id": "c10"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ip eigrp neighbors",
+   "regex": "Gi0/0",
+   "pts": 9,
+   "title_ar": "لا جيران على واجهة LAN",
+   "hint_ar": "passive-interface Gi0/0",
+   "solution_ar": "passive-interface Gi0/0",
+   "negate": true,
+   "id": "c11"
+  },
+  {
+   "kind": "ping",
+   "node": "PC5",
+   "target": "192.168.2.6",
+   "pts": 17,
+   "title_ar": "PC5 ← PC6",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c12"
+  }
+ ]
+}

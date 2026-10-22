@@ -1,0 +1,156 @@
+{
+ "lab": "CCNP ENCOR/20-NetFlow-Syslog.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 20 · Flexible NetFlow & Syslog",
+ "title_ar": "تحليل الحركة Flexible NetFlow والسجلات Syslog",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "192.168.1.10",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 2,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.10/24 192.168.1.1",
+   "id": "c01"
+  },
+  {
+   "kind": "pc",
+   "node": "COL",
+   "ip": "192.168.1.50",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 2,
+   "title_ar": "إعداد COL (IP + Gateway)",
+   "hint_ar": "راجع عنوان COL وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.50/24 192.168.1.1",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "10.0.12.1",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.0.12.1 255.255.255.252",
+   "id": "c03"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "192.168.1.1",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R1 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.1.1 255.255.255.0",
+   "id": "c04"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/0",
+   "ip": "10.0.12.2",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R2 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.0.12.2 255.255.255.252",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show logging",
+   "regex": "Logging to 192\\.168\\.1\\.50 ",
+   "pts": 13,
+   "title_ar": "إرسال السجلات إلى 192.168.1.50",
+   "hint_ar": "logging host 192.168.1.50",
+   "solution_ar": "logging host 192.168.1.50",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show logging",
+   "regex": "Trap logging: level informational",
+   "pts": 9,
+   "title_ar": "مستوى trap = informational",
+   "hint_ar": "logging trap informational",
+   "solution_ar": "logging trap informational",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | include service timestamps log",
+   "regex": "datetime msec localtime show-timezone",
+   "pts": 9,
+   "title_ar": "طوابع زمنية دقيقة",
+   "hint_ar": "service timestamps log datetime msec localtime show-timezone",
+   "solution_ar": "service timestamps log datetime msec localtime show-timezone",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show flow exporter FE-COL",
+   "regex": "Destination IP address:\\s+192\\.168\\.1\\.50",
+   "pts": 9,
+   "title_ar": "المصدّر نحو 192.168.1.50",
+   "hint_ar": "destination 192.168.1.50",
+   "solution_ar": "destination 192.168.1.50",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show flow exporter FE-COL",
+   "regex": "Destination Port:\\s+2055",
+   "pts": 4,
+   "title_ar": "المنفذ 2055",
+   "hint_ar": "transport udp 2055",
+   "solution_ar": "transport udp 2055",
+   "id": "c10"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show flow monitor FM-ABAD",
+   "regex": "Status:\\s+allocated",
+   "pts": 13,
+   "title_ar": "المراقب FM-ABAD مفعّل",
+   "hint_ar": "ip flow monitor FM-ABAD input",
+   "solution_ar": "ip flow monitor FM-ABAD input",
+   "id": "c11"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show flow interface Gi0/1",
+   "regex": "monitor:\\s+FM-ABAD\\s*\\n\\s*direction:\\s+Input",
+   "pts": 13,
+   "title_ar": "المراقب على Gi0/1 بالاتجاه الداخل",
+   "hint_ar": "interface Gi0/1 / ip flow monitor FM-ABAD input",
+   "solution_ar": "interface Gi0/1 / ip flow monitor FM-ABAD input",
+   "id": "c12"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "2.2.2.2",
+   "pts": 17,
+   "title_ar": "PC1 ← 2.2.2.2",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c13"
+  }
+ ]
+}

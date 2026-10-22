@@ -1,0 +1,118 @@
+{
+ "lab": "CCNP ENCOR/01-STP.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 01 · STP · RSTP · MST",
+ "title_ar": "بروتوكول الشجرة الممتدة STP و RSTP و MST",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "match",
+   "node": "SW3",
+   "cmd": "show spanning-tree mst configuration",
+   "regex": "Name\\s+\\[ccie\\]",
+   "pts": 10,
+   "title_ar": "اسم المنطقة ccie",
+   "hint_ar": "name ccie",
+   "solution_ar": "name ccie",
+   "id": "c01"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show spanning-tree mst configuration",
+   "regex": "Revision\\s+1\\s",
+   "pts": 8,
+   "title_ar": "رقم المراجعة 1 على SW1",
+   "hint_ar": "revision 1",
+   "solution_ar": "revision 1",
+   "id": "c02"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show spanning-tree mst configuration",
+   "regex": "1\\s+21-22[\\s\\S]*2\\s+23-24",
+   "pts": 12,
+   "title_ar": "ربط VLAN 21-22 بـ MSTI1 و 23-24 بـ MSTI2",
+   "hint_ar": "instance 1 vlan 21-22 / instance 2 vlan 23-24",
+   "solution_ar": "instance 1 vlan 21-22 / instance 2 vlan 23-24",
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "SW3",
+   "cmd": "show spanning-tree mst 1",
+   "regex": "Root\\s+this switch for MST1",
+   "pts": 12,
+   "title_ar": "SW3 هو الجذر لـ MST1",
+   "hint_ar": "spanning-tree mst 0-2 priority 4096",
+   "solution_ar": "spanning-tree mst 0-2 priority 4096",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "SW3",
+   "cmd": "show spanning-tree mst 0",
+   "regex": "this switch for the CIST",
+   "pts": 8,
+   "title_ar": "SW3 هو جذر CIST",
+   "hint_ar": "spanning-tree mst 0-2 priority 4096",
+   "solution_ar": "spanning-tree mst 0-2 priority 4096",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show running-config interface Gi0/0",
+   "regex": "spanning-tree bpduguard enable",
+   "pts": 10,
+   "title_ar": "BPDU Guard على منفذ PC5",
+   "hint_ar": "spanning-tree bpduguard enable",
+   "solution_ar": "spanning-tree bpduguard enable",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show errdisable recovery",
+   "regex": "bpduguard\\s+Enabled",
+   "pts": 8,
+   "title_ar": "استرجاع bpduguard تلقائياً",
+   "hint_ar": "errdisable recovery cause bpduguard",
+   "solution_ar": "errdisable recovery cause bpduguard",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "SW3",
+   "cmd": "show running-config interface Gi0/1",
+   "regex": "spanning-tree guard root",
+   "pts": 10,
+   "title_ar": "Root Guard على SW3 Gi0/1",
+   "hint_ar": "spanning-tree guard root",
+   "solution_ar": "spanning-tree guard root",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show spanning-tree mst 1",
+   "regex": "Gi0/2\\s+Root\\s+FWD",
+   "pts": 10,
+   "title_ar": "SW1 Gi0/2 هو Root Port في MST1",
+   "hint_ar": "SW1 Gi0/2 هو Root Port في MST1",
+   "solution_ar": "",
+   "id": "c09"
+  },
+  {
+   "kind": "ping",
+   "node": "PC5",
+   "target": "10.1.1.8",
+   "pts": 12,
+   "title_ar": "PC5 ← PC8 عبر الشبكة المحولة",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c10"
+  }
+ ]
+}

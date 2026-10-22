@@ -1,0 +1,157 @@
+{
+ "lab": "CCNP ENCOR/13-IPsec-VTI.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 13 · IPsec Site-to-Site VPN with a Static VTI (IKEv2)",
+ "title_ar": "شبكة VPN بين موقعين IPsec VTI مع IKEv2",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "192.168.10.10",
+   "len": 24,
+   "gw": "192.168.10.1",
+   "pts": 2,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.10.10/24 192.168.10.1",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "203.0.113.1",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 203.0.113.1 255.255.255.252",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "192.168.10.1",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R1 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.10.1 255.255.255.0",
+   "id": "c03"
+  },
+  {
+   "kind": "iface",
+   "node": "ISP",
+   "intf": "GigabitEthernet0/0",
+   "ip": "203.0.113.2",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "ISP Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 203.0.113.2 255.255.255.252",
+   "id": "c04"
+  },
+  {
+   "kind": "iface",
+   "node": "ISP",
+   "intf": "GigabitEthernet0/1",
+   "ip": "198.51.100.2",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "ISP Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 198.51.100.2 255.255.255.252",
+   "id": "c05"
+  },
+  {
+   "kind": "pc",
+   "node": "PC2",
+   "ip": "192.168.20.10",
+   "len": 24,
+   "gw": "192.168.20.1",
+   "pts": 2,
+   "title_ar": "إعداد PC2 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC2 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.20.10/24 192.168.20.1",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show crypto ikev2 sa",
+   "regex": "203\\.0\\.113\\.1/500\\s+198\\.51\\.100\\.1/500\\s+\\S+\\s+READY",
+   "pts": 14,
+   "title_ar": "IKEv2 SA بحالة READY",
+   "hint_ar": "crypto ikev2 profile + keyring",
+   "solution_ar": "crypto ikev2 profile + keyring",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show interfaces Tunnel1",
+   "regex": "Tunnel protocol/transport IPSEC/IP",
+   "pts": 9,
+   "title_ar": "Tunnel1 في وضع IPsec",
+   "hint_ar": "tunnel mode ipsec ipv4",
+   "solution_ar": "tunnel mode ipsec ipv4",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show crypto ipsec sa",
+   "regex": "#pkts encaps: [1-9]",
+   "pts": 13,
+   "title_ar": "حزم مشفرة عبر النفق",
+   "hint_ar": "tunnel protection ipsec profile VTI-PROF",
+   "solution_ar": "tunnel protection ipsec profile VTI-PROF",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show crypto ipsec sa",
+   "regex": "esp-256-aes esp-sha256-hmac",
+   "pts": 9,
+   "title_ar": "التحويل ESP AES-256 / SHA-256",
+   "hint_ar": "crypto ipsec transform-set TS-AES256 esp-aes 256 esp-sha256-hmac",
+   "solution_ar": "crypto ipsec transform-set TS-AES256 esp-aes 256 esp-sha256-hmac",
+   "id": "c10"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip eigrp neighbors",
+   "regex": "172\\.16\\.12\\.2\\s+Tu1",
+   "pts": 13,
+   "title_ar": "جوار EIGRP عبر Tunnel1",
+   "hint_ar": "network 172.16.12.0 0.0.0.3",
+   "solution_ar": "network 172.16.12.0 0.0.0.3",
+   "id": "c11"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip route eigrp",
+   "regex": "D\\s+192\\.168\\.20\\.0/24 .* Tunnel1",
+   "pts": 9,
+   "title_ar": "LAN البعيدة عبر الـ VTI",
+   "hint_ar": "network 192.168.20.0 على R2",
+   "solution_ar": "network 192.168.20.0 على R2",
+   "id": "c12"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "192.168.20.10",
+   "pts": 17,
+   "title_ar": "PC1 ← PC2 عبر IPsec",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c13"
+  }
+ ]
+}

@@ -1,0 +1,167 @@
+{
+ "lab": "CCNP ENCOR/21-QoS.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 21 · QoS: Classification, Marking, LLQ/CBWFQ, Shaping & Policing",
+ "title_ar": "جودة الخدمة QoS",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "192.168.1.10",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 2,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.10/24 192.168.1.1",
+   "id": "c01"
+  },
+  {
+   "kind": "pc",
+   "node": "PC2",
+   "ip": "192.168.1.20",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 2,
+   "title_ar": "إعداد PC2 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC2 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.20/24 192.168.1.1",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "10.0.12.1",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.0.12.1 255.255.255.252",
+   "id": "c03"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "192.168.1.1",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R1 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.1.1 255.255.255.0",
+   "id": "c04"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/0",
+   "ip": "10.0.12.2",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R2 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.0.12.2 255.255.255.252",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show policy-map interface Gi0/1",
+   "regex": "Service-policy input: PM-MARK-IN",
+   "pts": 9,
+   "title_ar": "سياسة التعليم داخلة على Gi0/1",
+   "hint_ar": "service-policy input PM-MARK-IN",
+   "solution_ar": "service-policy input PM-MARK-IN",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show policy-map interface Gi0/1",
+   "regex": "Class-map: CM-VOICE-IN \\(match-any\\)[\\s\\S]*?dscp ef",
+   "pts": 9,
+   "title_ar": "الصوت يُعلَّم EF",
+   "hint_ar": "set dscp ef",
+   "solution_ar": "set dscp ef",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show policy-map interface Gi0/0",
+   "regex": "Service-policy output: PM-WAN-SHAPE",
+   "pts": 9,
+   "title_ar": "السياسة الأم خارجة على Gi0/0",
+   "hint_ar": "service-policy output PM-WAN-SHAPE",
+   "solution_ar": "service-policy output PM-WAN-SHAPE",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show policy-map interface Gi0/0",
+   "regex": "Service-policy : PM-WAN-CHILD",
+   "pts": 9,
+   "title_ar": "السياسة الابن داخل التشكيل",
+   "hint_ar": "service-policy PM-WAN-CHILD",
+   "solution_ar": "service-policy PM-WAN-CHILD",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | section policy-map PM-WAN-SHAPE",
+   "regex": "shape average 10000000",
+   "pts": 9,
+   "title_ar": "تشكيل إلى 10 Mbps",
+   "hint_ar": "shape average 10000000",
+   "solution_ar": "shape average 10000000",
+   "id": "c10"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show policy-map interface Gi0/0",
+   "regex": "Priority: 20% \\(\\d+ kbps\\)",
+   "pts": 11,
+   "title_ar": "LLQ لـ EF بنسبة 20%",
+   "hint_ar": "priority percent 20",
+   "solution_ar": "priority percent 20",
+   "id": "c11"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show policy-map interface Gi0/0",
+   "regex": "Class-map: CM-CS2[\\s\\S]*?bandwidth 10% \\(\\d+ kbps\\)",
+   "pts": 9,
+   "title_ar": "CBWFQ لـ CS2 بنسبة 10%",
+   "hint_ar": "bandwidth percent 10",
+   "solution_ar": "bandwidth percent 10",
+   "id": "c12"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show policy-map interface Gi0/0",
+   "regex": "police:\\s*\\n\\s*cir 64000 bps",
+   "pts": 13,
+   "title_ar": "تحديد ICMP على R2",
+   "hint_ar": "police cir 64000",
+   "solution_ar": "police cir 64000",
+   "id": "c13"
+  },
+  {
+   "kind": "ping",
+   "node": "PC2",
+   "target": "2.2.2.2",
+   "pts": 9,
+   "title_ar": "PC2 ← 2.2.2.2",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c14"
+  }
+ ]
+}

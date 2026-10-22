@@ -1,0 +1,176 @@
+{
+ "lab": "CCNP ENCOR/14-NAT-PAT.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 14 · NAT, PAT & NAT Pools",
+ "title_ar": "ترجمة العناوين NAT و PAT",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "192.168.1.10",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 2,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.10/24 192.168.1.1",
+   "id": "c01"
+  },
+  {
+   "kind": "pc",
+   "node": "PC2",
+   "ip": "192.168.1.20",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 2,
+   "title_ar": "إعداد PC2 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC2 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.20/24 192.168.1.1",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.1.1",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.1.1 255.255.255.0",
+   "id": "c03"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "203.0.113.1",
+   "len": 29,
+   "pts": 3,
+   "title_ar": "R1 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 203.0.113.1 255.255.255.248",
+   "id": "c04"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/2",
+   "ip": "192.168.2.1",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R1 Gi0/2",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.2.1 255.255.255.0",
+   "id": "c05"
+  },
+  {
+   "kind": "iface",
+   "node": "ISP",
+   "intf": "GigabitEthernet0/1",
+   "ip": "203.0.113.6",
+   "len": 29,
+   "pts": 3,
+   "title_ar": "ISP Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 203.0.113.6 255.255.255.248",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip nat statistics",
+   "regex": "Outside interfaces:\\s*\\n\\s*GigabitEthernet0/1",
+   "pts": 9,
+   "title_ar": "Gi0/1 خارجية",
+   "hint_ar": "ip nat outside",
+   "solution_ar": "ip nat outside",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip nat statistics",
+   "regex": "Inside interfaces:\\s*\\n\\s*GigabitEthernet0/0, GigabitEthernet0/2",
+   "pts": 9,
+   "title_ar": "Gi0/0 و Gi0/2 داخليتان",
+   "hint_ar": "ip nat inside",
+   "solution_ar": "ip nat inside",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip nat translations",
+   "regex": "---\\s+203\\.0\\.113\\.3\\s+192\\.168\\.1\\.10\\s+---",
+   "pts": 9,
+   "title_ar": "Static NAT لـ PC1",
+   "hint_ar": "ip nat inside source static 192.168.1.10 203.0.113.3",
+   "solution_ar": "ip nat inside source static 192.168.1.10 203.0.113.3",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | include ip nat inside source list",
+   "regex": "list NAT-LAN1 interface GigabitEthernet0/1 overload",
+   "pts": 13,
+   "title_ar": "PAT على Gi0/1",
+   "hint_ar": "ip nat inside source list NAT-LAN1 interface Gi0/1 overload",
+   "solution_ar": "ip nat inside source list NAT-LAN1 interface Gi0/1 overload",
+   "id": "c10"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip nat statistics",
+   "regex": "pool LAN2-POOL: .*netmask 255\\.255\\.255\\.248\\s*\\n\\s*start 203\\.0\\.113\\.4 end 203\\.0\\.113\\.5",
+   "pts": 9,
+   "title_ar": "تجمع LAN2-POOL من .4 إلى .5",
+   "hint_ar": "ip nat pool LAN2-POOL 203.0.113.4 203.0.113.5 prefix-length 29",
+   "solution_ar": "ip nat pool LAN2-POOL 203.0.113.4 203.0.113.5 prefix-length 29",
+   "id": "c11"
+  },
+  {
+   "kind": "match",
+   "node": "ISP",
+   "cmd": "show ip route",
+   "regex": "192\\.168\\.",
+   "pts": 4,
+   "title_ar": "ISP لا يعرف الشبكات الخاصة",
+   "hint_ar": "لا تضف مسارات خاصة على ISP",
+   "solution_ar": "لا تضف مسارات خاصة على ISP",
+   "negate": true,
+   "id": "c12"
+  },
+  {
+   "kind": "ping",
+   "node": "PC2",
+   "target": "8.8.8.8",
+   "pts": 9,
+   "title_ar": "PC2 ← 8.8.8.8 عبر PAT",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c13"
+  },
+  {
+   "kind": "ping",
+   "node": "PC3",
+   "target": "8.8.8.8",
+   "pts": 9,
+   "title_ar": "PC3 ← 8.8.8.8 عبر التجمع",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c14"
+  },
+  {
+   "kind": "ping",
+   "node": "ISP",
+   "target": "203.0.113.3",
+   "pts": 13,
+   "title_ar": "ISP ← 203.0.113.3 (PC1 عبر Static NAT)",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c15"
+  }
+ ]
+}

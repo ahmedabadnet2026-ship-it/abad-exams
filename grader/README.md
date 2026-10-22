@@ -5,3 +5,4 @@ Runs on ubantu-server (reaches EVE VMs 192.168.200.201-212 on ESXi host 1; seats
 - Rubrics: `rubrics/<folder>__<lab>.json` — kinds iface / route / pc / ping with `title_ar`, `hint_ar`, `solution_ar` (shown after `solution_after` attempts); the grader reports expected vs. what was found (wrong IP/mask, shutdown, wrong next-hop, missing gateway…).
 - Demo: `python3 grader.py --fixture fixtures/MOCK-partial.json 3` (mock outputs) · `python3 grader.py --live 1 CCNA/01-Static-Routing.unl`.
 - Service: `GRADER_CFG=config.json GRADER_PORT=8795 python3 grader.py` (binds 127.0.0.1; port 8790 is taken by the stats service).
+- CCNP ENCOR: `rubrics/CCNP_ENCOR__<lab>.json` (lab path `CCNP ENCOR/<lab>.unl`); only seat-tested labs are enabled — list in api/lab_grade.php ABD_GRADE_ENCOR + eve-classroom.html options.

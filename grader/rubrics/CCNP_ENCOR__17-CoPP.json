@@ -1,0 +1,142 @@
+{
+ "lab": "CCNP ENCOR/17-CoPP.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 17 · Control Plane Policing (CoPP)",
+ "title_ar": "حماية مستوى التحكم CoPP",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "192.168.99.10",
+   "len": 24,
+   "gw": "192.168.99.1",
+   "pts": 2,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.99.10/24 192.168.99.1",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "10.0.12.1",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.0.12.1 255.255.255.252",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "192.168.99.1",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R1 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.99.1 255.255.255.0",
+   "id": "c03"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/0",
+   "ip": "10.0.12.2",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R2 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.0.12.2 255.255.255.252",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show policy-map control-plane",
+   "regex": "Service-policy input: PM-COPP",
+   "pts": 11,
+   "title_ar": "السياسة مطبقة على control-plane",
+   "hint_ar": "control-plane / service-policy input PM-COPP",
+   "solution_ar": "control-plane / service-policy input PM-COPP",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show policy-map control-plane",
+   "regex": "Class-map: CM-ICMP \\(match-all\\)[\\s\\S]*?cir 8000 bps",
+   "pts": 14,
+   "title_ar": "تحديد ICMP بـ 8000 bps",
+   "hint_ar": "police 8000 ...",
+   "solution_ar": "police 8000 ...",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show policy-map control-plane",
+   "regex": "Class-map: CM-ROUTING \\(match-all\\)[\\s\\S]*?cir 256000 bps",
+   "pts": 9,
+   "title_ar": "فئة البروتوكولات 256 kbps",
+   "hint_ar": "police 256000",
+   "solution_ar": "police 256000",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show policy-map control-plane",
+   "regex": "Class-map: CM-MGMT \\(match-all\\)[\\s\\S]*?cir 128000 bps",
+   "pts": 9,
+   "title_ar": "فئة الإدارة 128 kbps",
+   "hint_ar": "police 128000",
+   "solution_ar": "police 128000",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show access-lists COPP-MGMT",
+   "regex": "permit tcp 192\\.168\\.99\\.0 0\\.0\\.0\\.255 any eq 22",
+   "pts": 9,
+   "title_ar": "الإدارة من 192.168.99.0/24 فقط",
+   "hint_ar": "permit tcp 192.168.99.0 0.0.0.255 any eq 22",
+   "solution_ar": "permit tcp 192.168.99.0 0.0.0.255 any eq 22",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip ospf neighbor",
+   "regex": "2\\.2\\.2\\.2\\s+1\\s+FULL",
+   "pts": 14,
+   "title_ar": "OSPF يبقى قائماً بعد CoPP",
+   "hint_ar": "CM-ROUTING لا يسقط الحزم",
+   "solution_ar": "CM-ROUTING لا يسقط الحزم",
+   "id": "c10"
+  },
+  {
+   "kind": "ping",
+   "node": "R2",
+   "target": "1.1.1.1",
+   "pts": 9,
+   "title_ar": "R2 ← 1.1.1.1 (ping عادي)",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c11"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "192.168.99.1",
+   "pts": 14,
+   "title_ar": "PC1 ← R1",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c12"
+  }
+ ]
+}

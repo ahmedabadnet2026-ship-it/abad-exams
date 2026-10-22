@@ -6,6 +6,9 @@ declare(strict_types=1);
 require_once __DIR__ . '/_lab_lib.php';
 header('Cache-Control: no-store');
 const ABD_GRADE_LABS = ['CCNA/01-Static-Routing.unl', 'CCNA/02-VLANs-Trunking.unl', 'CCNA/03-Inter-VLAN-Routing-ROAS.unl', 'CCNA/04-STP-RSTP.unl', 'CCNA/05-EtherChannel.unl', 'CCNA/06-OSPF-and-Floating-Static.unl', 'CCNA/07-DHCP-Telnet-SSH.unl', 'CCNA/08-NAT-PAT.unl', 'CCNA/09-Standard-ACL.unl', 'CCNA/10-Extended-ACL.unl', 'CCNA/11-IPv6-Addressing-and-Static.unl', 'CCNA/12-Port-Security.unl', 'CCNA/13-HSRP.unl', 'CCNA/14-CDP-LLDP-NTP-Syslog.unl', 'CCNA/15-Troubleshooting-Challenge.unl'];
+// CCNP ENCOR: only labs that passed the seat test. To add one: append its path here, add its <option data-track="encor"> in eve-classroom.html,
+// and copy grader/rubrics/CCNP_ENCOR__<lab>.json to the grader (rubric file = folder with _ for space + "__" + lab).
+const ABD_GRADE_ENCOR = ['01-STP', '02-EtherChannel', '03-SPAN', '04-EIGRP', '05-HSRP-VRRP', '11-VRF-Lite', '12-GRE', '13-IPsec-VTI', '14-NAT-PAT', '16-AAA', '17-CoPP', '18-IP-SLA-Tracking', '20-NetFlow-Syslog', '21-QoS', '22-EEM'];
 
 $u = abd_require_user();
 $uid = (int)$u['id'];
@@ -14,7 +17,7 @@ $m = $_SERVER['REQUEST_METHOD'];
 $b = $m === 'POST' ? abd_body() : $_GET;
 $action = (string)($b['action'] ?? '');
 $lab = (string)($b['lab'] ?? '');
-if (!in_array($lab, ABD_GRADE_LABS, true)) abd_err('bad_lab', 400);
+if (!in_array($lab, ABD_GRADE_LABS, true) && !in_array($lab, array_map(fn($l) => 'CCNP ENCOR/' . $l . '.unl', ABD_GRADE_ENCOR), true)) abd_err('bad_lab', 400);
 
 if ($m === 'GET' && $action === 'attempts') {
   $rows = abd_q('SELECT id, seat, score, max_score, status, created_at FROM abd_lab_attempts WHERE user_id = ? AND lab = ? ORDER BY id DESC LIMIT 20', [$uid, $lab])->fetchAll();
