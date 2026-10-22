@@ -47,6 +47,14 @@ function abd_lec_can_title(?array $u, int $courseId): bool {
   return $u['role'] === 'trainer' && (bool)abd_q('SELECT 1 FROM abd_courses WHERE id = ? AND trainer_id = ?', [$courseId, (int)$u['id']])->fetchColumn();
 }
 
+/** Clean a one-line text field (title / note): strip control chars, trim, max 190. */
+function abd_lec_line($v): string { return is_string($v) ? mb_substr(trim(preg_replace('/[\x00-\x1F\x7F]/u', '', $v) ?? ''), 0, 190) : ''; }
+/** Displayed lecture title: «<title> — <note>», the note alone without a title, or '' (callers fall back to «المحاضرة N»). Escape on output. */
+function abd_lec_title_full(?string $title, ?string $note): string {
+  $t = trim((string)$title); $n = trim((string)$note);
+  return $t !== '' && $n !== '' ? "$t — $n" : ($t !== '' ? $t : $n);
+}
+
 function abd_lec_time(string $t): ?string { return preg_match('/^([01]\d|2[0-3]):([0-5]\d)$/', $t) ? $t : null; }
 
 /** Renumber a course's sessions 1..n by start time. */
@@ -74,7 +82,7 @@ function abd_lec_for_user(array $u): array {
              WHERE e.user_id = ? AND e.status IN ('active','completed') ORDER BY c.id", [(int)$u['id']])->fetchAll());
   if ($u['role'] === 'trainer') $staff = true;   // a trainer sees links/recordings of their own courses only (query above)
   foreach ($courses as &$c) {
-    $rows = abd_q('SELECT id, session_no, title, starts_at, ends_at, zoom_url, zoom_passcode, rec_url, rec_passcode, rec_until FROM abd_course_sessions WHERE course_id = ? ORDER BY starts_at, id', [(int)$c['id']])->fetchAll();
+    $rows = abd_q('SELECT id, session_no, title, title_note, starts_at, ends_at, zoom_url, zoom_passcode, rec_url, rec_passcode, rec_until FROM abd_course_sessions WHERE course_id = ? ORDER BY starts_at, id', [(int)$c['id']])->fetchAll();
     $c['sessions'] = array_map(function ($s) use ($now, $staff) {
       $st = strtotime((string)$s['starts_at']); $en = strtotime((string)$s['ends_at']);
       $open = $now >= $st - ABD_LEC_EARLY_MIN * 60 && $now < $en;
@@ -85,7 +93,7 @@ function abd_lec_for_user(array $u): array {
       $rec = null; $rs = $now < $en ? 'pending' : ($r ? ($expired ? 'expired' : 'available') : 'soon');
       if ($r && ($staff || $rs === 'available')) $rec = ['kind' => $r['kind'], 'url' => $r['kind'] === 'zoom' ? $r['url'] : null, 'embed' => $r['embed'],
         'passcode' => $s['rec_passcode'], 'until' => $s['rec_until']];
-      return ['id' => (int)$s['id'], 'rec_status' => $rs, 'rec' => $rec, 'no' => (int)$s['session_no'], 'title' => $s['title'],
+      return ['id' => (int)$s['id'], 'rec_status' => $rs, 'rec' => $rec, 'no' => (int)$s['session_no'], 'title' => abd_lec_title_full($s['title'], $s['title_note']) ?: null,   // merged «title — note»
         'start' => $st * 1000, 'end' => $en * 1000, 'has_link' => (bool)$s['zoom_url'],
         'join_url' => $show ? $s['zoom_url'] : null, 'passcode' => $show ? $s['zoom_passcode'] : null];
     }, $rows);

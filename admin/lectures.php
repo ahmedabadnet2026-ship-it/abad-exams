@@ -147,6 +147,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     }
     if ($do === 'save_all') {
       $titles = abd_q('SELECT id, title FROM abd_course_sessions WHERE course_id = ?', [$cid])->fetchAll(PDO::FETCH_KEY_PAIR); $rows = array_keys($titles);
+      $notes = abd_q('SELECT id, title_note FROM abd_course_sessions WHERE course_id = ?', [$cid])->fetchAll(PDO::FETCH_KEY_PAIR);
       $topicT = array_column(abd_topics($cid), 'title', 'id');   // admin title dropdown: tsel[id] = topic id | '' | 'other' (→ title[id])
       $bad = []; $upd = [];
       foreach ($rows as $id) {
@@ -156,11 +157,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         if (!$s || !$e || $e <= $s || ($url !== '' && !$z) || ($hu !== '' && !$hz) || ($ru !== '' && !$rv) || ($until !== '' && !abd_date($until))) { $bad[] = $id; continue; }
         $sel = ($_POST['tsel'] ?? [])[$id] ?? null; $sel = is_string($sel) ? $sel : null;
         $nt = $sel === null || $sel === 'other' ? ($f('title', 190) ?: null) : ($sel === '' ? null : ($topicT[(int)$sel] ?? $titles[$id]));
-        $upd[] = [$isAdmin ? $nt : $titles[$id], $s, $e, $z, $f('pass', 64) ?: null, $hz, $rv['url'] ?? null, $f('recpass', 64) ?: null, $until ?: null, $id, $cid];
+        $nn = $isAdmin && isset(($_POST['note'] ?? [])[$id]) ? (abd_lec_line(($_POST['note'] ?? [])[$id]) ?: null) : $notes[$id];   // note: admin only
+        $upd[] = [$isAdmin ? $nt : $titles[$id], $nn, $s, $e, $z, $f('pass', 64) ?: null, $hz, $rv['url'] ?? null, $f('recpass', 64) ?: null, $until ?: null, $id, $cid];
       }
       if ($bad) lec_back($cid, 'لم يُحفظ شيء: توجد ' . count($bad) . ' محاضرة بتاريخ/وقت غير صحيح أو رابط غير مقبول (المحاضرة: https على zoom.us فقط؛ التسجيل: zoom.us أو YouTube أو Google Drive).', true);
       $pdo = abd_db(); $pdo->beginTransaction();
-      foreach ($upd as $p) abd_q('UPDATE abd_course_sessions SET title = ?, starts_at = ?, ends_at = ?, zoom_url = ?, zoom_passcode = ?, host_url = ?, rec_url = ?, rec_passcode = ?, rec_until = ? WHERE id = ? AND course_id = ?', $p);
+      foreach ($upd as $p) abd_q('UPDATE abd_course_sessions SET title = ?, title_note = ?, starts_at = ?, ends_at = ?, zoom_url = ?, zoom_passcode = ?, host_url = ?, rec_url = ?, rec_passcode = ?, rec_until = ? WHERE id = ? AND course_id = ?', $p);
       $pdo->commit();
       abd_lec_renumber($cid);
       lec_back($cid, 'تم حفظ المحاضرات والروابط.');
@@ -311,7 +313,7 @@ main{max-width:1240px}
 @media (max-width:760px){.enrg{grid-template-columns:1fr}}
 @media (max-width:980px){.gen{grid-template-columns:1fr 1fr}.gen .wide{grid-column:1/-1}}
 .zt td:nth-child(2){min-width:150px}
-.zt td.ttl{min-width:230px}.zt select.tsel{width:100%;min-width:170px}.zt .tother{margin-top:6px}.zt .tother[hidden]{display:none}
+.zt td.ttl{min-width:230px}.zt select.tsel{width:100%;min-width:170px}.zt .tother,.zt .tnote{margin-top:6px}.zt .tnote{font-size:13px;background:#fbfcfd}.zt .tother[hidden]{display:none}
 #topics{border-top:5px solid var(--n)}#topics .cnt{background:var(--n);color:var(--g);border-radius:99px;padding:0 12px;font-size:15px}
 .tpg{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:start}.tpg textarea{width:100%;font:15px/1.8 Cairo,sans-serif;resize:vertical}
 .tpl{list-style:none;margin:0;padding:0;counter-reset:tp}.tpl li{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:#fff}
@@ -441,7 +443,7 @@ function lec_course_form(array $v, array $trainers, string $tok, string $do, int
   <form method="post" id="saveall"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="save_all"><input type="hidden" name="course" value="<?= $cid ?>">
   <table class="zt"><thead><tr><th>#</th><th>التاريخ والوقت</th><th style="width:25%">رابط الزوم</th><th>عنوان المحاضرة <?= $isAdmin ? '' : '(للقراءة فقط)' ?></th><th style="width:25%">رابط التسجيل</th><th>الحالة</th></tr></thead><tbody>
   <?php foreach ($sess as $s): $id = (int)$s['id']; $past = $s['ends_at'] <= $now; $live = !$past && $s['starts_at'] <= $now; $isToday = substr((string)$s['starts_at'], 0, 10) === $today;
-    $exp = $s['rec_until'] && $today > $s['rec_until']; $await = $past && !$s['rec_url']; $hasT = trim((string)$s['title']) !== '';
+    $exp = $s['rec_until'] && $today > $s['rec_until']; $await = $past && !$s['rec_url']; $full = abd_lec_title_full($s['title'], $s['title_note'] ?? null); $hasT = $full !== '';
     $pill = $past ? ($s['rec_url'] ? ($exp ? '<span class="pill p-exp">منتهي الإتاحة</span>' : '<span class="pill p-ok">● متاح</span>') : '<span class="pill p-wait">⏳ بانتظار التسجيل</span>')
       : ($live ? '<span class="pill p-live">● مباشر الآن</span>' : ($isToday ? '<span class="pill p-up">اليوم</span>' : '<span class="pill p-up">قادمة</span>')); ?>
     <tr class="<?= $await ? 'hl' : ($past ? 'past' : '') ?>">
@@ -454,7 +456,8 @@ function lec_course_form(array $v, array $trainers, string $tok, string $do, int
       <td data-l="عنوان المحاضرة" class="ttl"><?php if ($isAdmin && $topics): $cur = (string)($s['title'] ?? ''); $hit = null; foreach ($topics as $tp) if ($tp['title'] === $cur) { $hit = (int)$tp['id']; break; } $oth = $cur !== '' && $hit === null; ?>
         <select class="tsel" name="tsel[<?= $id ?>]" aria-label="موضوع المحاضرة <?= (int)$s['session_no'] ?>"><option value="">— اختر موضوع المحاضرة —</option><?php foreach ($topics as $i => $tp): ?><option value="<?= (int)$tp['id'] ?>" <?= $hit === (int)$tp['id'] ? 'selected' : '' ?>><?= $i + 1 ?>. <?=h($tp['title'])?></option><?php endforeach; ?><option value="other" <?= $oth ? 'selected' : '' ?>>عنوان آخر…</option></select>
         <input class="tother" name="title[<?= $id ?>]" value="<?=h($oth ? $cur : '')?>" maxlength="190" placeholder="اكتب عنوان المحاضرة…" <?= $oth ? '' : 'hidden' ?>>
-        <?php elseif ($isAdmin): ?><input name="title[<?= $id ?>]" value="<?=h($s['title'] ?? '')?>" maxlength="190"><?php elseif ($hasT): ?><b><?=h($s['title'])?></b><?php elseif ($past): ?><i>لم يُكتب بعد</i><?php else: ?><span class="mut">—</span><?php endif; ?>
+        <?php elseif ($isAdmin): ?><input name="title[<?= $id ?>]" value="<?=h($s['title'] ?? '')?>" maxlength="190"><?php elseif ($hasT): ?><b><?=h($full)?></b><?php elseif ($past): ?><i>لم يُكتب بعد</i><?php else: ?><span class="mut">—</span><?php endif; ?>
+        <?php if ($isAdmin): ?><input class="tnote" name="note[<?= $id ?>]" value="<?=h($s['title_note'] ?? '')?>" maxlength="190" placeholder="ملاحظة (اختياري)…" aria-label="ملاحظة المحاضرة <?= (int)$s['session_no'] ?>"><?php endif; ?>
         <?php if ($hasT): ?><span class="pill p-done" style="font-size:11px;margin-top:3px">من المدرب<?= $s['title_by_name'] ? ' · ' . h($s['title_by_name']) : '' ?></span><?php endif; ?></td>
       <td data-l="رابط التسجيل"><input type="url" class="lk" name="rec[<?= $id ?>]" value="<?=h($s['rec_url'] ?? '')?>" placeholder="<?= $past ? 'الصق رابط التسجيل…' : 'بعد انتهاء المحاضرة' ?>" <?= $past || $s['rec_url'] ? '' : 'readonly' ?> aria-label="رابط التسجيل">
         <?php if ($past || $s['rec_url']): ?><div class="sub"><input class="lk" name="recpass[<?= $id ?>]" value="<?=h($s['rec_passcode'] ?? '')?>" maxlength="64" placeholder="رمز التسجيل"><input type="date" name="recuntil[<?= $id ?>]" value="<?=h($s['rec_until'] ?? '')?>" title="متاح حتى (اختياري)"></div><?php endif; ?></td>
