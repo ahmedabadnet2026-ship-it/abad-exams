@@ -75,7 +75,7 @@ footer{text-align:center;color:var(--mut);font-size:12px;padding:10px 0 30px}
 </style></head><body>
 <header class="top"><img src="../assets/abad-logo.png" alt="ABAD"><div class="t"><b>لوحة إدارة منصة آباد الرقمية</b><small>معهد شبكة آباد للتدريب</small></div>
 <a class="btn o s" href="labs.php">🧪 التحكم في المختبر</a>
-<?php if ($user && in_array($user['role'], ['admin', 'staff'], true)): ?><a class="btn o s" href="seats.php">💺 مقاعد المعمل</a><a class="btn o s" href="seat-bookings.php">📅 حجوزات المقاعد</a><a class="btn o s" href="services.php">🧾 خدمات المتدربين</a><a class="btn o s" href="exam-access.php">🎟️ صلاحيات الاختبارات</a><?php endif; ?>
+<?php if ($user && in_array($user['role'], ['admin', 'staff'], true)): ?><a class="btn o s" href="seats.php">💺 مقاعد المعمل</a><?php if (function_exists('abd_book_any_on') ? abd_book_any_on() : ((require_once dirname(__DIR__) . '/api/_booking_lib.php') && abd_book_any_on())): ?><a class="btn o s" href="seat-bookings.php">📅 حجوزات المقاعد</a><?php endif; ?><a class="btn o s" href="services.php">🧾 خدمات المتدربين</a><a class="btn o s" href="exam-access.php">🎟️ صلاحيات الاختبارات</a><?php endif; ?>
 <?php if ($user && $user['role'] === 'admin'): ?><a class="btn o s" href="enrollments.php">🗓️ تسجيل الدورات</a><?php endif; ?>
 <a class="btn o s" href="../dashboard.html">لوحة المعلومات</a>
 <?php if ($user): ?><span class="who">👤 <?=h($user['full_name_ar'] ?: $user['full_name_en'] ?: $user['email'])?></span>

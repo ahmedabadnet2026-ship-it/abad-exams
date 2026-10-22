@@ -4,6 +4,7 @@ declare(strict_types=1);
 require __DIR__ . '/_layout.php';
 require_once dirname(__DIR__) . '/api/_booking_lib.php';
 
+if (!abd_book_any_on()) { http_response_code(404); exit; }   // SEAT_BOOKING off: page not usable
 abd_session();
 $me = abd_user();
 if (!$me || !in_array($me['role'], ['admin', 'staff'], true)) { header('Location: index.php', true, 303); exit; }
@@ -29,7 +30,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
   sb_back($self, 'إجراء غير معروف.', true);
 }
 try { $by = abd_book_day($lab, $day, true); }
-catch (Throwable $e) { error_log('[abad-book-admin] ' . $e->getMessage()); abd_admin_fatal('جدول الحجوزات غير موجود بعد. شغّل ترحيل قاعدة البيانات (api/bin/migrate.php) — 013_seat_bookings.sql.'); }
+catch (Throwable $e) { error_log('[abad-book-admin] ' . $e->getMessage()); abd_admin_fatal('جدول الحجوزات غير موجود بعد. شغّل ترحيل قاعدة البيانات (api/bin/migrate.php) — 014_seat_bookings.sql.'); }
 $slots = abd_book_day_slots($day); $seats = abd_book_seats($lab); $req = abd_book_required($lab);
 $cnt = 0; foreach ($by as $r) $cnt += count($r);
 $flash = $_SESSION['flash'] ?? null; unset($_SESSION['flash']);

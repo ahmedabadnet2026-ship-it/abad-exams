@@ -10,6 +10,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/_booking_lib.php';
 
 abd_api(function () {
+  if (!abd_book_any_on()) abd_err('not_found', 404);   // SEAT_BOOKING off: endpoint not usable at all (staff included)
   $m = $_SERVER['REQUEST_METHOD'] ?? 'GET';
   $u = abd_require_user();
   $uid = (int)$u['id'];

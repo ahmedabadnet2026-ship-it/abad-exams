@@ -44,6 +44,8 @@ function abd_book_required(string $res): bool {
 }
 /** Is booking offered at all for this lab (page + API)? */
 function abd_book_offered(string $res): bool { return abd_book_required($res); }
+/** Is booking switched on for ANY lab? false = booking page/API/admin view are 404 and not linked. */
+function abd_book_any_on(): bool { foreach (array_keys(ABD_BOOK_RESOURCES) as $r) if (abd_book_required($r)) return true; return false; }
 /** Bookable seat numbers of a lab. */
 function abd_book_seats(string $res): array {
   if ($res === 'eve') return abd_lab_enabled_seats();
