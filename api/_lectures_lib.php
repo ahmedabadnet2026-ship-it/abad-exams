@@ -155,3 +155,56 @@ function abd_lec_course_input(array $p): array {
   if ($dates[0] . " $st:00" <= date('Y-m-d H:i:s')) return [null, 'أول محاضرة يجب أن تكون في المستقبل.'];
   return [['title' => $title, 'trainer_id' => $tid, 'from' => $dates[0], 'to' => end($dates), 'days' => $days, 'st' => $st, 'et' => $et, 'n' => count($dates)], null];
 }
+
+// ── «مواضيع الدورة» (abd_course_topics, migration 016) ──────────────────────────────────────────────
+const ABD_TOPICS_MAX = 200;
+
+/** Ordered topics of a course: [['id'=>, 'title'=>], …]. Returns [] if the table does not exist yet (migration not run). */
+function abd_topics(int $cid): array {
+  try { return abd_q('SELECT id, title FROM abd_course_topics WHERE course_id = ? ORDER BY sort_order, id', [$cid])->fetchAll(); }
+  catch (Throwable $e) { return []; }
+}
+
+/** Clean one pasted line: strip control chars, leading bullets/numbering ("1.", "١)", "-", "•"), collapse spaces, max 190. */
+function abd_topic_clean(string $s): string {
+  $s = preg_replace('/[\x00-\x1F\x7F]/u', ' ', $s) ?? '';
+  $s = preg_replace('/^\s*(?:[-–—•*·▪●]+|[0-9٠-٩]{1,3}\s*[\.\)\-:،])\s*/u', '', $s) ?? '';
+  return mb_substr(trim(preg_replace('/\s+/u', ' ', $s) ?? ''), 0, 190);
+}
+
+/** Replace or append topics from a pasted list (one per line). Duplicates (also of existing ones on append) are skipped. Returns count added. */
+function abd_topics_paste(int $cid, string $text, bool $replace): int {
+  $have = $replace ? [] : array_map(fn($t) => mb_strtolower($t['title']), abd_topics($cid));
+  $new = [];
+  foreach (preg_split('/\R/u', mb_substr($text, 0, 40000)) ?: [] as $line) {
+    $t = abd_topic_clean($line); $k = mb_strtolower($t);
+    if ($t === '' || in_array($k, $have, true)) continue;
+    $have[] = $k; $new[] = $t;
+  }
+  $pdo = abd_db(); $pdo->beginTransaction();
+  try {
+    if ($replace) abd_q('DELETE FROM abd_course_topics WHERE course_id = ?', [$cid]);
+    $base = (int)abd_q('SELECT COALESCE(MAX(sort_order), 0) FROM abd_course_topics WHERE course_id = ?', [$cid])->fetchColumn();
+    $room = ABD_TOPICS_MAX - (int)abd_q('SELECT COUNT(*) FROM abd_course_topics WHERE course_id = ?', [$cid])->fetchColumn();
+    $new = array_slice($new, 0, max(0, $room));
+    foreach ($new as $i => $t) abd_q('INSERT INTO abd_course_topics (course_id, sort_order, title) VALUES (?, ?, ?)', [$cid, $base + $i + 1, $t]);
+    $pdo->commit();
+  } catch (Throwable $e) { $pdo->rollBack(); throw $e; }
+  abd_topics_renumber($cid);
+  return count($new);
+}
+
+/** Rewrite sort_order as 1..n, optionally in the given id order (ids not in the course are ignored, missing ones keep their relative order). */
+function abd_topics_renumber(int $cid, ?array $order = null): void {
+  $ids = array_map(fn($t) => (int)$t['id'], abd_topics($cid));
+  if ($order !== null) { $order = array_values(array_intersect(array_unique(array_map('intval', $order)), $ids)); $ids = array_merge($order, array_values(array_diff($ids, $order))); }
+  foreach ($ids as $i => $id) abd_q('UPDATE abd_course_topics SET sort_order = ? WHERE id = ? AND course_id = ?', [$i + 1, $id, $cid]);
+}
+
+/** Move one topic up (-1) or down (+1). */
+function abd_topic_move(int $cid, int $id, int $dir): void {
+  $ids = array_map(fn($t) => (int)$t['id'], abd_topics($cid)); $i = array_search($id, $ids, true);
+  if ($i === false || !isset($ids[$i + $dir])) return;
+  [$ids[$i], $ids[$i + $dir]] = [$ids[$i + $dir], $ids[$i]];
+  abd_topics_renumber($cid, $ids);
+}

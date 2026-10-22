@@ -2,7 +2,8 @@
 // ABAD Digital Platform — «لوحة المدرب»: only the courses assigned to the signed-in trainer (abd_courses.trainer_id).
 // - «ابدأ المحاضرة»: own sessions only, from ABD_LEC_EARLY_MIN minutes before start until the end; first click stores started_at/started_by,
 //   then redirects to the host start URL (host_url, entered by zoom_staff/admin) or else the join link.
-// - Title/topic: editable only after the session ended, own courses only. Recording state is read-only.
+// - Title/topic: editable only after the session ended, own courses only. If the course has «مواضيع الدورة» (abd_course_topics) the trainer
+//   picks one from a dropdown or «عنوان آخر…» for free text; the chosen text is saved in abd_course_sessions.title. Recording state is read-only.
 // - Trainers can never add or edit join/host/recording links (zoom_staff + admin only, admin/lectures.php).
 // Admins may preview a trainer's view with ?as=<trainer id> (read-only, cannot start).
 declare(strict_types=1);
@@ -45,11 +46,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       if (!abd_q('SELECT 1 FROM abd_courses WHERE id = ? AND trainer_id = ?', [$cid, $tid])->fetchColumn()) tr_back(0, 'هذه الدورة غير مسندة إليك.', true);
       // titles only, ended sessions only; any link fields in the request are ignored
       $rows = abd_q('SELECT id, title FROM abd_course_sessions WHERE course_id = ? AND ends_at <= NOW()', [$cid])->fetchAll();
+      $topicT = array_column(abd_topics($cid), 'title', 'id');
       $n = 0;
       foreach ($rows as $r) {
         $id = (int)$r['id'];
-        if (!isset(($_POST['title'] ?? [])[$id])) continue;
-        $t = mb_substr(trim(preg_replace('/[\x00-\x1F\x7F]/u', '', (string)$_POST['title'][$id]) ?? ''), 0, 190);
+        // «مواضيع الدورة»: tsel[id] = a topic id from this course's list, '' (none) or 'other' (use the free-text title[id])
+        $sel = ($_POST['tsel'] ?? [])[$id] ?? null;
+        $free = ($_POST['title'] ?? [])[$id] ?? null;
+        if (is_array($sel) || is_array($free)) continue;
+        if ($sel !== null && $sel !== 'other') { $raw = $sel === '' ? '' : ($topicT[(int)$sel] ?? null); if ($raw === null) continue; }   // unknown topic id → leave unchanged
+        elseif ($free !== null) $raw = (string)$free;
+        else continue;
+        $t = mb_substr(trim(preg_replace('/[\x00-\x1F\x7F]/u', '', $raw) ?? ''), 0, 190);
         if ($t !== (string)$r['title']) { abd_q('UPDATE abd_course_sessions SET title = ?, title_by = ?, title_at = NOW() WHERE id = ?', [$t ?: null, $tid, $id]); $n++; }
       }
       tr_back($cid, $n ? "تم حفظ $n عنوان." : 'لا توجد تغييرات.');
@@ -71,6 +79,7 @@ $cids = array_map(fn($c) => (int)$c['id'], $courses);
 if (!$cid && $courses) $cid = $cids[0];
 $course = null; foreach ($courses as $c) if ((int)$c['id'] === $cid) $course = $c;
 $sess = $course ? abd_q('SELECT id, session_no, title, starts_at, ends_at, rec_url, rec_until, started_at, (zoom_url IS NOT NULL OR host_url IS NOT NULL) has_link FROM abd_course_sessions WHERE course_id = ? ORDER BY starts_at, id', [$cid])->fetchAll() : [];
+$topics = $course ? abd_topics($cid) : [];   // «مواضيع الدورة» (admin-managed in lectures.php); empty → free-text titles
 $now = date('Y-m-d H:i:s'); $nowTs = time(); $today = date('Y-m-d');
 $st = ['courses' => count($courses), 'trainees' => 0, 'done' => 0, 'norec' => 0, 'today' => 0];
 $hero = null;
@@ -117,6 +126,7 @@ main{max-width:1180px}
 .ctabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}.ctabs a{white-space:nowrap;padding:5px 14px;border-radius:99px;background:#eef3f8;font-weight:800;font-size:13px;color:var(--n);text-decoration:none}.ctabs a.a{background:var(--n);color:#fff}
 .zt{width:100%;border-collapse:collapse;font-size:14px}.zt th{background:#f3f7fb;color:var(--mut);padding:10px;font-weight:800;border:0}.zt td{padding:10px;vertical-align:middle}.zt input{width:100%}
 .zt input[disabled]{background:#f6f8fa}
+.zt select.tsel{width:100%}.zt .tother{margin-top:6px}.zt .tother[hidden]{display:none}
 .pill{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:2px 11px;font-size:12px;font-weight:800;white-space:nowrap}
 .p-ok{background:#e4f5ea;color:#1d7a43}.p-wait{background:#fff4d6;color:#9a6a00}.p-done{background:#e8f0f7;color:var(--b)}.p-up{background:#eef1f4;color:var(--mut)}.p-live{background:#fde4e4;color:#c0392b}
 .nm{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--n);color:var(--g);font-weight:800;font-size:13px}
@@ -164,7 +174,10 @@ main{max-width:1180px}
     <tr><td data-l="رقم"><span class="nm"><?= (int)$s['session_no'] ?></span></td>
       <td data-l="التاريخ" style="white-space:nowrap"><?=h(tr_ar((string)$s['starts_at']))?><br><span class="mut"><?=h(tr_t((string)$s['starts_at']))?><?= $s['started_at'] ? ' · بدأت ' . h(tr_t((string)$s['started_at'])) : '' ?></span></td>
       <td data-l="الحالة"><?= $ended ? '<span class="pill p-done">منتهية</span>' : ($live ? '<span class="pill p-live">● مباشر الآن</span>' : ($isT ? '<span class="pill p-up">اليوم ' . h(tr_t((string)$s['starts_at'])) . '</span>' : '<span class="pill p-up">قادمة</span>')) ?></td>
-      <td data-l="عنوان المحاضرة"><?php if ($ended && !$ro): ?><input name="title[<?= $id ?>]" value="<?=h($s['title'] ?? '')?>" maxlength="190" placeholder="أضف عنوان المحاضرة…"><?php else: ?><input value="<?=h($s['title'] ?? '')?>" disabled placeholder="<?= $ended ? '—' : 'يتاح بعد انتهاء المحاضرة' ?>"><?php endif; ?></td>
+      <td data-l="عنوان المحاضرة"><?php if ($ended && !$ro && $topics): $cur = (string)($s['title'] ?? ''); $hit = null; foreach ($topics as $tp) if ($tp['title'] === $cur) { $hit = (int)$tp['id']; break; } $oth = $cur !== '' && $hit === null; ?>
+        <select class="tsel" name="tsel[<?= $id ?>]" aria-label="موضوع المحاضرة <?= (int)$s['session_no'] ?>"><option value="">— اختر موضوع المحاضرة —</option><?php foreach ($topics as $i => $tp): ?><option value="<?= (int)$tp['id'] ?>" <?= $hit === (int)$tp['id'] ? 'selected' : '' ?>><?= $i + 1 ?>. <?=h($tp['title'])?></option><?php endforeach; ?><option value="other" <?= $oth ? 'selected' : '' ?>>عنوان آخر…</option></select>
+        <input class="tother" name="title[<?= $id ?>]" value="<?=h($oth ? $cur : '')?>" maxlength="190" placeholder="اكتب عنوان المحاضرة…" <?= $oth ? '' : 'hidden' ?>>
+      <?php elseif ($ended && !$ro): ?><input name="title[<?= $id ?>]" value="<?=h($s['title'] ?? '')?>" maxlength="190" placeholder="أضف عنوان المحاضرة…"><?php else: ?><input value="<?=h($s['title'] ?? '')?>" disabled placeholder="<?= $ended ? '—' : 'يتاح بعد انتهاء المحاضرة' ?>"><?php endif; ?></td>
       <td data-l="التسجيل"><?= !$ended ? '<span class="pill p-up">—</span>' : ($s['rec_url'] ? ($exp ? '<span class="pill p-up">انتهت الإتاحة</span>' : '<span class="pill p-ok">● متاح</span>') : '<span class="pill p-wait">⏳ بانتظار التسجيل</span>') ?></td></tr>
   <?php endforeach; ?></tbody></table>
   <?php if (!$ro): ?><p style="margin:14px 0 0"><button class="btn g">💾 حفظ العناوين</button> <span class="mut">يضيف مسؤول الزوم روابط المحاضرات والتسجيلات.</span></p><?php endif; ?></form>
@@ -176,6 +189,7 @@ main{max-width:1180px}
     <label>رقم الاجتماع الثابت (Meeting ID)<input name="zoom_meeting_id" value="<?=h($prof['zoom_meeting_id'] ?? '')?>" dir="ltr" inputmode="numeric" <?= $ro ? 'disabled' : '' ?>></label>
     <?php if (!$ro): ?><button class="btn">حفظ</button><?php endif; ?></form></details>
 <script>
+document.querySelectorAll('select.tsel').forEach(function(s){var i=s.parentNode.querySelector('.tother');function u(){var o=s.value==='other';i.hidden=!o;i.disabled=!o;if(o&&!i.value)i.focus()}s.addEventListener('change',u);i.hidden=s.value!=='other';i.disabled=s.value!=='other'});
 (function(){var h=document.getElementById('hero');if(!h)return;var S=+h.dataset.start,E=+h.dataset.end,off=+h.dataset.now-Date.now(),EARLY=<?= ABD_LEC_EARLY_MIN ?>*60000;
  function p(n){return (n<10?'0':'')+n}
  function tick(){var n=Date.now()+off,cd=document.getElementById('cd');

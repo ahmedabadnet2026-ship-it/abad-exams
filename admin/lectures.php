@@ -50,6 +50,20 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       lec_back($new, "تم إنشاء الدورة «{$d['title']}» وتوليد $n محاضرة مرتّبة حسب التاريخ. أضف روابط الزوم أدناه.");
     }
     if ($cid <= 0 || !abd_q("SELECT 1 FROM abd_courses WHERE id = ? AND delivery = 'online'", [$cid])->fetchColumn()) lec_back(0, 'اختر دورة أولًا.', true);
+    if (in_array($do, ['topics_paste', 'topic_move', 'topic_delete'], true)) {
+      // «مواضيع الدورة»: admins only (zoom_staff sees the list read-only)
+      if (!$isAdmin) lec_back($cid, 'إدارة مواضيع الدورة للمدير فقط.', true, '', '#topics');
+      if ($do === 'topics_paste') {
+        $rep = ($_POST['mode'] ?? '') === 'replace';
+        $n = abd_topics_paste($cid, (string)($_POST['topics'] ?? ''), $rep);
+        if (!$n && !$rep) lec_back($cid, 'لم تُضف مواضيع جديدة (القائمة فارغة أو المواضيع موجودة مسبقًا).', true, '', '#topics');
+        lec_back($cid, $rep ? "تم استبدال مواضيع الدورة ($n موضوع)." : "تمت إضافة $n موضوع إلى نهاية القائمة.", false, '', '#topics');
+      }
+      if ($do === 'topic_move') { abd_topic_move($cid, (int)($_POST['id'] ?? 0), ($_POST['dir'] ?? '') === 'up' ? -1 : 1); lec_back($cid, 'تم تغيير ترتيب الموضوع.', false, '', '#topics'); }
+      abd_q('DELETE FROM abd_course_topics WHERE id = ? AND course_id = ?', [(int)($_POST['id'] ?? 0), $cid]);
+      abd_topics_renumber($cid);
+      lec_back($cid, 'تم حذف الموضوع.', false, '', '#topics');
+    }
     if ($do === 'update_course' || $do === 'delete_course') {
       $c = abd_q('SELECT delivery, title_ar FROM abd_courses WHERE id = ?', [$cid])->fetch();
       if (($c['delivery'] ?? '') !== 'online') lec_back($cid, 'يمكن تعديل أو حذف الدورات الأونلاين فقط من هنا.', true);
@@ -209,6 +223,7 @@ try {
 $flash = $_SESSION['flash'] ?? null; unset($_SESSION['flash']);
 $cc = $_SESSION['lec_cc'] ?? []; unset($_SESSION['lec_cc']);   // re-fill the create form after a validation error
 $held = $course ? abd_lec_held($cid) : 0;
+$topics = $course ? abd_topics($cid) : [];
 $enr = $course ? array_values(array_filter(abd_course_enrollments($cid), fn($e) => $e['status'] !== 'cancelled')) : [];
 $enrRep = ($_SESSION['lec_enr']['cid'] ?? 0) === $cid ? ($_SESSION['lec_enr']['rep'] ?? null) : null; unset($_SESSION['lec_enr']);
 $eq = trim(mb_substr((string)($_GET['q'] ?? ''), 0, 100)); $found = [];
@@ -293,6 +308,12 @@ main{max-width:1240px}
 @media (max-width:760px){.enrg{grid-template-columns:1fr}}
 @media (max-width:980px){.gen{grid-template-columns:1fr 1fr}.gen .wide{grid-column:1/-1}}
 .zt td:nth-child(2){min-width:150px}
+#topics{border-top:5px solid var(--n)}#topics .cnt{background:var(--n);color:var(--g);border-radius:99px;padding:0 12px;font-size:15px}
+.tpg{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:start}.tpg textarea{width:100%;font:15px/1.8 Cairo,sans-serif;resize:vertical}
+.tpl{list-style:none;margin:0;padding:0;counter-reset:tp}.tpl li{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:#fff}
+.tpl li .t{flex:1;font-weight:700;overflow-wrap:anywhere}.tpl .nm{width:26px;height:26px;font-size:12px;flex:none}
+.tpl .mv{display:flex;gap:4px}.tpl .mv button{background:#eef3f8;border:0;border-radius:7px;width:30px;height:28px;cursor:pointer;color:var(--n);font:800 14px Cairo}.tpl .mv button[disabled]{opacity:.35;cursor:default}
+@media (max-width:760px){.tpg{grid-template-columns:1fr}}
 @media (max-width:760px){
  .zh{padding:18px 16px 56px;border-radius:14px}.zh h1{font-size:21px}
  .zs{grid-template-columns:1fr;margin:-40px 6px 14px;gap:10px}.zs>div{padding:12px 14px}.zs b{font-size:22px}
@@ -371,6 +392,24 @@ function lec_course_form(array $v, array $trainers, string $tok, string $do, int
 </div>
 
 <?php if ($course): ?>
+<div class="zc" id="topics">
+  <div class="hd"><h2>📚 مواضيع الدورة <span class="cnt"><?= count($topics) ?></span></h2><span class="mut">تظهر للمدرّب كقائمة منسدلة عند كتابة عنوان المحاضرة، بنفس هذا الترتيب.<?= $isAdmin ? '' : ' (للقراءة فقط — يديرها المدير)' ?></span></div>
+  <div class="tpg">
+    <div>
+    <?php if ($topics): ?><ol class="tpl"><?php $nt = count($topics); foreach ($topics as $i => $t): $tpid = (int)$t['id']; ?><li><span class="nm"><?= $i + 1 ?></span><span class="t"><?=h($t['title'])?></span>
+      <?php if ($isAdmin): ?><form method="post" class="mv"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="topic_move"><input type="hidden" name="course" value="<?= $cid ?>"><input type="hidden" name="id" value="<?= $tpid ?>">
+        <button name="dir" value="up" title="تحريك لأعلى" aria-label="تحريك لأعلى" <?= $i ? '' : 'disabled' ?>>▲</button><button name="dir" value="down" title="تحريك لأسفل" aria-label="تحريك لأسفل" <?= $i < $nt - 1 ? '' : 'disabled' ?>>▼</button></form>
+        <form method="post" onsubmit="return confirm('حذف هذا الموضوع؟ لا تتغيّر عناوين المحاضرات المحفوظة.')"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="topic_delete"><input type="hidden" name="course" value="<?= $cid ?>"><input type="hidden" name="id" value="<?= $tpid ?>"><button class="del">✕ حذف</button></form><?php endif; ?></li><?php endforeach; ?></ol>
+    <?php else: ?><p class="mut" style="margin:0">لا توجد مواضيع لهذه الدورة بعد — يكتب المدرّب عناوين المحاضرات نصًا حرًا.</p><?php endif; ?>
+    </div>
+    <?php if ($isAdmin): ?><div class="drawer" style="margin:0"><h3>📋 لصق قائمة المواضيع</h3>
+      <form method="post" onsubmit="return this.mode.value!=='replace'||!<?= count($topics) ?>||confirm('سيتم استبدال المواضيع الحالية (<?= count($topics) ?>) بالقائمة الجديدة. متابعة؟')"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="topics_paste"><input type="hidden" name="course" value="<?= $cid ?>">
+        <textarea name="topics" rows="7" required placeholder="مقدمة في الشبكات&#10;نموذج OSI وطبقاته&#10;عناوين IPv4 والتقسيم الفرعي"></textarea>
+        <p class="mut" style="margin:6px 0">موضوع في كل سطر. تُحذف الترقيمات والنقاط من بداية السطر تلقائيًا، وتُتجاهل الأسطر الفارغة والمكرّرة (حتى <?= ABD_TOPICS_MAX ?> موضوع).</p>
+        <div class="seg" style="margin-bottom:10px"><label><input type="radio" name="mode" value="append" checked><span>إضافة إلى النهاية</span></label><label><input type="radio" name="mode" value="replace"><span>استبدال القائمة</span></label></div>
+        <button class="btn g">💾 حفظ المواضيع</button></form></div><?php endif; ?>
+  </div>
+</div>
 <div class="zc">
   <div class="hd"><h2><?= $ic($icCam) ?> جلسات: <?=h($course['title_ar'])?></h2>
     <div class="acts"><button type="button" class="btn ol" onclick="var d=document.getElementById('imp');d.hidden=!d.hidden">⬆ استيراد من Excel</button><button type="button" class="btn ol" onclick="var d=document.getElementById('one');d.hidden=!d.hidden">＋ محاضرة</button><?php if ($sess): ?><button class="btn" form="saveall">حفظ التغييرات</button><?php endif; ?></div></div>
