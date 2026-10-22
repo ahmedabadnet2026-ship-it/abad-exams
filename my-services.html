@@ -15,7 +15,7 @@
 .hero .in{max-width:1180px;margin:0 auto}.hero h1{margin:0 0 6px;font-size:30px}.hero h1 span{color:var(--g)}.hero p{margin:0;opacity:.85}
 main{max-width:1180px;margin:-36px auto 40px;padding:0 18px}
 .sec{background:#fff;border-radius:18px;box-shadow:0 4px 18px rgba(16,41,59,.08);padding:20px 22px;margin-bottom:18px;border-top:5px solid var(--b)}
-.sec.mat{border-top-color:var(--g)}.sec.lab{border-top-color:var(--n)}
+.sec.mat{border-top-color:var(--g)}.sec.zm{border-top-color:#3f86b3}.sec.zm a.go{background:var(--b)}.sec.lab{border-top-color:var(--n)}
 .sec h2{margin:0 0 14px;font-size:20px;display:flex;align-items:center;gap:8px}.sec h2 .c{background:#eef4f9;border-radius:99px;font-size:13px;padding:1px 10px;color:var(--b)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 .it{border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;background:#fafcfe}
@@ -28,12 +28,13 @@ main{max-width:1180px;margin:-36px auto 40px;padding:0 18px}
 [hidden]{display:none!important}
 </style></head><body>
 <header class="hdr"><div class="in"><a class="brand" href="platform.html"><img src="assets/abad-logo.png" alt="شعار معهد شبكة آباد"><b>معهد شبكة آباد للتدريب</b></a>
-<nav class="nav"><a href="platform.html">المنصة</a><a href="booking.html">احجز اختبارك</a></nav></div></header>
+<nav class="nav"><a href="platform.html">المنصة</a><a href="lectures.html">🎥 محاضرات الزوم</a><a href="booking.html">احجز اختبارك</a></nav></div></header>
 <section class="hero"><div class="in"><h1>خدماتي <span>•</span></h1><p id="hi">الخدمات المفتوحة لحسابك في منصة آباد: الاختبارات، الماتريال، واللابات.</p></div></section>
 <main>
 <div class="gate" id="gate" hidden><div style="font-size:40px">🔐</div><h2>سجّل الدخول لعرض خدماتك</h2><p class="empty" style="border:0">تظهر هنا الاختبارات والماتريال واللابات المفتوحة لحسابك.</p><button type="button" id="gin">👤 تسجيل الدخول</button></div>
 <div id="svc" hidden>
 <div data-promo-toggle hidden></div>
+<section class="sec zm"><h2>🎥 محاضرات الزوم</h2><div class="grid"><div class="it"><b>روابط محاضرات دوراتك المباشرة</b><small>مرتبة حسب الأيام مع موعد المحاضرة القادمة — يُفتح الدخول قبل 15 دقيقة من البداية.</small><a class="go" href="lectures.html">عرض محاضراتي</a></div></div></section>
 <section class="sec ex"><h2>📝 الاختبارات <span class="c" data-n="exams">0</span></h2><div class="grid" data-k="exams"></div><div class="empty" data-e="exams">لا توجد اختبارات مفتوحة لحسابك حاليًا. بعد تأكيد حجزك يفتح الاختبار هنا تلقائيًا.</div></section>
 <section class="sec mat"><h2>📚 الماتريال <span class="c" data-n="materials">0</span></h2><div class="grid" data-k="materials"></div><div class="empty" data-e="materials">لا توجد ماتريال مفتوحة لحسابك حاليًا.</div></section>
 <section class="sec lab"><h2>🧪 اللابات <span class="c" data-n="labs">0</span></h2><div class="grid" data-k="labs"></div><div class="empty" data-e="labs">لا يوجد لاب مفتوح لحسابك حاليًا.</div></section>
