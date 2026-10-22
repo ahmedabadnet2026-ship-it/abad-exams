@@ -17,6 +17,28 @@ function abd_zoom_url(string $u): ?string {
   return $u;
 }
 
+/** Recording link: https on zoom.us (+subdomains), YouTube or Google Drive. Returns ['url','kind','embed'] or null. */
+function abd_rec_url(string $u): ?array {
+  $u = trim($u);
+  if ($u === '' || strlen($u) > 500 || preg_match('/[\s"<>\\\\]/', $u)) return null;
+  $p = parse_url($u);
+  if (!$p || strtolower($p['scheme'] ?? '') !== 'https' || isset($p['user']) || isset($p['pass']) || isset($p['port'])) return null;
+  $host = strtolower(rtrim((string)($p['host'] ?? ''), '.')); $path = (string)($p['path'] ?? ''); parse_str((string)($p['query'] ?? ''), $q);
+  if ($host === 'zoom.us' || preg_match('/^([a-z0-9-]+\.)+zoom\.us$/', $host)) return ['url' => $u, 'kind' => 'zoom', 'embed' => null];
+  $id = null;
+  if ($host === 'youtu.be' && preg_match('~^/([A-Za-z0-9_-]{11})$~', $path, $m)) $id = $m[1];
+  elseif (in_array($host, ['youtube.com', 'www.youtube.com', 'm.youtube.com', 'youtube-nocookie.com', 'www.youtube-nocookie.com'], true)) {
+    if ($path === '/watch' && is_string($q['v'] ?? null) && preg_match('/^[A-Za-z0-9_-]{11}$/', $q['v'])) $id = $q['v'];
+    elseif (preg_match('~^/(embed|live|shorts|v)/([A-Za-z0-9_-]{11})/?$~', $path, $m)) $id = $m[2];
+  }
+  if ($id) return ['url' => $u, 'kind' => 'youtube', 'embed' => 'https://www.youtube-nocookie.com/embed/' . $id . '?rel=0&modestbranding=1'];
+  if ($host === 'drive.google.com') {
+    $fid = preg_match('~^/file/d/([A-Za-z0-9_-]{10,})(/|$)~', $path, $m) ? $m[1] : ($path === '/open' && is_string($q['id'] ?? null) && preg_match('/^[A-Za-z0-9_-]{10,}$/', $q['id']) ? $q['id'] : null);
+    if ($fid) return ['url' => $u, 'kind' => 'drive', 'embed' => 'https://drive.google.com/file/d/' . $fid . '/preview'];
+  }
+  return null;
+}
+
 function abd_lec_time(string $t): ?string { return preg_match('/^([01]\d|2[0-3]):([0-5]\d)$/', $t) ? $t : null; }
 
 /** Renumber a course's sessions 1..n by start time. */
@@ -36,17 +58,26 @@ function abd_lec_dates(string $from, string $to, array $days): array {
 function abd_lec_for_user(array $u): array {
   $staff = in_array($u['role'], ['admin', 'staff'], true);
   $now = time();
-  $courses = $staff
+  $courses = $u['role'] === 'trainer'
+    ? abd_q('SELECT c.id, c.title_ar, c.title_en FROM abd_courses c WHERE c.trainer_id = ? ORDER BY c.id', [(int)$u['id']])->fetchAll()
+    : ($staff
     ? abd_q("SELECT c.id, c.title_ar, c.title_en FROM abd_courses c WHERE EXISTS (SELECT 1 FROM abd_course_sessions s WHERE s.course_id = c.id) ORDER BY c.id")->fetchAll()
     : abd_q("SELECT c.id, c.title_ar, c.title_en FROM abd_enrollments e JOIN abd_courses c ON c.id = e.course_id
-             WHERE e.user_id = ? AND e.status IN ('active','completed') ORDER BY c.id", [(int)$u['id']])->fetchAll();
+             WHERE e.user_id = ? AND e.status IN ('active','completed') ORDER BY c.id", [(int)$u['id']])->fetchAll());
+  if ($u['role'] === 'trainer') $staff = true;   // a trainer sees links/recordings of their own courses only (query above)
   foreach ($courses as &$c) {
-    $rows = abd_q('SELECT id, session_no, title, starts_at, ends_at, zoom_url, zoom_passcode FROM abd_course_sessions WHERE course_id = ? ORDER BY starts_at, id', [(int)$c['id']])->fetchAll();
+    $rows = abd_q('SELECT id, session_no, title, starts_at, ends_at, zoom_url, zoom_passcode, rec_url, rec_passcode, rec_until FROM abd_course_sessions WHERE course_id = ? ORDER BY starts_at, id', [(int)$c['id']])->fetchAll();
     $c['sessions'] = array_map(function ($s) use ($now, $staff) {
       $st = strtotime((string)$s['starts_at']); $en = strtotime((string)$s['ends_at']);
       $open = $now >= $st - ABD_LEC_EARLY_MIN * 60 && $now < $en;
       $show = $staff || $open;
-      return ['id' => (int)$s['id'], 'no' => (int)$s['session_no'], 'title' => $s['title'],
+      // recording: only after the session ended, and until rec_until (inclusive). Staff see it whenever it exists.
+      $r = $s['rec_url'] ? abd_rec_url((string)$s['rec_url']) : null;
+      $expired = $s['rec_until'] && date('Y-m-d', $now) > $s['rec_until'];
+      $rec = null; $rs = $now < $en ? 'pending' : ($r ? ($expired ? 'expired' : 'available') : 'soon');
+      if ($r && ($staff || $rs === 'available')) $rec = ['kind' => $r['kind'], 'url' => $r['kind'] === 'zoom' ? $r['url'] : null, 'embed' => $r['embed'],
+        'passcode' => $s['rec_passcode'], 'until' => $s['rec_until']];
+      return ['id' => (int)$s['id'], 'rec_status' => $rs, 'rec' => $rec, 'no' => (int)$s['session_no'], 'title' => $s['title'],
         'start' => $st * 1000, 'end' => $en * 1000, 'has_link' => (bool)$s['zoom_url'],
         'join_url' => $show ? $s['zoom_url'] : null, 'passcode' => $show ? $s['zoom_passcode'] : null];
     }, $rows);

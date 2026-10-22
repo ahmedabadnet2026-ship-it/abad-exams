@@ -3,7 +3,7 @@
 <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#10293b"><meta name="referrer" content="no-referrer">
 <title>محاضرات الزوم — منصة آباد الرقمية</title>
 <link rel="icon" href="icons/icon-192.png"><link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="css/lectures.css?v=abad-202610221000">
+<link rel="stylesheet" href="css/lectures.css?v=abad-202610221100">
 </head><body>
 <header class="hdr"><div class="in"><a class="brand" href="platform.html"><img src="assets/abad-logo.png" alt="شعار معهد شبكة آباد"><b>معهد شبكة آباد للتدريب</b></a>
 <nav class="nav"><a href="platform.html">المنصة</a><a href="my-services.html">خدماتي</a><a href="lectures.html" class="on">محاضرات الزوم</a></nav></div></header>
@@ -15,9 +15,11 @@
 <div id="empty" class="gate" hidden><div class="zi zi-xl" aria-hidden="true"></div><h2>لا توجد محاضرات زوم لحسابك حاليًا</h2><p class="mut">عند تسجيلك في دورة وإضافة روابط محاضراتها ستظهر هنا مرتبة: المحاضرة 1، المحاضرة 2…</p></div>
 <div id="app" hidden>
   <section id="next" class="nx" aria-live="polite"></section>
-  <div id="tabs" class="tabs" role="tablist" hidden></div>
+  <div class="bar2"><div class="seg" role="tablist"><button type="button" data-v="lec" aria-selected="true">📅 المحاضرات</button><button type="button" data-v="rec" aria-selected="false">▶ التسجيلات <span class="cnt" id="rc">0</span></button></div><div id="tabs" class="tabs" role="tablist" hidden></div></div>
   <section id="tl" class="card"></section>
+  <section id="recs" class="card" hidden></section>
 </div>
 </main>
-<script src="js/lectures.js?v=abad-202610221000" defer></script>
+<div class="md" id="md" hidden role="dialog" aria-modal="true" aria-labelledby="mdt"><div class="mdb"><div class="mdh"><b id="mdt"></b><button type="button" class="x" data-close aria-label="إغلاق">✕</button></div><div class="vw" id="vw"></div><div class="mdf" id="mdf"></div></div></div>
+<script src="js/lectures.js?v=abad-202610221100" defer></script>
 </body></html>

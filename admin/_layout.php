@@ -69,12 +69,12 @@ form.i{display:inline-flex;gap:4px;align-items:center;margin:0}
 .tl li.system,.tl li.stage{border-color:#c9d6e2;color:var(--mut)}
 .bars div{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:13px}.bars i{display:block;height:14px;background:var(--b);border-radius:4px;min-width:2px}
 .bars i.w{background:#17803d}.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
-.st-lost{background:#f4e4e4;color:#922}.st-paid,.st-completed{background:#e6f6ec;color:#17603a}.st-interested,.st-registered{background:#e3f0fa;color:#1d5f8c}.st-staff{background:#e3f0fa;color:#1d5f8c}
+.st-lost{background:#f4e4e4;color:#922}.st-paid,.st-completed{background:#e6f6ec;color:#17603a}.st-interested,.st-registered{background:#e3f0fa;color:#1d5f8c}.st-staff,.st-trainer{background:#e3f0fa;color:#1d5f8c}
 details summary{cursor:pointer;color:var(--b);font-weight:700}
 footer{text-align:center;color:var(--mut);font-size:12px;padding:10px 0 30px}
 </style></head><body>
 <header class="top"><img src="../assets/abad-logo.png" alt="ABAD"><div class="t"><b>لوحة إدارة منصة آباد الرقمية</b><small>معهد شبكة آباد للتدريب</small></div>
-<a class="btn o s" href="labs.php">🧪 التحكم في المختبر</a>
+<?php if ($user && $user['role'] === 'trainer'): ?><a class="btn o s" href="trainer.php">🎓 محاضراتي (المدرّب)</a><?php else: ?><a class="btn o s" href="labs.php">🧪 التحكم في المختبر</a><?php endif; ?>
 <?php if ($user && in_array($user['role'], ['admin', 'staff'], true)): ?><a class="btn o s" href="seats.php">💺 مقاعد المعمل</a><?php if (function_exists('abd_book_any_on') ? abd_book_any_on() : ((require_once dirname(__DIR__) . '/api/_booking_lib.php') && abd_book_any_on())): ?><a class="btn o s" href="seat-bookings.php">📅 حجوزات المقاعد</a><?php endif; ?><a class="btn o s" href="lectures.php">🎥 محاضرات الزوم</a><a class="btn o s" href="services.php">🧾 خدمات المتدربين</a><a class="btn o s" href="exam-access.php">🎟️ صلاحيات الاختبارات</a><?php endif; ?>
 <?php if ($user && $user['role'] === 'admin'): ?><a class="btn o s" href="stats.php">📊 الإحصائيات</a><a class="btn o s" href="enrollments.php">🗓️ تسجيل الدورات</a><?php endif; ?>
 <a class="btn o s" href="../dashboard.html">لوحة المعلومات</a>
