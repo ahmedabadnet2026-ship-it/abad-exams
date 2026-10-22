@@ -1,0 +1,155 @@
+{
+ "lab": "CCNP ENCOR/16-AAA.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 16 · AAA with TACACS+, RADIUS and Local Fallback",
+ "title_ar": "المصادقة والتفويض والمحاسبة AAA مع TACACS+ و RADIUS",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.1.2",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R2 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.1.2 255.255.255.0",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "192.168.1.1",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.1.1 255.255.255.0",
+   "id": "c02"
+  },
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "192.168.1.10",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 2,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.10/24 192.168.1.1",
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | include aaa",
+   "regex": "aaa authentication login VTY group TAC-GRP group RAD-GRP local",
+   "pts": 19,
+   "title_ar": "قائمة VTY: TACACS ثم RADIUS ثم local",
+   "hint_ar": "aaa authentication login VTY group TAC-GRP group RAD-GRP local",
+   "solution_ar": "aaa authentication login VTY group TAC-GRP group RAD-GRP local",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | include aaa",
+   "regex": "aaa authorization exec VTY group TAC-GRP local",
+   "pts": 9,
+   "title_ar": "تفويض exec مع local احتياطي",
+   "hint_ar": "aaa authorization exec VTY group TAC-GRP local",
+   "solution_ar": "aaa authorization exec VTY group TAC-GRP local",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | include aaa",
+   "regex": "aaa accounting exec VTY start-stop group TAC-GRP",
+   "pts": 9,
+   "title_ar": "محاسبة exec",
+   "hint_ar": "aaa accounting exec VTY start-stop group TAC-GRP",
+   "solution_ar": "aaa accounting exec VTY start-stop group TAC-GRP",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | include aaa authentication login default",
+   "regex": "(?m)^aaa authentication login default",
+   "pts": 5,
+   "title_ar": "لا قائمة default حتى لا يتأثر الكونسول",
+   "hint_ar": "لا تعرّف aaa authentication login default",
+   "solution_ar": "لا تعرّف aaa authentication login default",
+   "negate": true,
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show tacacs",
+   "regex": "Server name: TAC1\\s*\\n\\s*Server address: 192\\.168\\.1\\.100",
+   "pts": 9,
+   "title_ar": "خادم TACACS+ TAC1",
+   "hint_ar": "tacacs server TAC1 / address ipv4 192.168.1.100",
+   "solution_ar": "tacacs server TAC1 / address ipv4 192.168.1.100",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show aaa servers",
+   "regex": "RADIUS: id \\d+, priority \\d+, host 192\\.168\\.1\\.101, auth-port 1812, acct-port 1813",
+   "pts": 9,
+   "title_ar": "خادم RADIUS على 1812/1813",
+   "hint_ar": "address ipv4 192.168.1.101 auth-port 1812 acct-port 1813",
+   "solution_ar": "address ipv4 192.168.1.101 auth-port 1812 acct-port 1813",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip ssh",
+   "regex": "SSH Enabled - version 2\\.0",
+   "pts": 9,
+   "title_ar": "SSH الإصدار 2",
+   "hint_ar": "crypto key generate rsa modulus 2048 / ip ssh version 2",
+   "solution_ar": "crypto key generate rsa modulus 2048 / ip ssh version 2",
+   "id": "c10"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | section line vty",
+   "regex": "login authentication VTY[\\s\\S]*transport input ssh",
+   "pts": 9,
+   "title_ar": "VTY تستخدم القائمة VTY و SSH فقط",
+   "hint_ar": "login authentication VTY / transport input ssh",
+   "solution_ar": "login authentication VTY / transport input ssh",
+   "id": "c11"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | include username admin",
+   "regex": "username admin privilege 15 secret 9 ",
+   "pts": 5,
+   "title_ar": "مستخدم محلي admin بـ scrypt",
+   "hint_ar": "username admin privilege 15 algorithm-type scrypt secret ...",
+   "solution_ar": "username admin privilege 15 algorithm-type scrypt secret ...",
+   "id": "c12"
+  },
+  {
+   "kind": "ping",
+   "node": "R2",
+   "target": "192.168.1.1",
+   "pts": 9,
+   "title_ar": "R2 ← R1",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c13"
+  }
+ ]
+}

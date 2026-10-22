@@ -1,0 +1,158 @@
+{
+ "lab": "CCNP ENCOR/05-HSRP-VRRP.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 05 · HSRP & VRRP (First-Hop Redundancy)",
+ "title_ar": "بروتوكولات تكرار البوابة HSRP و VRRP",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "10.1.1.10",
+   "len": 24,
+   "gw": "10.1.1.254",
+   "pts": 2,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 10.1.1.10/24 10.1.1.254",
+   "id": "c01"
+  },
+  {
+   "kind": "pc",
+   "node": "PC2",
+   "ip": "10.1.1.20",
+   "len": 24,
+   "gw": "10.1.1.254",
+   "pts": 2,
+   "title_ar": "إعداد PC2 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC2 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 10.1.1.20/24 10.1.1.254",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "10.1.1.1",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.1.1.1 255.255.255.0",
+   "id": "c03"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "13.0.0.1",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R1 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 13.0.0.1 255.255.255.252",
+   "id": "c04"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/0",
+   "ip": "10.1.1.2",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R2 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.1.1.2 255.255.255.0",
+   "id": "c05"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/1",
+   "ip": "23.0.0.1",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R2 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 23.0.0.1 255.255.255.252",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show vrrp brief",
+   "regex": "Gi0/0\\s+10\\s+120\\s+\\d+\\s+Y\\s+Master\\s+10\\.1\\.1\\.1\\s+10\\.1\\.1\\.254",
+   "pts": 18,
+   "title_ar": "R1 هو Master للمجموعة 10 بأولوية 120",
+   "hint_ar": "vrrp 10 priority 120",
+   "solution_ar": "vrrp 10 priority 120",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show vrrp brief",
+   "regex": "Gi0/0\\s+10\\s+100\\s+\\d+\\s+Y\\s+Backup",
+   "pts": 13,
+   "title_ar": "R2 هو Backup",
+   "hint_ar": "vrrp 10 ip 10.1.1.254",
+   "solution_ar": "vrrp 10 ip 10.1.1.254",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show vrrp",
+   "regex": "Authentication MD5",
+   "pts": 9,
+   "title_ar": "مصادقة VRRP بـ MD5",
+   "hint_ar": "vrrp 10 authentication md5 key-string cisco123",
+   "solution_ar": "vrrp 10 authentication md5 key-string cisco123",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show vrrp",
+   "regex": "Track object 1 state Up decrement 21",
+   "pts": 9,
+   "title_ar": "تتبع Gi0/1 بإنقاص 21",
+   "hint_ar": "vrrp 10 track 1 decrement 21",
+   "solution_ar": "vrrp 10 track 1 decrement 21",
+   "id": "c10"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show standby brief",
+   "regex": "Gi0/0\\s+1\\s",
+   "pts": 9,
+   "title_ar": "إزالة HSRP قبل VRRP",
+   "hint_ar": "no standby 1",
+   "solution_ar": "no standby 1",
+   "negate": true,
+   "id": "c11"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip route eigrp",
+   "regex": "D\\s+8\\.8\\.8\\.8",
+   "pts": 9,
+   "title_ar": "R1 يتعلم 8.8.8.8",
+   "hint_ar": "network 8.8.8.8 0.0.0.0 على R3",
+   "solution_ar": "network 8.8.8.8 0.0.0.0 على R3",
+   "id": "c12"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "8.8.8.8",
+   "pts": 17,
+   "title_ar": "PC1 ← 8.8.8.8 عبر البوابة الافتراضية",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c13"
+  }
+ ]
+}

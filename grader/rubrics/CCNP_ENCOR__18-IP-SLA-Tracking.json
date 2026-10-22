@@ -1,0 +1,156 @@
+{
+ "lab": "CCNP ENCOR/18-IP-SLA-Tracking.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 18 · IP SLA & Object Tracking (Dual-ISP Failover)",
+ "title_ar": "مراقبة المسارات IP SLA والتتبع",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "192.168.1.10",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 2,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.10/24 192.168.1.1",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "10.1.1.1",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.1.1.1 255.255.255.252",
+   "id": "c02"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/1",
+   "ip": "10.2.2.1",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R1 Gi0/1",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.2.2.1 255.255.255.252",
+   "id": "c03"
+  },
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/2",
+   "ip": "192.168.1.1",
+   "len": 24,
+   "pts": 3,
+   "title_ar": "R1 Gi0/2",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 192.168.1.1 255.255.255.0",
+   "id": "c04"
+  },
+  {
+   "kind": "iface",
+   "node": "ISP1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "10.1.1.2",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "ISP1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.1.1.2 255.255.255.252",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip sla configuration 1",
+   "regex": "Target address/Source interface: 8\\.8\\.8\\.8/GigabitEthernet0/0",
+   "pts": 9,
+   "title_ar": "هدف SLA هو 8.8.8.8 من Gi0/0",
+   "hint_ar": "icmp-echo 8.8.8.8 source-interface Gi0/0",
+   "solution_ar": "icmp-echo 8.8.8.8 source-interface Gi0/0",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip sla statistics 1",
+   "regex": "Latest operation return code: OK",
+   "pts": 13,
+   "title_ar": "آخر نتيجة للمسبار OK",
+   "hint_ar": "ip sla schedule 1 life forever start-time now",
+   "solution_ar": "ip sla schedule 1 life forever start-time now",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show track 1",
+   "regex": "IP SLA 1 reachability\\s*\\n\\s*Reachability is Up",
+   "pts": 13,
+   "title_ar": "track 1 بحالة Up",
+   "hint_ar": "track 1 ip sla 1 reachability",
+   "solution_ar": "track 1 ip sla 1 reachability",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip route static",
+   "regex": "S\\*\\s+0\\.0\\.0\\.0/0 \\[1/0\\] via 10\\.1\\.1\\.2",
+   "pts": 13,
+   "title_ar": "المسار الافتراضي الأساسي عبر ISP1",
+   "hint_ar": "ip route 0.0.0.0 0.0.0.0 10.1.1.2 track 1",
+   "solution_ar": "ip route 0.0.0.0 0.0.0.0 10.1.1.2 track 1",
+   "id": "c09"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | include ip route 0.0.0.0",
+   "regex": "ip route 0\\.0\\.0\\.0 0\\.0\\.0\\.0 10\\.2\\.2\\.2 10",
+   "pts": 9,
+   "title_ar": "مسار عائم عبر ISP2 بمسافة 10",
+   "hint_ar": "ip route 0.0.0.0 0.0.0.0 10.2.2.2 10",
+   "solution_ar": "ip route 0.0.0.0 0.0.0.0 10.2.2.2 10",
+   "id": "c10"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip route 8.8.8.8",
+   "regex": "\\*\\s+10\\.1\\.1\\.2\\s*$|\\* 10\\.1\\.1\\.2",
+   "pts": 9,
+   "title_ar": "مسار المضيف 8.8.8.8 مثبت عبر ISP1",
+   "hint_ar": "ip route 8.8.8.8 255.255.255.255 10.1.1.2",
+   "solution_ar": "ip route 8.8.8.8 255.255.255.255 10.1.1.2",
+   "id": "c11"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show track 1",
+   "regex": "Delay up 15 secs?, down 10 secs?",
+   "pts": 4,
+   "title_ar": "تأخير التتبع 10/15",
+   "hint_ar": "delay down 10 up 15",
+   "solution_ar": "delay down 10 up 15",
+   "id": "c12"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "8.8.8.8",
+   "pts": 16,
+   "title_ar": "PC1 ← 8.8.8.8",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c13"
+  }
+ ]
+}

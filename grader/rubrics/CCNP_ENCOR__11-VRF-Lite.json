@@ -1,0 +1,119 @@
+{
+ "lab": "CCNP ENCOR/11-VRF-Lite.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 11 · VRF-Lite (Overlapping Customers)",
+ "title_ar": "عزل جداول التوجيه VRF-Lite",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "pc",
+   "node": "PC1",
+   "ip": "192.168.1.10",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 2,
+   "title_ar": "إعداد PC1 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC1 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.10/24 192.168.1.1",
+   "id": "c01"
+  },
+  {
+   "kind": "pc",
+   "node": "PC2",
+   "ip": "192.168.1.10",
+   "len": 24,
+   "gw": "192.168.1.1",
+   "pts": 2,
+   "title_ar": "إعداد PC2 (IP + Gateway)",
+   "hint_ar": "راجع عنوان PC2 وقناعه والبوابة الافتراضية.",
+   "solution_ar": "ip 192.168.1.10/24 192.168.1.1",
+   "id": "c02"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show vrf",
+   "regex": "RED\\s+.*ipv4\\s+Gi0/0\\.10",
+   "pts": 10,
+   "title_ar": "Gi0/0.10 ضمن RED",
+   "hint_ar": "vrf forwarding RED",
+   "solution_ar": "vrf forwarding RED",
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show vrf",
+   "regex": "BLUE\\s+.*ipv4\\s+Gi0/0\\.20",
+   "pts": 10,
+   "title_ar": "Gi0/0.20 ضمن BLUE",
+   "hint_ar": "vrf forwarding BLUE",
+   "solution_ar": "vrf forwarding BLUE",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip route vrf RED ospf",
+   "regex": "O\\s+192\\.168\\.2\\.0/24 .* GigabitEthernet0/0\\.10",
+   "pts": 14,
+   "title_ar": "RED يتعلم 192.168.2.0/24 عبر Gi0/0.10",
+   "hint_ar": "router ospf 1 vrf RED",
+   "solution_ar": "router ospf 1 vrf RED",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip route vrf BLUE ospf",
+   "regex": "O\\s+192\\.168\\.2\\.0/24 .* GigabitEthernet0/0\\.20",
+   "pts": 14,
+   "title_ar": "BLUE يتعلم نفس الشبكة عبر Gi0/0.20",
+   "hint_ar": "router ospf 2 vrf BLUE",
+   "solution_ar": "router ospf 2 vrf BLUE",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip route",
+   "regex": "192\\.168\\.[12]\\.0",
+   "pts": 10,
+   "title_ar": "الجدول العام لا يحتوي شبكات العملاء",
+   "hint_ar": "لا تضع العناوين في الجدول العام",
+   "solution_ar": "لا تضع العناوين في الجدول العام",
+   "negate": true,
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R2",
+   "cmd": "show ip ospf 1 neighbor",
+   "regex": "1\\.0\\.0\\.1\\s+\\d+\\s+FULL",
+   "pts": 10,
+   "title_ar": "جوار OSPF في RED",
+   "hint_ar": "router ospf 1 vrf RED",
+   "solution_ar": "router ospf 1 vrf RED",
+   "id": "c08"
+  },
+  {
+   "kind": "ping",
+   "node": "PC1",
+   "target": "192.168.2.10",
+   "pts": 14,
+   "title_ar": "PC1 (RED) ← 192.168.2.10 = PC3",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c09"
+  },
+  {
+   "kind": "ping",
+   "node": "PC2",
+   "target": "192.168.2.10",
+   "pts": 14,
+   "title_ar": "PC2 (BLUE) ← 192.168.2.10 = PC4",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c10"
+  }
+ ]
+}

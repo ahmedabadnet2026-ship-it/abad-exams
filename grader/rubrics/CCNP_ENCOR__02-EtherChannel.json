@@ -1,0 +1,75 @@
+{
+ "lab": "CCNP ENCOR/02-EtherChannel.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 02 · EtherChannel (LACP · L2 & L3)",
+ "title_ar": "تجميع الروابط EtherChannel بطبقتيه الثانية والثالثة",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show etherchannel summary",
+   "regex": "30\\s+Po30\\(RU\\)\\s+LACP\\s+Gi0/0\\(P\\)\\s+Gi0/1\\(P\\)",
+   "pts": 28,
+   "title_ar": "Po30 بحالة RU وبعضوين P",
+   "hint_ar": "channel-group 30 mode active + no switchport",
+   "solution_ar": "channel-group 30 mode active + no switchport",
+   "id": "c01"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show etherchannel summary",
+   "regex": "Po30\\(RU\\)",
+   "pts": 17,
+   "title_ar": "Po30 قائم على SW2",
+   "hint_ar": "channel-group 30 mode active",
+   "solution_ar": "channel-group 30 mode active",
+   "id": "c02"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show etherchannel summary",
+   "regex": "Po1\\(",
+   "pts": 11,
+   "title_ar": "إزالة Port-channel 1 قبل الطبقة الثالثة",
+   "hint_ar": "no interface Port-channel1",
+   "solution_ar": "no interface Port-channel1",
+   "negate": true,
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "SW2",
+   "cmd": "show lacp neighbor",
+   "regex": "Gi0/0\\s+[SF]A\\s",
+   "pts": 11,
+   "title_ar": "جار LACP على Gi0/0",
+   "hint_ar": "جار LACP على Gi0/0",
+   "solution_ar": "",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "SW1",
+   "cmd": "show vlan brief",
+   "regex": "^10\\s+VLAN0010\\s+active\\s+Gi0/2",
+   "pts": 11,
+   "title_ar": "Gi0/2 في VLAN 10",
+   "hint_ar": "switchport access vlan 10",
+   "solution_ar": "switchport access vlan 10",
+   "id": "c05"
+  },
+  {
+   "kind": "ping",
+   "node": "SW1",
+   "target": "192.168.12.2",
+   "pts": 22,
+   "title_ar": "SW1 ← SW2 عبر Po30",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c06"
+  }
+ ]
+}

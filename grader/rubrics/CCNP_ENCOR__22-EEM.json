@@ -1,0 +1,120 @@
+{
+ "lab": "CCNP ENCOR/22-EEM.unl",
+ "track": "CCNP ENCOR",
+ "title": "ENCOR 22 · Embedded Event Manager (EEM) Applets",
+ "title_ar": "أتمتة الأحداث EEM",
+ "solution_after": 3,
+ "requires": "grader_ext",
+ "checks": [
+  {
+   "kind": "iface",
+   "node": "R1",
+   "intf": "GigabitEthernet0/0",
+   "ip": "10.0.12.1",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R1 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.0.12.1 255.255.255.252",
+   "id": "c01"
+  },
+  {
+   "kind": "iface",
+   "node": "R2",
+   "intf": "GigabitEthernet0/0",
+   "ip": "10.0.12.2",
+   "len": 30,
+   "pts": 3,
+   "title_ar": "R2 Gi0/0",
+   "hint_ar": "راجع العنوان والقناع وأن الواجهة ليست shutdown.",
+   "solution_ar": "ip address 10.0.12.2 255.255.255.252",
+   "id": "c02"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show event manager policy registered",
+   "regex": "applet\\s+user\\s+syslog\\s+Off\\s+.*\\n?.*LOOP0-RECOVER",
+   "pts": 11,
+   "title_ar": "تسجيل LOOP0-RECOVER على حدث syslog",
+   "hint_ar": "event syslog pattern ...",
+   "solution_ar": "event syslog pattern ...",
+   "id": "c03"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show event manager policy registered",
+   "regex": "timer cron[\\s\\S]*NIGHTLY-SAVE",
+   "pts": 9,
+   "title_ar": "تسجيل NIGHTLY-SAVE على cron",
+   "hint_ar": "event timer cron cron-entry \"0 2 * * *\"",
+   "solution_ar": "event timer cron cron-entry \"0 2 * * *\"",
+   "id": "c04"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show event manager policy registered",
+   "regex": "cli\\s+Off[\\s\\S]*BLOCK-RELOAD",
+   "pts": 9,
+   "title_ar": "تسجيل BLOCK-RELOAD على حدث cli",
+   "hint_ar": "event cli pattern \"^reload\" sync yes",
+   "solution_ar": "event cli pattern \"^reload\" sync yes",
+   "id": "c05"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show event manager policy registered",
+   "regex": "none\\s+Off[\\s\\S]*UPLINK-CHECK",
+   "pts": 8,
+   "title_ar": "تسجيل UPLINK-CHECK اليدوي",
+   "hint_ar": "event none",
+   "solution_ar": "event none",
+   "id": "c06"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show running-config | section BLOCK-RELOAD",
+   "regex": "set _exit_status \"0\"",
+   "pts": 9,
+   "title_ar": "منع تنفيذ reload",
+   "hint_ar": "action 2.0 set _exit_status \"0\"",
+   "solution_ar": "action 2.0 set _exit_status \"0\"",
+   "id": "c07"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show ip interface brief | include Loopback0",
+   "regex": "Loopback0\\s+1\\.1\\.1\\.1\\s+YES\\s+\\w+\\s+up\\s+up",
+   "pts": 20,
+   "title_ar": "Loopback0 عادت للعمل تلقائياً",
+   "hint_ar": "LOOP0-RECOVER",
+   "solution_ar": "LOOP0-RECOVER",
+   "id": "c08"
+  },
+  {
+   "kind": "match",
+   "node": "R1",
+   "cmd": "show logging | include EEM restored",
+   "regex": "EEM restored Loopback0",
+   "pts": 14,
+   "title_ar": "سجل EEM restored Loopback0",
+   "hint_ar": "action 6.0 syslog ...",
+   "solution_ar": "action 6.0 syslog ...",
+   "id": "c09"
+  },
+  {
+   "kind": "ping",
+   "node": "R2",
+   "target": "1.1.1.1",
+   "pts": 14,
+   "title_ar": "R2 ← 1.1.1.1 بعد الاسترجاع",
+   "hint_ar": "راجع التوجيه والعناوين على طول المسار.",
+   "id": "c10"
+  }
+ ]
+}
