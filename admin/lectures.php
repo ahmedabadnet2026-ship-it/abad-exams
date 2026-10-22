@@ -74,13 +74,13 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       foreach ($rows as $id) {
         $f = fn($k, $max = 500) => mb_substr(trim((string)(($_POST[$k] ?? [])[$id] ?? '')), 0, $max);
         $d = $f('date', 10); $s = lec_dt($d, $f('st', 5)); $e = lec_dt($d, $f('et', 5)); $url = $f('url'); $z = $url === '' ? null : abd_zoom_url($url);
-        $ru = $f('rec'); $rv = $ru === '' ? null : abd_rec_url($ru); $until = $f('recuntil', 10);
-        if (!$s || !$e || $e <= $s || ($url !== '' && !$z) || ($ru !== '' && !$rv) || ($until !== '' && !abd_date($until))) { $bad[] = $id; continue; }
-        $upd[] = [$isAdmin ? ($f('title', 190) ?: null) : $titles[$id], $s, $e, $z, $f('pass', 64) ?: null, $rv['url'] ?? null, $f('recpass', 64) ?: null, $until ?: null, $id, $cid];
+        $hu = $f('host'); $hz = $hu === '' ? null : abd_zoom_url($hu); $ru = $f('rec'); $rv = $ru === '' ? null : abd_rec_url($ru); $until = $f('recuntil', 10);
+        if (!$s || !$e || $e <= $s || ($url !== '' && !$z) || ($hu !== '' && !$hz) || ($ru !== '' && !$rv) || ($until !== '' && !abd_date($until))) { $bad[] = $id; continue; }
+        $upd[] = [$isAdmin ? ($f('title', 190) ?: null) : $titles[$id], $s, $e, $z, $f('pass', 64) ?: null, $hz, $rv['url'] ?? null, $f('recpass', 64) ?: null, $until ?: null, $id, $cid];
       }
       if ($bad) lec_back($cid, 'لم يُحفظ شيء: توجد ' . count($bad) . ' محاضرة بتاريخ/وقت غير صحيح أو رابط غير مقبول (المحاضرة: https على zoom.us فقط؛ التسجيل: zoom.us أو YouTube أو Google Drive).', true);
       $pdo = abd_db(); $pdo->beginTransaction();
-      foreach ($upd as $p) abd_q('UPDATE abd_course_sessions SET title = ?, starts_at = ?, ends_at = ?, zoom_url = ?, zoom_passcode = ?, rec_url = ?, rec_passcode = ?, rec_until = ? WHERE id = ? AND course_id = ?', $p);
+      foreach ($upd as $p) abd_q('UPDATE abd_course_sessions SET title = ?, starts_at = ?, ends_at = ?, zoom_url = ?, zoom_passcode = ?, host_url = ?, rec_url = ?, rec_passcode = ?, rec_until = ? WHERE id = ? AND course_id = ?', $p);
       $pdo->commit();
       abd_lec_renumber($cid);
       lec_back($cid, 'تم حفظ المحاضرات والروابط.');
@@ -273,7 +273,7 @@ main{max-width:1240px}
         <details><summary>تعديل الموعد</summary><div class="sub"><input type="date" name="date[<?= $id ?>]" value="<?=h(substr((string)$s['starts_at'], 0, 10))?>" required><input type="time" name="st[<?= $id ?>]" value="<?=h(substr((string)$s['starts_at'], 11, 5))?>" required><input type="time" name="et[<?= $id ?>]" value="<?=h(substr((string)$s['ends_at'], 11, 5))?>" required></div>
         <button class="del" form="del<?= $id ?>" onclick="return confirm('حذف المحاضرة <?= (int)$s['session_no'] ?>؟ سيُعاد ترقيم الباقي.')">🗑 حذف المحاضرة</button></details></td>
       <td data-l="رابط الزوم"><input type="url" class="lk<?= $s['zoom_url'] ? '' : ' miss' ?>" name="url[<?= $id ?>]" value="<?=h($s['zoom_url'] ?? '')?>" placeholder="⚠ أضف رابط الزوم" pattern="https://([A-Za-z0-9-]+\.)*zoom\.us(/.*)?" aria-label="رابط الزوم">
-        <div class="sub"><input class="lk" name="pass[<?= $id ?>]" value="<?=h($s['zoom_passcode'] ?? '')?>" maxlength="64" placeholder="رمز الدخول" aria-label="رمز الدخول"></div></td>
+        <div class="sub"><input class="lk" name="pass[<?= $id ?>]" value="<?=h($s['zoom_passcode'] ?? '')?>" maxlength="64" placeholder="رمز الدخول" aria-label="رمز الدخول"><input class="lk" type="url" name="host[<?= $id ?>]" value="<?=h($s['host_url'] ?? '')?>" placeholder="رابط بدء المضيف (اختياري)" title="رابط Start للمضيف — يُفتح للمدرّب فقط عند «ابدأ المحاضرة»" pattern="https://([A-Za-z0-9-]+\.)*zoom\.us(/.*)?"></div><?php if ($s['started_at']): ?><span class="mut" style="font-size:11px">▶ بدأها المدرّب <?=h(lec_t((string)$s['started_at']))?></span><?php endif; ?></td>
       <td data-l="عنوان المحاضرة" class="ttl"><?php if ($isAdmin): ?><input name="title[<?= $id ?>]" value="<?=h($s['title'] ?? '')?>" maxlength="190"><?php elseif ($hasT): ?><b><?=h($s['title'])?></b><?php elseif ($past): ?><i>لم يُكتب بعد</i><?php else: ?><span class="mut">—</span><?php endif; ?>
         <?php if ($hasT): ?><span class="pill p-done" style="font-size:11px;margin-top:3px">من المدرب<?= $s['title_by_name'] ? ' · ' . h($s['title_by_name']) : '' ?></span><?php endif; ?></td>
       <td data-l="رابط التسجيل"><input type="url" class="lk" name="rec[<?= $id ?>]" value="<?=h($s['rec_url'] ?? '')?>" placeholder="<?= $past ? 'الصق رابط التسجيل…' : 'بعد انتهاء المحاضرة' ?>" <?= $past || $s['rec_url'] ? '' : 'readonly' ?> aria-label="رابط التسجيل">

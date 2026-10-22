@@ -4,14 +4,16 @@ declare(strict_types=1);
 if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === basename(__FILE__)) { http_response_code(404); exit; }
 require_once dirname(__DIR__) . '/api/_db.php';
 
+/** $GLOBALS['abd_form_action_extra']: extra form-action sources for a page whose POST redirects off-site (trainer «ابدأ المحاضرة» → zoom.us). */
 function abd_admin_headers(): void {
+  $fa = trim("'self' " . (string)($GLOBALS['abd_form_action_extra'] ?? ''));
   header('Content-Type: text/html; charset=utf-8');
   header('Cache-Control: no-store, private');
   header('X-Frame-Options: DENY');
   header('X-Content-Type-Options: nosniff');
   header('X-Robots-Tag: noindex, nofollow');
   header('Referrer-Policy: same-origin');
-  header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'");
+  header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; form-action " . $fa . "; frame-ancestors 'none'; base-uri 'self'");
 }
 
 function abd_admin_top(string $title, ?array $user = null, string $tab = ''): void {

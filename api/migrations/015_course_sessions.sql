@@ -35,4 +35,10 @@ ALTER TABLE abd_courses
 
 ALTER TABLE abd_course_sessions
   ADD COLUMN title_by INT UNSIGNED NULL AFTER title,
-  ADD COLUMN title_at DATETIME NULL AFTER title_by;
+  ADD COLUMN title_at DATETIME NULL AFTER title_by,
+  ADD COLUMN host_url VARCHAR(500) NULL AFTER zoom_passcode,
+  ADD COLUMN started_at DATETIME NULL AFTER host_url,
+  ADD COLUMN started_by INT UNSIGNED NULL AFTER started_at,
+  ADD KEY ix_abd_cs_started (started_at);
+-- host_url: optional Zoom host start link, entered by zoom_staff/admin only and never sent to trainees (only the assigned trainer is redirected to it).
+-- started_at / started_by: first «ابدأ المحاضرة» click by the assigned trainer (start-delay statistics in admin/trainer-performance.php).
