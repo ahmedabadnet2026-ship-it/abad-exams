@@ -95,7 +95,16 @@ function abd_lab_seats_of(int $uid): array {
 }
 /** May this user open this exact seat? Staff/admin: any seat; trainee: only seats they are entitled to. */
 function abd_lab_can_open(int $uid, bool $staff, int $seat): bool {
-  return abd_lab_seat_enabled($seat) && ($staff || in_array($seat, abd_lab_seats_of($uid), true));
+  if (!abd_lab_seat_enabled($seat)) return false;
+  if ($staff) return true;
+  // SEAT_BOOKING on (api/_booking_lib.php): the seat booked for the current slot is what counts, not a permanent assignment
+  if (function_exists('abd_book_required') && abd_book_required('eve')) return abd_book_current($uid, 'eve', $seat) !== null;
+  return in_array($seat, abd_lab_seats_of($uid), true);
+}
+/** Booking gate with a specific error (not_booked + the trainee's next booking) — no-op while SEAT_BOOKING is off. */
+function abd_lab_booking_gate(array $u, int $seat): void {
+  if (!function_exists('abd_book_gate_ok') || abd_book_gate_ok($u, 'eve', $seat)) return;
+  abd_err('not_booked', 403, ['next' => abd_book_next((int)$u['id'], 'eve')]);
 }
 
 // ---------------------------------------------------------------- signed tokens (shared secret with the gate on ubantu-server)

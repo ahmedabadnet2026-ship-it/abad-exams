@@ -5,8 +5,13 @@ return [
   // Optional: switch EVE seats 13-20 on without a code change
   // 'EVE_SEATS_ENABLED' => [13, 14],
 
+  // Seat booking per time slot (api/_booking_lib.php, seat-booking.html, admin/seat-bookings.php). Omit or 'enabled'=>false = current behaviour.
+  // When enabled, the email code + EVE credentials / remote-lab URLs go ONLY to the trainee holding the booking for the current slot (staff always pass).
+  // 'SEAT_BOOKING' => ['enabled' => true, 'resources' => ['eve', 'ine', 'net'], 'hours' => [16, 17, 18, 19, 20, 21], 'slot_minutes' => 60,
+  //                    'days_ahead' => 7, 'max_per_day' => 2, 'early_minutes' => 10, 'seats' => ['ine' => 1, 'net' => 1], 'who' => 'registered'],
+
   // Remote labs (api/remote_lab.php). URLs are handed to the page only after the trainee's email code.
-  //   access: 'registered' = any signed-in trainee (current policy) | 'entitled' = only trainees granted «معمل عن بُعد» for this lab
+  //   access: 'registered' = any signed-in trainee (current policy) | 'entitled' = only trainees granted «معمل عن بُعد» for this lab | 'booked' = only the trainee who booked the current slot
   'REMOTE_LABS' => [
     'ine' => ['access' => 'registered', 'items' => [
       ['name' => 'Kali', 'url' => 'https://<kali-tunnel-host>/vnc.html?autoconnect=1&resize=scale'],

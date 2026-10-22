@@ -18,7 +18,7 @@ var CSS='.rlg{position:fixed;inset:0;z-index:99;display:grid;place-items:center;
  '@media(max-width:420px){.rlg .b{width:100%;margin:4px 0}}';
 function css(){if(document.getElementById("rlg-css"))return;var s=document.createElement("style");s.id="rlg-css";s.textContent=CSS;document.head.appendChild(s)}
 var ERR={wrong_code:"الرمز غير صحيح. المحاولات المتبقية:",expired:"انتهت صلاحية الرمز — أعد الإرسال.",cooldown:"انتظر قليلًا قبل طلب رمز جديد.",rate_limited:"طلبات كثيرة، انتظر قليلًا ثم أعد المحاولة.",
- mail_failed:"تعذّر إرسال البريد الآن — حاول لاحقًا.",not_entitled:"هذا المعمل متاح فقط للمتدربين المسجّلين في هذه الخدمة. تواصل معنا لتفعيلها.",unavailable:"المعمل غير متاح حاليًا.",csrf:"انتهت صلاحية الجلسة — حدّث الصفحة.",
+ not_booked:"هذا المعمل يُفتح بالحجز: يصلك رمز الدخول فقط خلال الفترة التي حجزتها (ويمكن طلبه قبل بدايتها بدقائق).",mail_failed:"تعذّر إرسال البريد الآن — حاول لاحقًا.",not_entitled:"هذا المعمل متاح فقط للمتدربين المسجّلين في هذه الخدمة. تواصل معنا لتفعيلها.",unavailable:"المعمل غير متاح حاليًا.",csrf:"انتهت صلاحية الجلسة — حدّث الصفحة.",
  no_email:"لا يوجد بريد صالح في حسابك.",email_is_sender:"بريد حسابك هو بريد المرسِل الخاص بالمنصة؛ حدِّث بريدك.",reverify:"انتهت صلاحية التحقق (30 دقيقة) — اطلب رمزًا جديدًا."};
 function etx(j){var e=j&&j.error;return (ERR[e]||"تعذّر الاتصال، حاول مرة أخرى.")+(e==="wrong_code"&&j.left!=null?" "+j.left:"")}
 function box(){css();var o=document.createElement("div");o.className="rlg";o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");o.innerHTML='<div class="bx"></div>';document.body.appendChild(o);return o}
@@ -33,6 +33,7 @@ function get(lab){if(CACHE[lab])return Promise.resolve(CACHE[lab]);
    if(!m.user){var nx=encodeURIComponent(location.pathname.split("/").pop()+location.search);card(o,"🔐","سجّل الدخول أولًا","هذا المعمل متاح للمتدربين المسجّلين. سجّل الدخول بحسابك في منصة آباد ثم عُد إلى هذه الصفحة.",null,[{t:"تسجيل الدخول",href:"login.html?next="+nx},{t:"إغلاق",f:close,l:1}]);return}
    return api("remote_lab.php?action=status&lab="+lab).then(function(s){
     if(!s.ok||!s.available){card(o,"🛠️","المعمل غير متاح حاليًا","نعمل على تجهيز المعمل. حاول مرة أخرى لاحقًا أو تواصل مع الدعم.",null,[{t:"إغلاق",f:close,l:1}]);return}
+    if(!s.allowed&&s.access==="booked"){card(o,"📅","احجز موعدك أولًا",ERR.not_booked,null,[{t:"احجز موعدًا",href:"seat-booking.html?lab="+lab},{t:"إغلاق",f:close,l:1}]);return}
     if(!s.allowed){card(o,"🔒","هذا المعمل لمشتركي الخدمة",ERR.not_entitled,null,[{t:"إغلاق",f:close,l:1}]);return}
     var done=function(items){CACHE[lab]=items;clearInterval(CDT);o.remove();res(items)};
     if(s.unlocked)return api("remote_lab.php",{action:"urls",lab:lab}).then(function(j){if(j.ok&&j.items)done(j.items);else lock(s.email)});

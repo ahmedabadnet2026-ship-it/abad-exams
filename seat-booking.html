@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><script src="js/login-guard.js?v=abad-202610211400"></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10293b">
+<title>حجز مقعد في المعمل — معهد شبكة آباد للتدريب</title><link rel="icon" href="icons/icon-192.png">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+:root{--navy:#10293b;--blue:#3f86b3;--gold:#F5BD2D;--ok:#3ecf8e;--bad:#ff5d6c}
+*{box-sizing:border-box}html,body{margin:0;-webkit-text-size-adjust:100%}
+body{font-family:Cairo,sans-serif;color:#fff;min-height:100vh;background:radial-gradient(circle at 15% 8%,#3f86b340 0,transparent 45%),linear-gradient(135deg,#071622,#10293b 55%,#16405e)}
+header{display:flex;align-items:center;gap:12px;padding:12px 18px;max-width:1140px;margin:0 auto;flex-wrap:wrap}header img{height:42px;background:#fff;border-radius:9px;padding:3px 7px}header .t{flex:1;min-width:0}header b{display:block;font-size:17px}header small{opacity:.7;font-size:12px}
+.hb{font:inherit;font-weight:700;font-size:13px;color:#fff;background:#ffffff14;border:1px solid #ffffff33;border-radius:9px;padding:6px 12px;text-decoration:none}
+main{max-width:1140px;margin:0 auto;padding:0 14px 40px}
+.hero{text-align:center}.hero small{color:var(--gold);font-weight:700}.hero h1{margin:2px 0;font-size:clamp(1.4rem,3.4vw,2rem);font-weight:800}.hero p{margin:0 auto;opacity:.85;max-width:720px;font-size:14px;line-height:1.8}
+.box{margin:16px auto 0;padding:16px;border-radius:18px;background:#ffffff0d;border:1px solid #ffffff22}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}.tabs button,.days button{font:inherit;font-weight:700;font-size:13.5px;color:#fff;background:#ffffff10;border:1px solid #ffffff2a;border-radius:999px;padding:6px 14px;cursor:pointer}
+.tabs button[aria-pressed=true],.days button[aria-pressed=true]{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.days{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:thin}.days button{flex:none;border-radius:12px;padding:6px 12px;line-height:1.3;text-align:center}.days button small{display:block;font-size:11px;opacity:.8}
+.gridw{overflow-x:auto;margin-top:10px;border-radius:14px}
+table{border-collapse:separate;border-spacing:5px;width:100%;min-width:max-content}
+th{font-size:12.5px;font-weight:800;color:#cfe6f5;padding:4px 6px;white-space:nowrap}th.tm{text-align:start;color:var(--gold);unicode-bidi:isolate}
+td button{font:inherit;width:100%;min-width:62px;height:40px;border-radius:10px;border:1px solid #6fb6e244;background:linear-gradient(160deg,#1d4f74aa,#0b2236e6);color:#d4ebfa;font-size:12px;font-weight:800;cursor:pointer}
+td button.free:hover,td button.free:focus-visible{border-color:var(--gold);outline:0;box-shadow:0 0 0 2px #F5BD2D55}
+td button.taken{background:#ff5d6c1a;border-color:#ff5d6c55;color:#ffc4ca;cursor:not-allowed}
+td button.mine{background:var(--gold);color:var(--navy);border-color:var(--gold);box-shadow:0 0 14px #F5BD2D66}
+td button.past{opacity:.35;cursor:not-allowed}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;margin-top:10px;opacity:.9}.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-inline-end:5px;vertical-align:middle}
+.mine-l{display:grid;gap:8px;margin-top:8px}.bk{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:12px;background:#071622aa;border:1px solid #3f86b366}
+.bk b{color:var(--gold)}.bk .now{font-size:11px;font-weight:800;color:var(--navy);background:var(--ok);border-radius:6px;padding:0 8px}.bk .sp{flex:1}
+.btn{font:inherit;font-weight:800;font-size:13px;border:0;border-radius:9px;padding:6px 14px;cursor:pointer;background:var(--gold);color:var(--navy);text-decoration:none}.btn.l{background:#ffffff14;color:#fff;border:1px solid #ffffff33}
+.note{font-size:13px;opacity:.85;line-height:1.8}.msg{min-height:1.5em;font-weight:700;font-size:13.5px;margin-top:8px}.msg.e{color:#ffb4bb}.msg.o{color:#bff3d9}
+.off{text-align:center;padding:26px 16px}.off b{display:block;font-size:18px;margin-bottom:6px;color:var(--gold)}
+h2{margin:0 0 6px;font-size:18px}
+@media (max-width:560px){header img{height:34px}.box{padding:12px 10px}td button{min-width:52px;height:38px;font-size:11px}th{font-size:11px}}
+</style>
+<link rel="stylesheet" href="css/home-btn.css?v=abad-202610201400"><script src="js/home-btn.js?v=abad-202610201900" defer></script>
+</head>
+<body>
+<header><img src="assets/abad-logo.png" alt="ABAD"><div class="t"><b>معهد شبكة آباد للتدريب</b><small>منصة المحاكاة العملية</small></div><a class="hb" href="eve-classroom.html">→ المعمل</a></header>
+<main>
+<section class="hero"><small>📅 حجز المعمل</small><h1>احجز مقعدك وموعدك</h1>
+<p>اختر المعمل واليوم ثم اضغط على خانة متاحة. رمز الدخول وبيانات المقعد تُرسل فقط لصاحب الحجز خلال فترته — جميع الأوقات بتوقيت الرياض.</p></section>
+<div class="box" id="app"><div class="note">⏳ جارٍ التحميل…</div></div>
+<div class="box"><h2>🎫 حجوزاتي القادمة</h2><div class="mine-l" id="mine"><span class="note">لا توجد حجوزات.</span></div></div>
+</main>
+<script>
+(function(){
+var CSRF="",CFG=null,LAB=null,DAY=null,$=function(i){return document.getElementById(i)};
+var E=function(t){return String(t==null?"":t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+var ERR={taken:"هذه الخانة حُجزت للتو — اختر خانة أخرى.",day_limit:"وصلت للحد الأقصى من الحجوزات في هذا اليوم.",have_slot:"لديك حجز آخر في نفس الفترة.",past:"انتهت هذه الفترة.",too_far:"لا يمكن الحجز بعد هذا التاريخ بعد.",not_entitled:"هذا المعمل متاح للحجز لمشتركي الخدمة فقط.",rate_limited:"طلبات كثيرة، انتظر قليلًا.",booking_off:"الحجز غير مفعّل لهذا المعمل.",csrf:"انتهت الجلسة — حدّث الصفحة.",not_found:"الحجز غير موجود."};
+function api(p,body){var h={Accept:"application/json"};if(body){h["Content-Type"]="application/json";h["X-CSRF-Token"]=CSRF}
+ return fetch("api/"+p,{method:body?"POST":"GET",credentials:"same-origin",cache:"no-store",headers:h,body:body?JSON.stringify(body):undefined}).then(function(r){return r.json().catch(function(){return{ok:false,error:"http"+r.status}})})}
+var WD=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+function ymd(d){return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
+function hm(s){var h=+s.slice(11,13),m=s.slice(14,16),pm=h>=12,h12=h%12||12;return h12+":"+m+(pm?" م":" ص")}
+function today(){var n=CFG&&CFG.now?new Date(CFG.now.replace(" ","T")):new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())}
+function lname(id){var l=(CFG.labs||[]).filter(function(x){return x.id===id})[0];return l?l.title:id}
+function shell(){var a=$("app"),t=today(),days="";
+ for(var i=0;i<=CFG.days_ahead;i++){var d=new Date(t);d.setDate(t.getDate()+i);var v=ymd(d);days+='<button type="button" data-d="'+v+'" aria-pressed="'+(v===DAY)+'">'+(i===0?"اليوم":i===1?"غدًا":WD[d.getDay()])+'<small dir="ltr">'+v.slice(5).replace("-","/")+'</small></button>'}
+ a.innerHTML='<div class="bar"><div class="tabs" role="group" aria-label="المعمل">'+CFG.labs.map(function(l){return '<button type="button" data-l="'+l.id+'" aria-pressed="'+(l.id===LAB)+'">'+E(l.title)+'</button>'}).join("")+'</div></div>'+
+  '<div class="days" role="group" aria-label="اليوم">'+days+'</div><div class="gridw" id="grid"></div>'+
+  '<div class="legend"><span><i style="background:#1d4f74"></i>متاح</span><span><i style="background:var(--gold)"></i>حجزي</span><span><i style="background:#ff5d6c55"></i>محجوز</span><span><i style="background:#ffffff22"></i>انتهى</span></div>'+
+  '<div class="note">مدة الفترة '+CFG.slot_minutes+' دقيقة · حتى '+CFG.max_per_day+' حجز في اليوم · يمكنك طلب رمز الدخول قبل بداية فترتك بـ '+CFG.early_minutes+' دقائق.</div><div class="msg" id="msg" aria-live="polite"></div>';
+ a.querySelectorAll("[data-l]").forEach(function(b){b.onclick=function(){LAB=b.dataset.l;shell()}});
+ a.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){DAY=b.dataset.d;shell()}});grid()}
+function grid(){api("seat_booking.php?action=grid&lab="+LAB+"&date="+DAY).then(function(j){var g=$("grid");if(!j.ok){g.innerHTML='<div class="msg e">'+E(ERR[j.error]||"تعذّر التحميل.")+'</div>';return}
+ var seats=j.slots.length?j.slots[0].seats.map(function(s){return s.seat}):[],one=seats.length===1;
+ var h='<table><thead><tr><th class="tm">⏰</th>'+seats.map(function(n){return '<th>'+(one?"الحجز":"مقعد "+n)+'</th>'}).join("")+'</tr></thead><tbody>';
+ j.slots.forEach(function(s){h+='<tr><th class="tm">'+hm(s.start)+' – '+hm(s.end)+'</th>'+s.seats.map(function(c){var lbl={free:"احجز",mine:"✓ حجزي",taken:"محجوز",past:"—"}[c.state];
+  return '<td><button type="button" class="'+c.state+'" data-s="'+c.seat+'" data-t="'+s.start+'"'+(c.id?' data-id="'+c.id+'"':'')+(c.state==="taken"||c.state==="past"?' disabled':'')+' aria-label="'+(one?"":"مقعد "+c.seat+" · ")+hm(s.start)+' · '+lbl+'">'+lbl+'</button></td>'}).join("")+'</tr>'});
+ g.innerHTML=h+'</tbody></table>';
+ g.querySelectorAll("button.free").forEach(function(b){b.onclick=function(){book(+b.dataset.s,b.dataset.t)}});
+ g.querySelectorAll("button.mine").forEach(function(b){b.onclick=function(){cancel(+b.dataset.id)}})})}
+function msg(t,ok){var m=$("msg");if(m){m.textContent=t;m.className="msg "+(ok?"o":"e")}}
+function book(seat,start){api("seat_booking.php",{action:"book",lab:LAB,seat:seat,start:start}).then(function(j){if(j.ok){msg("تم الحجز ✓ "+lname(LAB)+(seat>1||LAB==="eve"?" · مقعد "+seat:"")+" · "+start.slice(0,10)+" "+hm(start),1)}else msg(ERR[j.error]||"تعذّر الحجز.");grid();mine()})}
+function cancel(id){if(!confirm("إلغاء هذا الحجز؟"))return;api("seat_booking.php",{action:"cancel",id:id}).then(function(j){if(j.ok)msg("تم إلغاء الحجز.",1);else msg(ERR[j.error]||"تعذّر الإلغاء.");grid();mine()})}
+function mine(){api("seat_booking.php?action=mine").then(function(j){var b=$("mine");if(!j.ok||!j.items.length){b.innerHTML='<span class="note">لا توجد حجوزات قادمة.</span>';return}
+ b.innerHTML=j.items.map(function(x){var now=(j.current[x.lab]||[]).indexOf(+x.seat)>=0;var go=x.lab==="eve"?"eve-classroom.html":x.lab==="ine"?"ine-lab.html":"net-lab.html";
+  return '<div class="bk">'+(now?'<span class="now">الآن</span>':'')+'<span><b>'+E(lname(x.lab))+'</b>'+(x.lab==="eve"?' · مقعد '+x.seat:'')+'</span><span dir="ltr">'+x.slot_start.slice(0,10)+'</span><span>'+hm(x.slot_start)+' – '+hm(x.slot_end)+'</span><span class="sp"></span>'+
+  (now?'<a class="btn" href="'+go+'">ادخل المعمل</a>':'')+'<button class="btn l" type="button" data-id="'+x.id+'">إلغاء</button></div>'}).join("");
+ b.querySelectorAll("button[data-id]").forEach(function(x){x.onclick=function(){cancel(+x.dataset.id)}})})}
+api("auth.php?action=me").then(function(m){if(m&&m.csrf)CSRF=m.csrf;if(!m||!m.user){location.href="login.html?next=seat-booking.html";return}
+ return api("seat_booking.php?action=config").then(function(c){CFG=c;
+  if(!c.ok||!c.enabled||!c.labs.length){$("app").innerHTML='<div class="off"><b>الحجز بالموعد غير مفعّل حاليًا</b><span class="note">المعامل تعمل بالنظام الحالي: افتح مقعدك المخصص من صفحة المعمل.</span><br><br><a class="btn" href="eve-classroom.html">الذهاب إلى المعمل</a></div>';return}
+  var q=new URLSearchParams(location.search).get("lab");LAB=c.labs.some(function(l){return l.id===q})?q:c.labs[0].id;DAY=ymd(today());shell();mine()})})
+ .catch(function(){$("app").innerHTML='<div class="off"><b>تعذّر الاتصال بالمنصة</b></div>'});
+})();
+</script>
+</body>
+</html>
