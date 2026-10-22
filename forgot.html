@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-app-lang>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10293b">
+<title>استعادة كلمة المرور — معهد شبكة آباد للتدريب</title><meta name="robots" content="noindex">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+@font-face{font-family:Cairo;src:url('assets/cairo.ttf') format('truetype');font-display:swap}
+:root{--n:#10293b;--n2:#0a1c29;--b:#3f86b3;--g:#F5BD2D;--ink:#10293b;--mut:#5d7183;--line:#d9e3ec;--bg:#f5f8fb;--err:#c0392b;--ok:#17803d;--r:14px}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Cairo,system-ui,sans-serif;color:var(--ink);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;
+ background:radial-gradient(1200px 600px at 110% -10%,#3f86b355,transparent 60%),radial-gradient(900px 500px at -10% 110%,#F5BD2D22,transparent 60%),linear-gradient(150deg,var(--n2),var(--n) 55%,#16405e)}
+.shell{flex:1;width:100%;max-width:1120px;margin:0 auto;padding:18px 14px 10px;display:grid;gap:18px;align-content:center}
+/* brand side panel */
+.side{color:#fff;position:relative;padding:6px 4px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:46px;background:#fff;border-radius:12px;padding:4px 9px;box-shadow:0 6px 18px #0004}
+.brand b{display:block;font-size:17px;line-height:1.35}.brand small.mob{display:block;color:var(--g);font-size:15px;font-weight:800}@media (min-width:960px){.brand small.mob{display:none}}.brand small{color:#9cc7e3;font-size:12.5px}
+.side h2{display:none}.pts{display:none}
+.side .deco{display:none}@media (min-width:960px){.side .deco{display:block;position:absolute;pointer-events:none;z-index:-1;inset:-70px auto auto -90px;width:300px;opacity:.18}}
+/* card */
+.card{background:#fff;border-radius:22px;box-shadow:0 24px 60px #0007,0 0 0 1px #ffffff12;padding:22px 18px 20px;position:relative;overflow:hidden;width:100%;max-width:480px;justify-self:center}
+.card::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,var(--b),var(--g))}
+.card h1{margin:4px 0 2px;font-size:1.45rem;color:var(--n)}.sub{color:var(--mut);margin:0 0 16px;font-size:14px;line-height:1.8}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:14px;background:#eef3f8;border-radius:14px;padding:4px}
+.tabs button{font:inherit;font-weight:800;border:0;border-radius:11px;padding:9px;cursor:pointer;background:transparent;color:var(--mut);min-height:44px;transition:.2s}
+.tabs button[aria-selected=true]{background:#fff;color:var(--n);box-shadow:0 2px 8px #10293b1f}
+.tabs button:focus-visible,.btn:focus-visible,.eye:focus-visible,.lnk:focus-visible{outline:3px solid #3f86b366;outline-offset:2px}
+.fld{margin-top:12px}.row2{display:grid;gap:0 12px}
+label{display:block;font-size:13px;font-weight:700;margin:0 0 5px;color:var(--n)}label small{color:var(--mut);font-weight:400}
+.inp{position:relative}
+.inp .fi{position:absolute;inset-inline-start:12px;top:50%;width:19px;height:19px;transform:translateY(-50%);fill:none;stroke:#7b90a3;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;transition:stroke .2s}
+.inp input{width:100%;font:inherit;font-size:15px;padding:11px 12px;padding-inline-start:42px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);min-height:48px;transition:border-color .2s,box-shadow .2s,background .2s}
+.inp input[dir=ltr]{text-align:right}.inp input[dir=ltr]:not(:placeholder-shown){text-align:left}
+html[dir=ltr] .inp input[dir=ltr]{text-align:left}
+html[dir=rtl] .inp input{padding-right:42px;padding-left:12px}html[dir=rtl] .inp.pw input{padding-left:48px}
+html[dir=ltr] .inp input{padding-left:42px;padding-right:12px}html[dir=ltr] .inp.pw input{padding-right:48px}
+.inp input::placeholder{color:#a5b4c2}
+.inp input:focus{outline:0;border-color:var(--b);background:#fff;box-shadow:0 0 0 4px #3f86b322}.inp:focus-within .fi{stroke:var(--b)}
+.inp input[aria-invalid=true]{border-color:var(--err);background:#fff6f5;box-shadow:0 0 0 4px #c0392b1a}.inp input[aria-invalid=true]~.fi,.inp:has(input[aria-invalid=true]) .fi{stroke:var(--err)}
+.eye{position:absolute;inset-inline-end:4px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;background:none;border-radius:10px;cursor:pointer;display:grid;place-items:center;color:#7b90a3}
+.eye svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8}.eye[aria-pressed=true]{color:var(--b)}.eye[aria-pressed=true] svg{stroke-dasharray:none}
+.eye[aria-pressed=true]::after{content:"";position:absolute;width:22px;height:2px;background:currentColor;transform:rotate(-45deg);border-radius:2px}
+.btn{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:18px;font:inherit;font-weight:800;font-size:16px;border:0;border-radius:13px;padding:12px;cursor:pointer;
+ background:linear-gradient(180deg,#f8c94a,var(--g));color:var(--n);min-height:50px;text-decoration:none;text-align:center;box-shadow:0 8px 20px #F5BD2D44;transition:transform .15s,box-shadow .2s,filter .2s}
+.btn:hover{filter:brightness(1.03);box-shadow:0 10px 24px #F5BD2D66}.btn:active{transform:translateY(1px)}
+.btn.alt{background:#fff;color:var(--n);border:1.5px solid var(--line);box-shadow:none;margin-top:10px}.btn.alt:hover{border-color:var(--b)}
+.btn:disabled{opacity:.75;cursor:wait}
+.btn.is-busy{color:transparent}.btn.is-busy::after{content:"";position:absolute;width:22px;height:22px;border-radius:50%;border:3px solid #10293b44;border-top-color:var(--n);animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.msg{margin-top:14px;padding:11px 14px;border-radius:12px;font-size:14px;font-weight:600;display:none;line-height:1.7;align-items:flex-start;gap:8px}
+.msg.err{display:flex;background:#fdecea;color:#8e2418;border:1px solid #f5c2bc}.msg.err::before{content:"⚠";font-weight:800}
+.msg.ok{display:flex;background:#e8f6ee;color:#11622f;border:1px solid #b7e3c7}.msg.ok::before{content:"✓";font-weight:800}
+.loading{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:14px;margin:4px 0 10px}.loading::before{content:"";width:18px;height:18px;border-radius:50%;border:3px solid #3f86b333;border-top-color:var(--b);animation:sp .7s linear infinite}
+.off{text-align:center;color:var(--mut)}
+.hide{display:none!important}
+#signed #hello{font-size:17px;font-weight:800;color:var(--n);margin:6px 0 0}
+.hint{font-size:12px;color:var(--mut);margin-top:5px}
+.chk{display:flex;gap:10px;align-items:flex-start;margin:16px 0 0;font-size:13px;font-weight:600;color:var(--ink);line-height:1.7;cursor:pointer}
+.chk input{position:absolute;opacity:0;width:1px;height:1px}
+.chk .box{flex:none;width:22px;height:22px;margin-top:2px;border:1.5px solid #b9c8d6;border-radius:7px;background:var(--bg);display:grid;place-items:center;transition:.15s}
+.chk input:checked+.box{background:var(--b);border-color:var(--b)}.chk input:checked+.box::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.chk input:focus-visible+.box{outline:3px solid #3f86b366;outline-offset:2px}
+.vc{text-align:center}
+.vc .ic{width:68px;height:68px;margin:6px auto 4px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,#3f86b31f,#F5BD2D2e)}
+.vc .ic svg{width:34px;height:34px;fill:none;stroke:var(--n);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.vc h2{margin:6px 0 2px;font-size:1.3rem;color:var(--n)}.vc p{line-height:1.8;margin:6px 0;color:var(--mut)}.vc b.em{direction:ltr;unicode-bidi:embed;color:var(--n);background:#eef3f8;border-radius:8px;padding:1px 8px}
+.vc input.code{width:100%;max-width:330px;display:block;margin:14px auto 0;font:800 34px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.55em;text-indent:.55em;text-align:center;direction:ltr;
+ padding:14px 8px;border-radius:16px;border:2px solid var(--line);background:var(--bg);color:var(--n);min-height:70px;transition:.2s}
+.vc input.code:focus{outline:0;border-color:var(--g);background:#fff;box-shadow:0 0 0 5px #F5BD2D33}
+.vc input.code::placeholder{color:#c7d3de}
+.vc .lnk{background:none;border:0;color:var(--b);font:inherit;font-weight:700;cursor:pointer;margin-top:12px;min-height:44px;padding:4px 10px;border-radius:10px}.vc .lnk:hover{background:#eef3f8}.vc .lnk:disabled{color:var(--mut);cursor:default;background:none}
+.sec{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;font-size:12px;color:var(--mut)}.sec svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
+.fgt{text-align:end;margin-top:8px}.fgt a{color:var(--b);font-weight:700;font-size:13.5px;text-decoration:none;padding:6px 4px;border-radius:8px;display:inline-block}.fgt a:hover{text-decoration:underline}.fgt a:focus-visible{outline:3px solid #3f86b366;outline-offset:2px}
+footer{text-align:center;color:#9cc7e3;opacity:.8;font-size:12px;padding:8px 18px 20px}
+@media (min-width:600px){.card{padding:28px 30px 26px}.row2{grid-template-columns:1fr 1fr}}
+@media (min-width:960px){
+ .shell{grid-template-columns:1.05fr 1fr;gap:48px;padding:36px 28px;align-items:center}
+ .side{padding:10px 10px 10px 0}
+ .side h2{display:block;font-size:2.6rem;line-height:1.4;margin:30px 0 10px}.side h2 em{font-style:normal;color:var(--g)}
+ .side .lead{color:#c9dcea;font-size:16px;line-height:1.9;margin:0 0 26px;max-width:470px}
+ .pts{display:grid;gap:14px;list-style:none;margin:0;padding:0;max-width:470px}
+ .pts li{display:flex;gap:14px;align-items:center;background:#ffffff0d;border:1px solid #ffffff1a;border-radius:16px;padding:14px 16px;backdrop-filter:blur(4px)}
+ .pts .pi{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--b),#2d6a91)}
+ .pts li:nth-child(2) .pi{background:linear-gradient(135deg,#F5BD2D,#d99b0c)}.pts li:nth-child(3) .pi{background:linear-gradient(135deg,#6aa9cf,var(--b))}
+ .pts .pi svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+ .pts b{display:block;font-size:16px}.pts span{color:#9cc7e3;font-size:13.5px}
+ .card{justify-self:stretch;max-width:500px}
+}
+.side .lead{display:none}@media (min-width:960px){.side .lead{display:block}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation-duration:1.5s!important}}
+</style>
+<link rel="stylesheet" href="css/home-btn.css?r=2026101821"><script src="js/home-btn.js?v=abad-202610201900" defer></script>
+<script src="js/abad-api.js?r=2026101821"></script>
+<style>/* hero background shared with index.html */.herobg{position:fixed;inset:0;z-index:-1;pointer-events:none}.herobg picture,.herobg img{display:block;width:100%;height:100%}.herobg img{object-fit:cover;object-position:78% 40%}.herobg::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 62% 75% at 50% 50%,#0a1c29f2 0,#10293bd9 45%,#10293b80 75%,#10293b4d 100%),linear-gradient(180deg,#0a1c2999,transparent 30%,transparent 70%,#0a1c29cc)}@media (max-width:700px){.herobg img{object-position:75% center}.herobg::after{background:linear-gradient(180deg,#0a1c29e6 0,#10293bcc 40%,#10293bb3 65%,#0a1c29e6 100%)}}body{background:#0a1c29!important;isolation:isolate}.card{background:#ffffffeb;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 24px 60px #0009,0 0 0 1px #ffffff30}</style></head>
+<body><div class="herobg"><picture><source type="image/webp" media="(max-width:700px)" srcset="assets/hero/hero-saudi-1280.webp"><source type="image/webp" srcset="assets/hero/hero-saudi.webp"><source media="(max-width:700px)" srcset="assets/hero/hero-saudi-1280.jpg"><img src="assets/hero/hero-saudi.jpg" width="2560" height="1440" alt="شاب سعودي يستخدم منصة آباد الرقمية على حاسوبه المحمول" fetchpriority="high" aria-hidden="true" decoding="async"></picture></div>
+<div class="shell">
+<aside class="side">
+  <div class="brand"><img src="assets/abad-logo.png" alt="ABAD"><div><b data-ar="معهد شبكة آباد للتدريب" data-en="ABAD Network for Training">معهد شبكة آباد للتدريب</b><small class="mob" data-ar="بوابة المتدرب" data-en="Trainee Portal">بوابة المتدرب</small></div></div>
+  <h2><em data-ar="بوابة المتدرب" data-en="Trainee Portal">بوابة المتدرب</em></h2>
+  <p class="lead" data-ar="كل ما تحتاجه في رحلتك التدريبية في مكان واحد." data-en="Everything you need for your training journey, in one place.">كل ما تحتاجه في رحلتك التدريبية في مكان واحد.</p>
+  <ul class="pts">
+    <li><span class="pi"><svg viewBox="0 0 24 24"><path d="M9 4h6l1 2h3v14H5V6h3z"/><path d="m9 13 2 2 4-4"/></svg></span><div><b data-ar="اختبارات محاكاة وتقييم الجاهزية" data-en="Practice exams & readiness check">اختبارات محاكاة وتقييم الجاهزية</b><span data-ar="أسئلة تدريبية تفاعلية مع تحليل لنقاط القوة والضعف" data-en="Interactive practice questions with strengths & gaps analysis">أسئلة تدريبية تفاعلية مع تحليل لنقاط القوة والضعف</span></div></li>
+    <li><span class="pi"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M7 9l2 2-2 2M11 13h4"/></svg></span><div><b data-ar="المعامل العملية" data-en="Hands-on labs">المعامل العملية</b><span data-ar="تطبيق عملي على الشبكات ولينكس من المتصفح" data-en="Practical networking and Linux work in your browser">تطبيق عملي على الشبكات ولينكس من المتصفح</span></div></li>
+    <li><span class="pi"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="m9 13-2 8 5-3 5 3-2-8"/></svg></span><div><b data-ar="متابعة دوراتك وشهاداتك" data-en="Your courses & certificates">متابعة دوراتك وشهاداتك</b><span data-ar="مواد دوراتك وشهادات الحضور في حسابك" data-en="Your course materials and attendance certificates in your account">مواد دوراتك وشهادات الحضور في حسابك</span></div></li>
+  </ul>
+  <svg class="deco" viewBox="0 0 200 200" aria-hidden="true"><g fill="none" stroke="#F5BD2D" stroke-width="1"><circle cx="100" cy="100" r="98"/><circle cx="100" cy="100" r="70"/><circle cx="100" cy="100" r="42"/></g></svg>
+</aside>
+<main class="card" id="box">
+  <div id="loading" class="loading" data-ar="جارٍ التحميل…" data-en="Loading…">جارٍ التحميل…</div>
+  <div id="offline" class="off hide"><p data-ar="استعادة كلمة المرور متاحة على المنصة الرسمية فقط." data-en="Password recovery is available on the official platform only.">استعادة كلمة المرور متاحة على المنصة الرسمية فقط.</p>
+    <a class="btn" href="https://abad-labs.com/abad-digital/forgot.html" data-ar="الانتقال إلى المنصة الرسمية" data-en="Go to the official platform">الانتقال إلى المنصة الرسمية</a></div>
+  <form id="fReq" class="hide" novalidate>
+    <div class="vc"><div class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/><circle cx="12" cy="15.5" r="1.3"/></svg></div></div>
+    <h1 data-ar="نسيت كلمة المرور؟" data-en="Forgot your password?">نسيت كلمة المرور؟</h1>
+    <p class="sub" data-ar="أدخل بريدك الإلكتروني المسجّل في المنصة وسنرسل لك رابطًا لتعيين كلمة مرور جديدة. الرابط صالح 30 دقيقة ولمرة واحدة." data-en="Enter the email you registered with and we will send you a link to set a new password. The link is valid for 30 minutes, once.">أدخل بريدك الإلكتروني المسجّل في المنصة وسنرسل لك رابطًا لتعيين كلمة مرور جديدة. الرابط صالح 30 دقيقة ولمرة واحدة.</p>
+    <div class="fld"><label for="fe"><span data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</span></label><div class="inp"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg><input id="fe" type="email" dir="ltr" autocomplete="username" required placeholder="name@example.com"></div></div>
+    <button class="btn" type="submit" data-ar="إرسال رابط إعادة التعيين" data-en="Send reset link">إرسال رابط إعادة التعيين</button>
+    <a class="btn alt" href="login.html" data-ar="العودة لتسجيل الدخول" data-en="Back to sign-in">العودة لتسجيل الدخول</a>
+  </form>
+  <div id="sent" class="vc hide">
+    <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
+    <h2 data-ar="تحقّق من بريدك الإلكتروني" data-en="Check your email">تحقّق من بريدك الإلكتروني</h2>
+    <p data-ar="إذا كان هذا البريد مسجّلًا لدينا فستصلك رسالة خلال دقائق تحتوي على رابط لتعيين كلمة مرور جديدة. الرابط صالح 30 دقيقة." data-en="If this email is registered with us, you will receive a message within minutes with a link to set a new password. The link is valid for 30 minutes.">إذا كان هذا البريد مسجّلًا لدينا فستصلك رسالة خلال دقائق تحتوي على رابط لتعيين كلمة مرور جديدة. الرابط صالح 30 دقيقة.</p>
+    <p style="font-size:13px" data-ar="لم تصلك الرسالة؟ تحقّق من مجلد الرسائل غير المرغوب فيها، أو أعد المحاولة بعد قليل." data-en="Nothing arrived? Check your spam folder, or try again in a little while.">لم تصلك الرسالة؟ تحقّق من مجلد الرسائل غير المرغوب فيها، أو أعد المحاولة بعد قليل.</p>
+    <a class="btn alt" href="login.html" data-ar="العودة لتسجيل الدخول" data-en="Back to sign-in">العودة لتسجيل الدخول</a>
+  </div>
+  <form id="fNew" class="hide" novalidate>
+    <h1 data-ar="تعيين كلمة مرور جديدة" data-en="Set a new password">تعيين كلمة مرور جديدة</h1>
+    <p class="sub"><span data-ar="للحساب" data-en="For account">للحساب</span> <b class="em" id="acc" dir="ltr"></b> — <span data-ar="سيتم تسجيل خروجك من جميع الأجهزة بعد التغيير." data-en="you will be signed out on all devices afterwards.">سيتم تسجيل خروجك من جميع الأجهزة بعد التغيير.</span></p>
+    <div class="fld"><label for="np"><span data-ar="كلمة المرور الجديدة" data-en="New password">كلمة المرور الجديدة</span></label><div class="inp pw"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><input id="np" type="password" dir="ltr" autocomplete="new-password" maxlength="200" required><button class="eye" type="button" data-eye aria-pressed="false" aria-label="إظهار كلمة المرور"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+      <div class="meter" aria-hidden="true"><i id="mb"></i></div>
+      <ul class="rules" id="rules"><li data-r="len" data-ar="8 أحرف على الأقل" data-en="At least 8 characters">8 أحرف على الأقل</li><li data-r="let" data-ar="حرف واحد على الأقل" data-en="At least one letter">حرف واحد على الأقل</li><li data-r="dig" data-ar="رقم واحد على الأقل" data-en="At least one digit">رقم واحد على الأقل</li><li data-r="mail" data-ar="لا تطابق البريد الإلكتروني" data-en="Not the same as your email">لا تطابق البريد الإلكتروني</li></ul></div>
+    <div class="fld"><label for="np2"><span data-ar="تأكيد كلمة المرور" data-en="Confirm password">تأكيد كلمة المرور</span></label><div class="inp pw"><svg class="fi" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg><input id="np2" type="password" dir="ltr" autocomplete="new-password" maxlength="200" required><button class="eye" type="button" data-eye aria-pressed="false" aria-label="إظهار كلمة المرور"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+    <button class="btn" type="submit" data-ar="حفظ كلمة المرور الجديدة" data-en="Save new password">حفظ كلمة المرور الجديدة</button>
+  </form>
+  <div id="bad" class="vc hide">
+    <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg></div>
+    <h2 data-ar="الرابط غير صالح أو منتهي" data-en="Link invalid or expired">الرابط غير صالح أو منتهي</h2>
+    <p data-ar="روابط إعادة التعيين صالحة 30 دقيقة وتُستخدم مرة واحدة فقط. اطلب رابطًا جديدًا." data-en="Reset links are valid for 30 minutes and can be used once. Request a new one.">روابط إعادة التعيين صالحة 30 دقيقة وتُستخدم مرة واحدة فقط. اطلب رابطًا جديدًا.</p>
+    <a class="btn" href="forgot.html" data-ar="طلب رابط جديد" data-en="Request a new link">طلب رابط جديد</a>
+  </div>
+  <div class="msg" id="msg" role="alert" aria-live="polite"></div>
+  <div class="sec"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span data-ar="اتصال آمن ومشفّر" data-en="Secure, encrypted connection">اتصال آمن ومشفّر</span></div>
+</main>
+</div>
+<footer data-ar="© معهد شبكة آباد للتدريب" data-en="© ABAD Network Training Institute">© معهد شبكة آباد للتدريب</footer>
+<style>.meter{height:6px;border-radius:6px;background:#e6edf3;margin-top:8px;overflow:hidden}.meter i{display:block;height:100%;width:0;background:#c0392b;transition:width .25s,background .25s}
+.rules{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:12.5px;color:var(--mut)}.rules li::before{content:"○";margin-inline-end:6px;color:#b9c8d6}.rules li.on{color:var(--ok)}.rules li.on::before{content:"✓";color:var(--ok);font-weight:800}
+.em{direction:ltr;unicode-bidi:embed;color:var(--n);background:#eef3f8;border-radius:8px;padding:1px 8px}</style>
+<script>
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-eye]");if(!b)return;var i=b.parentNode.querySelector("input");var on=i.type==="password";i.type=on?"text":"password";b.setAttribute("aria-pressed",on?"true":"false");i.focus()});
+(function(){var $=function(i){return document.getElementById(i)},msg=$("msg"),EN=false;
+  try{EN=localStorage.getItem("abad-lang")==="en"}catch(e){}
+  function T(a,e){return EN?e:a}
+  if(EN){document.documentElement.lang="en";document.documentElement.dir="ltr";document.querySelectorAll("[data-en]").forEach(function(n){n.textContent=n.getAttribute("data-en")})}
+  function show(t,ok){msg.textContent=t;msg.className="msg "+(ok?"ok":"err")}function clear(){msg.className="msg";msg.textContent=""}
+  function busy(f,on){var b=f.querySelector("button[type=submit]");if(b){b.disabled=on;b.classList.toggle("is-busy",on)}}
+  function only(id){["fReq","sent","fNew","bad"].forEach(function(x){$(x).classList.toggle("hide",x!==id)})}
+  function post(b){return ABAD_API.req("password_reset.php",{method:"POST",body:b,timeout:20000}).catch(function(){return {ok:false,error:"network"}})}
+  var E={rate_limited:T("محاولات كثيرة. انتظر قليلًا ثم أعد المحاولة.","Too many attempts. Please wait and try again."),invalid:T("أدخل بريدًا إلكترونيًا صحيحًا.","Enter a valid email address."),
+    pw_length:T("كلمة المرور يجب أن تكون 8 أحرف على الأقل.","Password must be at least 8 characters."),pw_weak:T("كلمة المرور ضعيفة: استخدم حروفًا وأرقامًا معًا.","Weak password: use letters and digits together."),
+    pw_email:T("لا تستخدم بريدك الإلكتروني ككلمة مرور.","Do not use your email as the password."),network:T("تعذّر الاتصال. تحقّق من الإنترنت وأعد المحاولة.","Connection failed. Check your internet and try again.")};
+  function err(j){return E[j&&j.error]||T("حدث خطأ غير متوقع، أعد المحاولة.","Unexpected error, please try again.")}
+  var tok=(location.search.match(/[?&]t=([a-f0-9]{64})/)||[])[1],em=(location.search.match(/[?&]e=([^&]+)/)||[])[1];
+  if(tok&&history.replaceState)history.replaceState(null,"",location.pathname+"?t="+tok);
+  var acc="";
+  function rules(){var p=$("np").value,r={len:p.length>=8,let:/\p{L}/u.test(p),dig:/[0-9\u0660-\u0669]/.test(p),mail:!!p&&(!acc||p.toLowerCase()!==acc)},n=0;
+    document.querySelectorAll("#rules li").forEach(function(li){var on=r[li.getAttribute("data-r")];li.classList.toggle("on",on);if(on)n++});
+    var s=n+(p.length>=12?1:0)+(/[^\p{L}0-9]/u.test(p)?1:0),w=Math.min(100,s*17),mb=$("mb");mb.style.width=w+"%";mb.style.background=s<4?"#c0392b":s<5?"#F5BD2D":"#17803d";return n===4}
+  ABAD_API.me().then(function(s){$("loading").classList.add("hide");if(!s){$("offline").classList.remove("hide");return}
+    if(!tok){only("fReq");if(em)$("fe").value=decodeURIComponent(em);$("fe").focus();return}
+    post({action:"check",token:tok}).then(function(j){if(!j.ok){only(j.error==="rate_limited"?"fReq":"bad");if(j.error==="rate_limited")show(err(j));return}$("acc").textContent=j.email;only("fNew");$("np").focus()})});
+  $("fReq").onsubmit=function(e){e.preventDefault();clear();var f=this,v=$("fe").value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){$("fe").setAttribute("aria-invalid","true");show(E.invalid);return}$("fe").removeAttribute("aria-invalid");
+    busy(f,true);post({action:"request",email:v}).then(function(j){if(j.ok)only("sent");else show(err(j))}).finally(function(){busy(f,false)})};
+  $("np").oninput=rules;
+  $("fNew").onsubmit=function(e){e.preventDefault();clear();var f=this;
+    if(!rules()){show(E.pw_weak);return}if($("np").value!==$("np2").value){$("np2").setAttribute("aria-invalid","true");show(T("كلمتا المرور غير متطابقتين.","Passwords do not match."));return}
+    $("np2").removeAttribute("aria-invalid");busy(f,true);
+    post({action:"reset",token:tok,password:$("np").value}).then(function(j){if(j.ok){location.replace("login.html?reset=1");return}if(j.error==="invalid_link"){only("bad");return}show(err(j))}).finally(function(){busy(f,false)})};
+})();
+</script>
+</body>
+</html>

@@ -70,6 +70,23 @@ function abd_brevo_tx_send(string $to, string $toName, string $subject, string $
   return (string)($j['messageId'] ?? 'ok');
 }
 
+/**
+ * Deliver any platform email through a configurable driver. $driverKey names the mail.php setting
+ * (e.g. 'AUTH_MAIL_DRIVER'); values 'smtp' | 'brevo' | 'log'. Returns provider id, or 'logged' for the log driver.
+ * Log driver: writes only subject + masked recipient to the PHP error log. For LOCAL tests only, the env var
+ * ABAD_MAIL_DUMP_DIR (never read from config) additionally saves the rendered HTML there.
+ */
+function abd_mail_deliver(string $driverKey, string $default, string $to, string $name, string $subject, string $html, string $text): string {
+  $d = strtolower((string)abd_mail_cfg($driverKey, $default));
+  if (!in_array($d, ['log', 'brevo', 'smtp'], true)) $d = 'log';
+  if ($d === 'brevo') return abd_brevo_tx_send($to, $name, $subject, $html, $text);
+  if ($d === 'smtp') { abd_smtp_send($to, $subject, $html, $text); return 'smtp'; }
+  error_log('[abad-mail] log driver: «' . $subject . '» → ' . abd_mask_email($to));
+  $dir = getenv('ABAD_MAIL_DUMP_DIR');
+  if ($dir !== false && $dir !== '' && is_dir($dir)) file_put_contents(rtrim($dir, '/') . '/' . date('Ymd-His') . '-' . bin2hex(random_bytes(3)) . '.html', $html);
+  return 'logged';
+}
+
 /** Enrollments due today (effective end date = enrollment end or course end), active, verified recipient, not yet sent. */
 function abd_exam_mail_due(string $today): array {
   return abd_q("SELECT e.id, e.user_id, e.course_id, e.exam_mail_attempts, u.email, u.full_name_ar, u.full_name_en,
