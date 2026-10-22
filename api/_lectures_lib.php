@@ -67,10 +67,10 @@ function abd_lec_for_user(array $u): array {
   $staff = in_array($u['role'], ['admin', 'staff', 'zoom_staff'], true);
   $now = time();
   $courses = $u['role'] === 'trainer'
-    ? abd_q('SELECT c.id, c.title_ar, c.title_en FROM abd_courses c WHERE c.trainer_id = ? ORDER BY c.id', [(int)$u['id']])->fetchAll()
+    ? abd_q('SELECT c.id, c.title_ar, c.title_en, c.start_date, c.end_date, (SELECT t.full_name_ar FROM abd_users t WHERE t.id = c.trainer_id) trainer_name FROM abd_courses c WHERE c.trainer_id = ? ORDER BY c.id', [(int)$u['id']])->fetchAll()
     : ($staff
-    ? abd_q("SELECT c.id, c.title_ar, c.title_en FROM abd_courses c WHERE EXISTS (SELECT 1 FROM abd_course_sessions s WHERE s.course_id = c.id) ORDER BY c.id")->fetchAll()
-    : abd_q("SELECT c.id, c.title_ar, c.title_en FROM abd_enrollments e JOIN abd_courses c ON c.id = e.course_id
+    ? abd_q("SELECT c.id, c.title_ar, c.title_en, c.start_date, c.end_date, (SELECT t.full_name_ar FROM abd_users t WHERE t.id = c.trainer_id) trainer_name FROM abd_courses c WHERE EXISTS (SELECT 1 FROM abd_course_sessions s WHERE s.course_id = c.id) ORDER BY c.id")->fetchAll()
+    : abd_q("SELECT c.id, c.title_ar, c.title_en, c.start_date, c.end_date, (SELECT t.full_name_ar FROM abd_users t WHERE t.id = c.trainer_id) trainer_name FROM abd_enrollments e JOIN abd_courses c ON c.id = e.course_id
              WHERE e.user_id = ? AND e.status IN ('active','completed') ORDER BY c.id", [(int)$u['id']])->fetchAll());
   if ($u['role'] === 'trainer') $staff = true;   // a trainer sees links/recordings of their own courses only (query above)
   foreach ($courses as &$c) {

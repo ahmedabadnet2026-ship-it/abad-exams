@@ -2,7 +2,7 @@
    the server releases a join URL only from 15 min before start until the end, so the page refetches when a window opens. */
 (function(){
 var BASE=new URL(".",location.href).href,TZ="Asia/Riyadh",LOC="ar-SA-u-ca-gregory-nu-latn",EARLY=15*60000,
- off=0,data=null,cur=null,sig="",lastFetch=0,view="lec",lastFocus=null;
+ QS=new URLSearchParams(location.search),CF=+(QS.get("course")||0)||null,off=0,data=null,cur=CF,sig="",lastFetch=0,view=QS.get("view")==="rec"?"rec":"lec",lastFocus=null;
 function $(s){return document.querySelector(s)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function now(){return Date.now()+off}
@@ -85,6 +85,7 @@ function show(id){["gate","err","loading","empty","app"].forEach(function(k){$("
 function load(){lastFetch=Date.now();return fetch(BASE+"api/lectures.php",{credentials:"same-origin",headers:{Accept:"application/json"},cache:"no-store"})
  .then(function(r){if(r.status===401)return {logged_in:false};return r.json()}).then(function(j){
   if(!j||j.logged_in===false){show("gate");return}if(!j.ok)throw 0;
+  if(CF){j.courses=j.courses.filter(function(c){return +c.id===CF});var bc=$("#bc");if(bc&&j.courses[0]){bc.hidden=false;$("#bcc").textContent=j.courses[0].title_ar;document.title=j.courses[0].title_ar+" — منصة آباد الرقمية"}if(!j.courses.length){show("empty");return}}
   off=(j.now||Date.now())-Date.now();if(j.early_min)EARLY=j.early_min*60000;data=j;
   if(!j.courses.length){show("empty");return}show("app");render()}).catch(function(){if(!data)show("err")})}
 document.addEventListener("keydown",function(e){if(e.key==="Escape")closeRec()});
