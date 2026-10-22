@@ -69,7 +69,7 @@ $dT = $fT ?: (int)(array_key_first(array_filter($per, fn($m) => $m['past'] === m
 $recent = $weeks = [];
 if ($dT) {
   $p = [$dT]; $cw = ''; if ($fC) { $cw = ' AND c.id = ?'; $p[] = $fC; }
-  $recent = abd_q("SELECT s.session_no, s.title, s.starts_at, s.ends_at, s.started_at, c.title_ar,
+  $recent = abd_q("SELECT s.session_no, s.title, s.title_note, s.starts_at, s.ends_at, s.started_at, c.title_ar,
       IF(s.started_at IS NULL, NULL, TIMESTAMPDIFF(SECOND, s.starts_at, s.started_at)) d_s
     FROM abd_course_sessions s JOIN abd_courses c ON c.id = s.course_id WHERE c.trainer_id = ? $cw AND s.ends_at <= NOW() ORDER BY s.starts_at DESC LIMIT 10", $p)->fetchAll();
   $wk = abd_q("SELECT YEARWEEK(s.starts_at, 0) wk, MIN(DATE(s.starts_at)) d0, SUM(TIMESTAMPDIFF(SECOND, s.starts_at, s.ends_at)) plan_s, SUM(IF(s.started_at IS NULL, 0, TIMESTAMPDIFF(SECOND, s.starts_at, s.ends_at))) done_s
@@ -174,7 +174,7 @@ svg text{font-family:Cairo,sans-serif;font-size:11px;fill:#5d7183}
   <?php if (!$recent): ?><div class="emp">لا توجد محاضرات منتهية.</div><?php else: ?>
   <div class="tw"><table class="zt"><thead><tr><th>المحاضرة</th><th>الموعد المجدول</th><th>البدء الفعلي</th><th>التأخر</th><th>المدة</th></tr></thead><tbody>
   <?php foreach ($recent as $r): $d = $r['d_s'] === null ? null : (int)$r['d_s'] / 60; ?>
-    <tr><td><?=h($r['title_ar'])?> — <?= $r['title'] ? h($r['title']) : 'المحاضرة ' . (int)$r['session_no'] ?></td><td style="white-space:nowrap"><?=h(tp_d((string)$r['starts_at']) . ' · ' . tp_t((string)$r['starts_at']))?></td>
+    <tr><td><?=h($r['title_ar'])?> — <?= ($ft = abd_lec_title_full($r['title'], $r['title_note'])) !== '' ? h($ft) : 'المحاضرة ' . (int)$r['session_no'] ?></td><td style="white-space:nowrap"><?=h(tp_d((string)$r['starts_at']) . ' · ' . tp_t((string)$r['starts_at']))?></td>
       <td><?= $r['started_at'] ? h(tp_t((string)$r['started_at'])) : '—' ?></td>
       <td><?= $d === null ? '<span class="pill p-live">لم تُبدأ</span>' : '<span class="' . ($d > TP_LATE ? 'late' : '') . '">' . ($d < 0 ? 'مبكرًا ' . tp_n(-$d, 0) : tp_n($d, 0)) . ' د</span>' ?></td>
       <td><?= tp_n((strtotime((string)$r['ends_at']) - strtotime((string)$r['starts_at'])) / 60, 0) ?> د</td></tr>
