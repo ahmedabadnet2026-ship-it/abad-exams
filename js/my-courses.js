@@ -21,7 +21,8 @@ function card(c,i,now,early){var ss=c.sessions||[],done=ss.filter(function(s){re
   +(c.trainer_name?'<div class="row">👤 <span>المدرب: '+esc(c.trainer_name)+'</span></div>':"")
   +'<div><div class="pl"><span>نسبة التقدم</span><b>'+pct+'%</b></div><div class="bar" role="progressbar" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100"><i style="width:'+pct+'%"></i></div></div>'
   +'<div class="st"><div><b>'+tot+'</b><small>محاضرة</small></div><div><b>'+recs+'</b><small>تسجيل</small></div><div><b>'+(tot-done)+'</b><small>متبقية</small></div></div>'
-  +nxh+'<div class="act"><a class="go" href="'+u+'">دخول الدورة</a><a class="go2" href="'+u+'&amp;view=rec">التسجيلات</a></div></div></article>'}
+  +nxh+'<div class="act"><a class="go" href="'+u+'">دخول الدورة</a><a class="go2" href="'+u+'&amp;view=rec">التسجيلات</a>'+(waOk(c.wa_group_url)?'<a class="wa" href="'+esc(c.wa_group_url)+'" target="_blank" rel="noopener noreferrer">💬 انضم لجروب الدورة</a>':"")+'</div></div></article>'}
+function waOk(u){return typeof u==="string"&&/^https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9_-]{10,64}\/?(\?[A-Za-z0-9=&_.-]{0,100})?$/.test(u)}
 function load(){show("loading");return fetch(BASE+"api/lectures.php",{credentials:"same-origin",headers:{Accept:"application/json"},cache:"no-store"})
  .then(function(r){if(r.status===401)return {logged_in:false};return r.json()}).then(function(j){
   if(!j||j.logged_in===false){show("gate");return}if(!j.ok)throw 0;

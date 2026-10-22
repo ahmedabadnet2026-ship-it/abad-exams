@@ -75,10 +75,10 @@ function abd_lec_for_user(array $u): array {
   $staff = in_array($u['role'], ['admin', 'staff', 'zoom_staff'], true);
   $now = time();
   $courses = $u['role'] === 'trainer'
-    ? abd_q('SELECT c.id, c.title_ar, c.title_en, c.start_date, c.end_date, (SELECT t.full_name_ar FROM abd_users t WHERE t.id = c.trainer_id) trainer_name FROM abd_courses c WHERE c.trainer_id = ? ORDER BY c.id', [(int)$u['id']])->fetchAll()
+    ? abd_q('SELECT c.id, c.title_ar, c.title_en, c.start_date, c.end_date, c.wa_group_url, (SELECT t.full_name_ar FROM abd_users t WHERE t.id = c.trainer_id) trainer_name FROM abd_courses c WHERE c.trainer_id = ? ORDER BY c.id', [(int)$u['id']])->fetchAll()
     : ($staff
-    ? abd_q("SELECT c.id, c.title_ar, c.title_en, c.start_date, c.end_date, (SELECT t.full_name_ar FROM abd_users t WHERE t.id = c.trainer_id) trainer_name FROM abd_courses c WHERE EXISTS (SELECT 1 FROM abd_course_sessions s WHERE s.course_id = c.id) ORDER BY c.id")->fetchAll()
-    : abd_q("SELECT c.id, c.title_ar, c.title_en, c.start_date, c.end_date, (SELECT t.full_name_ar FROM abd_users t WHERE t.id = c.trainer_id) trainer_name FROM abd_enrollments e JOIN abd_courses c ON c.id = e.course_id
+    ? abd_q("SELECT c.id, c.title_ar, c.title_en, c.start_date, c.end_date, c.wa_group_url, (SELECT t.full_name_ar FROM abd_users t WHERE t.id = c.trainer_id) trainer_name FROM abd_courses c WHERE EXISTS (SELECT 1 FROM abd_course_sessions s WHERE s.course_id = c.id) ORDER BY c.id")->fetchAll()
+    : abd_q("SELECT c.id, c.title_ar, c.title_en, c.start_date, c.end_date, c.wa_group_url, (SELECT t.full_name_ar FROM abd_users t WHERE t.id = c.trainer_id) trainer_name FROM abd_enrollments e JOIN abd_courses c ON c.id = e.course_id
              WHERE e.user_id = ? AND e.status IN ('active','completed') ORDER BY c.id", [(int)$u['id']])->fetchAll());
   if ($u['role'] === 'trainer') $staff = true;   // a trainer sees links/recordings of their own courses only (query above)
   foreach ($courses as &$c) {
@@ -98,6 +98,7 @@ function abd_lec_for_user(array $u): array {
         'join_url' => $show ? $s['zoom_url'] : null, 'passcode' => $show ? $s['zoom_passcode'] : null];
     }, $rows);
     $c['total'] = count($rows);
+    $c['wa_group_url'] = $c['wa_group_url'] ? abd_wa_group_url((string)$c['wa_group_url']) : null;   // «انضم لجروب الدورة» (re-validated)
   }
   unset($c);
   return array_values(array_filter($courses, fn($c) => $c['total'] > 0));
@@ -215,4 +216,32 @@ function abd_topic_move(int $cid, int $id, int $dir): void {
   if ($i === false || !isset($ids[$i + $dir])) return;
   [$ids[$i], $ids[$i + $dir]] = [$ids[$i + $dir], $ids[$i]];
   abd_topics_renumber($cid, $ids);
+}
+
+// ── «جروب واتساب الدورة» (migration 018) ─────────────────────────────────────────────────────────────
+const ABD_WA_TPL = "أهلًا {name} 👋\nمرحبًا بك في دورة «{course}» في معهد شبكة آباد للتدريب.\nانضم لجروب الدورة على واتساب من هنا:\n{link}\nبداية الدورة: {start_date} — المدرّب: {trainer}\nنتمنى لك رحلة تعلّم موفّقة 🌟";
+const ABD_WA_TPL_MAX = 1500;
+
+/** WhatsApp group invite link: https://chat.whatsapp.com/<code> only. Returns normalized URL or null. */
+function abd_wa_group_url(string $u): ?string {
+  $u = trim($u);
+  return preg_match('~^https://chat\.whatsapp\.com/[A-Za-z0-9_-]{10,64}/?(\?[A-Za-z0-9=&_.-]{0,100})?$~', $u) ? $u : null;
+}
+
+/** Phone → wa.me digits. Saudi 05xxxxxxxx / 5xxxxxxxx / 009665… / +9665… → 9665xxxxxxxx; other numbers with a country code (+ or 00) kept. null if invalid. */
+function abd_wa_phone(?string $p): ?string {
+  $raw = trim(abd_latin_digits((string)$p));
+  if ($raw === '') return null;
+  $intl = str_starts_with($raw, '+') || str_starts_with($raw, '00');
+  $d = preg_replace('/\D+/', '', $raw) ?? '';
+  if (str_starts_with($d, '00')) $d = substr($d, 2);
+  if (preg_match('/^0?(5\d{8})$/', $d, $m)) return '966' . $m[1];          // local Saudi mobile
+  if (preg_match('/^966(5\d{8})$/', $d)) return $d;                         // Saudi with country code (+ optional)
+  if ($intl && preg_match('/^[1-9]\d{7,14}$/', $d)) return $d;               // other country, explicit international prefix
+  return null;
+}
+
+/** Fill the welcome template. Values are plain text (wa.me text is URL-encoded by the caller; HTML escaping happens at output). */
+function abd_wa_fill(string $tpl, array $v): string {
+  return strtr($tpl, ['{name}' => $v['name'] ?? '', '{course}' => $v['course'] ?? '', '{link}' => $v['link'] ?? '', '{start_date}' => $v['start_date'] ?? '', '{trainer}' => $v['trainer'] ?? '']);
 }

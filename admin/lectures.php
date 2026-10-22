@@ -14,6 +14,7 @@ if (!$me || !abd_lec_can_links($me)) { header('Location: ' . ($me && $me['role']
 $isAdmin = $me['role'] === 'admin';   // only admins may edit titles here (trainers edit their own in trainer.php)
 
 const LEC_DAYS = [0 => 'الأحد', 1 => 'الاثنين', 2 => 'الثلاثاء', 3 => 'الأربعاء', 4 => 'الخميس', 5 => 'الجمعة', 6 => 'السبت'];
+const LEC_MON = ['', 'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
 const LEC_HDR = ['no' => ['no', 'number', 'session', 'lecture', '#', 'رقم', 'رقم المحاضره', 'المحاضره', 'رقم الجلسه', 'الجلسه'],
   'url' => ['url', 'link', 'zoom', 'zoom link', 'zoom url', 'join url', 'الرابط', 'رابط', 'رابط الزوم', 'رابط المحاضره', 'زوم'],
   'pass' => ['passcode', 'password', 'pass', 'code', 'رمز الدخول', 'الرمز', 'كلمه المرور', 'رمز المرور'],
@@ -50,6 +51,24 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       lec_back($new, "تم إنشاء الدورة «{$d['title']}» وتوليد $n محاضرة مرتّبة حسب التاريخ. أضف روابط الزوم أدناه.");
     }
     if ($cid <= 0 || !abd_q("SELECT 1 FROM abd_courses WHERE id = ? AND delivery = 'online'", [$cid])->fetchColumn()) lec_back(0, 'اختر دورة أولًا.', true);
+    if ($do === 'wa_save') {
+      // «جروب واتساب الدورة»: admin + zoom_staff (page access). Empty link clears it; template equal to the default (or empty) is stored as NULL.
+      $url = abd_str($_POST, 'wa_url', 255); $wu = $url === '' ? null : abd_wa_group_url($url);
+      if ($url !== '' && !$wu) lec_back($cid, 'رابط الجروب غير مقبول: يجب أن يبدأ بـ https://chat.whatsapp.com/', true, '', '#wa');
+      $tpl = trim(str_replace("\r\n", "\n", mb_substr((string)($_POST['wa_tpl'] ?? ''), 0, ABD_WA_TPL_MAX)));
+      $tpl = preg_replace('/[\x00-\x09\x0B-\x1F\x7F]/u', '', $tpl) ?? '';
+      abd_q('UPDATE abd_courses SET wa_group_url = ?, wa_welcome_tpl = ? WHERE id = ?', [$wu, $tpl === '' || $tpl === ABD_WA_TPL ? null : $tpl, $cid]);
+      lec_back($cid, 'تم حفظ رابط جروب واتساب ورسالة الترحيب.', false, '', '#wa');
+    }
+    if ($do === 'wa_sent') {
+      // fetch() from the «إرسال واتساب» button: record the click (the wa.me tab opens from the link itself)
+      $eid = (int)($_POST['eid'] ?? 0);
+      $ok = abd_q("UPDATE abd_enrollments SET wa_invite_sent_at = NOW(), wa_invite_sent_by = ? WHERE id = ? AND course_id = ? AND status = 'active'", [(int)$me['id'], $eid, $cid])->rowCount() > 0
+        || (bool)abd_q("SELECT 1 FROM abd_enrollments WHERE id = ? AND course_id = ? AND status = 'active'", [$eid, $cid])->fetchColumn();
+      $at = $ok ? (string)abd_q('SELECT wa_invite_sent_at FROM abd_enrollments WHERE id = ?', [$eid])->fetchColumn() : '';
+      header('Content-Type: application/json; charset=utf-8'); header('Cache-Control: no-store');
+      echo json_encode($ok ? ['ok' => true, 'at' => lec_ar($at) . ' · ' . lec_t($at)] : ['ok' => false], JSON_UNESCAPED_UNICODE); exit;
+    }
     if (in_array($do, ['topics_paste', 'topic_move', 'topic_delete'], true)) {
       // «مواضيع الدورة»: admins only (zoom_staff sees the list read-only)
       if (!$isAdmin) lec_back($cid, 'إدارة مواضيع الدورة للمدير فقط.', true, '', '#topics');
@@ -218,7 +237,7 @@ if (($t = (string)($_GET['template'] ?? '')) === 'csv') {
 
 try {
   $trainers = abd_q("SELECT id, full_name_ar, full_name_en, email FROM abd_users WHERE role = 'trainer' AND is_active = 1 ORDER BY full_name_ar")->fetchAll();
-  $courses = abd_q("SELECT c.id, c.title_ar, c.start_date, c.end_date, c.trainer_id, c.delivery, (SELECT COUNT(*) FROM abd_course_sessions s WHERE s.course_id = c.id) n,
+  $courses = abd_q("SELECT c.id, c.title_ar, c.start_date, c.end_date, c.trainer_id, c.delivery, c.wa_group_url, c.wa_welcome_tpl, (SELECT COUNT(*) FROM abd_course_sessions s WHERE s.course_id = c.id) n,
       (SELECT COUNT(*) FROM abd_course_sessions s WHERE s.course_id = c.id AND s.zoom_url IS NOT NULL) nl,
       (SELECT COUNT(*) FROM abd_enrollments e WHERE e.course_id = c.id AND e.status = 'active') ne
     FROM abd_courses c WHERE c.delivery = 'online' ORDER BY c.is_active DESC, COALESCE(c.start_date, '9999-12-31') DESC")->fetchAll();
@@ -229,6 +248,7 @@ $flash = $_SESSION['flash'] ?? null; unset($_SESSION['flash']);
 $cc = $_SESSION['lec_cc'] ?? []; unset($_SESSION['lec_cc']);   // re-fill the create form after a validation error
 $held = $course ? abd_lec_held($cid) : 0;
 $topics = $course ? abd_topics($cid) : [];
+$waSent = $course ? abd_q("SELECT id, wa_invite_sent_at FROM abd_enrollments WHERE course_id = ? AND wa_invite_sent_at IS NOT NULL", [$cid])->fetchAll(PDO::FETCH_KEY_PAIR) : [];
 $enr = $course ? array_values(array_filter(abd_course_enrollments($cid), fn($e) => $e['status'] !== 'cancelled')) : [];
 $enrRep = ($_SESSION['lec_enr']['cid'] ?? 0) === $cid ? ($_SESSION['lec_enr']['rep'] ?? null) : null; unset($_SESSION['lec_enr']);
 $eq = trim(mb_substr((string)($_GET['q'] ?? ''), 0, 100)); $found = [];
@@ -251,7 +271,6 @@ if ($course && $sess && !$held) {
 }
 $tok = abd_csrf();
 $imp = ($_GET['step'] ?? '') === 'preview' && ($_SESSION['lec_imp']['cid'] ?? 0) === $cid ? $_SESSION['lec_imp'] : null;
-const LEC_MON = ['', 'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
 function lec_ar(string $dt): string { $t = strtotime($dt); return LEC_DAYS[(int)date('w', $t)] . ' ' . (int)date('j', $t) . ' ' . LEC_MON[(int)date('n', $t)]; }
 $now = date('Y-m-d H:i:s');
 $cnt = abd_q("SELECT SUM(zoom_url IS NULL AND ends_at > NOW()) nolink, SUM(rec_url IS NULL AND ends_at <= NOW()) norec, SUM(DATE(starts_at) = CURDATE()) today FROM abd_course_sessions")->fetch() ?: [];
@@ -315,6 +334,13 @@ main{max-width:1240px}
 .zt td:nth-child(2){min-width:150px}
 .zt td.ttl{min-width:230px}.zt select.tsel{width:100%;min-width:170px}.zt .tother,.zt .tnote{margin-top:6px}.zt .tnote{font-size:13px;background:#fbfcfd}.zt .tother[hidden]{display:none}
 #topics{border-top:5px solid var(--n)}#topics .cnt{background:var(--n);color:var(--g);border-radius:99px;padding:0 12px;font-size:15px}
+.wat{display:grid;grid-template-columns:1fr 1.3fr;gap:14px;align-items:start}.wat textarea{width:100%;font:14px/1.8 Cairo,sans-serif;resize:vertical}.wat input[type=url]{width:100%;direction:ltr;text-align:left}
+#wa{border-top:5px solid #25d366}#wa .cnt{background:#25d366;color:#fff;border-radius:99px;padding:0 12px;font-size:15px}
+.ph{font-size:12px;color:var(--mut)}.ph code{background:#eef3f8;border-radius:6px;padding:0 6px;margin:0 2px;direction:ltr;display:inline-block}
+.wab{display:inline-flex;align-items:center;gap:6px;background:#25d366;color:#fff;border-radius:10px;padding:7px 14px;font:800 13px Cairo;text-decoration:none;white-space:nowrap;border:0;cursor:pointer}
+.wab.re{background:#fff;color:#128c4b;border:1.5px solid #25d366}.wab[aria-disabled=true]{background:#e6ebf0;color:#8a9aa8;pointer-events:none;border:0}
+.wsent[hidden]{display:none}.wsent{display:block;font-size:12px;color:#1d7a43;font-weight:800;margin-bottom:4px}.wprev{white-space:pre-wrap;background:#e7fbe9;border-radius:12px;padding:10px 12px;font-size:13px;border:1px solid #c9eecf}
+@media (max-width:760px){.wat{grid-template-columns:1fr}}
 .tpg{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:start}.tpg textarea{width:100%;font:15px/1.8 Cairo,sans-serif;resize:vertical}
 .tpl{list-style:none;margin:0;padding:0;counter-reset:tp}.tpl li{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:#fff}
 .tpl li .t{flex:1;font-weight:700;overflow-wrap:anywhere}.tpl .nm{width:26px;height:26px;font-size:12px;flex:none}
@@ -496,8 +522,50 @@ function lec_course_form(array $v, array $trainers, string $tok, string $do, int
   </tbody></table>
   <?php else: ?><p class="mut" style="margin:12px 0 0">لا يوجد متدربون مسجّلون في هذه الدورة بعد.</p><?php endif; ?>
 </div>
+<?php
+// «جروب واتساب الدورة»: message values per trainee; wa.me text is URL-encoded, everything printed is escaped.
+$waUrl = (string)($course['wa_group_url'] ?? ''); $waTpl = (string)($course['wa_welcome_tpl'] ?? '') ?: ABD_WA_TPL;
+$waStart = $sess ? lec_ar((string)$sess[0]['starts_at']) . ' ' . substr((string)$sess[0]['starts_at'], 0, 4) . ' · ' . lec_t((string)$sess[0]['starts_at']) : (string)($course['start_date'] ?? '');
+$waTr = ($tn ?? []) ? (string)$tn[0]['full_name_ar'] : '';
+$waAct = array_values(array_filter($enr, fn($e) => $e['status'] === 'active'));
+$waVals = fn(array $e) => ['name' => (string)($e['full_name_ar'] ?: $e['full_name_en']), 'course' => (string)$course['title_ar'], 'link' => $waUrl, 'start_date' => $waStart, 'trainer' => $waTr];
+?>
+<div class="zc" id="wa">
+  <div class="hd"><h2>💬 جروب واتساب الدورة <span class="cnt"><?= count($waAct) ?></span></h2><span class="mut">أرسل رابط الجروب لكل متدرب برسالة ترحيب من واتساب — يُسجَّل الإرسال حتى لا يتكرر.</span></div>
+  <div class="wat">
+    <div class="drawer" style="margin:0"><h3>🔗 الرابط ورسالة الترحيب</h3>
+      <form method="post"><input type="hidden" name="csrf" value="<?=h($tok)?>"><input type="hidden" name="do" value="wa_save"><input type="hidden" name="course" value="<?= $cid ?>">
+        <label class="zl" for="waurl">رابط دعوة الجروب</label><input id="waurl" type="url" name="wa_url" value="<?=h($waUrl)?>" maxlength="255" placeholder="https://chat.whatsapp.com/…" pattern="https://chat\.whatsapp\.com/.+">
+        <label class="zl" for="watpl" style="margin-top:10px">رسالة الترحيب</label><textarea id="watpl" name="wa_tpl" rows="7" maxlength="<?= ABD_WA_TPL_MAX ?>"><?=h($waTpl)?></textarea>
+        <p class="ph">المتغيرات: <code>{name}</code><code>{course}</code><code>{link}</code><code>{start_date}</code><code>{trainer}</code> — اترك الرسالة فارغة لاستخدام الرسالة الافتراضية.</p>
+        <button class="btn g">💾 حفظ</button></form>
+      <?php if ($waAct): ?><p class="zl" style="margin:12px 0 4px">معاينة (أول متدرب)</p><div class="wprev"><?=h(abd_wa_fill($waTpl, $waVals($waAct[0])))?></div><?php endif; ?>
+    </div>
+    <div>
+    <?php if (!$waUrl): ?><p class="err" style="margin:0 0 10px">أضف رابط جروب الواتساب أولًا لتفعيل أزرار الإرسال.</p><?php endif; ?>
+    <?php if ($waAct): ?>
+    <table class="zt"><thead><tr><th>#</th><th>المتدرب</th><th>الجوال</th><th>الإرسال</th></tr></thead><tbody>
+    <?php foreach ($waAct as $i => $e): $eid = (int)$e['id']; $ph = abd_wa_phone($e['phone'] ?? null); $sent = $waSent[$eid] ?? null;
+      $href = $ph && $waUrl ? 'https://wa.me/' . $ph . '?text=' . rawurlencode(abd_wa_fill($waTpl, $waVals($e))) : ''; ?>
+      <tr><td class="top"><span class="nm"><?= $i + 1 ?></span></td><td data-l="المتدرب"><b><?=h($e['full_name_ar'] ?: $e['full_name_en'])?></b></td>
+        <td data-l="الجوال" class="ltr" style="text-align:right"><?php if ($ph): ?><?=h('+' . $ph)?><?php elseif (trim((string)$e['phone']) !== ''): ?><span class="pill p-wait">رقم غير صالح</span> <small class="mut"><?=h($e['phone'])?></small><?php else: ?><span class="pill p-up">لا يوجد جوال</span><?php endif; ?></td>
+        <td data-l="الإرسال" class="wcell"><span class="wsent" <?= $sent ? '' : 'hidden' ?>>✓ أُرسلت <span class="wt"><?= $sent ? h(lec_ar((string)$sent) . ' · ' . lec_t((string)$sent)) : '' ?></span></span>
+          <?php if ($href): ?><a class="wab<?= $sent ? ' re' : '' ?>" href="<?=h($href)?>" target="_blank" rel="noopener noreferrer" data-eid="<?= $eid ?>"><?= $sent ? '↻ إعادة الإرسال' : '💬 إرسال واتساب' ?></a>
+          <?php else: ?><span class="wab" aria-disabled="true">💬 إرسال واتساب</span><small class="mut" style="display:block;margin-top:3px"><?= !$waUrl ? 'أضف رابط الجروب' : 'لا يوجد رقم جوال صالح' ?></small><?php endif; ?></td></tr>
+    <?php endforeach; ?></tbody></table>
+    <?php else: ?><p class="mut" style="margin:0">لا يوجد متدربون نشطون في هذه الدورة بعد.</p><?php endif; ?>
+    </div>
+  </div>
+</div>
 <?php endif; ?>
 <script>
+document.querySelectorAll('#wa a.wab[data-eid]').forEach(function(a){a.addEventListener('click',function(e){
+  // «إعادة الإرسال» asks first; the wa.me tab opens from the link itself (no popup blocker), the click is recorded in parallel
+  if(a.classList.contains('re')&&!confirm('أُرسلت الدعوة لهذا المتدرب سابقًا. إعادة الإرسال؟')){e.preventDefault();return}
+  var fd=new FormData();fd.append('csrf',<?= json_encode($tok) ?>);fd.append('do','wa_sent');fd.append('course','<?= $cid ?>');fd.append('eid',a.dataset.eid);
+  fetch('lectures.php',{method:'POST',body:fd,credentials:'same-origin',keepalive:true,headers:{Accept:'application/json'}}).then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)return;
+    var s=a.closest('.wcell').querySelector('.wsent');s.querySelector('.wt').textContent=j.at;s.hidden=false;a.classList.add('re');a.textContent='↻ إعادة الإرسال'}).catch(function(){});
+})});
 document.querySelectorAll('select.tsel').forEach(function(s){var i=s.parentNode.querySelector('.tother');function u(){var o=s.value==='other';i.hidden=!o;i.disabled=!o;if(o&&!i.value)i.focus()}s.addEventListener('change',u);i.hidden=s.value!=='other';i.disabled=s.value!=='other'});
 document.querySelectorAll('form.cc').forEach(function(f){
   var q=f.querySelector('.psearch'),l=f.querySelector('.plist'),t=f.elements.title,hr=f.querySelector('.phours'),du=f.querySelector('.pdur'),cn=f.querySelector('.pcount'),sg=f.querySelector('.psug');

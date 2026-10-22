@@ -87,7 +87,7 @@ function show(id){["gate","err","loading","empty","app"].forEach(function(k){$("
 function load(){lastFetch=Date.now();return fetch(BASE+"api/lectures.php",{credentials:"same-origin",headers:{Accept:"application/json"},cache:"no-store"})
  .then(function(r){if(r.status===401)return {logged_in:false};return r.json()}).then(function(j){
   if(!j||j.logged_in===false){show("gate");return}if(!j.ok)throw 0;
-  if(CF){j.courses=j.courses.filter(function(c){return +c.id===CF});var bc=$("#bc");if(bc&&j.courses[0]){bc.hidden=false;$("#bcc").textContent=j.courses[0].title_ar;document.title=j.courses[0].title_ar+" — منصة آباد الرقمية"}if(!j.courses.length){show("empty");return}}
+  if(CF){j.courses=j.courses.filter(function(c){return +c.id===CF});var bc=$("#bc");if(bc&&j.courses[0]){bc.hidden=false;$("#bcc").textContent=j.courses[0].title_ar;var wa=j.courses[0].wa_group_url,wl=$("#bcwa");if(wl&&typeof wa==="string"&&/^https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9_-]{10,64}\/?(\?[A-Za-z0-9=&_.-]{0,100})?$/.test(wa)){wl.href=wa;wl.hidden=false}document.title=j.courses[0].title_ar+" — منصة آباد الرقمية"}if(!j.courses.length){show("empty");return}}
   off=(j.now||Date.now())-Date.now();if(j.early_min)EARLY=j.early_min*60000;data=j;
   if(!j.courses.length){show("empty");return}show("app");render()}).catch(function(){if(!data)show("err")})}
 document.addEventListener("keydown",function(e){if(e.key==="Escape")closeRec()});
